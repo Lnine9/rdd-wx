@@ -8539,6 +8539,159 @@ function normalizeComponent (
 }
 
 
+/***/ }),
+/* 15 */,
+/* 16 */,
+/* 17 */,
+/* 18 */,
+/* 19 */,
+/* 20 */,
+/* 21 */
+/*!***********************************************************************!*\
+  !*** /Users/nihao/Documents/HBuilderProjects/囧途宝盒/pages/index/api.js ***!
+  \***********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });exports.api = void 0;var _MinRequest = __webpack_require__(/*! ../../Config/MinRequest */ 22);function _classCallCheck(instance, Constructor) {if (!(instance instanceof Constructor)) {throw new TypeError("Cannot call a class as a function");}}function _defineProperties(target, props) {for (var i = 0; i < props.length; i++) {var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, descriptor.key, descriptor);}}function _createClass(Constructor, protoProps, staticProps) {if (protoProps) _defineProperties(Constructor.prototype, protoProps);if (staticProps) _defineProperties(Constructor, staticProps);return Constructor;}
+
+// 请求拦截器
+// minRequest.interceptors.request((request) => {
+//   return request
+// })
+
+// // 响应拦截器
+// minRequest.interceptors.response((response) => {
+//   return response.data
+// })
+
+// // 设置默认配置
+// minRequest.((config) => {
+//   config.baseURL = ''
+//   return config
+// })
+var
+api = /*#__PURE__*/function () {function api() {_classCallCheck(this, api);}_createClass(api, null, [{ key: "getData",
+    // 这里统一管理api请求
+    value: function getData(data) {
+      return _MinRequest.minRequest.get('/api/StudentManage/getAllStudent', data);
+    } }]);return api;}();exports.api = api;
+
+/***/ }),
+/* 22 */
+/*!*************************************************************************!*\
+  !*** /Users/nihao/Documents/HBuilderProjects/囧途宝盒/Config/MinRequest.js ***!
+  \*************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.minRequest = void 0;function _objectSpread(target) {for (var i = 1; i < arguments.length; i++) {var source = arguments[i] != null ? arguments[i] : {};var ownKeys = Object.keys(source);if (typeof Object.getOwnPropertySymbols === 'function') {ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) {return Object.getOwnPropertyDescriptor(source, sym).enumerable;}));}ownKeys.forEach(function (key) {_defineProperty(target, key, source[key]);});}return target;}function _classCallCheck(instance, Constructor) {if (!(instance instanceof Constructor)) {throw new TypeError("Cannot call a class as a function");}}function _defineProperties(target, props) {for (var i = 0; i < props.length; i++) {var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, descriptor.key, descriptor);}}function _createClass(Constructor, protoProps, staticProps) {if (protoProps) _defineProperties(Constructor.prototype, protoProps);if (staticProps) _defineProperties(Constructor, staticProps);return Constructor;}function _defineProperty(obj, key, value) {if (key in obj) {Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });} else {obj[key] = value;}return obj;}var config = Symbol('config');
+var isCompleteURL = Symbol('isCompleteURL');
+var requestBefore = Symbol('requestBefore');
+var requestAfter = Symbol('requestAfter');var
+
+MinRequest = /*#__PURE__*/function () {function MinRequest() {_classCallCheck(this, MinRequest);_defineProperty(this,
+    config, {
+      baseURL: 'http://127.0.0.1:8000',
+      header: {
+        'content-type': 'application/json' },
+
+      method: 'GET',
+      dataType: 'json',
+      responseType: 'text' });_defineProperty(this, "interceptors",
+
+
+    {
+      request: function request(func) {
+        if (func) {
+          MinRequest[requestBefore] = func;
+        } else {
+          MinRequest[requestBefore] = function (request) {return request;};
+        }
+
+      },
+      response: function response(func) {
+        if (func) {
+          MinRequest[requestAfter] = func;
+        } else {
+          MinRequest[requestAfter] = function (response) {return response;};
+        }
+      } });}_createClass(MinRequest, [{ key: "setConfig", value: function setConfig(
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    func) {
+      this[config] = func(this[config]);
+    } }, { key: "request", value: function request()
+
+    {var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+      options.baseURL = options.baseURL || this[config].baseURL;
+      options.dataType = options.dataType || this[config].dataType;
+      options.url = MinRequest[isCompleteURL](options.url) ? options.url : options.baseURL + options.url;
+      options.data = options.data;
+      options.header = _objectSpread({}, options.header, this[config].header);
+      options.method = options.method || this[config].method;
+
+      options = _objectSpread({}, options, MinRequest[requestBefore](options));
+
+      return new Promise(function (resolve, reject) {
+        options.success = function (res) {
+          resolve(MinRequest[requestAfter](res));
+        };
+        options.fail = function (err) {
+          reject(MinRequest[requestAfter](err));
+        };
+        uni.request(options);
+      });
+    } }, { key: "get", value: function get(
+
+    url, data) {var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+      options.url = url;
+      options.data = data;
+      options.method = 'GET';
+      return this.request(options);
+    } }, { key: "post", value: function post(
+
+    url, data) {var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+      options.url = url;
+      options.data = data;
+      options.method = 'POST';
+      return this.request(options);
+    } }], [{ key: requestBefore, value: function value(config) {return config;} }, { key: requestAfter, value: function value(response) {return response;} }, { key: isCompleteURL, value: function value(url) {return /(http|https):\/\/([\w.]+\/?)\S*/.test(url);} }]);return MinRequest;}();
+
+
+MinRequest.install = function (Vue) {
+  Vue.mixin({
+    beforeCreate: function beforeCreate() {
+      if (this.$options.minRequest) {
+        console.log(this.$options.minRequest);
+        Vue._minRequest = this.$options.minRequest;
+      }
+    } });
+
+  Object.defineProperty(Vue.prototype, '$minApi', {
+    get: function get() {
+      return Vue._minRequest.apis;
+    } });
+
+};
+
+var minRequest = new MinRequest();exports.minRequest = minRequest;
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))
+
 /***/ })
 ]]);
 //# sourceMappingURL=../../.sourcemap/mp-weixin/common/vendor.js.map

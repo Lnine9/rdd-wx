@@ -21,6 +21,7 @@
 </template>
 
 <script>
+	import {api} from	'./api.js'
     export default {
         data() {
             return {
@@ -104,37 +105,18 @@
          //向后台更新信息
             updateUserInfo() {
                 let _this = this;
-				console.log('请求后台')
-                uni.request({
-                    url:'http://127.0.0.1:8000/api/StudentManage/getAllStudent' ,//服务器端地址
-                    data: {
-                        appKey: this.$store.state.appKey,
-                        customerId: _this.customerId,
-                        nickName: _this.nickName,
-                        headUrl: _this.avatarUrl
-                    },
-                    method: 'POST',
-                    header: {
-                        'content-type': 'application/json'
-                    },
-                    success: (res) => {
-						console.log('请求后台失败')
-                        if (res.data.state == "success") {
-                            uni.reLaunch({//信息更新成功后跳转到小程序首页
-                                url: '/pages/index/index'
-                            });
-                        }
-                    },
-					fail(res) {
-						console.log('请求后台失败')
-						console.log(res)
-					}
-                });
+				console.log('请求后台');
+				let p = {
+					currentPage: 1,
+					pageSize: 10
+				};
+				api.getData(p).then(res=>{
+					console.log(res.data)
+				}).catch(err => {
+					console.log(err)
+				})
             }
         },
-        // onLoad() {//默认加载
-        //     this.login();
-        // }
     }
 </script>
 
