@@ -5,10 +5,7 @@ const requestAfter = Symbol('requestAfter')
 
 class MinRequest {
   [config] = {
-    baseURL: 'http://127.0.0.1:8000',
-    header: {
-      'content-type': 'application/json'
-    },
+    baseURL: 'http://127.0.0.1:8899',
     method: 'GET',
     dataType: 'json',
     responseType: 'text'
@@ -53,11 +50,11 @@ class MinRequest {
     options.dataType = options.dataType || this[config].dataType
     options.url = MinRequest[isCompleteURL](options.url) ? options.url : (options.baseURL + options.url)
     options.data = options.data
-    options.header = {...options.header, ...this[config].header}
+    options.header = { ...options.header }
     options.method = options.method || this[config].method
 
     options = {...options, ...MinRequest[requestBefore](options)}
-
+	console.log(options.header)
     return new Promise((resolve, reject) => {
       options.success = function (res) {
         resolve(MinRequest[requestAfter](res))
@@ -73,6 +70,9 @@ class MinRequest {
     options.url = url
     options.data = data
     options.method = 'GET'
+	options.header = {
+	  'content-type': 'application/json'
+	}
     return this.request(options)
   }
 
@@ -80,24 +80,11 @@ class MinRequest {
     options.url = url
     options.data = data
     options.method = 'POST'
+	options.header = {
+	  'content-type': 'application/x-www-form-urlencoded'
+	}
     return this.request(options)
   }
-}
-
-MinRequest.install = function (Vue) {
-  Vue.mixin({
-    beforeCreate: function () {
-			if (this.$options.minRequest) {
-        console.log(this.$options.minRequest)
-				Vue._minRequest = this.$options.minRequest
-			}
-    }
-  })
-  Object.defineProperty(Vue.prototype, '$minApi', {
-    get: function () {
-			return Vue._minRequest.apis
-		}
-  })
 }
 
 export const minRequest = new MinRequest()
