@@ -1,9 +1,11 @@
 {
   "pages": [
-    "pages/mine/myInfo",
     "pages/inviteFriends/inviteFriends",
     "pages/vipApply/vipApply",
-    "pages/index/index"
+    "pages/mine/myInfo",
+    "pages/index/index",
+    "pages/wallet/wallet",
+    "pages/withdraw/withdraw"
   ],
   "subPackages": [],
   "window": {
