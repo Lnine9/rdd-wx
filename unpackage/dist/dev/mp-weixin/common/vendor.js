@@ -7751,10 +7751,9 @@ var minRequest = new MinRequest();exports.minRequest = minRequest;
   !*** D:/czb/pages.json ***!
   \*************************/
 /*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, exports) {
 
-"use strict";
-
+throw new Error("Module build failed (from ./node_modules/@dcloudio/webpack-uni-pages-loader/lib/index.js):\nSyntaxError: Unexpected token < in JSON at position 485\n    at JSON.parse (<anonymous>)\n    at parseJson (D:\\HBuilderX\\HBuilderX\\plugins\\uniapp-cli\\node_modules\\@dcloudio\\uni-cli-shared\\lib\\json.js:17:20)\n    at parsePagesJson (D:\\HBuilderX\\HBuilderX\\plugins\\uniapp-cli\\node_modules\\@dcloudio\\uni-cli-shared\\lib\\pages.js:39:27)\n    at Object.module.exports (D:\\HBuilderX\\HBuilderX\\plugins\\uniapp-cli\\node_modules\\@dcloudio\\webpack-uni-pages-loader\\lib\\index-new.js:42:21)\n    at Object.module.exports (D:\\HBuilderX\\HBuilderX\\plugins\\uniapp-cli\\node_modules\\@dcloudio\\webpack-uni-pages-loader\\lib\\index.js:45:35)");
 
 /***/ }),
 
@@ -23479,7 +23478,7 @@ module.exports = {"_from":"@dcloudio/uni-stat@next","_id":"@dcloudio/uni-stat@2.
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _default = { "pages": { "pages/address/address": { "navigationBarTitleText": "收货地址", "usingComponents": {} }, "pages/index/index": { "navigationBarTitleText": "首页", "usingComponents": {} }, "pages/address/newAddress": { "navigationBarTitleText": "", "usingComponents": { "w-picker": "/pages/components/w-picker/w-picker" } }, "pages/inviteFriends/inviteFriends": { "navigationBarTitleText": "分享赚钱", "navigationBarBackgroundColor": "#0086f1", "navigationBarTextStyle": "white" }, "pages/vipApply/vipApply": { "navigationBarTitleText": "申请会员", "enablePullDownRefresh": true } }, "globalStyle": { "navigationBarTextStyle": "black", "navigationBarTitleText": "uni-app", "navigationBarBackgroundColor": "#F8F8F8", "backgroundColor": "#F8F8F8" } };exports.default = _default;
+Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _default = { "pages": { "pages/address/address": { "navigationBarTitleText": "收货地址", "usingComponents": {} }, "pages/index/index": { "navigationBarTitleText": "首页", "usingComponents": {} }, "pages/address/newAddress": { "navigationBarTitleText": "", "usingComponents": { "w-picker": "/pages/components/w-picker/w-picker" } }, "pages/inviteFriends/inviteFriends": { "navigationBarTitleText": "分享赚钱", "navigationBarBackgroundColor": "#0086f1", "navigationBarTextStyle": "white", "usingComponents": {} }, "pages/vipApply/vipApply": { "navigationBarTitleText": "申请会员", "enablePullDownRefresh": true, "usingComponents": {} } }, "globalStyle": { "navigationBarTextStyle": "black", "navigationBarTitleText": "uni-app", "navigationBarBackgroundColor": "#F8F8F8", "backgroundColor": "#F8F8F8" } };exports.default = _default;
 
 /***/ }),
 
