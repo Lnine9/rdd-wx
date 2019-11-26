@@ -1,6 +1,8 @@
 {
   "pages": [
     "pages/address/address",
+    "pages/inviteFriends/inviteFriends",
+    "pages/vipApply/vipApply",
     "pages/index/index",
     "pages/address/newAddress"
   ],
@@ -11,6 +13,5 @@
     "navigationBarBackgroundColor": "#F8F8F8",
     "backgroundColor": "#F8F8F8"
   },
-  "usingComponents": {},
-  "sitemapLocation": "sitemap65.json"
+  "usingComponents": {}
 }

@@ -8415,7 +8415,7 @@ module.exports = {"_from":"@dcloudio/uni-stat@next","_id":"@dcloudio/uni-stat@2.
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _default = { "pages": { "pages/address/address": { "navigationBarTitleText": "收货地址", "usingComponents": {} }, "pages/index/index": { "navigationBarTitleText": "uni-app", "usingComponents": {} }, "pages/address/newAddress": { "navigationBarTitleText": "", "usingComponents": { "w-picker": "/pages/components/w-picker/w-picker" } } }, "globalStyle": { "navigationBarTextStyle": "black", "navigationBarTitleText": "uni-app", "navigationBarBackgroundColor": "#F8F8F8", "backgroundColor": "#F8F8F8" } };exports.default = _default;
+Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _default = { "pages": { "pages/address/address": { "navigationBarTitleText": "收货地址", "usingComponents": {} }, "pages/index/index": { "navigationBarTitleText": "首页", "usingComponents": {} }, "pages/address/newAddress": { "navigationBarTitleText": "", "usingComponents": { "w-picker": "/pages/components/w-picker/w-picker" } }, "pages/inviteFriends/inviteFriends": { "navigationBarTitleText": "分享赚钱", "navigationBarBackgroundColor": "#0086f1", "navigationBarTextStyle": "white" }, "pages/vipApply/vipApply": { "navigationBarTitleText": "申请会员", "enablePullDownRefresh": true } }, "globalStyle": { "navigationBarTextStyle": "black", "navigationBarTitleText": "uni-app", "navigationBarBackgroundColor": "#F8F8F8", "backgroundColor": "#F8F8F8" } };exports.default = _default;
 
 /***/ }),
 /* 8 */
@@ -8602,10 +8602,7 @@ var requestAfter = Symbol('requestAfter');var
 
 MinRequest = /*#__PURE__*/function () {function MinRequest() {_classCallCheck(this, MinRequest);_defineProperty(this,
     config, {
-      baseURL: 'http://127.0.0.1:8000',
-      header: {
-        'content-type': 'application/json' },
-
+      baseURL: 'http://127.0.0.1:8899',
       method: 'GET',
       dataType: 'json',
       responseType: 'text' });_defineProperty(this, "interceptors",
@@ -8650,11 +8647,11 @@ MinRequest = /*#__PURE__*/function () {function MinRequest() {_classCallCheck(th
       options.dataType = options.dataType || this[config].dataType;
       options.url = MinRequest[isCompleteURL](options.url) ? options.url : options.baseURL + options.url;
       options.data = options.data;
-      options.header = _objectSpread({}, options.header, this[config].header);
+      options.header = _objectSpread({}, options.header);
       options.method = options.method || this[config].method;
 
       options = _objectSpread({}, options, MinRequest[requestBefore](options));
-
+      console.log(options.header);
       return new Promise(function (resolve, reject) {
         options.success = function (res) {
           resolve(MinRequest[requestAfter](res));
@@ -8670,6 +8667,9 @@ MinRequest = /*#__PURE__*/function () {function MinRequest() {_classCallCheck(th
       options.url = url;
       options.data = data;
       options.method = 'GET';
+      options.header = {
+        'content-type': 'application/json' };
+
       return this.request(options);
     } }, { key: "post", value: function post(
 
@@ -8677,25 +8677,12 @@ MinRequest = /*#__PURE__*/function () {function MinRequest() {_classCallCheck(th
       options.url = url;
       options.data = data;
       options.method = 'POST';
+      options.header = {
+        'content-type': 'application/x-www-form-urlencoded' };
+
       return this.request(options);
     } }], [{ key: requestBefore, value: function value(config) {return config;} }, { key: requestAfter, value: function value(response) {return response;} }, { key: isCompleteURL, value: function value(url) {return /(http|https):\/\/([\w.]+\/?)\S*/.test(url);} }]);return MinRequest;}();
 
-
-MinRequest.install = function (Vue) {
-  Vue.mixin({
-    beforeCreate: function beforeCreate() {
-      if (this.$options.minRequest) {
-        console.log(this.$options.minRequest);
-        Vue._minRequest = this.$options.minRequest;
-      }
-    } });
-
-  Object.defineProperty(Vue.prototype, '$minApi', {
-    get: function get() {
-      return Vue._minRequest.apis;
-    } });
-
-};
 
 var minRequest = new MinRequest();exports.minRequest = minRequest;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))
