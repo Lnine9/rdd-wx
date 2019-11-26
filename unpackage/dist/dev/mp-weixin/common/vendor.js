@@ -7580,9 +7580,9 @@ internalMixin(Vue);
 /***/ }),
 
 /***/ 29:
-/*!****************************************************************************************!*\
-  !*** D:/JAVA内容/B305实验室/模拟项目/TheOurProject/czb-MbarrassingWayBox/pages/vipApply/api.js ***!
-  \****************************************************************************************/
+/*!**********************************************************!*\
+  !*** E:/WeChat/czb-MbarrassingWayBox/pages/index/api.js ***!
+  \**********************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -7645,9 +7645,9 @@ module.exports = g;
 /***/ }),
 
 /***/ 30:
-/*!***************************************************************************************!*\
-  !*** D:/JAVA内容/B305实验室/模拟项目/TheOurProject/czb-MbarrassingWayBox/Config/MinRequest.js ***!
-  \***************************************************************************************/
+/*!************************************************************!*\
+  !*** E:/WeChat/czb-MbarrassingWayBox/Config/MinRequest.js ***!
+  \************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -7746,44 +7746,22 @@ var minRequest = new MinRequest();exports.minRequest = minRequest;
 
 /***/ }),
 
-/***/ 39:
-/*!*************************************************************************************!*\
-  !*** D:/JAVA内容/B305实验室/模拟项目/TheOurProject/czb-MbarrassingWayBox/pages/index/api.js ***!
-  \*************************************************************************************/
+/***/ 36:
+/*!**********************************************************!*\
+  !*** E:/WeChat/czb-MbarrassingWayBox/pages/mine/mine.js ***!
+  \**********************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });exports.api = void 0;var _MinRequest = __webpack_require__(/*! ../../Config/MinRequest */ 30);function _classCallCheck(instance, Constructor) {if (!(instance instanceof Constructor)) {throw new TypeError("Cannot call a class as a function");}}function _defineProperties(target, props) {for (var i = 0; i < props.length; i++) {var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, descriptor.key, descriptor);}}function _createClass(Constructor, protoProps, staticProps) {if (protoProps) _defineProperties(Constructor.prototype, protoProps);if (staticProps) _defineProperties(Constructor, staticProps);return Constructor;}
 
-// 请求拦截器
-// minRequest.interceptors.request((request) => {
-//   return request
-// })
-
-// // 响应拦截器
-// minRequest.interceptors.response((response) => {
-//   return response.data
-// })
-
-// // 设置默认配置
-// minRequest.((config) => {
-//   config.baseURL = ''
-//   return config
-// })
-var
-api = /*#__PURE__*/function () {function api() {_classCallCheck(this, api);}_createClass(api, null, [{ key: "getData",
-    // 这里统一管理api请求
-    value: function getData(data) {
-      return _MinRequest.minRequest.get('/api/StudentManage/getAllStudent', data);
-    } }]);return api;}();exports.api = api;
 
 /***/ }),
 
 /***/ 4:
-/*!*****************************************************************************!*\
-  !*** D:/JAVA内容/B305实验室/模拟项目/TheOurProject/czb-MbarrassingWayBox/pages.json ***!
-  \*****************************************************************************/
+/*!**************************************************!*\
+  !*** E:/WeChat/czb-MbarrassingWayBox/pages.json ***!
+  \**************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -8679,6 +8657,40 @@ main();
 
 /***/ }),
 
+/***/ 51:
+/*!*************************************************************!*\
+  !*** E:/WeChat/czb-MbarrassingWayBox/pages/vipApply/api.js ***!
+  \*************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });exports.api = void 0;var _MinRequest = __webpack_require__(/*! ../../Config/MinRequest */ 30);function _classCallCheck(instance, Constructor) {if (!(instance instanceof Constructor)) {throw new TypeError("Cannot call a class as a function");}}function _defineProperties(target, props) {for (var i = 0; i < props.length; i++) {var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, descriptor.key, descriptor);}}function _createClass(Constructor, protoProps, staticProps) {if (protoProps) _defineProperties(Constructor.prototype, protoProps);if (staticProps) _defineProperties(Constructor, staticProps);return Constructor;}
+
+// 请求拦截器
+// minRequest.interceptors.request((request) => {
+//   return request
+// })
+
+// // 响应拦截器
+// minRequest.interceptors.response((response) => {
+//   return response.data
+// })
+
+// // 设置默认配置
+// minRequest.((config) => {
+//   config.baseURL = ''
+//   return config
+// })
+var
+api = /*#__PURE__*/function () {function api() {_classCallCheck(this, api);}_createClass(api, null, [{ key: "getData",
+    // 这里统一管理api请求
+    value: function getData(data) {
+      return _MinRequest.minRequest.get('/api/StudentManage/getAllStudent', data);
+    } }]);return api;}();exports.api = api;
+
+/***/ }),
+
 /***/ 6:
 /*!******************************************************!*\
   !*** ./node_modules/@dcloudio/uni-stat/package.json ***!
@@ -8691,21 +8703,21 @@ module.exports = {"_from":"@dcloudio/uni-stat@next","_id":"@dcloudio/uni-stat@2.
 /***/ }),
 
 /***/ 7:
-/*!**********************************************************************************************!*\
-  !*** D:/JAVA内容/B305实验室/模拟项目/TheOurProject/czb-MbarrassingWayBox/pages.json?{"type":"style"} ***!
-  \**********************************************************************************************/
+/*!*******************************************************************!*\
+  !*** E:/WeChat/czb-MbarrassingWayBox/pages.json?{"type":"style"} ***!
+  \*******************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _default = { "pages": { "pages/inviteFriends/inviteFriends": { "navigationBarTitleText": "分享赚钱", "navigationBarBackgroundColor": "#0086f1", "navigationBarTextStyle": "white", "usingComponents": {} }, "pages/vipApply/vipApply": { "navigationBarTitleText": "申请会员", "enablePullDownRefresh": true, "usingComponents": {} }, "pages/index/index": { "navigationBarTitleText": "首页", "usingComponents": {} } }, "globalStyle": { "navigationBarTextStyle": "black", "navigationBarTitleText": "uni-app", "navigationBarBackgroundColor": "#F8F8F8", "backgroundColor": "#F8F8F8" } };exports.default = _default;
+Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _default = { "pages": { "pages/mine/myInfo": { "navigationBarTitleText": "我的", "usingComponents": {} }, "pages/index/index": { "navigationBarTitleText": "首页", "usingComponents": {} }, "pages/inviteFriends/inviteFriends": { "navigationBarTitleText": "分享赚钱", "navigationBarBackgroundColor": "#0086f1", "navigationBarTextStyle": "white", "usingComponents": {} }, "pages/vipApply/vipApply": { "navigationBarTitleText": "申请会员", "enablePullDownRefresh": true, "usingComponents": {} } }, "globalStyle": { "navigationBarTextStyle": "black", "navigationBarTitleText": "uni-app", "navigationBarBackgroundColor": "#F8F8F8", "backgroundColor": "#F8F8F8" } };exports.default = _default;
 
 /***/ }),
 
 /***/ 8:
-/*!*********************************************************************************************!*\
-  !*** D:/JAVA内容/B305实验室/模拟项目/TheOurProject/czb-MbarrassingWayBox/pages.json?{"type":"stat"} ***!
-  \*********************************************************************************************/
+/*!******************************************************************!*\
+  !*** E:/WeChat/czb-MbarrassingWayBox/pages.json?{"type":"stat"} ***!
+  \******************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
