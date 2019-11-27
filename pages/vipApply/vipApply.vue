@@ -57,12 +57,11 @@
 					phoneNum:this.applyInformation.phone
 				}
 				api.vipApply(parms).then(res=>{
-					// wx.showToast({
-					//       title: '成功提示弹窗',
-					//       icon: '',     //默认值是success,就算没有icon这个值，就算有其他值最终也显示success
-					//       duration: 2000,      //停留时间
-					//     })
-					console.log(111)
+					wx.showToast({
+					      title: '申请会员成功',
+					      icon: 'success',     //默认值是success,就算没有icon这个值，就算有其他值最终也显示success
+					      duration: 2000,      //停留时间
+					    })
 				}).catch(err=>{
 					console.log(err)
 				})
