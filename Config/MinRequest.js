@@ -5,7 +5,7 @@ const requestAfter = Symbol('requestAfter')
 
 class MinRequest {
   [config] = {
-    baseURL: 'http://127.0.0.1:8090',
+    baseURL: 'http://127.0.0.1:8899',
     method: 'GET',
     dataType: 'json',
     responseType: 'text'
@@ -73,7 +73,7 @@ class MinRequest {
     options.method = 'GET'
 	options.header = {
 	  'content-type': 'application/json',
-	  'Authentication': token || ''
+	  'Authorization': token || ''
 	}
 	console.info('头部')
 	console.info(options.header)
@@ -87,7 +87,7 @@ class MinRequest {
     options.method = 'POST'
 	options.header = {
 	  'content-type': 'application/x-www-form-urlencoded',
-	  'Authentication':token || ''
+	  'Authorization':token || ''
 	}
     return this.request(options)
   }

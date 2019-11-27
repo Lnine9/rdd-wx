@@ -52,25 +52,21 @@
         },
         methods: {
             recommend:function(options){
-				
-				console.log(this.applyInformation.name);
-				// wx.navigateTo({
-				//   url: '../index/index?id=1',
-				//   events: {
-				//     // 为指定事件添加一个监听器，获取被打开页面传送到当前页面的数据
-				//     acceptDataFromOpenedPage: function(data) {
-				//       console.log(data)
-				//     },
-				//     someEvent: function(data) {
-				//       console.log(data)
-				//     }
-				    
-				//   },
-				//   success: function(res) {
-				//     // 通过eventChannel向被打开页面传送数据
-				//     console.log("success");
-				//   }
-				// })
+				var parms={
+					userName:this.applyInformation.name,
+					phoneNum:this.applyInformation.phone
+				}
+				api.vipApply(parms).then(res=>{
+					// wx.showToast({
+					//       title: '成功提示弹窗',
+					//       icon: '',     //默认值是success,就算没有icon这个值，就算有其他值最终也显示success
+					//       duration: 2000,      //停留时间
+					//     })
+					console.log(111)
+				}).catch(err=>{
+					console.log(err)
+				})
+
 			}
         },
     }

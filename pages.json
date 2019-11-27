@@ -1,43 +1,28 @@
 {
 	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
-		// {
-		// 	"path": "pages/inviteFriends/inviteFriends",
-		// 	"style": {
-		// 		"navigationBarTitleText": "分享赚钱",
-		// 		"navigationBarBackgroundColor": "#0086f1",
-		// 		"navigationBarTextStyle": "white"
-		// 	}
-		// },
-		// {
-		// 	"path": "pages/vipApply/vipApply",
-		// 	"style": {
-		// 		"navigationBarTitleText": "申请会员",
-		// 		"enablePullDownRefresh": true
-		// 	}
-		// },
-		// {
-		// 	"path": "pages/index/index",
-		// 	"style": {
-		// 		"navigationBarTitleText": "首页"
-		// 	}
-		// },
 		{
-
-			"path": "pages/wallet/wallet",
+			"path": "pages/index/index",
+			"style": {
+				"navigationBarTitleText": "授权",
+				"enablePullDownRefresh": true
+			}
+		},
+		{
+			"path": "pages/vipApply/vipApply",
+			"style": {
+				"navigationBarTitleText": "申请会员",
+				"enablePullDownRefresh": true
+			}
+		},
+		{
 		    "path" : "pages/address/address",
 		    "style" : {
 				"navigationBarTitleText": "收货地址"
 			}
-		},{
-			"path": "pages/inviteFriends/inviteFriends",
-			"style": {
-				"navigationBarTitleText": "钱包"
-			}
 		},
 		{
-			{
 			"path": "pages/withdraw/withdraw",
-			"path": "pages/vipApply/vipApply",
+			"style": {
 			"navigationBarTitleText": "登录"
 			}
 		},
@@ -50,18 +35,12 @@
 		{
 			"path": "pages/inviteFriends/inviteFriends",
 			"style": {
-				"navigationBarTitleText": "分享赚钱",
+				"navigationBarTitleText": "邀请好友",
 				"navigationBarBackgroundColor": "#0086f1",
 				"navigationBarTextStyle": "white"
 			}
 		},
-		{
-			"path": "pages/vipApply/vipApply",
-			"style": {
-				"navigationBarTitleText": "申请会员",
-				"enablePullDownRefresh": true
-			}
-		},
+		
 		{
 			"path": "pages/mine/myInfo",
 			"style": {
@@ -73,7 +52,6 @@
 			"style": {
 				"navigationBarTitleText": "钱包",
 				"enablePullDownRefresh":true
-				"navigationBarTitleText": "提现"
 			}
 		},{
 			"path": "pages/address/newAddress",
@@ -98,6 +76,10 @@
 				"iconPath": "static/homePageNo.png",
 				"selectedIconPath": "static/homePage.png",
 				"text": "首页"
+			},
+			{
+				"pagePath": "pages/vipApply/vipApply",
+				"text": "会员"
 			},
 			{
 				"pagePath": "pages/mine/myInfo",
