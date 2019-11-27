@@ -19,6 +19,7 @@ import {minRequest} from '../../Config/MinRequest'
 export class api{
   // 这里统一管理api请求
   static vipApply(data){
+	  
 	  return minRequest.post('/api/VipApply/applyWCPVip', data)
   }
 }
