@@ -1,10 +1,19 @@
 {
   "pages": [
+<<<<<<< HEAD
     "pages/address/address",
     "pages/inviteFriends/inviteFriends",
     "pages/vipApply/vipApply",
     "pages/index/index",
     "pages/address/newAddress"
+=======
+    "pages/inviteFriends/inviteFriends",
+    "pages/vipApply/vipApply",
+    "pages/mine/myInfo",
+    "pages/index/index",
+    "pages/wallet/wallet",
+    "pages/withdraw/withdraw"
+>>>>>>> 7fa96c555b7d2b3bc8713ac0b51588b77af3a64c
   ],
   "subPackages": [],
   "window": {
