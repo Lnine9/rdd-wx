@@ -19,6 +19,7 @@
 </template>
 
 <script>
+	import {api} from	'./api.js'
 	export default {
 		data() {
 			return {
@@ -43,12 +44,22 @@
 				]
 			}
 		},
+		onLoad(option){
+			this.getData();
+		},
 		methods: {
 			addAddress(type, item){
 				uni.navigateTo({
 					url: `/pages/address/newAddress?type=${type}&data=${JSON.stringify(item)}`
 				})
 			},
+			getData(){
+				api.getData().then(res=>{
+					console.log(res)
+				}).catch(err=>{
+					console.log(err)
+				})
+			}
 		}
 	}
 </script>
