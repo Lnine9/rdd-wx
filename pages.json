@@ -1,10 +1,47 @@
 {
 	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+		// {
+		// 	"path": "pages/inviteFriends/inviteFriends",
+		// 	"style": {
+		// 		"navigationBarTitleText": "分享赚钱",
+		// 		"navigationBarBackgroundColor": "#0086f1",
+		// 		"navigationBarTextStyle": "white"
+		// 	}
+		// },
+		// {
+		// 	"path": "pages/vipApply/vipApply",
+		// 	"style": {
+		// 		"navigationBarTitleText": "申请会员",
+		// 		"enablePullDownRefresh": true
+		// 	}
+		// },
+		// {
+		// 	"path": "pages/index/index",
+		// 	"style": {
+		// 		"navigationBarTitleText": "首页"
+		// 	}
+		// },
 		{
-			"path": "pages/vipApply/vipApply",
+			"path": "pages/wallet/wallet",
+		    "path" : "pages/address/address",
+		    "style" : {
+				"navigationBarTitleText": "收货地址"
+			}
+		},{
+			"path": "pages/inviteFriends/inviteFriends",
 			"style": {
-				"navigationBarTitleText": "申请会员",
-				"enablePullDownRefresh": true
+				"navigationBarTitleText": "钱包"
+			}
+		},
+		{
+			"path": "pages/withdraw/withdraw",
+			"path": "pages/vipApply/vipApply",
+			"navigationBarTitleText": "登录"
+		},
+		{
+			"path": "pages/homePage/homePage",
+			"style": {
+				"navigationBarTitleText": "首页"
 			}
 		},
 		{
@@ -16,28 +53,30 @@
 			}
 		},
 		{
+			"path": "pages/vipApply/vipApply",
+			"style": {
+				"navigationBarTitleText": "申请会员",
+				"enablePullDownRefresh": true
+			}
+		},
+		{
 			"path": "pages/mine/myInfo",
 			"style": {
 				"navigationBarTitleText": "我的"
 			}
 		},
 		{
-			"path": "pages/inviteFriends/inviteFriends",
-			"path": "pages/index/index",
-			"style": {
-				"navigationBarTitleText": "首页"
-			}
-		},
-		{
 			"path": "pages/wallet/wallet",
 			"style": {
-				"navigationBarTitleText": "钱包"
+				"navigationBarTitleText": "钱包",
+				"enablePullDownRefresh":true,
+				"navigationBarTitleText": "提现"
 			}
 		},
 		{
-			"path": "pages/withdraw/withdraw",
+			"path": "pages/address/newAddress",
 			"style": {
-				"navigationBarTitleText": "提现"
+				"navigationBarTitleText": ""
 			}
 		},
 		{
@@ -55,16 +94,37 @@
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
-		"navigationBarTitleText": "uni-app",
+		"navigationBarTitleText": "首页",
 		"navigationBarBackgroundColor": "#F8F8F8",
 		"backgroundColor": "#F8F8F8"
 	},
-	"condition": { // 模式配置，开发时生效
-		"current": 6,
+	"tabBar": {
+		"color": "#C0C4CC",
+		"selectedColor": "#fa436a",
+		"borderStyle": "black",
+		"backgroundColor": "#ffffff",
 		"list": [{
-			"name":"payOrder",
-			"path":"pages/payOrder/payOrder",
-			"query":"commodityId=1&commodityNum=1" // 从商品详情跳转而来，商品id与商品数量，从而得到价格
-		}]
+				"pagePath": "pages/homePage/homePage",
+				"iconPath": "static/homePageNo.png",
+				"selectedIconPath": "static/homePage.png",
+				"text": "首页"
+			},
+			{
+				"pagePath": "pages/mine/myInfo",
+				"iconPath": "static/mineNo.png",
+				"selectedIconPath": "static/mine.png",
+				"text": "我的"
+			}
+		]
+	},
+	"condition" : { //模式配置，仅开发期间生效
+		"current": 0, //当前激活的模式(list 的索引项)
+		"list": [
+			{
+				"name": "首页", //模式名称
+				"path": "pages/homePage/homePage", //启动页面，必选
+				"query": "" //启动参数，在页面的onLoad函数里面得到
+			}
+		]
 	}
 }
