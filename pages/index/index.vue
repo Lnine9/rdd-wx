@@ -21,7 +21,12 @@
 </template>
 
 <script>
+	import {
+	    mapState,  
+	    mapMutations  
+	} from 'vuex';  
 	import {api} from	'./api.js'
+	import {auth} from '../../Config/auth.js'
     export default {
         data() {
             return {
@@ -29,10 +34,16 @@
                 OpenId: '',
                 nickName: null,
                 avatarUrl: null,
-                isCanUse: uni.getStorageSync('isCanUse')||true//默认为true
+                isCanUse: uni.getStorageSync('isCanUse')||true,//默认为true
+				code: '',
+				sessionkey: '',
             };
         },
+		computed:{
+			...mapState(['token'])
+		},
         methods: {
+			...mapMutations(['login']),
             //第一授权获取用户信息===》按钮触发
             wxGetUserInfo() {
 				console.log('...授权...')
@@ -42,12 +53,13 @@
                     success: function(infoRes) {
                         let nickName = infoRes.userInfo.nickName; //昵称
                         let avatarUrl = infoRes.userInfo.avatarUrl; //头像
-						console.log(nickName)
-						console.log(avatarUrl)
+						console.log(infoRes)
                         try {
                             uni.setStorageSync('isCanUse', false);//记录是否第一次授权  false:表示不是第一次授权
-                            _this.updateUserInfo();
-                        } catch (e) {}
+                            _this.loginWx();
+                        } catch (e) {
+							console.error(e)
+						}
                     },
                     fail(res) {
 						uni.showModal({
@@ -59,64 +71,57 @@
             },
 
 　　　　　　//登录
-                login() {
-                let _this = this;
-                uni.showLoading({
-                    title: '登录中...'
-                });
-             
-               // 1.wx获取登录用户code
-                uni.login({
-                    provider: 'weixin',
-                    success: function(loginRes) {
-                        let code = loginRes.code;
+			loginWx() {
+				let _this = this;
+				uni.showLoading({
+					title: '登录中...'
+				});
+		   // 1.wx获取登录用户code
+				uni.login({
+					provider: 'weixin',
+					success: function(loginRes) {
 						console.log(loginRes)
-                        if (!_this.isCanUse) {
-                            //非第一次授权获取用户信息
-                            uni.getUserInfo({
-                                provider: 'weixin',
-                                success: function(infoRes) {
+						if (!_this.isCanUse) {
+							//非第一次授权获取用户信息
+							uni.getUserInfo({
+								provider: 'weixin',
+								success: function(infoRes) {
  　　　　　　　　　　　　　　　　　　　　　　//获取用户信息后向调用信息更新方法
-                                    let nickName = infoRes.userInfo.nickName; //昵称
-                                    let avatarUrl = infoRes.userInfo.avatarUrl; //头像
-                                        _this.updateUserInfo();//调用更新信息方法
-                                }
-                            });
-                        }
-            
-                        //2.将用户登录code传递到后台置换用户SessionKey、OpenId等信息
-                        uni.request({
-                            url: '服务器地址',
-                            data: {
-                                code: code,
-                            },
-                            method: 'GET',
-                            header: {
-                                'content-type': 'application/json'
-                            },
-                            success: (res) => {
-                                //openId、或SessionKdy存储//隐藏loading
-                                uni.hideLoading();
-                            }
-                        });
-                    },
-                });
+									let nickName = infoRes.userInfo.nickName; //昵称
+									let avatarUrl = infoRes.userInfo.avatarUrl; //头像
+										_this.updateUserInfo();//调用更新信息方法
+								}
+							});
+						}
+						//2.将用户登录code传递到后台置换用户SessionKey、OpenId等信息
+						console.log('请求后台');
+						let loginParam = {
+							code: loginRes.code,
+						}
+						api.getData(loginParam).then(res=>{
+							console.log('跳转')
+							_this.loginSuccess(res.data.token)
+							console.info('awewe'+uni.getStorageSync('token'))
+						}).catch(err => {
+							console.log(err)
+						})
+					},
+				});
             },
-         //向后台更新信息
-            updateUserInfo() {
-                let _this = this;
-				console.log('请求后台');
-				let p = {
-					currentPage: 1,
-					pageSize: 10
-				};
-				api.getData(p).then(res=>{
-					console.log(res.data)
-				}).catch(err => {
-					console.log(err)
+			
+			//登录成功后跳转到首页
+			loginSuccess(data) {
+				console.info('成功')
+				this.login(data);
+				
+				uni.reLaunch({
+					url:'../homePage/homePage'
 				})
-            }
+			},
+			
+  
         },
+		
     }
 </script>
 
