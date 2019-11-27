@@ -76,6 +76,10 @@
 				"iconPath": "static/mineNo.png",
 				"selectedIconPath": "static/mine.png",
 				"text": "我的"
+			},
+			{
+				"pagePath" : "pages/address/address",
+				"text": "收货地址"
 			}
 		]
 	},

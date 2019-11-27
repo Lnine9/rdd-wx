@@ -25,21 +25,13 @@
 			return {
 				addressList: [
 					{
-						name: '刘晓晓',
-						mobile: '18666666666',
-						province: '重庆市',
+						name: '',
+						mobile: '',
+						province: '',
 						city:'',
 						area:'',
-						detail: '三栋603',
-						default: true
-					},{
-						name: '刘大大',
-						mobile: '18667766666',
-						province: '山东省',
-						city:'济南市',
-						area:'历城区',
-						detail: '三栋510',
-						default: false,
+						detail: '',
+						default: false
 					}
 				]
 			}
@@ -55,7 +47,9 @@
 			},
 			getData(){
 				api.getData().then(res=>{
+					console.log("王亚好帅！！！")
 					console.log(res)
+					
 				}).catch(err=>{
 					console.log(err)
 				})

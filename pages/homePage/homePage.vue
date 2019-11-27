@@ -39,9 +39,6 @@
 		},
 		methods:{
 			getCarouselPic() {
-				api.getPic({}).then(res=>{
-					console.info(res)
-				})
 			},
 			onReady() {
 				this.getCarouselPic()
