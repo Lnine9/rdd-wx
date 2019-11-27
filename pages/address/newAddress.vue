@@ -10,16 +10,16 @@
 		</view>
 		<view class="row">
 			<text class="tit">所在区域</text>
-			<text class="input" @click="open">请选择地址</text>
+			<text class="input" @tap="open">{{addressData.province}} {{addressData.city}} {{addressData.area}}</text>
 			<image src="../../static/arrow.png" class="arrow"></image>
 		</view>
 		<view class="row">
-			<input />
+			<textarea v-model="addressData.detail" class="bigInput" placeholder="请输入详细地址，如道路、门牌号、小区、楼栋、单元室等"/>
 		</view>
 		
 		<view class="row default-row">
 			<text class="tit">设为默认</text>
-			<switch :checked="addressData.defaule" color="#4CD964" @change="switchChange" />
+			<switch :checked="addressData.default" color="#4CD964" @change="switchChange" />
 		</view>
 		<button class="add-btn" @click="confirm">保存</button>
 		<w-picker
@@ -41,37 +41,23 @@
 		},
 		data() {
 			return {
-				province:[
-					{
-						label:"",
-						value:"",
-					}
-				],
-				city:[
-					{
-						label:"",
-						value:""
-					}
-				],
-				area:[
-					{
-						label:"",
-						value:""
-					}
-				],
+				manageType:'',
 				addressData: {
 					name: '',
 					mobile: '',
-					
-					},
+					province: '',
+					city:'',
+					area:'',
+					detail: '',
 					default: false
+					},
 				}
 		},
 		onLoad(option){
-			this.bindChange();
 			let title = '新增收货地址';
 			if(option.type==='edit'){
 				title = '编辑收货地址'
+				console.log(option.data)
 				this.addressData = JSON.parse(option.data)
 			}
 			this.manageType = option.type;
@@ -86,36 +72,51 @@
 			
 			//打开底部弹出层
 			open(){
-				this.$refs.popup.open();
-				this.bindChange();
-				console.log(this.city)
+				this.$refs.region.show()
+			},
+			//改变地区
+			onConfirm(val){
+				this.addressData.province=val.checkArr[0];
+				this.addressData.city=val.checkArr[1];
+				this.addressData.area=val.checkArr[2];
 			},
 			//提交
 			confirm(){
 				let data = this.addressData;
-				if(!data.name){
-					this.$api.msg('请填写收货人姓名');
+				if(this.addressData.name ==''){
+					wx.showToast({
+					  title: '请填写收货人姓名！',
+					  icon: 'none',
+					  duration: 1500
+					})
 					return;
 				}
-				if(!/(^1[3|4|5|7|8][0-9]{9}$)/.test(data.mobile)){
-					this.$api.msg('请输入正确的手机号码');
+				if(!/(^1[3|4|5|7|8][0-9]{9}$)/.test(this.addressData.mobile)){
+					wx.showToast({
+					  title: '请输入正确的手机号码！',
+					  icon: 'none',
+					  duration: 1500
+					})
 					return;
 				}
-				if(!data.address){
-					this.$api.msg('请选择地址');
+				if(this.addressData.province==''){
+					wx.showToast({
+					  title: '请选择地址！',
+					  icon: 'none',
+					  duration: 1500
+					})
 					return;
 				}
-				if(!data.area){
-					this.$api.msg('请填写');
+				if(this.addressData.detail==''){
+					wx.showToast({
+					  title: '请填写详细地址！',
+					  icon: 'none',
+					  duration: 1500
+					})
 					return;
 				}
 				
-				//this.$api.prePage()获取上一页实例，可直接调用上页所有数据和方法，在App.vue定义
-				this.$api.prePage().refreshList(data, this.manageType);
-				this.$api.msg(`地址${this.manageType=='edit' ? '修改': '添加'}成功`);
-				setTimeout(()=>{
-					uni.navigateBack()
-				}, 800)
+				
 			}	
 		}
 	}
@@ -145,7 +146,13 @@
 	.input{
 		flex: 1;
 		text-align: right;
+		font-size: 34rpx;
+	}
+	.bigInput{
+		width: 100%;
+		height: 220rpx;
 		font-size: 36rpx;
+		word-wrap: break-word;
 	}
 	.arrow{
 		margin-left: 18rpx;

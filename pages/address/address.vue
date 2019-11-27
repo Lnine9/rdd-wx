@@ -8,7 +8,7 @@
 				</view>
 				<view class="u-box">
 					<text v-if="item.default" class="tag">默认</text>
-					<text class="address">{{item.address}}{{item.addressName}}</text>
+					<text class="address">{{item.province}} {{item.city}} {{item.area}} {{item.detail}}</text>
 				</view>
 			</view>
 			<text class="edit" @click.stop="addAddress('edit', item)">编辑</text>
@@ -26,14 +26,18 @@
 					{
 						name: '刘晓晓',
 						mobile: '18666666666',
-						address: '北京市东城区',
-						addressName: '三栋603',
+						province: '重庆市',
+						city:'',
+						area:'',
+						detail: '三栋603',
 						default: true
 					},{
 						name: '刘大大',
 						mobile: '18667766666',
-						address: '山东省济南市历城区',
-						addressName: '三栋510',
+						province: '山东省',
+						city:'济南市',
+						area:'历城区',
+						detail: '三栋510',
 						default: false,
 					}
 				]
@@ -124,4 +128,5 @@ page{
 		background-color: #06C1AE;
 		border-radius: 40rpx;	
 	}
+	
 </style>
