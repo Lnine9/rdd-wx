@@ -34,13 +34,6 @@
 			}
 		},
 		{
-			"path": "pages/inviteFriends/inviteFriends",
-			"path": "pages/index/index",
-			"style": {
-				"navigationBarTitleText": "首页"
-			}
-		},
-		{
 			"path": "pages/wallet/wallet",
 			"style": {
 				"navigationBarTitleText": "钱包"
