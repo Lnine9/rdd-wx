@@ -99,7 +99,7 @@
 							code: loginRes.code,
 						}
 						api.getData(loginParam).then(res=>{
-							console.log('跳转')
+							console.log(res)
 							_this.loginSuccess(res.data.token)
 							console.info('awewe'+uni.getStorageSync('token'))
 						}).catch(err => {
@@ -111,11 +111,11 @@
 			
 			//登录成功后跳转到首页
 			loginSuccess(data) {
-				console.info('成功')
+				console.info(data)
 				this.login(data);
 				
 				uni.reLaunch({
-					url:'../homePage/homePage'
+					url:'../payOrder/payOrder'
 				})
 			},
 			

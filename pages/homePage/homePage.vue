@@ -1,5 +1,11 @@
 <template>
 	<view class="container">
+		<!-- 小程序头部兼容 -->
+		<!-- #ifdef MP -->
+		<view class="mp-search-box">
+			<input class="ser-input" type="text" value="输入关键字搜索" disabled />
+		</view>
+		<!-- #endif -->
 		
 		<!-- 头部轮播 -->
 		<view class="carousel-section">
@@ -21,31 +27,30 @@
 		</view>
 		<!-- 分类 -->
 		<view class="cate-section">
-		</view>
-		
-		<!-- 团购楼层 -->
-		<view class="f-header">
-			<image src="/static/temp/h1.png"></image>
-			<view class="tit-box">
-				<text class="tit">精品团购</text>
-				<text class="tit2">Boutique Group Buying</text>
-			</view>
-			<text class="yticon icon-you"></text>
-		</view>
-		<view class="seckill-section">
-			<scroll-view class="floor-list" scroll-x>
-				<view class="scoll-wrapper">
-					<view 
-						v-for="(item, index) in goodsList" :key="index"
-						class="floor-item"
-						@click="navToDetailPage(item)"
-					>
-						<image :src="item.image" mode="aspectFill"></image>
-						<text class="title clamp">{{item.title}}</text>
-						<text class="price">￥{{item.price}}</text>
-					</view>
+			<!-- 秒杀楼层 -->
+			<view class="seckill-section m-t">
+				<view class="s-header">
+					<image class="s-img" src="/static/temp/secskill-img.jpg" mode="widthFix"></image>
+					<text class="tip">8点场</text>
+					<text class="hour timer">07</text>
+					<text class="minute timer">13</text>
+					<text class="second timer">55</text>
+					<text class="yticon icon-you"></text>
 				</view>
-			</scroll-view>
+				<scroll-view class="floor-list" scroll-x>
+					<view class="scoll-wrapper">
+						<view 
+							v-for="(item, index) in goodsList" :key="index"
+							class="floor-item"
+							@click="navToDetailPage(item)"
+						>
+							<image :src="item.image" mode="aspectFill"></image>
+							<text class="title clamp">{{item.title}}</text>
+							<text class="price">￥{{item.price}}</text>
+						</view>
+					</view>
+				</scroll-view>
+			</view>
 		</view>
 		
 		<!-- 猜你喜欢 -->
@@ -59,7 +64,7 @@
 		</view>
 		
 		<view class="guess-section">
-			<block 
+			<view 
 				v-for="(item, index) in goodsList" :key="index"
 				class="guess-item"
 				@click="navToDetailPage(item)"
@@ -69,7 +74,7 @@
 				</view>
 				<text class="title clamp">{{item.title}}</text>
 				<text class="price">￥{{item.price}}</text>
-			</block>
+			</view>
 		</view>
 		
 
@@ -97,7 +102,6 @@
 				]
 			};
 		},
-<<<<<<< HEAD
 
 		onLoad() {
 			this.loadData();
@@ -129,13 +133,13 @@
 				uni.navigateTo({
 					url: `/pages/product/product?id=${id}`
 				})
-=======
-		methods:{
-			getCarouselPic() {
->>>>>>> 471eb6915f072becb8f1770ca43b521f34418d46
 			},
 		},
 		// #ifndef MP
+		// 标题栏input搜索框点击
+		onNavigationBarSearchInputClicked: async function(e) {
+			this.$api.msg('点击了搜索框');
+		},
 		//点击导航栏 buttons 时触发
 		onNavigationBarButtonTap(e) {
 			const index = e.index;
@@ -184,7 +188,7 @@
 			position:relative;
 			z-index:5;
 			border-radius:16upx 16upx 0 0;
-			margin-top:-5upx;
+			margin-top:-20upx;
 		}
 		.carousel-section{
 			padding: 0;
@@ -279,6 +283,7 @@
 			transform: translateX(-50%);
 		}
 	}
+
 	/* 秒杀专区 */
 	.seckill-section{
 		padding: 4upx 30upx 24upx;
@@ -371,6 +376,7 @@
 			color: $font-color-light;
 		}
 	}
+
 	/* 猜你喜欢 */
 	.guess-section{
 		display:flex;

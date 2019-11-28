@@ -3,45 +3,45 @@
 		<view class="list" v-for="(item, index) in addressList" :key="index">
 			<view class="wrapper">
 				<view class="address-box">
-					<text class="name">{{item.name}}</text>
-					<text class="mobile">{{item.mobile}}</text>
+					
+					<text class="receiver">{{item.receiver}}</text>
+					<text class="mobile">{{item.contactNumber}}</text>
 				</view>
 				<view class="u-box">
-					<text v-if="item.default" class="tag">默认</text>
+					<text v-if="item.isDefault==1" class="tag">默认</text>
 					<text class="address">{{item.province}} {{item.city}} {{item.area}} {{item.detail}}</text>
 				</view>
 			</view>
-			<text class="edit" @click.stop="addAddress('edit', item)">编辑</text>
+			<text class="edit" @click="addAddress('edit', item)">编辑</text>
 		</view>
+		
 		
 		<button class="add-btn" @click="addAddress('add')">新增地址</button>
 	</view>
 </template>
 
 <script>
+	import {api} from	'./api.js'
 	export default {
 		data() {
 			return {
 				addressList: [
 					{
-						name: '刘晓晓',
-						mobile: '18666666666',
-						province: '重庆市',
+						addressId:'',
+						receiver: '',
+						contactNumber: '',
+						province: '',
 						city:'',
 						area:'',
-						detail: '三栋603',
-						default: true
-					},{
-						name: '刘大大',
-						mobile: '18667766666',
-						province: '山东省',
-						city:'济南市',
-						area:'历城区',
-						detail: '三栋510',
-						default: false,
+						detail: '',
+						isDefault: 0,
 					}
 				]
 			}
+		},
+		onShow() {
+			console.log("8888888");
+			this.getData();					
 		},
 		methods: {
 			addAddress(type, item){
@@ -49,6 +49,17 @@
 					url: `/pages/address/newAddress?type=${type}&data=${JSON.stringify(item)}`
 				})
 			},
+			getData(){
+				api.getData().then(res=>{
+					console.log(res.data.data);
+					this.addressList=res.data.data;
+				}).catch(err=>{
+					console.log(err)
+				})
+			},
+			reLoad(){
+				this.getData();
+			}
 		}
 	}
 </script>
@@ -84,6 +95,7 @@ page{
 		font-size: 40rpx;
 	}
 	.mobile{
+		margin-left: 20rpx;
 		font-size: 40rpx;
 		color: #C0C0C0;
 	}
@@ -102,6 +114,7 @@ page{
 	}
 	.address{
 		font-size: 32rpx;
+		line-height: 20rpx;
 	}
 	.edit{
 		display: flex;
