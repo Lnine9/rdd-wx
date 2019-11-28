@@ -8,23 +8,23 @@
 			</view>
 		</view>	
 		<view class="vip">
-			<image class="vipPhoto" src="../../static/ic-会员价购买.png"></image>
-			<text class="applyVip">申请会员</text>
-			<text class="freeVip">囧途宝盒会员免费申请啦！</text>
-			<image class="more" src="../../static/ic-更多.png"></image>
+			<image class="vipPhoto" src="../../static/vip/ic-会员价购买.png"></image>
+			<text class="applyVip" @click="getVip()">申请会员</text>
+			<text class="freeVip"  @click="getVip()">囧途宝盒会员免费申请啦！</text>
+			<image class="more" src="../../static/vip/ic-更多.png" @click="getVip()"></image>
 		</view>	
 		<view class="service">
 			<text class="myService">我的服务</text>
 			<view style="width: 700rpx;margin-left: 50rpx;">
 				<view class="serciceList" v-for="item in service" :key="item" >
-				<image class="servicePicture"  :src="item.picture"></image>
-				<text class="serciceFont">{{item.name}}</text>
-			</view>
+					<image class="servicePicture"  :src="item.savePath" @click="getRouter(item.androidPath)"></image>
+					<text class="serciceFont" @click="getRouter(item.androidPath)">{{item.menuName}}</text>
+				</view>
 			</view>	
 		</view>
 		<text class="myElectronicCode">我的电子码</text>
 		<text class="lookMore">查看更多</text>
-		<image class="moreCode" src="../../static/ic-更多电子码.png"></image>
+		<image class="moreCode" src="../../static/code/ic-更多电子码.png"></image>
 		<view class="electronicCode">
 			<view class="subElectronicCode">
 				<image class="codePhoto" :src="code.photo"></image>
@@ -48,48 +48,75 @@
 </template>
 
 <script>
-	import {api} from	'./mine.js'
+	import {api} from './api.js'
 	    export default {
 	        data() {
 	            return {
 					user:{
-						name:'乌拉拉',
+						name:'',
 						account:'153897433204',
-						photo:'../../static/user/logo.png',
+						photo:'',
 					},
 					service:[
-						{
-							name:'钱包',
-							picture:'../../static/menu/ic-钱包.png',
-						},
-						{
-							name:'我的订单',
-							picture:'../../static/menu/ic-订单.png',
-						},
-						{
-							name:'收货地址',
-							picture:'../../static/menu/ic-收货地址.png',
-						},
-						{
-							name:'邀请好友',
-							picture:'../../static/menu/ic-邀请好友.png',
-						},
-						{
-							name:'邀请好友',
-							picture:'../../static/menu/ic-邀请好友.png',
-						},
 					],
 					code:{
 						codeName:'乌拉拉',
 						codeAccount:'153897433204',
-						codeIntroduction:'电子码简介电子码简介电子码简介简介电子介简介电子码简介简介电子码简介',
+						codeIntroduction:'电子码简介电子码简介电子码简介简介电子介简介电子码简介简介电子码简介电子码简介简介电子码简介',
 						shopName:'水晶玻璃纸',
 						photo:'../../static/code/logo.png',
 					}
-	              
 	            };
 	        },
+			onShow() {
+				this.wxGetUserInfo();
+				this.getData();
+			},
 	        methods: {
+				// 获取登录信息
+				wxGetUserInfo() {
+					console.log('...授权...')
+				    let _this = this;
+				    uni.getUserInfo({
+				        provider: 'weixin',
+				        success: function(infoRes) {
+				           _this.user.name = infoRes.userInfo.nickName; //昵称
+				           _this.user.photo = infoRes.userInfo.avatarUrl; //头像
+				        },
+				        fail(res) {
+							uni.showModal({
+								content: '失败了',
+								showCancel: true
+							});
+						}
+				    });
+				},
+				//获取菜单信息
+				getData(){
+					let p = {
+						userType: 0,
+						menuIdentityCode: 'WCPPersonCenter',
+					}
+					api.getList(p).then(res =>{
+						this.service = res.data.data,
+						console.log(this.service)
+					}).catch(err => {
+						console.log(err)
+					})
+				},
+				//跳转申请vip
+				getVip(){
+					uni.navigateTo({
+						url: `/pages/vipApply/vipApply`
+					})
+				},
+				//跳转菜单路由
+				getRouter(path){
+					console.log(path),
+					uni.navigateTo({
+						url: `${path}`
+					})
+				},
 				
 			},
 	           
