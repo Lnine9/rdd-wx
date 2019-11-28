@@ -27,19 +27,23 @@
 		<image class="moreCode" src="../../static/code/ic-更多电子码.png"></image>
 		<view class="electronicCode">
 			<view class="subElectronicCode">
-				<image class="codePhoto" :src="code.photo"></image>
-				<text class="codeName">电子码：{{code.codeName}}</text>
-				<text class="codeAccount">订单号码：{{code.codeAccount}}</text>
+				<image class="codePhoto" :src="code.commodityImgList[0]"></image>
+				<text class="codeName" :style="{display:code.commodityType == 2 ? 'block' : 'none' }">电子码：{{code.electronicCode}}</text>
+				<text class="codeAccount" :style="{display:code.commodityType == 2 ? 'block' : 'none' }">订单号码：{{code.orderId}}</text>
+				<text class="codeName" :style="{display:code.commodityType == 1 ? 'block' : 'none' }">快递单号：{{code.deliveryNum}}</text>
+				<button class="copy" :style="{display:code.commodityType == 1 ? 'block' : 'none' }">复制</button>
+				<text class="codeAccount" :style="{display:code.commodityType == 1 ? 'block' : 'none' }">邮寄状态：{{this.getdeliveryState(code.deliveryState)}}</text>
 			</view>
-			<view class="dottedLineOne"></view>
 			<view class="introduction">
-				<text>{{code.codeIntroduction}}</text>
+				<view class="dottedLineOne"></view>
+				<text class="codeInfo">{{code.commodityInfo}}</text>
+				<view class="dottedLineTwo"></view>
 			</view>
-			<view class="dottedLineTwo"></view>
 			<view class="bottom">
-				<text class="shopName">{{code.shopName}}</text>
-				<button class="lookDetails"><text class="fontOne">查看详情</text></button>
-				<button class="QR-Code"><text class="fontTwo">查看二维码</text></button>
+				<text class="shopName">{{code.commodityTitle}}</text>
+				<button class="QR-Code" :style="{display:code.commodityType == 2 ? 'block' : 'none'}"><text class="fontTwo">查看二维码</text></button>
+				<button class="lookDetails" :style="{marginRight:code.commodityType == 2 ? '25rpx' : '0rpx'}"><text class="fontOne">查看详情</text></button>
+				
 			</view>
 		</view>
 	
@@ -59,18 +63,20 @@
 					},
 					service:[
 					],
-					code:{
+					codes:{
 						codeName:'乌拉拉',
 						codeAccount:'153897433204',
-						codeIntroduction:'电子码简介电子码简介电子码简介简介电子介简介电子码简介简介电子码简介电子码简介简介电子码简介',
+						codeIntroduction:'电子电子码简介电子码简介电子码简介简介电子介简介电子码简介简介电子码简介电子码简介简介电子码简介电子码简介电子码简介电子码简介简介电子介简介电子码简介简介电子码简介电子码简介简介电子码简介电子码简介电子码简介电子码简介简介电子介简介电子码简介简介电子码简介电子码简介简介电子码简介码简介电子码简介电子码简介简介电子介简介电子码简介简介电子码简介电子码简介简介电子码简介电子码简介电子码简介电子码简介简介电子介简介电子码简介简介电子码简介电子码简介简介电子码简介电子码简介电子码简介电子码简介简介电子介简介电子码简介简介电子码简介电子码简介简介电子码简介电子码简介电子码简介电子码简介简介电子介简介电子码简介简介电子码简介电子码简介简介电子码简介',
 						shopName:'水晶玻璃纸',
 						photo:'../../static/code/logo.png',
-					}
+					},
+					code:[],
 	            };
 	        },
 			onShow() {
 				this.wxGetUserInfo();
 				this.getData();
+				this.getCode();
 			},
 	        methods: {
 				// 获取登录信息
@@ -117,6 +123,27 @@
 						url: `${path}`
 					})
 				},
+				//获取电子码信息
+				getCode(){
+					api.getCodeInfo().then(res=>{
+						this.code = res.data.data,
+						console.log(this.code)
+					})
+				},
+				//获取邮寄状态
+				getdeliveryState(index){
+					if(index == 0){
+						return '未邮寄'
+					}	
+					else if(index == 1){
+						return '邮寄中'
+					}	
+					else if(index == 2){
+						return '已发送'
+					}
+					else
+						return '未知'
+				}
 				
 			},
 	           
@@ -263,7 +290,6 @@
 	}
 	.electronicCode{
 		width: 683rpx;
-		height: 468rpx;
 		margin: auto;
 		position: relative;
 		top: 60rpx;
@@ -271,8 +297,9 @@
 	}
 	.subElectronicCode{
 		position: relative;
-		left: 40rpx;
-		top: 50rpx;
+		display: inline-block;
+		margin-left: 40rpx;
+		margin-top: 50rpx;
 		width: 642rpx;
 		height: 80rpx;
 	}
@@ -291,36 +318,49 @@
 		display: inline-block;
 		position: absolute;
 		font-weight: normal;
-		top:53rpx;
+		top:56rpx;
 		left: 114rpx;
 		font-size: 24rpx;
 	}
-	.dottedLineOne{
+	.copy{
 		display: inline-block;
 		position: absolute;
-		top: 162rpx;
-		left: 41rpx;
-		width:602rpx;
-		height:1rpx;
-		border:1rpx dotted rgba(227,227,227,1);
+		border:1rpx solid rgba(6,193,174,1);
+		border-radius:10rpx;
+		width: 70rpx;
+		height: 50rpx;
+		font-size: 20rpx;
+		right: 40rpx;
+		top: 0rpx;
+		padding: 0;
 	}
 	.introduction{
 		display: inline-block;
 		position: relative;
-		top: 130rpx;
 		left: 41rpx;
 		width:601rpx;
 		font-size:24rpx;
 		font-family:PingFang SC;
 		font-weight:500;
-		text-decoration:underline;
 		color:rgba(153,153,153,1);
+	}
+	.dottedLineOne{
+		display: inline-block;
+		position: relative;
+		top: 0rpx;
+		width:602rpx;
+		height:1rpx;
+		border:1rpx dotted rgba(227,227,227,1);
+	}
+	.codeInfo{
+		display: inline-block;
+		text-decoration:underline;
+		margin: 30rpx 0;
 	}
 	.dottedLineTwo{
 		display: inline-block;
-		position: absolute;
-		top: 325rpx;
-		left: 41rpx;
+		position: relative;
+		bottom: 0rpx;
 		width:602rpx;
 		height:1rpx;
 		border:1rpx dotted rgba(227,227,227,1);
@@ -331,10 +371,13 @@
 		width: 600rpx;
 		height: 60rpx;
 		left: 43rpx;
-		top:216rpx;
+		top:15rpx;
+		margin-bottom: 50rpx;
 		
 	}
 	.shopName{
+		display: inline-block;
+		margin-top: 15rpx;
 		font-size:24rpx;
 		font-family:PingFang SC;
 		font-weight:500;
@@ -342,8 +385,7 @@
 	}
 	.lookDetails{
 		display: inline-block;
-		position: absolute;
-		left: 270rpx;
+		float: right;
 		width:160rpx;
 		height:60rpx;
 		border:1rpx solid rgba(204,204,204,1);
@@ -351,8 +393,7 @@
 	}
 	.QR-Code{
 		display: inline-block;
-		position: absolute;
-		left: 450rpx;
+		float: right;
 		width:160rpx;
 		height:60rpx;
 		border:1rpx solid rgba(6,193,174,1);
@@ -379,3 +420,150 @@
 		color:#06C1AE;
 	}
 </style>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

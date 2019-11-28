@@ -115,7 +115,7 @@
 				this.login(data);
 				
 				uni.reLaunch({
-					url:'../homePage/homePage'
+					url:'../payOrder/payOrder'
 				})
 			},
 			
