@@ -141,21 +141,22 @@
 				// uni.navigateTo({
 				// 	url: './imageTest/imageTest'
 				// });
-				
-				// this.getCommodityInfo();
+				this.commmodityId = 1;
+				this.getCommodityInfo();
 				// let params = {
 				// 	commodityId: this.commmodityId,
 				// 	commodityNum: this.commmodityNum
 				// }
-				let params = {
-					commodityId: 1,
-					commodityNum: 1
-				};
-				PayOrderAPI.payOrder(params).then(res => {
-					console.log(res);
-				}).catch(err => {
-					console.log(err);
-				});
+				// let params = {
+				// 	commodityId: 1,
+				// 	commodityNum: 1,
+				// 	userPhone: '1593528693'
+				// };
+				// PayOrderAPI.payOrder(params).then(res => {
+				// 	console.log(res);
+				// }).catch(err => {
+				// 	console.log(err);
+				// });
 			},
 			imgStorage: function() {
 				console.log('test')
