@@ -97,8 +97,6 @@
 				]
 			};
 		},
-<<<<<<< HEAD
-
 		onLoad() {
 			this.loadData();
 		},
@@ -126,36 +124,34 @@
 			navToDetailPage(item) {
 				//测试数据没有写id，用title代替
 				let id = item.title;
+				console.log("ddd")
 				uni.navigateTo({
-					url: `/pages/product/product?id=${id}`
-				})
-=======
-		methods:{
-			getCarouselPic() {
->>>>>>> 471eb6915f072becb8f1770ca43b521f34418d46
-			},
-		},
-		// #ifndef MP
-		//点击导航栏 buttons 时触发
-		onNavigationBarButtonTap(e) {
-			const index = e.index;
-			if (index === 0) {
-				this.$api.msg('点击了扫描');
-			} else if (index === 1) {
-				// #ifdef APP-PLUS
-				const pages = getCurrentPages();
-				const page = pages[pages.length - 1];
-				const currentWebview = page.$getAppWebview();
-				currentWebview.hideTitleNViewButtonRedDot({
-					index
-				});
-				// #endif
-				uni.navigateTo({
-					url: '/pages/notice/notice'
+					url: `/pages/commodityDetail/commodityDetail?id=${id}`
 				})
 			}
+			
+			// #ifndef MP
+			//点击导航栏 buttons 时触发
+			onNavigationBarButtonTap(e) {
+				const index = e.index;
+				if (index === 0) {
+					this.$api.msg('点击了扫描');
+				} else if (index === 1) {
+					// #ifdef APP-PLUS
+					const pages = getCurrentPages();
+					const page = pages[pages.length - 1];
+					const currentWebview = page.$getAppWebview();
+					currentWebview.hideTitleNViewButtonRedDot({
+						index
+					});
+					// #endif
+					uni.navigateTo({
+						url: '/pages/notice/notice'
+					})
+				}
+			}
+			// #endif
 		}
-		// #endif
 	}
 </script>
 

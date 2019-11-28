@@ -45,7 +45,7 @@
 				addressData: {
 					name: '',
 					mobile: '',
-					province: '',
+					province: '请选择地区',
 					city:'',
 					area:'',
 					detail: '',
@@ -72,7 +72,7 @@
 			
 			//打开底部弹出层
 			open(){
-				this.$refs.region.show()
+				this.$refs.region.show();
 			},
 			//改变地区
 			onConfirm(val){
@@ -99,7 +99,7 @@
 					})
 					return;
 				}
-				if(this.addressData.province==''){
+				if(this.addressData.province=='请选择地区'){
 					wx.showToast({
 					  title: '请选择地址！',
 					  icon: 'none',
@@ -146,12 +146,12 @@
 	.input{
 		flex: 1;
 		text-align: right;
-		font-size: 34rpx;
+		font-size: 30rpx;
 	}
 	.bigInput{
 		width: 100%;
 		height: 220rpx;
-		font-size: 36rpx;
+		font-size: 30rpx;
 		word-wrap: break-word;
 	}
 	.arrow{
