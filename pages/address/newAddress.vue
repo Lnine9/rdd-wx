@@ -2,11 +2,11 @@
 	<view class="content">
 		<view class="row">
 			<text class="tit">收货人</text>
-			<input class="input" type="text" v-model="addressData.name" placeholder="请输入收货人姓名" placeholder-class="placeholder" />
+			<input class="input" type="text" v-model="addressData.receiver" placeholder="请输入收货人姓名" placeholder-class="placeholder" />
 		</view>
 		<view class="row">
 			<text class="tit">手机号</text>
-			<input class="input" type="number" v-model="addressData.mobile" placeholder="请输入收货人手机号" placeholder-class="placeholder" />
+			<input class="input" type="number" v-model="addressData.contactNumber" placeholder="请输入收货人手机号" placeholder-class="placeholder" />
 		</view>
 		<view class="row">
 			<text class="tit">所在区域</text>
@@ -19,7 +19,7 @@
 		
 		<view class="row default-row">
 			<text class="tit">设为默认</text>
-			<switch :checked="addressData.default" color="#4CD964" @change="switchChange" />
+			<switch :checked="Default" color="#4CD964" @change="switchChange" />
 		</view>
 		<button class="add-btn" @click="confirm">保存</button>
 		<w-picker
@@ -34,7 +34,8 @@
 </template>
 
 <script>
-	import wPicker from "../components/w-picker/w-picker.vue"
+	import wPicker from "../components/w-picker/w-picker.vue";
+	import {api} from	'./api.js'
 	export default {
 		components: {
 			wPicker
@@ -42,14 +43,16 @@
 		data() {
 			return {
 				manageType:'',
+				Default:false,
 				addressData: {
-					name: '',
-					mobile: '',
+					addressId:'',
+					receiver: '',
+					contactNumber: '',
 					province: '请选择地区',
 					city:'',
 					area:'',
 					detail: '',
-					default: false
+					isDefault: 0,
 					},
 				}
 		},
@@ -57,17 +60,29 @@
 			let title = '新增收货地址';
 			if(option.type==='edit'){
 				title = '编辑收货地址'
-				console.log(option.data)
-				this.addressData = JSON.parse(option.data)
+				this.addressData = JSON.parse(option.data);
 			}
 			this.manageType = option.type;
+			console.log(this.addressData.isDefault)
+			if(this.addressData.isDefault==0){
+				this.Default=false
+			}else{
+				this.Default=true
+			}
 			uni.setNavigationBarTitle({
 				title
 			})
 		},
 		methods: {
 			switchChange(e){
-				this.addressData.default = e.detail;
+				this.Default = e.detail;
+				if(this.Default.value===true){
+					this.addressData.isDefault=1;
+				}
+				else{
+					this.addressData.isDefault=0;
+				}
+				console.log(this.addressData.isDefault)
 			},
 			
 			//打开底部弹出层
@@ -83,7 +98,7 @@
 			//提交
 			confirm(){
 				let data = this.addressData;
-				if(this.addressData.name ==''){
+				if(this.addressData.receiver ==''){
 					wx.showToast({
 					  title: '请填写收货人姓名！',
 					  icon: 'none',
@@ -91,7 +106,7 @@
 					})
 					return;
 				}
-				if(!/(^1[3|4|5|7|8][0-9]{9}$)/.test(this.addressData.mobile)){
+				if(!/(^1[3|4|5|7|8][0-9]{9}$)/.test(this.addressData.contactNumber)){
 					wx.showToast({
 					  title: '请输入正确的手机号码！',
 					  icon: 'none',
@@ -115,11 +130,54 @@
 					})
 					return;
 				}
+				if(this.manageType==='edit'){
+					this.setDefault();
+					api.modifyAddress(this.addressData).then(res=>{
+						wx.showToast({
+						  title: '修改成功',
+						  icon: 'success',
+						  duration: 1500
+						})
+						wx.navigateBack({
+							delta:1
+						})
+					}).catch(err=>{
+						console.log(err)
+						wx.showToast({
+						  title: '请求错误！',
+						  icon: 'none',
+						  duration: 1500
+						})
+					})
+				}else{
+					this.setDefault();
+					api.addAddress(this.addressData).then(res=>{
+						wx.showToast({
+						  title: '新增成功',
+						  icon: 'success',
+						  duration: 1500
+						})
+						wx.navigateBack({
+							delta:1
+						})
+					}).catch(err=>{
+						console.log(err);
+					})
+				}
 				
-				
-			}	
+			},
+				//提交修改默认
+			setDefault(){
+				if(this.addressData.isDefault===1){
+					api.setDefaultAddress(this.addressData).then(res=>{
+					console.log(res)
+				}).catch(err=>{
+					console.log(err)
+				})
+			}
 		}
 	}
+}
 </script>
 
 <style>

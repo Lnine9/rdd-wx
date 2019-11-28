@@ -5,4 +5,7 @@ export class api{
   static getList(data){
 	  return minRequest.get('/api/AppHomePage/selectHomePageRouters',data)
   }
+  static getCodeInfo(){
+	  	  return minRequest.get('/api/WCPCommodityOrder/getCurrentOrder')
+  }
 }

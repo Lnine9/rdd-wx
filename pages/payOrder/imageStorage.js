@@ -1,6 +1,6 @@
 //      图片缓存
 //======================
-export class ImageStorage() {
+export class ImageStorage {
 	
 	static image_cache(image_url, image_name, call_back) {
 	
