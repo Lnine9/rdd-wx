@@ -1,7 +1,14 @@
 {
 	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+			{
+		    "path" : "pages/myOrder/myOrder",
+		    "style" : {
+				"navigationBarTitleText": "我的订单",
+				"navigationBarBackgroundColor": "#EAEAEA",
+				"enablePullDownRefresh": true
+			}
+		},
 		{
-
 		    "path" : "pages/address/address",
 		    "style" : {
 				"navigationBarTitleText": "收货地址"
@@ -15,8 +22,8 @@
 			}
 		},
 		{
-			{
 			"path": "pages/vipApply/vipApply",
+			"style":{
 			"navigationBarTitleText": "登录"
 			}
 		},
@@ -26,21 +33,7 @@
 				"navigationBarTitleText": "首页"
 			}
 		},
-		{
-			"path": "pages/inviteFriends/inviteFriends",
-			"style": {
-				"navigationBarTitleText": "分享赚钱",
-				"navigationBarBackgroundColor": "#0086f1",
-				"navigationBarTextStyle": "white"
-			}
-		},
-		{
-			"path": "pages/vipApply/vipApply",
-			"style": {
-				"navigationBarTitleText": "申请会员",
-				"enablePullDownRefresh": true
-			}
-		},
+		
 		{
 			"path": "pages/mine/myInfo",
 			"style": {
