@@ -1,23 +1,29 @@
 <template>
    <view>
-	   <image src="../../static/邀请好友.png" class="imageBackground"></image>
-	   <view class="invite">您的朋友{{account}} 邀请您加入人多多</view>
-	   <view class="scan">扫描下方二维码，快来加入我们吧~ </view>
+	   <image src="../../static/邀请好友/ic-背景.png" class="imageBackground"></image>
+	   <view class="invite"></view>
+	   <view class="scan"></view>
 	   <image src="../../static/二维码.png" class="QRCode"></image>
-	   <view class="million">您与百万车主之间只差一个人多多</view>
-	   <button>分享给朋友</button>
+	   <image src="../../static/邀请好友/按钮.png" class="btn"></image>
+	   
    </view>
 </template>
 
 <script>
+	
     export default {
         data() {
             return {
                account:'18223525462'
             };
         },
+		
         methods: {
-            
+            share(){
+				// uni.navigateTo({
+				// 	url:''
+				// })
+			}
         },
     }
 </script>
@@ -25,7 +31,7 @@
 <style>
    .imageBackground{
 	   width: 750rpx;
-	   height: 1200rpx;
+	   height: 1240rpx;
    }
    
    .invite{
@@ -45,24 +51,15 @@
    }
    
    .QRCode{
-	   width: 222rpx;
-	   height: 220rpx;
-	   margin-left: 264rpx;
+	   width: 250rpx;
+	   height: 250rpx;
+	   margin-left: 265rpx;
+	   margin-top: 70rpx;
    }
-   
-   .million{
-	   font-size: 36rpx;
-	   font-weight: bold;
-	   color: #0086f1;
-	   text-align: center;
-	   /* margin-top: 238rpx */
-	}
 	
-	button {
-	    border-radius: 80rpx;
-	    margin: 140rpx 40rpx 0 40rpx;
-	    font-size: 35rpx;
-		background-color: #0086f1;
-		color: #FFFFFF;
+	.btn {
+	    width: 469rpx;
+		height: 124rpx;
+	    margin: 100rpx 40rpx 0 152rpx;
 	}
 </style>

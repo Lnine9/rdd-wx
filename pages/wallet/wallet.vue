@@ -4,14 +4,14 @@
 			<view class="left">
 				<image class="backImg" src="../../static/wallet/ic-收益背景图.png"></image>
 				<view class="incomeType">总收益</view>
-				<view class="theIncome">{{wallet.allIncoem}}
+				<view class="theIncome">{{this.wallet.totalIncome}}
 				<text style="font-size: 28rpx;margin-left: 15rpx;">元</text>
 				</view>
 				</view>
 			<view class="right">
 				<image class="backImg" src="../../static/wallet/ic-余额背景图.png"></image>
 				<view class="incomeType">余额</view>
-				<view class="theIncome">{{wallet.balance}}
+				<view class="theIncome">{{this.wallet.balance}}
 				<text style="font-size: 28rpx;margin-left: 15rpx;">元</text>
 				</view>
 				</view>
@@ -20,7 +20,7 @@
 			<view class="income">
 				<image class="incomePic" src='../../static/wallet/ic-推荐收益.png'></image>推荐收益 （元）
 				</view>
-				<text class="text">{{wallet.recommend}}</text>
+				<text class="text">{{this.wallet.shareIncome}}</text>
 				<image class="arrow" src="../../static/wallet/arrow.png"></image>
 			</view>
 		
@@ -29,7 +29,7 @@
 					<view class="income">
 						<image class="incomePic" src='../../static/wallet/ic-返佣收益.png'>返佣收益 （元）
 					</view>
-					<text class="text">{{wallet.rebate}}</text>
+					<text class="text">{{this.wallet.fanyongIncome}}</text>
 					<image class="arrow" src="../../static/wallet/arrow.png"></image>
 				</view>
 			</navigator>
@@ -37,23 +37,26 @@
 				<view class="income">
 					<image class="incomePic" src='../../static/wallet/ic-其他收益.png'>其他收益 （元）
 					</view>
-					<text class="text">{{wallet.other}}</text>
+					<text class="text">{{this.wallet.otherIncome}}</text>
 					<image class="arrow" src="../../static/wallet/arrow.png"></image>
 			</view>
-		<button class="withdraw">去提现</button>
+			<navigator url="../withdraw/withdraw">
+				<button class="withdraw">去提现</button>
+			</navigator>
 	</view>
 </template>
 
 <script>
+	import {api} from './api.js'
 	export default {
 		data() {
 			return {
 				wallet: {
-					allIncoem: 0,
+					totalIncome: 0,
 					balance: 0,
-					recommend: 220.01,
-					rebate: 220.22,
-					other: 230.33
+					shareIncome: 0,
+					fanyongIncome: 0,
+					otherIncome: 0
 				}
 			}
 		}
