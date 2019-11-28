@@ -86,7 +86,6 @@
 						shopName:'水晶玻璃纸',
 						photo:'../../static/code/logo.png',
 					}
-	              
 	            };
 	        },
 	        methods: {
