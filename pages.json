@@ -1,47 +1,27 @@
 {
 	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
-		// {
-		// 	"path": "pages/inviteFriends/inviteFriends",
-		// 	"style": {
-		// 		"navigationBarTitleText": "分享赚钱",
-		// 		"navigationBarBackgroundColor": "#0086f1",
-		// 		"navigationBarTextStyle": "white"
-		// 	}
-		// },
-		// {
-		// 	"path": "pages/vipApply/vipApply",
-		// 	"style": {
-		// 		"navigationBarTitleText": "申请会员",
-		// 		"enablePullDownRefresh": true
-		// 	}
-		// },
-		// {
-		// 	"path": "pages/index/index",
-		// 	"style": {
-		// 		"navigationBarTitleText": "首页"
-		// 	}
-		// },
 		{
-			"path": "pages/wallet/wallet",
-		    "path" : "pages/address/address",
-		    "style" : {
-				"navigationBarTitleText": "收货地址"
-			}
-		},{
-			"path": "pages/inviteFriends/inviteFriends",
+			"path": "pages/index/index",
 			"style": {
-				"navigationBarTitleText": "钱包"
+				"navigationBarTitleText": "首页"
 			}
-		},
-		{
-			"path": "pages/withdraw/withdraw",
-			"path": "pages/vipApply/vipApply",
-			"navigationBarTitleText": "登录"
 		},
 		{
 			"path": "pages/homePage/homePage",
 			"style": {
 				"navigationBarTitleText": "首页"
+			}
+		},
+		{
+			"path": "pages/mine/myInfo",
+			"style": {
+				"navigationBarTitleText": "我的"
+			}
+		},
+		{
+		    "path" : "pages/address/address",
+		    "style" : {
+				"navigationBarTitleText": "收货地址"
 			}
 		},
 		{
@@ -60,17 +40,10 @@
 			}
 		},
 		{
-			"path": "pages/mine/myInfo",
-			"style": {
-				"navigationBarTitleText": "我的"
-			}
-		},
-		{
 			"path": "pages/wallet/wallet",
 			"style": {
 				"navigationBarTitleText": "钱包",
-				"enablePullDownRefresh":true,
-				"navigationBarTitleText": "提现"
+				"enablePullDownRefresh":true
 			}
 		},
 		{
