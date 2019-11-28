@@ -27,7 +27,7 @@
 				<view class="orderMessage">
 					<view class="item">
 					<text class="title">订单编号</text>
-					<text class="value">{{item.orderID}}</text>
+					<text class="value">{{item.orderId}}</text>
 					</view>
 					<view class="item">
 					<text class="title">下单时间</text>
@@ -49,6 +49,7 @@
 </template>
 
 <script>
+	import {api} from './api.js'
 	export default {
 		data() {
 			return {
@@ -81,27 +82,33 @@
 			}
 			
 		},
-		onLoad: function (options) {
-		        setTimeout(function () {
-		            console.log('start pulldown');
-		        }, 1000);
-		        uni.startPullDownRefresh();
-		    },
-		    onPullDownRefresh() {
-		        console.log('refresh');
-		        setTimeout(function () {
-		            uni.stopPullDownRefresh();
-		        }, 1000);
-		    },
+		
 		methods: {
 			toDetail(orderID){
 				console.log(orderID)
 			},
 			checkQRCode(orderID){
 				console.log(orderID)
-			}
+			},
+			getData(){
+				api.getData().then(res=>{
+					console.info(res)
+				})
+			},
+			},
+			onLoad: function (options) {
+			      uni.startPullDownRefresh({
+			                  success:function(res){
+			                    console.log("刷新成功")
+			                  }
+			              });  //这里表示当进入页面的时候就开始执行下拉刷新动画
+
+			    },
+			    onPullDownRefresh() {
+			        console.log('refresh');
+			        this.getData()
+			    },
 		}
-	}
 </script>
 
 <style>
