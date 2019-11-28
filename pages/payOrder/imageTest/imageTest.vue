@@ -12,6 +12,8 @@
 </template>
 
 <script>
+	import {ImageStorage} from '../imageStorage.js'
+	
 	export default {
 		data() {
 			return {
@@ -23,7 +25,10 @@
 				if (this.imageUrl == null || this.imageUrl === undefined) {
 					this.imageUrl = [];
 				}
-				this.imageUrl.push('http://39.108.134.245/Image/WaterSeee.png');
+				
+				ImageStorage.image_cache('http://39.108.134.245/Image/WaterSeee.png', 'WaterSeee', () => {
+					this.imageUrl.push('http://39.108.134.245/Image/WaterSeee.png');
+				});
 			}
 		}
 	}

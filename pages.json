@@ -22,20 +22,13 @@
 		// 	}
 		// },
 		{
-			"path": "pages/wallet/wallet",
-		    "path" : "pages/address/address",
-		    "style" : {
-				"navigationBarTitleText": "收货地址"
-			}
-		},{
-			"path": "pages/inviteFriends/inviteFriends",
+			"path": "pages/address/address",
 			"style": {
-				"navigationBarTitleText": "钱包"
+				"navigationBarTitleText": "收货地址"
 			}
 		},
 		{
 			"path": "pages/withdraw/withdraw",
-			"path": "pages/vipApply/vipApply",
 			"navigationBarTitleText": "登录"
 		},
 		{
@@ -69,7 +62,7 @@
 			"path": "pages/wallet/wallet",
 			"style": {
 				"navigationBarTitleText": "钱包",
-				"enablePullDownRefresh":true,
+				"enablePullDownRefresh": true,
 				"navigationBarTitleText": "提现"
 			}
 		},
@@ -80,18 +73,30 @@
 			}
 		},
 		{
-            "path" : "pages/payOrder/payOrder",
-            "style" : {
-				"navigationBarTitleText":"支付订单"
+			"path": "pages/payOrder/payOrder",
+			"style": {
+				"navigationBarTitleText": "支付订单"
 			}
-        },
+		},
 		{
-            "path" : "pages/payOrder/imageTest/imageTest",
-            "style" : {
-				"navigationBarTitleText":"测试图片"
+			"path": "pages/payOrder/imageTest/imageTest",
+			"style": {
+				"navigationBarTitleText": "测试图片"
 			}
-        }
-    ],
+		},
+		{
+			"path": "pages/index/index",
+			"style": {
+				"navigationBarTitleText": "登录"
+			}
+		},
+		{
+			"path": "pages/orderDetail/orderDetail",
+			"style": {
+				"navigationBarTitleText": "订单详情"
+			}
+		}
+	],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "首页",
@@ -117,13 +122,25 @@
 			}
 		]
 	},
-	"condition" : { //模式配置，仅开发期间生效
-		"current": 0, //当前激活的模式(list 的索引项)
-		"list": [
+	"condition": { //模式配置，仅开发期间生效
+		"current": 10, //当前激活的模式(list 的索引项)
+		"list": [{
+				"name": "支付订单", //模式名称
+				"path": "pages/payOrder/payOrder", //启动页面，必选
+				"query": "commodityId=1&commodityNum=1" //启动参数，在页面的onLoad函数里面得到
+			},
 			{
-				"name": "首页", //模式名称
-				"path": "pages/homePage/homePage", //启动页面，必选
-				"query": "" //启动参数，在页面的onLoad函数里面得到
+				"name": "订单详情",
+				"path": "pages/orderDetail/orderDetail",
+				"query": "orderId=1"
+			},
+			{
+				"name": "首页",
+				"path":"pages/homePage/homePage"
+			},
+			{
+				"name": "登录",
+				"path":"pages/index/index"
 			}
 		]
 	}

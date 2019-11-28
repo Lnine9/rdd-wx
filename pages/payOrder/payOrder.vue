@@ -12,9 +12,9 @@
 
 				<!-- 价格展示 与 数量 -->
 				<view class="commodity-price-container">
-					<text class="commodity-actual-price">￥150</text>
+					<text class="commodity-actual-price">￥0</text>
 
-					<text class="commodity-primary-price">￥150</text>
+					<text class="commodity-primary-price">￥0</text>
 
 					<text class="commodity-num">x1</text>
 				</view>
@@ -24,7 +24,8 @@
 		<!-- 地址展示 -->
 		<view 
 			v-if="takeWay === 1"
-			class="address-container">
+			class="address-container"
+			@tap="chooseAddress">
 			<view class="addres-img-container">
 				<image src="../../static/payOrder/ic-地址.png" mode="" class="addres-img"></image>
 			</view>
@@ -78,6 +79,7 @@
 	export default {
 		data() {
 			return {
+				commodityId: '',
 				commodity: {
 					imageUrl: '',
 					commodityTitle: '',
@@ -91,45 +93,72 @@
 				// 地址栏
 				addressId: '', // 默认地址的id
 				remark: '',
-				totalPrice: 159,
+				totalPrice: 0,
 			}
 		},
+		// mounted() {
+		// 	console.log('mounted');
+		// 	this.getCommodityInfo();
+		// },
 		methods: {
 			onLoad: function(params) {
 				console.log(params);
-				let commodityId = params.commodityId
-				if (commodityId != null && commodityId !== undefined) {
+				this.commmodityId = params.commodityId
+				
+				this.getCommodityInfo();
+			},
+			getCommodityInfo: function() {
+				// 获取商品信息
+				console.log(this.commmodityId);
+				if (this.commodityId != null && this.commodityId != undefined) {
 					console.log("开始请求");
 					PayOrderAPI.getCommodityInfo({
-						commodityId: commodityId
+						commodityId: this.commodityId
 					}).then(res => {
 						console.log(res);
 					}).catch(err => {
+						uni.showToast({title: '商品信息获取失败，刷新试试'})
 						console.log(err);
 					})
+				} else {
+					console.log("返回上一个页面");
+					uni.navigateBack();
 				}
-
-			},
-			getCommodityInfo: function() {
-				// todo 获取商品信息，并展示与计算totalPrice
 			},
 			getDefaultAddress: function() {
-				// todo 判断商品性质，是否展示地址，
 				// todo获取默认地址，如果没有数据，更改样式，要求用户选择地址or
 			},
 			chooseAddress: function() {
-				// todo 跳转到选择地址页面
+				// 跳转到选择地址页面，并且标明是从支付订单页面跳转
+				uni.navigateTo({
+					url: '../address/address?payOrder=true'
+				})
 			},
 			payOrder: function(item) {
 				// todo 支付订单，，传递commodityId, commodityNum, remark
 				console.log(item);
 				
-				uni.navigateTo({
-					url: './imageTest/imageTest'
+				// uni.navigateTo({
+				// 	url: './imageTest/imageTest'
+				// });
+				
+				// this.getCommodityInfo();
+				// let params = {
+				// 	commodityId: this.commmodityId,
+				// 	commodityNum: this.commmodityNum
+				// }
+				let params = {
+					commodityId: 1,
+					commodityNum: 1
+				};
+				PayOrderAPI.payOrder(params).then(res => {
+					console.log(res);
+				}).catch(err => {
+					console.log(err);
 				});
 			},
 			imgStorage: function() {
-				
+				console.log('test')
 			}
 		}
 	}
@@ -263,6 +292,11 @@
 		margin-bottom: 10rpx;
 		color: #333333;
 		font-size: 26rpx;
+		display: -webkit-box;
+		text-overflow: ellipsis;
+		overflow: hidden;
+		-webkit-box-orient: vertical;
+		-webkit-line-clamp: 2;
 	}
 
 	.address-more-address-container {

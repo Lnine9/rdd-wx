@@ -22,6 +22,6 @@ export class PayOrderAPI {
 	 * @param {Object} params
 	 */
 	static payOrder(params) {
-	  return minRequest.get('', params)
+	  return minRequest.get('/api/WeChatAppletVip/WeChatApplet', params)
 	}
 }
