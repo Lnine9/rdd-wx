@@ -97,6 +97,7 @@
 				]
 			};
 		},
+<<<<<<< HEAD
 
 		onLoad() {
 			this.loadData();
@@ -128,6 +129,10 @@
 				uni.navigateTo({
 					url: `/pages/product/product?id=${id}`
 				})
+=======
+		methods:{
+			getCarouselPic() {
+>>>>>>> 471eb6915f072becb8f1770ca43b521f34418d46
 			},
 		},
 		// #ifndef MP
