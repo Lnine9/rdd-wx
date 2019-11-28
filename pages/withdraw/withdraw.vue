@@ -11,41 +11,77 @@
 		</view>
 		<view id="account" class="info">
 			<text class="title">支付宝账号</text>
-			<input class="inputBox" v-model="account" placeholder="请输入支付宝账号"/>
+			<input class="inputBox" v-model="this.withdraw.paymentAccount" placeholder="请输入支付宝账号"/>
 		</view>
 		<view class="info">
 			<text class="title">真实姓名</text>
-			<input class="inputBox" v-model="name" placeholder="请输入支付宝真实姓名"/>
+			<input class="inputBox" v-model="this.withdraw.name" placeholder="请输入支付宝真实姓名"/>
 		</view>
 		<view class="info">
 			<text class="title">密码</text>
-			<input class="inputBox" v-model="password" password="true" placeholder="请输入RenDuoDuo登录密码"/>
+			<input class="inputBox" v-model="this.withdraw.keyWord" password="true" placeholder="请输入RenDuoDuo登录密码"/>
 		</view>
 		<view id="wAmount">
 			<view style="font-size: 25rpx;padding: 39rpx 0 0 40rpx;">提现金额</view>
 			<view style="display: flex;">
 				<text style="font-size: 50rpx;margin: 20rpx 0 0 40rpx;">¥</text>
-				<input type="number" v-model="money" style="width: 550rpx;margin: 33rpx 0 0 30rpx;font-size: 30rpx;" placeholder="请输入提现金额"/>
+				<input type="number" v-model="this.withdraw.paymentAmount" style="width: 550rpx;margin: 33rpx 0 0 30rpx;font-size: 30rpx;" placeholder="请输入提现金额"/>
 			</view>
 		</view>
+		
 		<button class="goWithdraw" @click="toSubmit">立即提现</button>
 	</view>
 </template>
 
 <script>
+	import {api} from './api.js'
 	export default {
 		data() {
 			return {
 				amount: 230.63,
-				account: "",
-				name: "",
-				password:"",
-				money: ""
+				withdraw: {
+					paymentAccount: "",
+					paymentName: "",
+					keyWord:"",
+					paymentAmount: ""
+				},
+				
 			}
 		},
 		methods: {
 			toSubmit: function() {
-				
+				if (this.withdraw.paymentAccount == "") {
+					wx.showToast({
+					  title: '请填写支付宝账号！',
+					  icon: 'none',
+					  duration: 1500
+					})
+					return;
+				}
+				if (this.withdraw.paymentName == "") {
+					wx.showToast({
+					  title: '请填写真实姓名！',
+					  icon: 'none',
+					  duration: 1500
+					})
+					return;
+				}
+				if (this.withdraw.keyWord == "") {
+					wx.showToast({
+					  title: '请填写密码！',
+					  icon: 'none',
+					  duration: 1500
+					})
+					return;
+				}
+				if (this.withdraw.paymentAmount == "") {
+					wx.showToast({
+					  title: '请填写提现金额！',
+					  icon: 'none',
+					  duration: 1500
+					})
+					return;
+				}
 			}
 		}
 	}
