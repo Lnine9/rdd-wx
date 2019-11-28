@@ -72,7 +72,7 @@ class MinRequest {
     options.data = data
     options.method = 'GET'
 	options.header = {
-	  'content-type': 'application/json',
+	  'content-type': 'application/json;charset=UTF-8',
 	  'Authorization': token || ''
 	}
 	console.info('头部')
@@ -86,7 +86,7 @@ class MinRequest {
     options.data = data
     options.method = 'POST'
 	options.header = {
-	  'content-type': 'application/x-www-form-urlencoded',
+	  'content-type': 'application/json;charset=UTF-8',
 	  'Authorization':token || ''
 	}
     return this.request(options)
