@@ -24,7 +24,7 @@
 				<image class="arrow" src="../../static/wallet/arrow.png"></image>
 			</view>
 		
-			<navigator url="../index/index">
+			<navigator>
 				<view class="incomes">
 					<view class="income">
 						<image class="incomePic" src='../../static/wallet/ic-返佣收益.png'>返佣收益 （元）
@@ -43,6 +43,7 @@
 			<navigator url="../withdraw/withdraw">
 				<button class="withdraw">去提现</button>
 			</navigator>
+			
 	</view>
 </template>
 
@@ -59,6 +60,9 @@
 					otherIncome: 0
 				}
 			}
+		},
+		methods: {
+			
 		}
 	}
 </script>
