@@ -1,11 +1,5 @@
 {
 	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
-		// {
-		// 	"path": "pages/commodityDetail/commodityDetail",
-		// 	"style": {
-		// 		"navigationBarTitleText": "商品详情"
-		// 	}
-		// },
 		{
 			"path": "pages/index/index",
 			"style": {
@@ -75,13 +69,17 @@
 		    "style" : {
 				"navigationBarTitleText":"订单详情"
 			}
-		},
-		{
+		},{
 		    "path" : "pages/income/income",
 		    "style" : {
 				"navigationBarTitleText":"收益"
 			}
-		}
+		},{
+            "path" : "pages/product/product",
+            "style" : {
+				"navigationBarTitleText":"商品详情"
+			}
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
@@ -123,6 +121,10 @@
 			{
 				"name": "首页",
 				"path":"pages/homePage/homePage"
+			},
+			{
+				"name": "产品详情",
+				"path":"pages/product/product"
 			},
 			{
 				"name": "登录",

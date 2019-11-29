@@ -1,12 +1,5 @@
 <template>
-	<view class="container">
-		<!-- 小程序头部兼容 -->
-		<!-- #ifdef MP -->
-		<view class="mp-search-box">
-			<input class="ser-input" type="text" value="输入关键字搜索" disabled />
-		</view>
-		<!-- #endif -->
-		
+	<view class="container">	
 		<!-- 头部轮播 -->
 		<view class="carousel-section">
 			<!-- 标题栏和状态栏占位符 -->
@@ -42,8 +35,7 @@
 						<view 
 							v-for="(item, index) in goodsList" :key="index"
 							class="floor-item"
-							@click="navToDetailPage(item)"
-						>
+							@click="navToDetailPage(item)">
 							<image :src="item.image" mode="aspectFill"></image>
 							<text class="title clamp">{{item.title}}</text>
 							<text class="price">￥{{item.price}}</text>
@@ -76,8 +68,6 @@
 				<text class="price">￥{{item.price}}</text>
 			</view>
 		</view>
-		
-
 	</view>
 </template>
 
@@ -130,9 +120,13 @@
 			navToDetailPage(item) {
 				//测试数据没有写id，用title代替
 				let id = item.title;
+				console.log(item.title),
 				uni.navigateTo({
-					url: `/pages/product/product?id=${id}`
+					// url: `/pages/product/product?id=${id}`,
+					url: `/pages/product/product`,
+					
 				})
+				
 			},
 		},
 		// #ifndef MP
