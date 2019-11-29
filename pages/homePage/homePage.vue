@@ -1,10 +1,10 @@
 <template>
-	<view class="container">
+	<view class="container">	
 		<!-- 小程序头部兼容 -->
 		<!-- #ifdef MP -->
-		<view class="mp-search-box">
+		<!-- <view class="mp-search-box">
 			<input class="ser-input" type="text" value="输入关键字搜索" disabled />
-		</view>
+		</view> -->
 		<!-- #endif -->
 		
 		<!-- 头部轮播 -->
@@ -15,7 +15,7 @@
 			<view class="titleNview-background" :style="{backgroundColor:titleNViewBackground}"></view>
 			<swiper class="carousel" circular @change="swiperChange">
 				<swiper-item v-for="(item, index) in carouselList" :key="index" class="carousel-item" @click="navToDetailPage({title: '轮播广告'})">
-					<image :src="item.src" />
+					<image :src="item.savePath" />
 				</swiper-item>
 			</swiper>
 			<!-- 自定义swiper指示器 -->
@@ -27,7 +27,7 @@
 		</view>
 		<!-- 分类 -->
 		<view class="cate-section">
-			<!-- 秒杀楼层 -->
+			<!-- 精选商品 -->
 			<view class="seckill-section m-t">
 				<view class="s-header">
 					<image class="s-img" src="/static/temp/secskill-img.jpg" mode="widthFix"></image>
@@ -42,8 +42,7 @@
 						<view 
 							v-for="(item, index) in goodsList" :key="index"
 							class="floor-item"
-							@click="navToDetailPage(item)"
-						>
+							@click="navToDetailPage(item)">
 							<image :src="item.image" mode="aspectFill"></image>
 							<text class="title clamp">{{item.title}}</text>
 							<text class="price">￥{{item.price}}</text>
@@ -76,15 +75,13 @@
 				<text class="price">￥{{item.price}}</text>
 			</view>
 		</view>
-		
-
 	</view>
 </template>
 
 <script>
-
+	import {api} from "./api.js"
+	
 	export default {
-
 		data() {
 			return {
 				titleNViewBackground: '',
@@ -102,44 +99,117 @@
 				]
 			};
 		},
-
-		onLoad() {
-			this.loadData();
-		},
+		
 		methods: {
-			/**
-			 * 请求静态数据只是为了代码不那么乱
-			 * 分次请求未作整合
-			 */
-			async loadData() {
-				let carouselList = await this.$api.json('carouselList');
-				this.titleNViewBackground = carouselList[0].background;
-				this.swiperLength = carouselList.length;
-				this.carouselList = carouselList;
-				
-				let goodsList = await this.$api.json('goodsList');
-				this.goodsList = goodsList || [];
-			},
-			//轮播图切换修改背景色
+			//轮播图切换
 			swiperChange(e) {
 				const index = e.detail.current;
 				this.swiperCurrent = index;
-				this.titleNViewBackground = this.carouselList[index].background;
 			},
 			//详情页
 			navToDetailPage(item) {
 				//测试数据没有写id，用title代替
 				let id = item.title;
+				console.log(item.title),
 				uni.navigateTo({
-					url: `/pages/product/product?id=${id}`
-				})
-			},
+					// url: `/pages/product/product?id=${id}`,
+					url: `/pages/product/product`,			
+				})				
+			},		
 		},
+		
+		mounted() {	
+			/**
+			 * 获取设备定位
+			 */
+			// uni.getLocation({
+			//     type: 'wgs84',
+			//     success: function (res) {
+			//         console.log('当前位置的经度：' + res.longitude);
+			//         console.log('当前位置的纬度：' + res.latitude);
+			//     }
+			// });
+					
+			/**
+			 * 获取用户信息
+			 */
+			let user = {
+				// 此处默认传入重庆
+				// 用户信息和地区无关
+				area:'重庆'
+			};
+			api.getUserInfo().then(res =>{
+				this.service = res.data.data,
+				console.log(this.service),
+			
+				// userType 说明
+				// 0: app
+				// 1: 企业
+				// 2: 小程序
+				uni.setStorageSync('userType', this.service.userType),
+				// 默认重庆（debug）
+				uni.setStorageSync('location', "重庆"),
+				// 存储角色信息
+				uni.setStorageSync('roleName', this.service.roleName),
+				// 当前用户是否为VIP
+				uni.setStorageSync('isVip', this.service.isVip==0?false:true)
+				// 当前地区是否有VIP业务
+				uni.setStorageSync('haveVip', this.service.haveVip==0?false:true)
+				
+				console.log("userType" + uni.getStorageSync('userType'),
+					"location" + uni.getStorageSync('location'),
+					"isVip" + uni.getStorageSync('isVip'),
+					"haveVip" + uni.getStorageSync('haveVip'),
+				)			
+			}).catch(err => {
+				console.log(err)
+			});	
+			
+			/**
+			 * 获取轮播图信息
+			 */
+			let location = {
+				locationCode:'WCPHomePage'
+			};
+			api.getBannerImgs(location).then(res =>{
+				this.carouselList = res.data.data,
+				console.log(this.carouselList)
+				this.swiperLength = this.carouselList.length;
+				this.carouselList = this.carouselList;
+			}).catch(err => {
+				console.log(err)
+			})		
+			
+			/**
+			 * 精选商品列表
+			 */
+			let userAndLocalMes = {
+				// area: uni.getStorageSync('location'),
+				area: '重庆',
+				longitude: '',
+				latitude: '',
+				showPlace: 'Recommend'
+			};
+			api.getProducts(userAndLocalMes).then(res =>{
+				this.goodsList = res.data,
+				console.log(this.goodsList)		
+			}).catch(err => {
+				console.log(err)
+			})	
+			
+			/**
+			 * 猜你喜欢列表
+			 */
+			api.getProducts(userAndLocalMes).then(res =>{
+				this.goodsList = res.data,
+				console.log(this.goodsList)		
+			}).catch(err => {
+				console.log(err)
+			})	
+			
+		},
+		
 		// #ifndef MP
-		// 标题栏input搜索框点击
-		onNavigationBarSearchInputClicked: async function(e) {
-			this.$api.msg('点击了搜索框');
-		},
 		//点击导航栏 buttons 时触发
 		onNavigationBarButtonTap(e) {
 			const index = e.index;
