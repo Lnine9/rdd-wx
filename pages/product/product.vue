@@ -15,52 +15,22 @@
 		</view>
 		
 		<view class="introduce-section">
-			<text class="title">恒源祥2019春季长袖白色t恤 新款春装</text>
+			<text class="title">{{commodityTitle}}</text>
 			<view class="price-box">
 				<text class="price-tip">¥</text>
-				<text class="price">341.6</text>
-				<text class="m-price">¥488</text>
+				<text class="price">{{originalPrice}}</text>
+				<text class="m-price">¥{{salePrice}}</text>
 				<text class="coupon-tip">7折</text>
 			</view>
 			<view class="bot-row">
-				<text>销量: 108</text>
-				<text>库存: 4690</text>
-				<text>浏览量: 768</text>
+				<text>销量: {{salesVolume}}</text>
+				<text>库存: {{commodityNum}}</text>
 			</view>
 		</view>
 		
-		<!--  分享 -->
-	<!-- 	<view class="share-section" @click="share">
-			<view class="share-icon">
-				<text class="yticon icon-xingxing"></text>
-				 返
-			</view>
-			<text class="tit">该商品分享可领49减10红包</text>
-			<text class="yticon icon-bangzhu1"></text>
-			<view class="share-btn">
-				立即分享
-				<text class="yticon icon-you"></text>
-			</view>
-			
-		</view> -->
-		
-		<view class="c-list">
-			<!-- <view class="c-row b-b" @click="toggleSpec">
-				<text class="tit">购买类型</text>
-				<view class="con">
-					<text class="selected-text" v-for="(sItem, sIndex) in specSelected" :key="sIndex">
-						{{sItem.name}}
-					</text>
-				</view>
-				<text class="yticon icon-you"></text>
-			</view> -->
+		<view class="c-list">		
 			<view class="c-row b-b">
-				<text class="tit">优惠券</text>
-				<text class="con t-r red">领取优惠券</text>
-				<text class="yticon icon-you"></text>
-			</view>
-			<view class="c-row b-b">
-				<text class="tit">促销活动</text>
+				<text class="tit">{{commodityInfo}}</text>
 				<view class="con-list">
 					<text>新人首单送20元无门槛代金券</text>
 					<text>订单满50减10</text>
@@ -68,39 +38,11 @@
 					<text>单笔购买满两件免邮费</text>
 				</view>
 			</view>
-			<view class="c-row b-b">
-				<text class="tit">服务</text>
-				<view class="bz-list con">
-					<text>7天无理由退换货 ·</text>
-					<text>假一赔十 ·</text>
-				</view>
-			</view>
-		</view>
-		
-		<!-- 评价 -->
-		<view class="eva-section">
-			<view class="e-header">
-				<text class="tit">评价</text>
-				<text>(86)</text>
-				<text class="tip">好评率 100%</text>
-				<text class="yticon icon-you"></text>
-			</view> 
-			<view class="eva-box">
-				<image class="portrait" src="http://img3.imgtn.bdimg.com/it/u=1150341365,1327279810&fm=26&gp=0.jpg" mode="aspectFill"></image>
-				<view class="right">
-					<text class="name">Leo yo</text>
-					<text class="con">商品收到了，79元两件，质量不错，试了一下有点瘦，但是加个外罩很漂亮，我很喜欢</text>
-					<view class="bot">
-						<text class="attr">购买类型：XL 红色</text>
-						<text class="time">2019-04-01 19:21</text>
-					</view>
-				</view>
-			</view>
 		</view>
 		
 		<view class="detail-desc">
 			<view class="d-header">
-				<text>图文详情</text>
+				<text>商品介绍</text>
 			</view>
 			<rich-text :nodes="desc"></rich-text>
 		</view>
@@ -125,65 +67,22 @@
 				<button type="primary" class=" action-btn no-border add-cart-btn">加入购物车</button>
 			</view>
 		</view>
-		
-		
-		<!-- 规格-模态层弹窗 -->
-		<view 
-			class="popup spec" 
-			:class="specClass"
-			@touchmove.stop.prevent="stopPrevent"
-			@click="toggleSpec"
-		>
-			<!-- 遮罩层 -->
-			<view class="mask"></view>
-			<view class="layer attr-content" @click.stop="stopPrevent">
-				<view class="a-t">
-					<image src="https://gd3.alicdn.com/imgextra/i3/0/O1CN01IiyFQI1UGShoFKt1O_!!0-item_pic.jpg_400x400.jpg"></image>
-					<view class="right">
-						<text class="price">¥328.00</text>
-						<text class="stock">库存：188件</text>
-						<view class="selected">
-							已选：
-							<text class="selected-text" v-for="(sItem, sIndex) in specSelected" :key="sIndex">
-								{{sItem.name}}
-							</text>
-						</view>
-					</view>
-				</view>
-				<view v-for="(item,index) in specList" :key="index" class="attr-list">
-					<text>{{item.name}}</text>
-					<view class="item-list">
-						<text 
-							v-for="(childItem, childIndex) in specChildList" 
-							v-if="childItem.pid === item.id"
-							:key="childIndex" class="tit"
-							:class="{selected: childItem.selected}"
-							@click="selectSpec(childIndex, childItem.pid)"
-						>
-							{{childItem.name}}
-						</text>
-					</view>
-				</view>
-				<button class="btn" @click="toggleSpec">完成</button>
-			</view>
-		</view>
-		<!-- 分享 -->
-		<share 
-			ref="share" 
-			:contentHeight="580"
-			:shareList="shareList"
-		></share>
 	</view>
 </template>
 
 <script>
+	import {api} from "./api.js"
 	export default{
-	
 		data() {
 			return {
+				commodityTitle: '',
+				commodityInfo: '',
+				originalPrice: '',
+				salePrice: '',
+				salesVolume: '',  // 销量
+				commodityNum: '',  // 库存
 				specClass: 'none',
-				specSelected:[],
-				
+				specSelected:[],				
 				favorite: true,
 				shareList: [],
 				imgList: [
@@ -205,74 +104,15 @@
 						<img style="width:100%;display:block;" src="https://gd4.alicdn.com/imgextra/i4/479184430/O1CN01tWg4Us1iaz4auqelt_!!479184430.jpg_400x400.jpg" />
 						<img style="width:100%;display:block;" src="https://gd1.alicdn.com/imgextra/i1/479184430/O1CN01Tnm1rU1iaz4aVKcwP_!!479184430.jpg_400x400.jpg" />
 					</div>
-				`,
-				specList: [
-					{
-						id: 1,
-						name: '尺寸',
-					},
-					{	
-						id: 2,
-						name: '颜色',
-					},
-				],
-				specChildList: [
-					{
-						id: 1,
-						pid: 1,
-						name: 'XS',
-					},
-					{
-						id: 2,
-						pid: 1,
-						name: 'S',
-					},
-					{
-						id: 3,
-						pid: 1,
-						name: 'M',
-					},
-					{
-						id: 4,
-						pid: 1,
-						name: 'L',
-					},
-					{
-						id: 5,
-						pid: 1,
-						name: 'XL',
-					},
-					{
-						id: 6,
-						pid: 1,
-						name: 'XXL',
-					},
-					{
-						id: 7,
-						pid: 2,
-						name: '白色',
-					},
-					{
-						id: 8,
-						pid: 2,
-						name: '珊瑚粉',
-					},
-					{
-						id: 9,
-						pid: 2,
-						name: '草木绿',
-					},
-				]
+				`	
 			};
 		},
 		async onLoad(options){
-			
 			//接收传值,id里面放的是标题，因为测试数据并没写id 
 			let id = options.id;
 			if(id){
 				this.$api.msg(`点击了${id}`);
 			}
-			
 			
 			//规格 默认选中第一条
 			this.specList.forEach(item=>{
@@ -283,10 +123,27 @@
 						break; //forEach不能使用break
 					}
 				}
-			})
-			this.shareList = await this.$api.json('shareList');
+			})						
 		},
 		methods:{
+			getData(commodityId) {
+				let data={
+					commodityId:commodityId
+				}
+				api.getList(data).then(res =>{
+					this.service = res.data.data,
+					console.log(this.service),
+					this.commodityTitle=this.service.commodityTitle
+					this.commodityInfo=this.service.commodityInfo
+					this.originalPrice=this.service.originalPrice
+					this.salePrice=this.service.salePrice
+					this.salesVolume=this.service.salesVolume
+					this.commodityNum=this.service.commodityNum
+					
+				}).catch(err => {
+					console.log(err)
+				})		
+			},
 			//规格弹窗开关
 			toggleSpec() {
 				if(this.specClass === 'show'){
@@ -337,7 +194,10 @@
 			},
 			stopPrevent(){}
 		},
-
+		mounted() {
+			this.getData("1")
+			console.log("dadsd")
+		}
 	}
 </script>
 
@@ -422,67 +282,7 @@
 			}
 		}
 	}
-	/* 分享 */
-	.share-section{
-		display:flex;
-		align-items:center;
-		color: $font-color-base;
-		background: linear-gradient(left, #fdf5f6, #fbebf6);
-		padding: 12upx 30upx;
-		.share-icon{
-			display:flex;
-			align-items:center;
-			width: 70upx;
-			height: 30upx;
-			line-height: 1;
-			border: 1px solid $uni-color-primary;
-			border-radius: 4upx;
-			position:relative;
-			overflow: hidden;
-			font-size: 22upx;
-			color: $uni-color-primary;
-			&:after{
-				content: '';
-				width: 50upx;
-				height: 50upx;
-				border-radius: 50%;
-				left: -20upx;
-				top: -12upx;
-				position:absolute;
-				background: $uni-color-primary;
-			}
-		}
-		.icon-xingxing{
-			position:relative;
-			z-index: 1;
-			font-size: 24upx;
-			margin-left: 2upx;
-			margin-right: 10upx;
-			color: #fff;
-			line-height: 1;
-		}
-		.tit{
-			font-size: $font-base;
-			margin-left:10upx;
-		}
-		.icon-bangzhu1{
-			padding: 10upx;
-			font-size: 30upx;
-			line-height: 1;
-		}
-		.share-btn{
-			flex: 1;
-			text-align:right;
-			font-size: $font-sm;
-			color: $uni-color-primary;
-		}
-		.icon-you{
-			font-size: $font-sm;
-			margin-left: 4upx;
-			color: $uni-color-primary;
-		}
-	}
-	
+
 	.c-list{
 		font-size: $font-sm + 2upx;
 		color: $font-color-base;
@@ -524,62 +324,6 @@
 		}
 	}
 	
-	/* 评价 */
-	.eva-section{
-		display: flex;
-		flex-direction: column;
-		padding: 20upx 30upx;
-		background: #fff;
-		margin-top: 16upx;
-		.e-header{
-			display: flex;
-			align-items: center;
-			height: 70upx;
-			font-size: $font-sm + 2upx;
-			color: $font-color-light;
-			.tit{
-				font-size: $font-base + 2upx;
-				color: $font-color-dark;
-				margin-right: 4upx;
-			}
-			.tip{
-				flex: 1;
-				text-align: right;
-			}
-			.icon-you{
-				margin-left: 10upx;
-			}
-		}
-	}
-	.eva-box{
-		display: flex;
-		padding: 20upx 0;
-		.portrait{
-			flex-shrink: 0;
-			width: 80upx;
-			height: 80upx;
-			border-radius: 100px;
-		}
-		.right{
-			flex: 1;
-			display: flex;
-			flex-direction: column;
-			font-size: $font-base;
-			color: $font-color-base;
-			padding-left: 26upx;
-			.con{
-				font-size: $font-base;
-				color: $font-color-dark;
-				padding: 20upx 0;
-			}
-			.bot{
-				display: flex;
-				justify-content: space-between;
-				font-size: $font-sm;
-				color:$font-color-light;
-			}
-		}
-	}
 	/*  详情 */
 	.detail-desc{
 		background: #fff;
