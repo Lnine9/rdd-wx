@@ -30,7 +30,7 @@
 		</view>
 		
 		<!--  分享 -->
-		<view class="share-section" @click="share">
+	<!-- 	<view class="share-section" @click="share">
 			<view class="share-icon">
 				<text class="yticon icon-xingxing"></text>
 				 返
@@ -42,9 +42,18 @@
 				<text class="yticon icon-you"></text>
 			</view>
 			
-		</view>
+		</view> -->
 		
 		<view class="c-list">
+			<!-- <view class="c-row b-b" @click="toggleSpec">
+				<text class="tit">购买类型</text>
+				<view class="con">
+					<text class="selected-text" v-for="(sItem, sIndex) in specSelected" :key="sIndex">
+						{{sItem.name}}
+					</text>
+				</view>
+				<text class="yticon icon-you"></text>
+			</view> -->
 			<view class="c-row b-b">
 				<text class="tit">优惠券</text>
 				<text class="con t-r red">领取优惠券</text>
@@ -68,6 +77,27 @@
 			</view>
 		</view>
 		
+		<!-- 评价 -->
+		<view class="eva-section">
+			<view class="e-header">
+				<text class="tit">评价</text>
+				<text>(86)</text>
+				<text class="tip">好评率 100%</text>
+				<text class="yticon icon-you"></text>
+			</view> 
+			<view class="eva-box">
+				<image class="portrait" src="http://img3.imgtn.bdimg.com/it/u=1150341365,1327279810&fm=26&gp=0.jpg" mode="aspectFill"></image>
+				<view class="right">
+					<text class="name">Leo yo</text>
+					<text class="con">商品收到了，79元两件，质量不错，试了一下有点瘦，但是加个外罩很漂亮，我很喜欢</text>
+					<view class="bot">
+						<text class="attr">购买类型：XL 红色</text>
+						<text class="time">2019-04-01 19:21</text>
+					</view>
+				</view>
+			</view>
+		</view>
+		
 		<view class="detail-desc">
 			<view class="d-header">
 				<text>图文详情</text>
@@ -77,7 +107,7 @@
 		
 		<!-- 底部操作菜单 -->
 		<view class="page-bottom">
-			<navigator url="/pages/homePage/homePage" open-type="switchTab" class="p-b-btn">
+			<navigator url="/pages/index/index" open-type="switchTab" class="p-b-btn">
 				<text class="yticon icon-xiatubiao--copy"></text>
 				<text>首页</text>
 			</navigator>
@@ -95,12 +125,60 @@
 				<button type="primary" class=" action-btn no-border add-cart-btn">加入购物车</button>
 			</view>
 		</view>
-	
+		
+		
+		<!-- 规格-模态层弹窗 -->
+		<view 
+			class="popup spec" 
+			:class="specClass"
+			@touchmove.stop.prevent="stopPrevent"
+			@click="toggleSpec"
+		>
+			<!-- 遮罩层 -->
+			<view class="mask"></view>
+			<view class="layer attr-content" @click.stop="stopPrevent">
+				<view class="a-t">
+					<image src="https://gd3.alicdn.com/imgextra/i3/0/O1CN01IiyFQI1UGShoFKt1O_!!0-item_pic.jpg_400x400.jpg"></image>
+					<view class="right">
+						<text class="price">¥328.00</text>
+						<text class="stock">库存：188件</text>
+						<view class="selected">
+							已选：
+							<text class="selected-text" v-for="(sItem, sIndex) in specSelected" :key="sIndex">
+								{{sItem.name}}
+							</text>
+						</view>
+					</view>
+				</view>
+				<view v-for="(item,index) in specList" :key="index" class="attr-list">
+					<text>{{item.name}}</text>
+					<view class="item-list">
+						<text 
+							v-for="(childItem, childIndex) in specChildList" 
+							v-if="childItem.pid === item.id"
+							:key="childIndex" class="tit"
+							:class="{selected: childItem.selected}"
+							@click="selectSpec(childIndex, childItem.pid)"
+						>
+							{{childItem.name}}
+						</text>
+					</view>
+				</view>
+				<button class="btn" @click="toggleSpec">完成</button>
+			</view>
+		</view>
+		<!-- 分享 -->
+		<share 
+			ref="share" 
+			:contentHeight="580"
+			:shareList="shareList"
+		></share>
 	</view>
 </template>
 
 <script>
 	export default{
+	
 		data() {
 			return {
 				specClass: 'none',
@@ -254,7 +332,7 @@
 			},
 			buy(){
 				uni.navigateTo({
-					// url: `/pages/order/createOrder`
+					url: `/pages/order/createOrder`
 				})
 			},
 			stopPrevent(){}
@@ -263,7 +341,7 @@
 	}
 </script>
 
-<style lang="scss">
+<style lang='scss'>
 	page{
 		background: $page-color-base;
 		padding-bottom: 160upx;
@@ -275,7 +353,7 @@
 	.carousel {
 		height: 722upx;
 		position:relative;
-		.swiper{
+		swiper{
 			height: 100%;
 		}
 		.image-wrapper{
@@ -344,6 +422,66 @@
 			}
 		}
 	}
+	/* 分享 */
+	.share-section{
+		display:flex;
+		align-items:center;
+		color: $font-color-base;
+		background: linear-gradient(left, #fdf5f6, #fbebf6);
+		padding: 12upx 30upx;
+		.share-icon{
+			display:flex;
+			align-items:center;
+			width: 70upx;
+			height: 30upx;
+			line-height: 1;
+			border: 1px solid $uni-color-primary;
+			border-radius: 4upx;
+			position:relative;
+			overflow: hidden;
+			font-size: 22upx;
+			color: $uni-color-primary;
+			&:after{
+				content: '';
+				width: 50upx;
+				height: 50upx;
+				border-radius: 50%;
+				left: -20upx;
+				top: -12upx;
+				position:absolute;
+				background: $uni-color-primary;
+			}
+		}
+		.icon-xingxing{
+			position:relative;
+			z-index: 1;
+			font-size: 24upx;
+			margin-left: 2upx;
+			margin-right: 10upx;
+			color: #fff;
+			line-height: 1;
+		}
+		.tit{
+			font-size: $font-base;
+			margin-left:10upx;
+		}
+		.icon-bangzhu1{
+			padding: 10upx;
+			font-size: 30upx;
+			line-height: 1;
+		}
+		.share-btn{
+			flex: 1;
+			text-align:right;
+			font-size: $font-sm;
+			color: $uni-color-primary;
+		}
+		.icon-you{
+			font-size: $font-sm;
+			margin-left: 4upx;
+			color: $uni-color-primary;
+		}
+	}
 	
 	.c-list{
 		font-size: $font-sm + 2upx;
@@ -386,7 +524,62 @@
 		}
 	}
 	
-
+	/* 评价 */
+	.eva-section{
+		display: flex;
+		flex-direction: column;
+		padding: 20upx 30upx;
+		background: #fff;
+		margin-top: 16upx;
+		.e-header{
+			display: flex;
+			align-items: center;
+			height: 70upx;
+			font-size: $font-sm + 2upx;
+			color: $font-color-light;
+			.tit{
+				font-size: $font-base + 2upx;
+				color: $font-color-dark;
+				margin-right: 4upx;
+			}
+			.tip{
+				flex: 1;
+				text-align: right;
+			}
+			.icon-you{
+				margin-left: 10upx;
+			}
+		}
+	}
+	.eva-box{
+		display: flex;
+		padding: 20upx 0;
+		.portrait{
+			flex-shrink: 0;
+			width: 80upx;
+			height: 80upx;
+			border-radius: 100px;
+		}
+		.right{
+			flex: 1;
+			display: flex;
+			flex-direction: column;
+			font-size: $font-base;
+			color: $font-color-base;
+			padding-left: 26upx;
+			.con{
+				font-size: $font-base;
+				color: $font-color-dark;
+				padding: 20upx 0;
+			}
+			.bot{
+				display: flex;
+				justify-content: space-between;
+				font-size: $font-sm;
+				color:$font-color-light;
+			}
+		}
+	}
 	/*  详情 */
 	.detail-desc{
 		background: #fff;
@@ -418,7 +611,158 @@
 			}
 		}
 	}
-
+	
+	/* 规格选择弹窗 */
+	.attr-content{
+		padding: 10upx 30upx;
+		.a-t{
+			display: flex;
+			image{
+				width: 170upx;
+				height: 170upx;
+				flex-shrink: 0;
+				margin-top: -40upx;
+				border-radius: 8upx;;
+			}
+			.right{
+				display: flex;
+				flex-direction: column;
+				padding-left: 24upx;
+				font-size: $font-sm + 2upx;
+				color: $font-color-base;
+				line-height: 42upx;
+				.price{
+					font-size: $font-lg;
+					color: $uni-color-primary;
+					margin-bottom: 10upx;
+				}
+				.selected-text{
+					margin-right: 10upx;
+				}
+			}
+		}
+		.attr-list{
+			display: flex;
+			flex-direction: column;
+			font-size: $font-base + 2upx;
+			color: $font-color-base;
+			padding-top: 30upx;
+			padding-left: 10upx;
+		}
+		.item-list{
+			padding: 20upx 0 0;
+			display: flex;
+			flex-wrap: wrap;
+			text{
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				background: #eee;
+				margin-right: 20upx;
+				margin-bottom: 20upx;
+				border-radius: 100upx;
+				min-width: 60upx;
+				height: 60upx;
+				padding: 0 20upx;
+				font-size: $font-base;
+				color: $font-color-dark;
+			}
+			.selected{
+				background: #fbebee;
+				color: $uni-color-primary;
+			}
+		}
+	}
+	
+	/*  弹出层 */
+	.popup {
+		position: fixed;
+		left: 0;
+		top: 0;
+		right: 0;
+		bottom: 0;
+		z-index: 99;
+		
+		&.show {
+			display: block;
+			.mask{
+				animation: showPopup 0.2s linear both;
+			}
+			.layer {
+				animation: showLayer 0.2s linear both;
+			}
+		}
+		&.hide {
+			.mask{
+				animation: hidePopup 0.2s linear both;
+			}
+			.layer {
+				animation: hideLayer 0.2s linear both;
+			}
+		}
+		&.none {
+			display: none;
+		}
+		.mask{
+			position: fixed;
+			top: 0;
+			width: 100%;
+			height: 100%;
+			z-index: 1;
+			background-color: rgba(0, 0, 0, 0.4);
+		}
+		.layer {
+			position: fixed;
+			z-index: 99;
+			bottom: 0;
+			width: 100%;
+			min-height: 40vh;
+			border-radius: 10upx 10upx 0 0;
+			background-color: #fff;
+			.btn{
+				height: 66upx;
+				line-height: 66upx;
+				border-radius: 100upx;
+				background: $uni-color-primary;
+				font-size: $font-base + 2upx;
+				color: #fff;
+				margin: 30upx auto 20upx;
+			}
+		}
+		@keyframes showPopup {
+			0% {
+				opacity: 0;
+			}
+			100% {
+				opacity: 1;
+			}
+		}
+		@keyframes hidePopup {
+			0% {
+				opacity: 1;
+			}
+			100% {
+				opacity: 0;
+			}
+		}
+		@keyframes showLayer {
+			0% {
+				transform: translateY(120%);
+			}
+			100% {
+				transform: translateY(0%);
+			}
+		}
+		@keyframes hideLayer {
+			0% {
+				transform: translateY(0);
+			}
+			100% {
+				transform: translateY(120%);
+			}
+		}
+	}
+	
 	/* 底部操作菜单 */
 	.page-bottom{
 		position:fixed;
