@@ -170,7 +170,7 @@
 				console.log(params);
 				this.orderId = params.orderid;
 
-				this.orderId = '1575036170665008-4';
+				// this.orderId = '1575036170665008-4';
 				this.getOrderInfo();
 			},
 			getOrderInfo: function() {
