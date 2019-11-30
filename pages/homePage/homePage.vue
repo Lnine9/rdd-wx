@@ -5,7 +5,8 @@
 		<!-- #endif -->
 		<view class="header"><label class="head-text">首页</label>
 		<picker class="head-region" @change="bindPickerChange" :value="regionIndex" :range="region">
-			 <view class="uni-input">{{region[regionIndex]}}</view>
+			<view class="uni-input" v-if="this.defaultRegion==''">{{region[regionIndex]}}</view>
+			 <view class="uni-input" v-if="this.defaultRegion!=''">{{defaultRegion}}</view>
 		</picker></view>
 		<!-- 头部轮播 -->
 		<view class="carousel-section">
@@ -33,16 +34,7 @@
 		</view>
 		<view class="cate-section">
 			<!-- 精选商品 -->
-			<view class="seckill-section m-t">
-				<!-- <view class="s-header">
-					<image class="s-img" src="/static/temp/secskill-img.jpg" mode="widthFix"></image>
-					<text class="tip">8点场</text>
-					<text class="hour timer">07</text>
-					<text class="minute timer">13</text>
-					<text class="second timer">55</text>
-					<text class="yticon icon-you"></text>
-				</view> -->
-				
+			<view class="seckill-section m-t">			
 				<text class="yticon icon-you"></text>
 				<scroll-view class="floor-list" scroll-x>
 					<view class="scoll-wrapper">
@@ -64,10 +56,9 @@
 		
 		<!-- 猜你喜欢 -->
 		<view class="f-header m-t">
-			<image src="/static/temp/h1.png"></image>
+		
 			<view class="tit-box">
 				<text class="tit">猜你喜欢</text>
-				<text class="tit2">Guess You Like It</text>
 			</view>
 			<text class="yticon icon-you"></text>
 		</view>
@@ -78,10 +69,10 @@
 				class="guess-item"
 				@click="navToDetailPage(index)">
 				<view class="image-wrapper">
-					<image :src="item.image" mode="aspectFill"></image>
+					<image :src="item.commodityImg[0]" mode="aspectFill"></image>
 				</view>
-				<text class="title clamp">{{item.title}}</text>
-				<text class="price">￥{{item.price}}</text>
+				<text class="title clamp">{{item.commodityTitle}}</text>
+				<text class="price">￥{{item.salePrice}}</text>
 			</view>
 		</view>
 	</view>
@@ -89,25 +80,24 @@
 
 <script>
 	import {api} from "./api.js"
+	// 高德地图 api
+	import amap from '../../libs/amap-wx.js';  
 	
 	export default {
 		data() {
 			return {
+				amapPlugin: null,
+				key: '8aa790ec80dd04abdf75736893a84613',
 				titleNViewBackground: '',
 				swiperCurrent: 0,
 				swiperLength: 0,
 				carouselList: [],
+				defaultRegion: '',
 				region:['重庆市','上海市','山西'],
-				regionIndex: 0,
-				goodsList: [
-					// {image:"https://static.runoob.com/images/demo/demo1.jpg", title:"哈哈哈", price:"12"},
-					// {image:"https://static.runoob.com/images/demo/demo1.jpg", title:"哈哈哈", price:"12"},
-					// {image:"https://static.runoob.com/images/demo/demo1.jpg", title:"哈哈哈", price:"12"},
-					// {image:"https://static.runoob.com/images/demo/demo1.jpg", title:"哈哈哈", price:"12"},
-					// {image:"https://static.runoob.com/images/demo/demo1.jpg", title:"哈哈哈", price:"12"},
-					// {image:"https://static.runoob.com/images/demo/demo1.jpg", title:"哈哈哈", price:"12"},
-					// {image:"https://static.runoob.com/images/demo/demo1.jpg", title:"哈哈哈", price:"12"}
-				]
+				regionIndex: 1,
+				guessList:[],
+				goodsList: [],
+				addressName: ''
 			};
 		},
 		
@@ -120,128 +110,145 @@
 			//详情页
 			navToDetailPage(item) {
 				//测试数据没有写id，用title代替
-				let id = "1";
-				// console.log(item.title),
+				let id = item.commodityId;
 				uni.navigateTo({
 					url: `/pages/product/product?id=${id}`,
-					// url: `/pages/product/product`,			
 				})				
 			},	
-			bindPickerChange() {
-			}
-					
-		},
-			
-		mounted() {	
-			/**
-			 * 获取设备定位
-			 */
-			// uni.getLocation({
-			//     type: 'wgs84',
-			//     success: function (res) {
-			//         console.log('当前位置的经度：' + res.longitude);
-			//         console.log('当前位置的纬度：' + res.latitude);
-			//     }
-			// });
-					
+			bindPickerChange(val) {
+				uni.setStorageSync('location',this.region[val.detail.value]);
+				this.defaultRegion = this.region[val.detail.value]
+				this.getBanner(),
+				this.getUserMes(),
+				this.getRecommend(),
+				this.getGuess()
+			},
 			/**
 			 * 获取用户信息
 			 */
-			let user = {
-				// 此处默认传入重庆
-				// 用户信息和地区无关
-				area:'重庆'
-			};
-			api.getUserInfo().then(res =>{
-				this.service = res.data.data,
-				console.log(this.service),
-			
-				// userType 说明
-				// 0: app
-				// 1: 企业
-				// 2: 小程序
-				uni.setStorageSync('userType', this.service.userType),
-				// 默认重庆（debug）
-				uni.setStorageSync('location', "重庆"),
-				// 存储角色信息
-				uni.setStorageSync('roleName', this.service.roleName),
-				// 当前用户是否为VIP
-				uni.setStorageSync('isVip', this.service.isVip==0?false:true)
-				// 当前地区是否有VIP业务
-				uni.setStorageSync('haveVip', this.service.haveVip==0?false:true)
+			getUserMes(){
+				let user = {
+					// 此处默认传入重庆市
+					// 用户信息和地区无关
+					area:'重庆市'
+				};
+				api.getUserInfo().then(res =>{
+					this.service = res.data.data,
 				
-				console.log("userType" + uni.getStorageSync('userType'),
-					"location" + uni.getStorageSync('location'),
-					"isVip" + uni.getStorageSync('isVip'),
-					"haveVip" + uni.getStorageSync('haveVip'),
-				)			
-			}).catch(err => {
-				console.log(err)
-			});	
+					// userType 说明
+					// 0: app
+					// 1: 企业
+					// 2: 小程序
+					uni.setStorageSync('userType', this.service.userType),
+					// 默认重庆（debug）
+					uni.setStorageSync('location', "重庆"),
+					// 存储角色信息
+					uni.setStorageSync('roleName', this.service.roleName),
+					// 当前用户是否为VIP
+					uni.setStorageSync('isVip', this.service.isVip==0?false:true)
+					// 当前地区是否有VIP业务
+					uni.setStorageSync('haveVip', this.service.haveVip==0?false:true)
+					
+						
+				}).catch(err => {
+					console.log(err)
+				});		
+			},
 			
 			/**
 			 * 获取轮播图信息
 			 */
-			let location = {
-				locationCode:'WCPHomePage'
-			};
-			api.getBannerImgs(location).then(res =>{
-				this.carouselList = res.data.data,
-				console.log(this.carouselList)
-				this.swiperLength = this.carouselList.length;
-				this.carouselList = this.carouselList;
-			}).catch(err => {
-				console.log(err)
-			})		
+			getBanner() {				
+				let location = {
+					locationCode:'WCPHomePage'
+				};
+				api.getBannerImgs(location).then(res =>{
+					this.carouselList = res.data.data,
+					this.swiperLength = this.carouselList.length;
+					this.carouselList = this.carouselList;
+				}).catch(err => {
+					console.log(err)
+				})		
+			},
 			
 			/**
-			 * 精选商品列表
+			 * 获取精选商品
 			 */
-			let userAndLocalMes = {
-				// area: uni.getStorageSync('location'),
-				area: '重庆市',
-				longitude: '',
-				latitude: '',
-				shopPlace: 'Recommend'
-			};
-			api.getProducts(userAndLocalMes).then(res =>{
-				this.goodsList = res.data,
-				console.log(this.goodsList)		
-			}).catch(err => {
-				console.log(err)
-			})	
+			getRecommend() {
+				let userAndLocalMes = {
+					// area: uni.getStorageSync('location'),
+					area: this.addressName,
+					longitude: '',
+					latitude: '',
+					shopPlace: 'Recommend'
+				};
+				api.getProducts(userAndLocalMes).then(res =>{
+					this.goodsList = res.data.data,
+					console.log(this.goodsList)		
+				}).catch(err => {
+					console.log(err)
+				})	
+			},
 			
 			/**
-			 * 猜你喜欢列表
+			 * 猜你喜欢
 			 */
-			api.getProducts(userAndLocalMes).then(res =>{
-				this.goodsList = res.data.data,
-				console.log(this.goodsList)		
-			}).catch(err => {
-				console.log(err)
-			})				
-		},
-		
-		// #ifndef MP
-		//点击导航栏 buttons 时触发
-		onNavigationBarButtonTap(e) {
-			const index = e.index;
-			if (index === 0) {
-				this.$api.msg('点击了扫描');
-			} else if (index === 1) {
-				// #ifdef APP-PLUS
-				const pages = getCurrentPages();
-				const page = pages[pages.length - 1];
-				const currentWebview = page.$getAppWebview();
-				currentWebview.hideTitleNViewButtonRedDot({
-					index
-				});
-				// #endif
-				uni.navigateTo({
-					url: '/pages/notice/notice'
-				})
+			getGuess() {
+				let userAndLocalMes_1 = {
+					// area: uni.getStorageSync('location'),
+					area: this.addressName,
+					longitude: '',
+					latitude: '',
+					shopPlace: 'Guess'
+				};
+				api.getProducts(userAndLocalMes_1).then(res =>{
+					this.guessList = res.data.data,
+					console.log(this.guessList)		
+				}).catch(err => {
+					console.log(err)
+				})			
 			}
+														
+		},
+							
+		/**
+		 * 猜你喜欢列表
+		 */
+		mounted() {		
+			/**
+			 * 获取设备定位
+			 */
+			console.info('mounted')
+			console.info(!uni.getStorageSync('location'))
+			if(!uni.getStorageSync('location')){
+				this.amapPlugin = new amap.AMapWX({
+					    key: this.key  
+					});  
+					
+					uni.showLoading({  
+						title: '获取信息中'  
+					});  
+					this.amapPlugin.getPoiAround({  
+						success: (data) => {  
+							uni.hideLoading();  
+							this.addressName = data.poisData[0].cityname;  
+							uni.setStorageSync('location', this.addressName)
+							this.defaultRegion = uni.getStorageSync('location')||'';
+						},
+						fail: (res) => {
+							console.log(res)  
+						}
+					}); 
+				}	
+					this.defaultRegion = uni.getStorageSync('location')||'';
+					this.getBanner(),
+					this.getUserMes(),
+					this.getRecommend(),
+					this.getGuess()
+			
 		}
+		// #ifndef MP
+
 		// #endif
 	}
 </script>
