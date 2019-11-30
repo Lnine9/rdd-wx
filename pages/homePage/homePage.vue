@@ -2,9 +2,6 @@
 	<view class="container">	
 		<!-- 小程序头部兼容 -->
 		<!-- #ifdef MP -->
-		<!-- <view class="mp-search-box">
-			<input class="ser-input" type="text" value="输入关键字搜索" disabled />
-		</view> -->
 		<!-- #endif -->
 		
 		<!-- 头部轮播 -->
@@ -26,26 +23,35 @@
 			</view>
 		</view>
 		<!-- 分类 -->
+		<view class="f-header m-t">
+			<image src="/static/temp/h1.png"></image>
+			<view class="tit-box">
+				<text class="tit">精选商品</text>
+				<text class="tit2">Recommand To You</text>
+			</view>
+		</view>
 		<view class="cate-section">
 			<!-- 精选商品 -->
 			<view class="seckill-section m-t">
-				<view class="s-header">
+				<!-- <view class="s-header">
 					<image class="s-img" src="/static/temp/secskill-img.jpg" mode="widthFix"></image>
 					<text class="tip">8点场</text>
 					<text class="hour timer">07</text>
 					<text class="minute timer">13</text>
 					<text class="second timer">55</text>
 					<text class="yticon icon-you"></text>
-				</view>
+				</view> -->
+				
+				<text class="yticon icon-you"></text>
 				<scroll-view class="floor-list" scroll-x>
 					<view class="scoll-wrapper">
 						<view 
 							v-for="(item, index) in goodsList" :key="index"
 							class="floor-item"
-							@click="navToDetailPage(item)">
+							@click="navToDetailPage(index)">
 							<image :src="item.image" mode="aspectFill"></image>
-							<text class="title clamp">{{item.title}}</text>
-							<text class="price">￥{{item.price}}</text>
+							<!-- <text class="title clamp">{{item.title}}</text>
+							<text class="price">￥{{item.price}}</text> -->
 						</view>
 					</view>
 				</scroll-view>
@@ -66,8 +72,7 @@
 			<view 
 				v-for="(item, index) in goodsList" :key="index"
 				class="guess-item"
-				@click="navToDetailPage(item)"
-			>
+				@click="navToDetailPage(index)">
 				<view class="image-wrapper">
 					<image :src="item.image" mode="aspectFill"></image>
 				</view>
@@ -109,14 +114,15 @@
 			//详情页
 			navToDetailPage(item) {
 				//测试数据没有写id，用title代替
-				let id = item.title;
-				console.log(item.title),
+				let id = "1";
+				// console.log(item.title),
 				uni.navigateTo({
-					// url: `/pages/product/product?id=${id}`,
-					url: `/pages/product/product`,			
+					url: `/pages/product/product?id=${id}`,
+					// url: `/pages/product/product`,			
 				})				
 			},		
 		},
+		
 		
 		mounted() {	
 			/**
@@ -191,7 +197,7 @@
 				showPlace: 'Recommend'
 			};
 			api.getProducts(userAndLocalMes).then(res =>{
-				this.goodsList = res.data,
+				this.goodsList = res.data.data,
 				console.log(this.goodsList)		
 			}).catch(err => {
 				console.log(err)
@@ -201,7 +207,7 @@
 			 * 猜你喜欢列表
 			 */
 			api.getProducts(userAndLocalMes).then(res =>{
-				this.goodsList = res.data,
+				this.goodsList = res.data.data,
 				console.log(this.goodsList)		
 			}).catch(err => {
 				console.log(err)

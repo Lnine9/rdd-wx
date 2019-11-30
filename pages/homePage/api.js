@@ -25,7 +25,5 @@ export class api{
    */
   static getProducts(userAndLocalMes){
   	  return minRequest.get('/api/WCPCommodityInfo/getCommodityList', userAndLocalMes)
-  }
-  
-  
+  } 
 }

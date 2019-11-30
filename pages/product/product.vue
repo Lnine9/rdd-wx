@@ -2,10 +2,10 @@
 	<view class="container">
 		<view class="carousel">
 			<swiper indicator-dots circular=true duration="400">
-				<swiper-item class="swiper-item" v-for="(item,index) in imgList" :key="index">
+				<swiper-item class="swiper-item" v-for="(item,index) in commodityImg" :key="index">
 					<view class="image-wrapper">
 						<image
-							:src="item.src" 
+							:src="item" 
 							class="loaded" 
 							mode="aspectFill"
 						></image>
@@ -20,7 +20,7 @@
 				<text class="price-tip">¥</text>
 				<text class="price">{{originalPrice}}</text>
 				<text class="m-price">¥{{salePrice}}</text>
-				<text class="coupon-tip">7折</text>
+				<!-- <text class="coupon-tip">7折</text> -->
 			</view>
 			<view class="bot-row">
 				<text>销量: {{salesVolume}}</text>
@@ -75,12 +75,13 @@
 	export default{
 		data() {
 			return {
-				commodityTitle: '',
-				commodityInfo: '',
-				originalPrice: '',
-				salePrice: '',
-				salesVolume: '',  // 销量
-				commodityNum: '',  // 库存
+				commodityTitle: '',    // 商品描述标题
+				commodityImg: [],      // 商品图片
+				commodityInfo: '',     // 商品信息
+				originalPrice: '',     // 商品原价
+				salePrice: '',         // 商品现价
+				salesVolume: '',       // 销量
+				commodityNum: '',      // 库存
 				specClass: 'none',
 				specSelected:[],				
 				favorite: true,
@@ -125,7 +126,15 @@
 				}
 			})						
 		},
+		
+		onLoad(data) {
+			console.log("asdfasdfasfasfasdfasdfasf" + data.id)
+		},
 		methods:{
+			/**
+			 * 获取商品详细信息
+			 * @param {Object} commodityId
+			 */
 			getData(commodityId) {
 				let data={
 					commodityId:commodityId
@@ -138,12 +147,13 @@
 					this.originalPrice=this.service.originalPrice
 					this.salePrice=this.service.salePrice
 					this.salesVolume=this.service.salesVolume
-					this.commodityNum=this.service.commodityNum
-					
+					this.commodityNum=this.service.commodityNum		
+					this.commodityImg=this.service.commodityImg
 				}).catch(err => {
 					console.log(err)
 				})		
 			},
+			
 			//规格弹窗开关
 			toggleSpec() {
 				if(this.specClass === 'show'){
@@ -155,6 +165,7 @@
 					this.specClass = 'show';
 				}
 			},
+			
 			//选择规格
 			selectSpec(index, pid){
 				let list = this.specChildList;
@@ -165,6 +176,7 @@
 				})
 
 				this.$set(list[index], 'selected', true);
+				
 				//存储已选择
 				/**
 				 * 修复选择规格存储错误
@@ -196,7 +208,6 @@
 		},
 		mounted() {
 			this.getData("1")
-			console.log("dadsd")
 		}
 	}
 </script>
