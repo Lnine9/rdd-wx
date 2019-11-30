@@ -10,24 +10,24 @@
 			</view>
 
 			<view class="order-state-img-container">
-				<image src="../../static/orderDetail/ic-已签收.png" mode="" class="order-state-img"></image>
+				<image src="/static/orderDetail/ic-received.png" mode="" class="order-state-img"></image>
 			</view>
 		</view>
 
 		<!-- 物流信息 -->
 		<view v-if="takeWay === 1 && hasLogistics" class="commodity-logistics-container">
-			<image src="../../static/orderDetail/ic-物流.png" mode="" class="commodity-logistics-img"></image>
+			<image src="/static/orderDetail/ic-logistics.png" mode="" class="commodity-logistics-img"></image>
 
 			<view class="commodity-logistics-text-container">
 				<text class="commodity-logistics-text">快件从【江苏昆山公司】发往【上海航空】</text>
 			</view>
 
-			<image src="../../static/orderDetail/ic-更多电子码.png" mode="" class="commodity-logistics-more-img"></image>
+			<image src="/static/orderDetail/ic-more-el-code.png" mode="" class="commodity-logistics-more-img"></image>
 		</view>
 
 		<!-- 地址信息 -->
-		<view v-if="takeWay === 1" class="address-container">
-			<image src="../../static/orderDetail/ic-地址.png" mode="" class="addres-img"></image>
+		<view v-if="takeWay === 1 && order.address" class="address-container">
+			<image src="/static/orderDetail/ic-address.png" mode="" class="addres-img"></image>
 
 			<view class="address-content-container">
 				<view class="address-user-info-container">
@@ -50,11 +50,11 @@
 		<!-- 商品信息 -->
 		<view class="commodity-container">
 			<view class="shop-container">
-				<image src="../../static/orderDetail/ic-店铺.png" mode="" class="shop-img"></image>
+				<image src="/static/orderDetail/ic-shop.png" mode="" class="shop-img"></image>
 
 				<text class="shop-name">{{order.shopName}}</text>
 
-				<text class="shop-receive-text">{{order.deliveryStateShow}}</text>
+				<text class="shop-receive-text">{{takeWay === 1? order.deliveryStateShow : order.orderStateShow}}</text>
 			</view>
 
 			<!-- 商品展示 -->
@@ -99,6 +99,18 @@
 					<text class="order-text">下单时间</text>
 					<text class="order-value">{{order.createAt}}</text>
 				</view>
+				
+				<view v-if="order.takeWay === 2">
+					<text class="order-text">电子码<text style="color: #FFFFFF;">白</text></text>
+					<text class="order-value">{{order.electronicCode}}</text>
+				</view>
+				
+				<view 
+					v-else 
+					class="qr-code-container">
+					<text class="order-text">二维码</text>
+					<image :src="qrImageUrl" mode="" class="qr-code-img"></image>
+				</view>
 			</view>
 
 			<view class="bottom-price-container">
@@ -133,6 +145,8 @@
 		OrderDetailAPI
 	} from './api.js'
 
+	import qr from '../utils/wxqrcode.js'
+
 	export default {
 		data() {
 			return {
@@ -152,18 +166,21 @@
 					deliveryCompany: '',
 					deliveryNum: '',
 					commodityType: 2, // 1，寄送，2，核销
+					orderState: '',
+					orderStateShow: '',
+					electronicCode: '', // 电子码
 				},
 				imageUrl: '',
 				totalPrice: '',
-				sureBtnText: '确认收货'
+				sureBtnText: '确认收货',
+				qrImageUrl: '', // 二维码图片
 			}
 		},
 		methods: {
 			onLoad: function(params) {
 				console.log(params);
-				this.orderId = params.orderId;
+				this.orderId = params.orderid;
 
-				this.orderId = '8';
 				this.getOrderInfo();
 			},
 			getOrderInfo: function() {
@@ -173,6 +190,9 @@
 					console.log(res);
 
 					this.order = res.data.data;
+					this.takeWay = Number(this.order.commodityType);
+					// 显示二维码
+					this.getQRCodeImage();
 					switch (Number(this.order.deliveryState)) {
 						case 0:
 							this.order.deliveryStateShow = '未寄送';
@@ -180,8 +200,26 @@
 						case 1:
 							this.order.deliveryStateShow = '未寄送';
 							break;
-						case 0:
+						case 2:
 							this.order.deliveryStateShow = '已收货';
+							break;
+						default:
+							this.order.deliveryStateShow = '--';
+							break;
+					}
+					// 订单状态(核销类型的订单显示)
+					switch (Number(this.order.orderState)) {
+						case 0:
+							this.order.orderStateShow = '待支付';
+							break;
+						case 1:
+							this.order.orderStateShow = '待处理';
+							break;
+						case 2:
+							this.order.orderStateShow = '已完成';
+							break;
+						default:
+							this.order.orderStateShow = '--';
 							break;
 					}
 					// 总价格
@@ -198,7 +236,6 @@
 					} else {
 						this.sureBtnText = '确认完成';
 					}
-					
 				}).catch(err => {
 					console.log(err);
 				});
@@ -250,6 +287,13 @@
 					':' + (oMin.toString().length === 1 ? '0' + oMin : oMin) +
 					':' + (oSec.toString().length === 1 ? '0' + oSec : oSec);
 			},
+			getQRCodeImage: function() {
+				// 二维码内容
+				let content = 'wx:shopId=' + this.order.shopId + 
+					'&orderId=' + this.order.shopId +  
+					'&time=' + this.order.createAt;
+				this.qrImageUrl = qr.createQrCodeImg(content);
+			}
 		}
 	}
 </script>
@@ -411,7 +455,7 @@
 	}
 
 	.shop-name {
-		flex: 80%;
+		flex: 70%;
 		font-size: 28rpx;
 		font-weight: bold;
 		margin: auto 0;
@@ -505,6 +549,7 @@
 
 	.order-text {
 		color: #303038;
+		width: 100rpx;
 		font-size: 24rpx;
 		margin: 10rpx 0 10rpx 30rpx;
 	}
@@ -513,6 +558,17 @@
 		color: #999999;
 		font-size: 24rpx;
 		margin: 10rpx 0 10rpx 93rpx;
+	}
+	
+	.qr-code-container {
+		display: flex;
+		flex-direction: column;
+	}
+	
+	.qr-code-img {
+		margin: 10rpx 220rpx 0 230rpx;
+		width: 300rpx;
+		height: 300rpx;
 	}
 
 	.bottom-price-container {

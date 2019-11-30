@@ -1,47 +1,51 @@
 <template>
-	<view>
-		<view class="orderList" v-for="(item,index) in shopList" :key="index">
-			<view class="shopContainer">
-				<view class="shopTitle">
-				<image class="shopPic" src="../../static/myOrder/shop.png"></image>
-				<text class="shopName">{{item.shopName}}</text>
-				<text class="status">{{item.status}}</text>
+	<view v-bind:style="noDataCenter">
+		<image v-if="isNodata" src="../../static/code/logo.png" class="noDataPic"></image>
+		<view v-if="!isNodata" class="orderList" v-for="(item,index) in shopList" :key="index">
+			<view class="shopContainer normalFontWeight">
+				<view class="shopTitle boldFontWeight">
+					<image class="shopPic" src="../../static/myOrder/shop.png"></image>
+					<text class="shopName normalFontDark bigFontSize">{{item.commodityTitle}}</text>
+					<text class="status smallFontSize" v-bind:style="statusStyle[index]">{{judgeOrderState(index)}}</text>
 				</view>
-				<view class="goodsMessageContainer" >
+				<view class="goodsMessageContainer">
 					<view class="goodsPicContainer">
-					<image class="goodsPic" src="../../static/myOrder/shop.png">
-					</image>
+						<image class="goodsPic" :src="item.commodityImgList[0]">
+						</image>
 					</view>
+					<!-- 商品信息 -->
 					<view class="goodsMessage">
-						
-						<text class="goodsName">{{item.goods.goodName}}</text>
+
+						<text class="goodsName normalFontDark bigFontSize">{{item.commodityInfo}}</text>
 						<view style="display: flex;flex-direction: row;margin-top: 40rpx;align-items: center;width: 67.5vw;">
-						<text class="actualPrice">{{"￥"+item.goods.actualPrice}}</text>
-						<text class="originPrice">{{"￥"+item.goods.originPrice}}</text>
-						<text class="number">{{"x"+item.goods.number}}</text>
+							<text class="actualPrice boldFontWeight largeFontSize">{{"￥"+item.actualPrice}}</text>
+							<text class="originPrice normalGray midalFontSize">{{"￥"+item.originalPrice}}</text>
+							<text class="number normalGray midalFontSize">{{"x"+item.commodityNum}}</text>
 						</view>
-						
+
 					</view>
-						
+
 				</view>
+				<!-- 订单信息 -->
 				<view class="orderMessage">
 					<view class="item">
-					<text class="title">订单编号</text>
-					<text class="value">{{item.orderID}}</text>
+						<text class="title normalFontDark smallFontSize">订单编号</text>
+						<text class="value normalGray smallFontSize">{{item.orderId}}</text>
 					</view>
 					<view class="item">
-					<text class="title">下单时间</text>
-					<text class="value">{{item.orderTime}}</text>
+						<text class="title normalFontDark smallFontSize">下单时间</text>
+						<text class="value normalGray smallFontSize">{{item.createAt|formatDate}}</text>
 					</view>
 				</view>
-				<view class="bottom" >
-					<view class="total">
-					<text class="actualPrice">{{"合计：￥"+item.goods.actualPrice * item.goods.number}}</text>
+				<!-- 底部 -->
+				<view class="bottom">
+					<view class="totalText bigFontSize">
+						<text>合计:</text>
+						<text class="totalPrice boldFontWeight">{{"￥"+item.actualPrice * item.commodityNum}}</text>
 					</view>
-					<view class="buttonContainer">
-					<button class="button buttonDetail"  @click="toDetail(item.orderID)"> 查看详情</button>
-					<button class="button buttonCheck" @click="checkQRCode(item.orderID)">查看二维码</button>
-					</view>
+
+					<button class="button  normalGray smallFontSize" @click="toDetail(item.orderId)"> 查看详情</button>
+
 				</view>
 			</view>
 		</view>
@@ -49,241 +53,320 @@
 </template>
 
 <script>
+	import {
+		api
+	} from './api.js'
 	export default {
 		data() {
 			return {
-				shopList: [
-					{
-						shopName: '国家航天局',
-						status:"商家已发货",
-						orderID:123432521,
-						orderTime:"2019-11-11",
-						goods:
-							{
-								goodName:'飞机打了卡飞机上的来看房价来看撒谎flash发生了飞机撒来看的撒发快了点设计福利卡时间翻了会计分录卡萨丁解放路',
-								actualPrice: 1000111111,
-								originPrice:10000,
-								number:1,},
-							
-					},{
-						shopName: '国家航天局',
-						status:"商家未发货",
-						orderID:12421342,
-						orderTime:"2019-11-11",
-						goods:
-							{
-								goodName:'飞机',
-								actualPrice: 1000,
-								originPrice:10000,
-								number:1,},
-					}
-				]
+				isNodata: false,
+				statusStyle: [],
+
+				shopList: []
 			}
-			
+
 		},
-		onLoad: function (options) {
-		        setTimeout(function () {
-		            console.log('start pulldown');
-		        }, 1000);
-		        uni.startPullDownRefresh();
-		    },
-		    onPullDownRefresh() {
-		        console.log('refresh');
-		        setTimeout(function () {
-		            uni.stopPullDownRefresh();
-		        }, 1000);
-		    },
-		methods: {
-			toDetail(orderID){
-				console.log(orderID)
-			},
-			checkQRCode(orderID){
-				console.log(orderID)
+		// 时间转换
+		filters: {
+			formatDate: function(value) {
+				let date = new Date(value);
+				let y = date.getFullYear();
+				let MM = date.getMonth() + 1;
+				MM = MM < 10 ? ('0' + MM) : MM;
+				let d = date.getDate();
+				d = d < 10 ? ('0' + d) : d;
+				let h = date.getHours();
+				h = h < 10 ? ('0' + h) : h;
+				let m = date.getMinutes();
+				m = m < 10 ? ('0' + m) : m;
+				let s = date.getSeconds();
+				s = s < 10 ? ('0' + s) : s;
+				return y + '-' + MM + '-' + d;
 			}
-		}
+		},
+
+		computed: {
+			noDataCenter() {
+				if (this.isNodata) {
+					return "text-align:center"
+				}
+
+			}
+		},
+
+		methods: {
+			// 跳转到详情
+			toDetail: function(orderID) {
+				console.log(orderID);
+				
+				uni.navigateTo({
+					url: '/pages/orderDetail/orderDetail?orderid=' + orderID
+				})
+			},
+
+			// 判断邮寄状态
+			judgeOrderState: function(index) {
+				if (this.shopList.length == 0) {
+					return ""
+				}
+				let item = this.shopList[index]
+
+				if (item.commodityType == "1") {
+					if (item.deliveryState == 0) {
+						this.statusStyle[index] = "color:#06C1AE;"
+						return "未发货"
+					} else if (item.deliveryState == 1) {
+						this.statusStyle[index] = "color:#06C1AE;"
+						return "卖家已发货"
+					} else if (item.deliveryState == 2) {
+						this.statusStyle = "color:#CCCCCC"
+						return "已签收"
+					} else
+						this.statusStyle[index] = "#CCCCCC"
+					return "暂无信息"
+				} else {
+					if (item.orderState == 0) {
+						this.statusStyle[index] = "color:#CCCCCC"
+						console.log(this.statusStyle[index])
+						return "订单已完成"
+
+					} else {
+						this.statusStyle[index] = "color:#06C1AE;"
+						return "订单未完成"
+					}
+				}
+
+
+			},
+			// 加载数据
+			getData: function() {
+				api.getComidityList().then(res => {
+
+					if (res.statusCode == "200") {
+						this.shopList = res.data.data
+						this.isNodata = (this.shopList.length == 0)
+						uni.stopPullDownRefresh()
+					} else {
+						this.isNodata = true
+						uni.stopPullDownRefresh()
+					}
+				}).catch(() => {
+					uni.showModal({
+						title: "出错啦！",
+						content: '刷新失败',
+						showCancel: false
+					});
+					uni.stopPullDownRefresh()
+				})
+			},
+		},
+
+		onShow: function(options) {
+
+			uni.startPullDownRefresh({
+				success: function(res) {
+					console.log("刷新成功"); //success 返回参数说明
+				},
+				fail: function(res) {
+					console.log("刷新失败")
+				}
+			});
+		},
+		onPullDownRefresh() {
+			console.log('refresh');
+			this.getData()
+		},
 	}
 </script>
 
 <style>
-	.orderList{
+	.smallFontSize {
+		font-size: 24rpx;
+	}
+
+	.midalFontSize {
+		font-size: 26rpx;
+	}
+
+	.bigFontSize {
+		font-size: 28rpx;
+	}
+
+	.largeFontSize {
+		font-size: 32rpx;
+	}
+
+	.normalFontDark {
+		color: #303038;
+	}
+
+	.deepFontDark {
+		color: #333333;
+	}
+
+	.normalFontWeight {
+		font-weight: 400;
+	}
+
+	.boldFontWeight {
+		font-weight: 500;
+	}
+
+	.normalGray {
+		color: #999999;
+	}
+
+	.orderList {
 		padding-top: 20rpx;
 		background-color: #F8F9FB;
-		height: 560rpx;
+		height: 500rpx;
 		width: 100%;
-		
-		}
-	.shopContainer{
+
+	}
+
+	.shopContainer {
+		font-family: PingFang SC;
 		position: relative;
 		width: 100%;
-		font-weight:bold;
-		height: 560rpx;
+		height: 500rpx;
 		background-color: #FFFFFF;
 	}
-	.shopPic{
+
+	.shopPic {
 		padding-top: 36rpx;
-		padding-left: 30rpx;
+		padding-left: 5vw;
 		height: 29rpx;
 		width: 30rpx;
-		
+
 	}
-	.shopName{
+
+	.shopName {
 		position: absolute;
 		padding-top: 40rpx;
 		margin-top: -10rpx;
 		margin-left: 10rpx;
-		font-size:28rpx;
-		font-family:PingFang SC;
-		color: #303038;
 	}
-	.status{
+
+	.status {
 		position: absolute;
-		right: 2.5vw;
+		right: 5vw;
 		top: 32rpx;
-		font-size:24rpx;
-		font-family:PingFang SC;
-		font-weight:500;
-		color: #06C1AE;
 	}
-	.shopTitle{
+
+	.shopTitle {
 		position: relative;
 		height: 95rpx;
-		
 	}
-	.goodsMessageContainer{
-		display:flex;
+
+	.goodsMessageContainer {
+		display: flex;
 		padding-top: 15rpx;
 		position: relative;
-		width:100%;
-		height:182rpx;
-		
+		width: 100%;
+		height: 182rpx;
 	}
-	.goodsPic{
-		position: absolute;
-		top: 2.5vw;
-		left: 2.5vw;
-		height: 15vw;
-		width: 15vw;
+
+	.goodsPic {
+		height: 20vw;
+		width: 20vw;
+		border: 1px solid rgba(227, 227, 227, 1);
+		border-radius: 10px;
 	}
-	.goodsPicContainer{
+
+	.goodsPicContainer {
 		position: relative;
 		left: 5vw;
 		height: 20vw;
 		width: 20vw;
-		border:1px solid rgba(227,227,227,1);
-		border-radius:10px;
 	}
-	.goodsMessage{
+
+	.goodsMessage {
 		position: relative;
 		left: 5vw;
-		width: 67.5vw;
+		width: 65vw;
 		height: 182rpx;
 		margin-left: 30rpx;
 	}
-	.goodsName{
+
+	.goodsName {
 		height: 60rpx;
 		display: -webkit-box;
 		-webkit-box-orient: vertical;
-		-webkit-line-clamp:2;
+		-webkit-line-clamp: 2;
 		overflow: hidden;
 		word-break: break-all;
 		text-overflow: ellipsis;
-		line-height:30rpx ;
+		line-height: 30rpx;
 		width: 67.5vw;
 		position: relative;
 		top: 30rpx;
-		font-size:24rpx;
-		font-family:PingFang SC;
-		font-weight:500;
-		color:rgba(48,48,56,1);
 	}
-	.actualPrice{
-		
-		font-size:32rpx;
-		font-family:PingFang SC;
-		font-weight:bold;
-		color:rgba(255,126,48,1);
+
+	.actualPrice {
+		color: rgba(255, 126, 48, 1);
 	}
-	.originPrice{
+
+	.originPrice {
 		margin-left: 2.5vw;
-		font-size:26rpx;
-		font-family:PingFang SC;
-		font-weight:500;
-		text-decoration:line-through;
-		color:rgba(153,153,153,1);
+		text-decoration: line-through;
 	}
-	.number{
+
+	.number {
 		position: absolute;
 		right: 0vw;
-		
-		font-size: 26rpx;
-		font-family:PingFang SC;
-		font-weight:500;
-		color:rgba(153,153,153,1);
 	}
-	.title{
-		margin-left:5vw ;
-		font-size:24rpx;
-		font-family:PingFang SC;
-		font-weight:500;
-		color:rgba(48,48,56,1);
+
+	.title {
+		margin-left: 5vw;
 	}
-	.value{
+
+	.value {
 		margin-left: 12.5vw;
-		font-size:24rpx;
-		font-family:PingFang SC;
-		font-weight:500;
-		color:rgba(153,153,153,1);
 	}
-	.orderMessage{
+
+	.orderMessage {
 		display: flex;
 		justify-content: space-around;
 		flex-direction: column;
 		height: 90rpx;
 		border-width: 1px 0 1px 0;
 		border-style: solid;
-		border-color: #FFF3F3F3;
-		
+		border-color: rgba(243, 243, 243, 1);
+
 	}
-	.item{
+
+	.item {
 		display: flex;
 	}
-	.bottom{
-		text-align: right;
+
+	.bottom {
+		display: flex;
+		align-items: flex-start;
+		justify-content: space-around;
 		position: relative;
+		left: 5vw;
+		padding-top: 2.5vw;
 		height: 180rpx;
-		width: 100%;
+		width: 90vw;
 	}
-	.button{
-		margin-left: 5vw;
-		font-size: 20rpx;
-		font-family:PingFang SC;
-		color:rgba(153,153,153,1);
-		height:60rpx;
-		border:1px solid rgba(204,204,204,1);
-		border-radius:30rpx;
+
+	.button {
+		height: 60rpx;
+		width: 160rpx;
+		border: 1px solid rgba(204, 204, 204, 1);
+		border-radius: 30rpx;
 	}
-	.buttonDetail{
+
+	.totalText {
 		flex: 1;
-		border:1px solid rgba(204,204,204,1);
-		color:rgba(153,153,153,1);
+		display: block;
 	}
-	.buttonCheck{
-		border:1px solid rgba(6,193,174,1);
-		color:rgba(6,193,174,1);
+
+	.totalPrice {
+		color: #FF7E30;
 	}
-	.total{
-		margin-top: 2.5vw;
-		padding-right: 2.5vw;
-	}
-	.buttonContainer{
-		padding-right: 2.5vw;
-		position: absolute;
-		right: 0;
-		width: 55vw;
-		display: flex;
-		align-items: flex-end;
-		margin-top: 2.5vw;
-		
-		
+
+	.noDataPic {
+		padding-top: 20vh;
 	}
 </style>

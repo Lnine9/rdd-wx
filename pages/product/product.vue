@@ -2,10 +2,10 @@
 	<view class="container">
 		<view class="carousel">
 			<swiper indicator-dots circular=true duration="400">
-				<swiper-item class="swiper-item" v-for="(item,index) in imgList" :key="index">
+				<swiper-item class="swiper-item" v-for="(item,index) in titleImg" :key="index">
 					<view class="image-wrapper">
 						<image
-							:src="item.src" 
+							:src="item" 
 							class="loaded" 
 							mode="aspectFill"
 						></image>
@@ -20,22 +20,27 @@
 				<text class="price-tip">¥</text>
 				<text class="price">{{originalPrice}}</text>
 				<text class="m-price">¥{{salePrice}}</text>
-				<text class="coupon-tip">7折</text>
-			</view>
-			<view class="bot-row">
+				<!-- <text class="coupon-tip">7折</text> -->
 				<text>销量: {{salesVolume}}</text>
 				<text>库存: {{commodityNum}}</text>
+			</view>
+			<view class="bot-row">
+				<!-- <text>销量: {{salesVolume}}</text>
+				<text>库存: {{commodityNum}}</text> -->
+			</view>
+		</view>
+		<view class="c-list">
+			<view class="c-row b-b">
+				<view class="con-list">
+					<text>{{commodityInfo}}</text>
+				</view>
 			</view>
 		</view>
 		
 		<view class="c-list">		
 			<view class="c-row b-b">
-				<text class="tit">{{commodityInfo}}</text>
 				<view class="con-list">
-					<text>新人首单送20元无门槛代金券</text>
-					<text>订单满50减10</text>
-					<text>订单满100减30</text>
-					<text>单笔购买满两件免邮费</text>
+					<text>{{commodityInfo}}</text>
 				</view>
 			</view>
 		</view>
@@ -44,7 +49,7 @@
 			<view class="d-header">
 				<text>商品介绍</text>
 			</view>
-			<rich-text :nodes="desc"></rich-text>
+			<rich-text :nodes="bottomImg"></rich-text>
 		</view>
 		
 		<!-- 底部操作菜单 -->
@@ -64,7 +69,7 @@
 			
 			<view class="action-btn-group">
 				<button type="primary" class=" action-btn no-border buy-now-btn" @click="buy">立即购买</button>
-				<button type="primary" class=" action-btn no-border add-cart-btn">加入购物车</button>
+				<!-- <button type="primary" class=" action-btn no-border add-cart-btn">加入购物车</button> -->
 			</view>
 		</view>
 	</view>
@@ -75,16 +80,19 @@
 	export default{
 		data() {
 			return {
-				commodityTitle: '',
-				commodityInfo: '',
-				originalPrice: '',
-				salePrice: '',
-				salesVolume: '',  // 销量
-				commodityNum: '',  // 库存
+				commodityTitle: '',    // 商品描述标题
+				commodityImg: [],      // 商品图片
+				commodityInfo: '',     // 商品信息
+				originalPrice: '',     // 商品原价
+				salePrice: '',         // 商品现价
+				salesVolume: '',       // 销量
+				commodityNum: '',      // 库存
 				specClass: 'none',
-				specSelected:[],				
+				specSelected:[],	
+				titleImg:[],		
 				favorite: true,
 				shareList: [],
+				bottomImg: [],
 				imgList: [
 					{
 						src: 'https://gd3.alicdn.com/imgextra/i3/0/O1CN01IiyFQI1UGShoFKt1O_!!0-item_pic.jpg_400x400.jpg'
@@ -125,12 +133,21 @@
 				}
 			})						
 		},
+		
+		onLoad(data) {
+			console.log("asdfasdfasfasfasdfasdfasf" + data.id)
+		},
 		methods:{
+			/**
+			 * 获取商品详细信息
+			 * @param {Object} commodityId
+			 */
 			getData(commodityId) {
 				let data={
 					commodityId:commodityId
 				}
 				api.getList(data).then(res =>{
+					console.log(res)
 					this.service = res.data.data,
 					console.log(this.service),
 					this.commodityTitle=this.service.commodityTitle
@@ -139,11 +156,23 @@
 					this.salePrice=this.service.salePrice
 					this.salesVolume=this.service.salesVolume
 					this.commodityNum=this.service.commodityNum
-					
+					this.titleImg = this.service.commodityImg.filter((item, index, arr) => { // item为数组中的元素，index为下标，arr为目标数组
+						return index < 3
+					})
+					this.bottomImg = `<div style="width:100%">`
+					this.service.commodityImg.forEach((item, index, arr) => { // item为arr的元素，index为下标，arr原数组
+						if(index >= 3){
+							this.bottomImg += `<img style="width:100%;display:block;" src="${item}" />`
+						}
+					});
+					this.bottomImg += `</div>`
+					console.log(this.bottomImg)
+					this.commodityImg=this.service.commodityImg
 				}).catch(err => {
 					console.log(err)
 				})		
 			},
+			
 			//规格弹窗开关
 			toggleSpec() {
 				if(this.specClass === 'show'){
@@ -155,6 +184,7 @@
 					this.specClass = 'show';
 				}
 			},
+			
 			//选择规格
 			selectSpec(index, pid){
 				let list = this.specChildList;
@@ -165,6 +195,7 @@
 				})
 
 				this.$set(list[index], 'selected', true);
+				
 				//存储已选择
 				/**
 				 * 修复选择规格存储错误
@@ -196,7 +227,6 @@
 		},
 		mounted() {
 			this.getData("1")
-			console.log("dadsd")
 		}
 	}
 </script>
