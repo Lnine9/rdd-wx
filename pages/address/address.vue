@@ -1,6 +1,10 @@
-<template>
++;;<template>
 	<view>
-		<view class="list" v-for="(item, index) in addressList" :key="index">
+		<view v-show="showtype">
+			<image class="noAddress" src="../../static/收货地址缺省图_icon.png"></image>
+			<text class="warning">暂无收货地址</text>
+		</view>
+		<view class="list" v-for="(item, index) in addressList" :key="index" v-show="!showtype">
 			<view class="wrapper">
 				<view class="address-box">
 					
@@ -25,6 +29,7 @@
 	export default {
 		data() {
 			return {
+				showtype:false,
 				addressList: [
 					{
 						addressId:'',
@@ -40,8 +45,7 @@
 			}
 		},
 		onShow() {
-			console.log("8888888");
-			this.getData();					
+			this.getData();
 		},
 		methods: {
 			addAddress(type, item){
@@ -53,6 +57,12 @@
 				api.getData().then(res=>{
 					console.log(res.data.data);
 					this.addressList=res.data.data;
+					if(res.data.data.length==0){
+						this.showtype=true;
+					}
+					else{
+						this.showtype=false;
+					}
 				}).catch(err=>{
 					console.log(err)
 				})
@@ -92,11 +102,11 @@ page{
 	}
 	.name{
 		margin-right: 30rpx;
-		font-size: 40rpx;
+		font-size: 32rpx;
 	}
 	.mobile{
 		margin-left: 20rpx;
-		font-size: 40rpx;
+		font-size: 32rpx;
 		color: #C0C0C0;
 	}
 	.u-box{
@@ -110,36 +120,48 @@ page{
 		background: #e6f9f7;
 		border-radius: 24rpx;
 		padding: 10rpx 12rpx;
-		line-height: 1;
 	}
 	.address{
 		font-size: 32rpx;
-		line-height: 20rpx;
+		line-height: 60rpx;
 	}
 	.edit{
 		display: flex;
-		align-items: center;
-		height: 80rpx;
+		height: 40rpx;
+		line-height: 40rpx;
 		font-size: 32rpx;
 		color: #CCCCCC;
 		padding-left: 30rpx;
+		border-left: 1rpx solid #F3F3F3;
+		
 	}
 	
 	.add-btn{
 		position: fixed;
 		left: 24rpx;
 		right: 30rpx;
-		bottom: 30rpx;
+		bottom: 50rpx;
 		z-index: 95;
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		width: 600rpx;
+		width: 670rpx;
 		height: 80rpx;
 		font-size: 32rpx;
 		color: #FFFFFF;
 		background-color: #06C1AE;
 		border-radius: 40rpx;	
 	}
-	
-</style>
+	.noAddress{
+		margin-left: 280rpx;
+		margin-top: 370rpx;
+		width: 200rpx;
+		height: 200rpx;
+	}
+	.warning{
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		color: #CCCCCC;
+	}
+	</style>

@@ -11,7 +11,7 @@
 			<view class="right">
 				<image class="backImg" src="../../static/wallet/ic-余额背景图.png"></image>
 				<view class="incomeType">余额</view>
-				<view class="theIncome">{{blance}}
+				<view class="theIncome">{{wallet.blance}}
 				<text style="font-size: 28rpx;margin-left: 15rpx;">元</text>
 				</view>
 				</view>
@@ -49,8 +49,8 @@
 	export default {
 		data() {
 			return {
-				blance: 0,
 				wallet: {
+					blance: 0,
 					totalIncome: 0,
 					shareIncome: 0,
 					fanyongIncome: 0,
@@ -75,7 +75,16 @@
 			getInfo() {
 				api.getWallet().then(res => {
 					console.log(res.data.data);
-					this.wallet = res.data.data;
+					if (res.data.data == null) {
+						this.wallet.blance = 0;
+						this.wallet.totalIncome = 0;
+						this.wallet.shareIncome = 0;
+						this.wallet.fanyongIncome = 0;
+						 this.wallet.otherIncome = 0;
+					} else {
+						this.wallet = res.data.data;
+					}
+					
 				}).catch(_ => {
 					wx.showToast({
 					  title: '网络繁忙！',

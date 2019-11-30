@@ -25,4 +25,7 @@
 
 <style>
 	/*每个页面公共css */
+	page{
+		font-family:PingFang SC;
+	}
 </style>
