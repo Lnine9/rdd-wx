@@ -54,7 +54,7 @@
 
 				<text class="shop-name">{{order.shopName}}</text>
 
-				<text class="shop-receive-text">{{order.deliveryStateShow}}</text>
+				<text class="shop-receive-text">{{takeWay === 1? order.deliveryStateShow : order.orderStateShow}}</text>
 			</view>
 
 			<!-- 商品展示 -->
@@ -99,6 +99,11 @@
 					<text class="order-text">下单时间</text>
 					<text class="order-value">{{order.createAt}}</text>
 				</view>
+				
+<!-- 				<view>
+					<text class="order-text">电子码</text>
+					<text class="order-value">{{order.createAt}}</text>
+				</view> -->
 			</view>
 
 			<view class="bottom-price-container">
@@ -152,6 +157,8 @@
 					deliveryCompany: '',
 					deliveryNum: '',
 					commodityType: 2, // 1，寄送，2，核销
+					orderState: '',
+					orderStateShow: ''
 				},
 				imageUrl: '',
 				totalPrice: '',
@@ -161,9 +168,9 @@
 		methods: {
 			onLoad: function(params) {
 				console.log(params);
-				this.orderId = params.orderId;
+				this.orderId = params.orderid;
 
-				this.orderId = '8';
+				// this.orderId = '1575036170665008-4';
 				this.getOrderInfo();
 			},
 			getOrderInfo: function() {
@@ -180,8 +187,26 @@
 						case 1:
 							this.order.deliveryStateShow = '未寄送';
 							break;
-						case 0:
+						case 2:
 							this.order.deliveryStateShow = '已收货';
+							break;
+						default:
+							this.order.deliveryStateShow = '--';
+							break;
+					}
+					// 订单状态(核销类型的订单显示)
+					switch (Number(this.order.orderState)) {
+						case 0:
+							this.order.orderStateShow = '待支付';
+							break;
+						case 1:
+							this.order.orderStateShow = '待处理';
+							break;
+						case 2:
+							this.order.orderStateShow = '已完成';
+							break;
+						default:
+							this.order.orderStateShow = '--';
 							break;
 					}
 					// 总价格
@@ -505,6 +530,7 @@
 
 	.order-text {
 		color: #303038;
+		width: 100rpx;
 		font-size: 24rpx;
 		margin: 10rpx 0 10rpx 30rpx;
 	}
