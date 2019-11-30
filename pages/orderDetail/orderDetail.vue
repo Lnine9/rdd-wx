@@ -10,24 +10,24 @@
 			</view>
 
 			<view class="order-state-img-container">
-				<image src="../../static/orderDetail/ic-已签收.png" mode="" class="order-state-img"></image>
+				<image src="/static/orderDetail/ic-received.png" mode="" class="order-state-img"></image>
 			</view>
 		</view>
 
 		<!-- 物流信息 -->
 		<view v-if="takeWay === 1 && hasLogistics" class="commodity-logistics-container">
-			<image src="../../static/orderDetail/ic-物流.png" mode="" class="commodity-logistics-img"></image>
+			<image src="/static/orderDetail/ic-logistics.png" mode="" class="commodity-logistics-img"></image>
 
 			<view class="commodity-logistics-text-container">
 				<text class="commodity-logistics-text">快件从【江苏昆山公司】发往【上海航空】</text>
 			</view>
 
-			<image src="../../static/orderDetail/ic-更多电子码.png" mode="" class="commodity-logistics-more-img"></image>
+			<image src="/static/orderDetail/ic-more-el-code.png" mode="" class="commodity-logistics-more-img"></image>
 		</view>
 
 		<!-- 地址信息 -->
 		<view v-if="takeWay === 1 && order.address" class="address-container">
-			<image src="../../static/orderDetail/ic-地址.png" mode="" class="addres-img"></image>
+			<image src="/static/orderDetail/ic-address.png" mode="" class="addres-img"></image>
 
 			<view class="address-content-container">
 				<view class="address-user-info-container">
@@ -50,7 +50,7 @@
 		<!-- 商品信息 -->
 		<view class="commodity-container">
 			<view class="shop-container">
-				<image src="../../static/orderDetail/ic-店铺.png" mode="" class="shop-img"></image>
+				<image src="/static/orderDetail/ic-shop.png" mode="" class="shop-img"></image>
 
 				<text class="shop-name">{{order.shopName}}</text>
 
@@ -181,8 +181,6 @@
 				console.log(params);
 				this.orderId = params.orderid;
 
-				// 测试
-				// this.orderId = '1575036170665008-4';
 				this.getOrderInfo();
 			},
 			getOrderInfo: function() {
@@ -238,8 +236,6 @@
 					} else {
 						this.sureBtnText = '确认完成';
 					}
-					// 生成二维码
-					
 				}).catch(err => {
 					console.log(err);
 				});
