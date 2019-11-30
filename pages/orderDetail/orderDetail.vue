@@ -26,7 +26,7 @@
 		</view>
 
 		<!-- 地址信息 -->
-		<view v-if="takeWay === 1" class="address-container">
+		<view v-if="takeWay === 1 && order.address" class="address-container">
 			<image src="../../static/orderDetail/ic-地址.png" mode="" class="addres-img"></image>
 
 			<view class="address-content-container">
@@ -100,10 +100,17 @@
 					<text class="order-value">{{order.createAt}}</text>
 				</view>
 				
-<!-- 				<view>
-					<text class="order-text">电子码</text>
-					<text class="order-value">{{order.createAt}}</text>
-				</view> -->
+				<view v-if="order.takeWay === 2">
+					<text class="order-text">电子码<text style="color: #FFFFFF;">白</text></text>
+					<text class="order-value">{{order.electronicCode}}</text>
+				</view>
+				
+				<view 
+					v-else 
+					class="qr-code-container">
+					<text class="order-text">二维码</text>
+					<image :src="qrImageUrl" mode="" class="qr-code-img"></image>
+				</view>
 			</view>
 
 			<view class="bottom-price-container">
@@ -138,6 +145,8 @@
 		OrderDetailAPI
 	} from './api.js'
 
+	import qr from '../utils/wxqrcode.js'
+
 	export default {
 		data() {
 			return {
@@ -158,11 +167,13 @@
 					deliveryNum: '',
 					commodityType: 2, // 1，寄送，2，核销
 					orderState: '',
-					orderStateShow: ''
+					orderStateShow: '',
+					electronicCode: '', // 电子码
 				},
 				imageUrl: '',
 				totalPrice: '',
-				sureBtnText: '确认收货'
+				sureBtnText: '确认收货',
+				qrImageUrl: '', // 二维码图片
 			}
 		},
 		methods: {
@@ -170,6 +181,7 @@
 				console.log(params);
 				this.orderId = params.orderid;
 
+				// 测试
 				// this.orderId = '1575036170665008-4';
 				this.getOrderInfo();
 			},
@@ -180,6 +192,9 @@
 					console.log(res);
 
 					this.order = res.data.data;
+					this.takeWay = Number(this.order.commodityType);
+					// 显示二维码
+					this.getQRCodeImage();
 					switch (Number(this.order.deliveryState)) {
 						case 0:
 							this.order.deliveryStateShow = '未寄送';
@@ -223,6 +238,7 @@
 					} else {
 						this.sureBtnText = '确认完成';
 					}
+					// 生成二维码
 					
 				}).catch(err => {
 					console.log(err);
@@ -275,6 +291,13 @@
 					':' + (oMin.toString().length === 1 ? '0' + oMin : oMin) +
 					':' + (oSec.toString().length === 1 ? '0' + oSec : oSec);
 			},
+			getQRCodeImage: function() {
+				// 二维码内容
+				let content = 'wx:shopId=' + this.order.shopId + 
+					'&orderId=' + this.order.shopId +  
+					'&time=' + this.order.createAt;
+				this.qrImageUrl = qr.createQrCodeImg(content);
+			}
 		}
 	}
 </script>
@@ -436,7 +459,7 @@
 	}
 
 	.shop-name {
-		flex: 80%;
+		flex: 70%;
 		font-size: 28rpx;
 		font-weight: bold;
 		margin: auto 0;
@@ -539,6 +562,17 @@
 		color: #999999;
 		font-size: 24rpx;
 		margin: 10rpx 0 10rpx 93rpx;
+	}
+	
+	.qr-code-container {
+		display: flex;
+		flex-direction: column;
+	}
+	
+	.qr-code-img {
+		margin: 10rpx 220rpx 0 230rpx;
+		width: 300rpx;
+		height: 300rpx;
 	}
 
 	.bottom-price-container {
