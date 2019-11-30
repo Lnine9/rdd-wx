@@ -27,6 +27,12 @@
 			}
 		},
 		{
+			"path": "pages/address/address",
+			"style": {
+				"navigationBarTitleText": "收货地址"
+			}
+		},
+		{
 			"path": "pages/vipApply/vipApply",
 			"style": {
 				"navigationBarTitleText": "申请会员",
@@ -44,12 +50,6 @@
 			"path": "pages/address/newAddress",
 			"style": {
 				"navigationBarTitleText": "新增地址"
-			}
-		},
-		{
-			"path": "pages/address/address",
-			"style": {
-				"navigationBarTitleText": "收货地址"
 			}
 		},
 		{
