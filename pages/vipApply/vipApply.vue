@@ -3,7 +3,7 @@
         <view v-if="isCanUse">
 			<view class='header'>
 				<view class="vipApplyLogo">
-					<image src='../../static/会员卡片.png'></image>
+					<image src='/static/vip.png'></image>
 					<text class="text1">囧途宝盒会员</text>
 					<text class="text2">免费申请啦！</text>
 					<text class="text3">名额有限！时间有限！快快报名申请吧！！</text>
@@ -11,7 +11,7 @@
 				<view class="exclusive">专属权益</view>
 				<view class="legalRight">
 					<view class="recommend">
-						<image src="../../static/ic-返佣.png"></image>
+						<image src="/static/return.png"></image>
 						<view class="referee">推荐人返佣</view>
 					</view>
 					<!-- <view class="vip">
@@ -57,17 +57,18 @@
 					phoneNum:this.applyInformation.phone,
 					remark:this.applyInformation.remarks
 				}
-				api.getData(parms).then(res=>{
+				console.log(parms)
+				api.sendData(parms).then(res=>{
 					wx.showToast({
-					  title: '申请成功！',
+					  title: '申请成功,我们客服人员会尽快联系您',
 					  icon: 'success',
-					  duration: 2000
+					  duration: 3000
 					})
 				}).catch(err=>{
 					wx.showToast({
 					  title: '申请失败，请重试！',
 					  icon: 'fail',
-					  duration: 2000
+					  duration: 3000
 					})
 				})
 				
@@ -184,7 +185,7 @@
 		margin-left: 530rpx;
 		margin-top: -40rpx;
 		font-size: 30rpx;
-		color: #CCCCCC;
+		color: black;
 		text-align: center;
 	}
 	
@@ -192,7 +193,7 @@
 		margin-left: 470rpx;
 		margin-top: -40rpx;
 		font-size: 30rpx;
-		color: #CCCCCC;
+		color: black;
 		text-align: center;
 	}
 
