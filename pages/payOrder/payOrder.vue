@@ -3,58 +3,66 @@
 		<!-- 商品展示 -->
 		<view class="commodity-container">
 			<view class="commodity-img-container">
-				<image src="../../static/payOrder/ic-地址.png" mode="" class="commodity-img"></image>
+				<image :src="imageUrl" mode="暂无图片" class="commodity-img"></image>
 			</view>
 
 			<view class="commodity-content-container">
 				<!-- 商品名 -->
-				<text class="commodity-title">谈谈烧烤</text>
+				<text class="commodity-title">{{commodity.commodityTitle}}</text>
 
 				<!-- 价格展示 与 数量 -->
 				<view class="commodity-price-container">
-					<text class="commodity-actual-price">￥0</text>
+					<text class="commodity-actual-price">￥{{commodity.salePrice}}</text>
 
-					<text class="commodity-primary-price">￥0</text>
+					<text class="commodity-primary-price">￥{{commodity.originalPrice}}</text>
 
-					<text class="commodity-num">x1</text>
+					<text class="commodity-num">x{{commodityNum}}</text>
 				</view>
 			</view>
 		</view>
 
 		<!-- 地址展示 -->
-		<view 
-			v-if="takeWay === 1"
-			class="address-container"
-			@tap="chooseAddress">
+		<view v-if="commodity.takeWay === 1 && hasDefaultAddress" class="address-container" @tap="chooseAddress">
 			<view class="addres-img-container">
-				<image src="../../static/payOrder/ic-地址.png" mode="" class="addres-img"></image>
+				<image src="/static/payOrder/ic-address.png" mode="" class="addres-img"></image>
 			</view>
 
 			<view class="address-content-container">
 				<view class="address-user-info-container">
 					<text class="address-user-name">
-						张三
+						{{address.receiver}}
 					</text>
 
 					<text class="address-user-account">
-						182321312312
+						{{address.contactNumber}}
 					</text>
 				</view>
 
 				<view class="address-user-address-detail">
-					江苏省 南京市 市辖区 江南大道花园小区 1栋5-10
+					{{wholeAddress}}
 				</view>
 			</view>
 
 			<view class="address-more-address-container">
-				<image src="../../static/payOrder/ic-更多电子码.png" mode="" class="address-more-address-img"></image>
+				<image src="/static/payOrder/ic-more-el-code.png" mode="" class="address-more-address-img"></image>
+			</view>
+		</view>
+
+		<!-- 新增地址 -->
+		<view v-if="commodity.takeWay === 1 && !hasDefaultAddress" class="address-container" @tap="addAddress">
+			<view class="addrees-add-container">
+				<view class="addrees-add-content-container">
+					<image src="/static/payOrder/ic-add-address.png" mode="" class="addrees-add-img"></image>
+
+					<text class="address-add-text">新增地址</text>
+				</view>
 			</view>
 		</view>
 
 		<!-- 输入备注 -->
 		<view class="remark-container">
 			<text class="remark-text">备注</text>
-			<input class="remark-input" placeholder="选填,输入备注" v-model="remark" />
+			<input class="remark-input" placeholder="选填，输入订单相关的备注" v-model="remark" />
 		</view>
 
 		<!-- 支付按钮与价格 -->
@@ -64,7 +72,7 @@
 				<text class="pay-btn-price-text">￥{{totalPrice}}</text>
 			</view>
 
-			<view class="pay-btn" @tap="payOrder" data-test="123">
+			<view class="pay-btn" @tap="payOrder">
 				<text class="pay-btn-text">立即支付</text>
 			</view>
 		</view>
@@ -76,38 +84,56 @@
 		PayOrderAPI
 	} from './api.js'
 
+	import md5 from '../utils/md5.js'
+
 	export default {
 		data() {
 			return {
 				commodityId: '',
+				commodityNum: '',
 				commodity: {
-					imageUrl: '',
+					commodityId: '',
+					commmodityTitle: '',
+					commodityImg: [],
+					salePrice: '',
+					originalPrice: '',
 					commodityTitle: '',
+					takeWay: 2,
 				},
 				imageUrl: '',
-				takeWay: 1, // 默认为核销(不显示选择地址信息)
-				// 支付价格
-				// 原价
-				// 件数
-
-				// 地址栏
-				addressId: '', // 默认地址的id
+				addressId: '', // 外部传递过来的id（暂时未使用）
+				address: {
+					addressId: '',
+					receiver: '',
+					contactNumber: '',
+					province: '',
+					city: '',
+					area: '',
+					detail: '',
+				},
+				wholeAddress: '', // 完整路径(上方字符串的拼接)
+				hasDefaultAddress: false,
 				remark: '',
 				totalPrice: 0,
 			}
 		},
-		// mounted() {
-		// 	console.log('mounted');
-		// 	this.getCommodityInfo();
-		// },
+		onLoad: function(params) {
+			console.log(params);
+			this.commodityId = params.commodityId;
+			this.commodityNum = params.commodityNum;
+
+			// uni.startPullDownRefresh();
+			this.getCommodityInfo();
+		},
+		onPullDownRefresh: function() {
+			// console.log(this.commodityId);
+			// setTimeout(function() {
+			// 	uni.stopPullDownRefresh();
+			// }, 1000);
+		},
 		methods: {
-			onLoad: function(params) {
-				console.log(params);
-				this.commmodityId = params.commodityId
-				
-				this.getCommodityInfo();
-			},
 			getCommodityInfo: function() {
+				// uni.startPullDownRefresh();
 				// 获取商品信息
 				console.log(this.commmodityId);
 				if (this.commodityId != null && this.commodityId != undefined) {
@@ -116,8 +142,28 @@
 						commodityId: this.commodityId
 					}).then(res => {
 						console.log(res);
+						this.commodity = res.data.data;
+						this.commodity.salePrice = Number(this.commodity.salePrice);
+						this.commodity.originalPrice = Number(this.commodity.originalPrice);
+						// 设置显示的图片
+						if (this.commodity.commodityImg.length > 0) {
+							this.imageUrl = this.commodity.commodityImg[0];
+						}
+						// 获取总价格
+						this.totalPrice = Number(this.commodity.salePrice) * Number(this.commodityNum);
+
+						// 寄送，请求默认地址
+						if (this.commodity.takeWay === 1) {
+							this.getDefaultAddress();
+						}
+						
+						// uni.stopPullDownRefresh();
 					}).catch(err => {
-						uni.showToast({title: '商品信息获取失败，刷新试试'})
+						uni.showModal({
+							title: '提示',
+							content: '商品信息获取失败，刷新试试',
+							showCancel: false
+						});
 						console.log(err);
 					})
 				} else {
@@ -127,33 +173,98 @@
 			},
 			getDefaultAddress: function() {
 				// todo获取默认地址，如果没有数据，更改样式，要求用户选择地址or
+				PayOrderAPI.getDefaultAddress().then(res => {
+					console.log(res);
+					if (res.data.data != null && res.data.data != undefined) {
+						this.hasDefaultAddress = true;
+						this.address = res.data.data;
+						this.wholeAddress = this.address.province +
+							' ' + this.address.city +
+							' ' + this.address.area +
+							' ' + this.address.detail;
+					} else {
+						this.hasDefaultAddress = false;
+					}
+				}).catch(err => {
+					console.log(err);
+				});
 			},
 			chooseAddress: function() {
+				console.log('你点击了选择地址')
 				// 跳转到选择地址页面，并且标明是从支付订单页面跳转
 				uni.navigateTo({
-					url: '../address/address?payOrder=true'
+					url: '/pages/address/address'
 				})
 			},
-			payOrder: function(item) {
-				// todo 支付订单，，传递commodityId, commodityNum, remark
-				console.log(item);
-				
-				// uni.navigateTo({
-				// 	url: './imageTest/imageTest'
-				// });
-				// this.commmodityId = 1;
-				// this.getCommodityInfo();
-				// let params = {
-				// 	commodityId: this.commmodityId,
-				// 	commodityNum: this.commmodityNum
-				// }
+			addAddress: function() {
+				console.log('你点击了新增地址')
+				// 跳转到选择地址页面，并且标明是从支付订单页面跳转
+				uni.navigateTo({
+					url: '/pages/address/address'
+				})
+				console.log('你点击了新增地址End')
+			},
+			payOrder: function() {
+				// 测试支付
 				let params = {
-					commodityId: 1,
-					commodityNum: 1,
-					userPhone: '1593528693'
+					commodityId: this.commodityId,
+					commodityNum: this.commodityNum,
+					userPhone: '15936528693',
+					remark: this.remark,
+					addressId: this.address.addressId
 				};
+
 				PayOrderAPI.payOrder(params).then(res => {
 					console.log(res);
+					if (res.data.data) {
+						console.log(res.data.data)
+						console.log(data)
+						let data = res.data.data;
+						let result = 'appId=' + data.appid +
+							'&nonceStr=' + data.noncestr +
+							'&package=prepay_id=' + data.prepayid +
+							'&signType=MD5&timeStamp=' + data.timestamp +
+							'&key=CHONGQINGAiDonginformation201808';
+						console.log(result);
+						// MD5加密
+						let paySignStr = md5(result).toUpperCase();
+						console.log(paySignStr);
+						// 起调支付接口
+						wx.requestPayment({
+							'timeStamp': data.timestamp,
+							'nonceStr': data.noncestr,
+							'package': 'prepay_id=' + data.prepayid,
+							'signType': 'MD5',
+							'paySign': paySignStr,
+							'success': function(res) {
+								console.log(res);
+								console.log('成功');
+								
+								uni.showToast({
+									title: '购买成功!',
+									icon: 'success',
+									
+								});
+								// 购买成功去往首页
+								uni.switchTab({
+									url: '/pages/homePage/homePage'
+								});
+							},
+							'fail': function(res) {
+								console.log(res);
+								console.log('失败');
+								// 购买成功去往首页
+								uni.showToast({
+									title: '取消支付',
+									icon: 'none'
+								});
+							},
+							'complete': function(res) {
+								console.log(res);
+								console.log('完成');
+							}
+						});
+					}
 				}).catch(err => {
 					console.log(err);
 				});
@@ -312,6 +423,29 @@
 		width: 13rpx;
 		height: 26rpx;
 		margin: auto 20rpx auto 0;
+	}
+
+	.addrees-add-container {
+		display: flex;
+		width: 100%;
+	}
+
+	.addrees-add-content-container {
+		display: flex;
+		justify-content: center;
+		margin: auto;
+	}
+
+	.addrees-add-img {
+		width: 40rpx;
+		height: 40rpx;
+	}
+
+	.address-add-text {
+		margin-left: 20rpx;
+		color: #333333;
+		font-size: 30rpx;
+		text-line-through: 40rpx;
 	}
 
 	.remark-container {

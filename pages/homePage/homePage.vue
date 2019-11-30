@@ -1,5 +1,13 @@
 <template>
 	<view class="container">	
+		<!-- 小程序头部兼容 -->
+		<!-- #ifdef MP -->
+		<!-- #endif -->
+		<view class="header"><label class="head-text">首页</label>
+		<picker class="head-region" @change="bindPickerChange" :value="regionIndex" :range="region">
+			<view class="uni-input" v-if="this.defaultRegion==''">{{region[regionIndex]}}</view>
+			 <view class="uni-input" v-if="this.defaultRegion!=''">{{defaultRegion}}</view>
+		</picker></view>
 		<!-- 头部轮播 -->
 		<view class="carousel-section">
 			<!-- 标题栏和状态栏占位符 -->
@@ -8,7 +16,7 @@
 			<view class="titleNview-background" :style="{backgroundColor:titleNViewBackground}"></view>
 			<swiper class="carousel" circular @change="swiperChange">
 				<swiper-item v-for="(item, index) in carouselList" :key="index" class="carousel-item" @click="navToDetailPage({title: '轮播广告'})">
-					<image :src="item.src" />
+					<image :src="item.savePath" />
 				</swiper-item>
 			</swiper>
 			<!-- 自定义swiper指示器 -->
@@ -19,26 +27,27 @@
 			</view>
 		</view>
 		<!-- 分类 -->
+		<view class="f-header m-t">
+			<view class="tit-box">
+				<text class="tit">精选商品</text>
+			</view>
+		</view>
 		<view class="cate-section">
-			<!-- 秒杀楼层 -->
-			<view class="seckill-section m-t">
-				<view class="s-header">
-					<image class="s-img" src="/static/temp/secskill-img.jpg" mode="widthFix"></image>
-					<text class="tip">8点场</text>
-					<text class="hour timer">07</text>
-					<text class="minute timer">13</text>
-					<text class="second timer">55</text>
-					<text class="yticon icon-you"></text>
-				</view>
+			<!-- 精选商品 -->
+			<view class="seckill-section m-t">			
+				<text class="yticon icon-you"></text>
 				<scroll-view class="floor-list" scroll-x>
 					<view class="scoll-wrapper">
 						<view 
 							v-for="(item, index) in goodsList" :key="index"
 							class="floor-item"
-							@click="navToDetailPage(item)">
-							<image :src="item.image" mode="aspectFill"></image>
-							<text class="title clamp">{{item.title}}</text>
-							<text class="price">￥{{item.price}}</text>
+							@click="navToDetailPage(index)">
+							<image :src="item.commodityImg[0]" mode="aspectFill"></image>
+							<text class="clamp">{{item.commodityTitle}}</text>
+							<view class="PriceArea">
+								<text class="priceOrigin">￥{{item.salePrice}}</text>
+								<text class="priceCurrent">￥{{item.originalPrice}}</text>
+							</view>
 						</view>
 					</view>
 				</scroll-view>
@@ -47,10 +56,9 @@
 		
 		<!-- 猜你喜欢 -->
 		<view class="f-header m-t">
-			<image src="/static/temp/h1.png"></image>
+		
 			<view class="tit-box">
 				<text class="tit">猜你喜欢</text>
-				<text class="tit2">Guess You Like It</text>
 			</view>
 			<text class="yticon icon-you"></text>
 		</view>
@@ -59,105 +67,206 @@
 			<view 
 				v-for="(item, index) in goodsList" :key="index"
 				class="guess-item"
-				@click="navToDetailPage(item)"
-			>
+				@click="navToDetailPage(index)">
 				<view class="image-wrapper">
-					<image :src="item.image" mode="aspectFill"></image>
+					<image :src="item.commodityImg[0]" mode="aspectFill"></image>
 				</view>
-				<text class="title clamp">{{item.title}}</text>
-				<text class="price">￥{{item.price}}</text>
+				<text class="title clamp">{{item.commodityTitle}}</text>
+				<text class="price">￥{{item.salePrice}}</text>
 			</view>
 		</view>
 	</view>
 </template>
 
 <script>
-
+	import {api} from "./api.js"
+	// 高德地图 api
+	import amap from '../../libs/amap-wx.js';  
+	
 	export default {
-
 		data() {
 			return {
+				amapPlugin: null,
+				key: '8aa790ec80dd04abdf75736893a84613',
 				titleNViewBackground: '',
 				swiperCurrent: 0,
 				swiperLength: 0,
 				carouselList: [],
-				goodsList: [
-					{image:"https://static.runoob.com/images/demo/demo1.jpg", title:"哈哈哈", price:"12"},
-					{image:"https://static.runoob.com/images/demo/demo1.jpg", title:"哈哈哈", price:"12"},
-					{image:"https://static.runoob.com/images/demo/demo1.jpg", title:"哈哈哈", price:"12"},
-					{image:"https://static.runoob.com/images/demo/demo1.jpg", title:"哈哈哈", price:"12"},
-					{image:"https://static.runoob.com/images/demo/demo1.jpg", title:"哈哈哈", price:"12"},
-					{image:"https://static.runoob.com/images/demo/demo1.jpg", title:"哈哈哈", price:"12"},
-					{image:"https://static.runoob.com/images/demo/demo1.jpg", title:"哈哈哈", price:"12"}
-				]
+				defaultRegion: '',
+				region:['重庆市','上海市','山西'],
+				regionIndex: 1,
+				guessList:[],
+				goodsList: [],
+				addressName: ''
 			};
 		},
-
-		onLoad() {
-			this.loadData();
-		},
+		
 		methods: {
-			/**
-			 * 请求静态数据只是为了代码不那么乱
-			 * 分次请求未作整合
-			 */
-			async loadData() {
-				let carouselList = await this.$api.json('carouselList');
-				this.titleNViewBackground = carouselList[0].background;
-				this.swiperLength = carouselList.length;
-				this.carouselList = carouselList;
-				
-				let goodsList = await this.$api.json('goodsList');
-				this.goodsList = goodsList || [];
-			},
-			//轮播图切换修改背景色
+			//轮播图切换
 			swiperChange(e) {
 				const index = e.detail.current;
 				this.swiperCurrent = index;
-				this.titleNViewBackground = this.carouselList[index].background;
 			},
 			//详情页
 			navToDetailPage(item) {
 				//测试数据没有写id，用title代替
-				let id = item.title;
-				console.log(item.title),
+				let id = item.commodityId;
 				uni.navigateTo({
-					// url: `/pages/product/product?id=${id}`,
-					url: `/pages/product/product`,
-					
-				})
-				
+					url: `/pages/product/product?id=${id}`,
+				})				
+			},	
+			bindPickerChange(val) {
+				uni.setStorageSync('location',this.region[val.detail.value]);
+				this.defaultRegion = this.region[val.detail.value]
+				this.getBanner(),
+				this.getUserMes(),
+				this.getRecommend(),
+				this.getGuess()
 			},
-		},
-		// #ifndef MP
-		// 标题栏input搜索框点击
-		onNavigationBarSearchInputClicked: async function(e) {
-			this.$api.msg('点击了搜索框');
-		},
-		//点击导航栏 buttons 时触发
-		onNavigationBarButtonTap(e) {
-			const index = e.index;
-			if (index === 0) {
-				this.$api.msg('点击了扫描');
-			} else if (index === 1) {
-				// #ifdef APP-PLUS
-				const pages = getCurrentPages();
-				const page = pages[pages.length - 1];
-				const currentWebview = page.$getAppWebview();
-				currentWebview.hideTitleNViewButtonRedDot({
-					index
-				});
-				// #endif
-				uni.navigateTo({
-					url: '/pages/notice/notice'
-				})
+			/**
+			 * 获取用户信息
+			 */
+			getUserMes(){
+				let user = {
+					// 此处默认传入重庆市
+					// 用户信息和地区无关
+					area:'重庆市'
+				};
+				api.getUserInfo().then(res =>{
+					this.service = res.data.data,
+				
+					// userType 说明
+					// 0: app
+					// 1: 企业
+					// 2: 小程序
+					uni.setStorageSync('userType', this.service.userType),
+					// 默认重庆（debug）
+					uni.setStorageSync('location', "重庆"),
+					// 存储角色信息
+					uni.setStorageSync('roleName', this.service.roleName),
+					// 当前用户是否为VIP
+					uni.setStorageSync('isVip', this.service.isVip==0?false:true)
+					// 当前地区是否有VIP业务
+					uni.setStorageSync('haveVip', this.service.haveVip==0?false:true)
+					
+						
+				}).catch(err => {
+					console.log(err)
+				});		
+			},
+			
+			/**
+			 * 获取轮播图信息
+			 */
+			getBanner() {				
+				let location = {
+					locationCode:'WCPHomePage'
+				};
+				api.getBannerImgs(location).then(res =>{
+					this.carouselList = res.data.data,
+					this.swiperLength = this.carouselList.length;
+					this.carouselList = this.carouselList;
+				}).catch(err => {
+					console.log(err)
+				})		
+			},
+			
+			/**
+			 * 获取精选商品
+			 */
+			getRecommend() {
+				let userAndLocalMes = {
+					// area: uni.getStorageSync('location'),
+					area: this.addressName,
+					longitude: '',
+					latitude: '',
+					shopPlace: 'Recommend'
+				};
+				api.getProducts(userAndLocalMes).then(res =>{
+					this.goodsList = res.data.data,
+					console.log(this.goodsList)		
+				}).catch(err => {
+					console.log(err)
+				})	
+			},
+			
+			/**
+			 * 猜你喜欢
+			 */
+			getGuess() {
+				let userAndLocalMes_1 = {
+					// area: uni.getStorageSync('location'),
+					area: this.addressName,
+					longitude: '',
+					latitude: '',
+					shopPlace: 'Guess'
+				};
+				api.getProducts(userAndLocalMes_1).then(res =>{
+					this.guessList = res.data.data,
+					console.log(this.guessList)		
+				}).catch(err => {
+					console.log(err)
+				})			
 			}
+														
+		},
+							
+		/**
+		 * 猜你喜欢列表
+		 */
+		mounted() {		
+			/**
+			 * 获取设备定位
+			 */
+			console.info('mounted')
+			console.info(!uni.getStorageSync('location'))
+			if(!uni.getStorageSync('location')){
+				this.amapPlugin = new amap.AMapWX({
+					    key: this.key  
+					});  
+					
+					uni.showLoading({  
+						title: '获取信息中'  
+					});  
+					this.amapPlugin.getPoiAround({  
+						success: (data) => {  
+							uni.hideLoading();  
+							this.addressName = data.poisData[0].cityname;  
+							uni.setStorageSync('location', this.addressName)
+							this.defaultRegion = uni.getStorageSync('location')||'';
+						},
+						fail: (res) => {
+							console.log(res)  
+						}
+					}); 
+				}	
+					this.defaultRegion = uni.getStorageSync('location')||'';
+					this.getBanner(),
+					this.getUserMes(),
+					this.getRecommend(),
+					this.getGuess()
+			
 		}
+		// #ifndef MP
+
 		// #endif
 	}
 </script>
 
 <style lang="scss">
+	.header{
+		width: 90%;
+		height: 100rpx;
+		line-height: 100rpx;
+		margin: 0 auto;
+	}
+	.head-text {
+		float: left;
+	}
+	.head-region{
+		float: right;
+	}
+	
 	/* #ifdef MP */
 	.mp-search-box{
 		position:absolute;
@@ -182,9 +291,11 @@
 			position:relative;
 			z-index:5;
 			border-radius:16upx 16upx 0 0;
-			margin-top:-20upx;
+			margin-top:-50upx;
 		}
 		.carousel-section{
+			margin: 0 auto;
+			width: 90%;
 			padding: 0;
 			.titleNview-placing {
 				padding-top: 0;
@@ -205,7 +316,7 @@
 	
 	
 	page {
-		background: #f5f5f5;
+		background: #ffffff;
 	}
 	.m-t{
 		margin-top: 16upx;
@@ -226,7 +337,7 @@
 			top: 0;
 			left: 0;
 			width: 100%;
-			height: 426upx;
+			// height: 400upx;
 			transition: .4s;
 		}
 	}
@@ -323,27 +434,57 @@
 			align-items: flex-start;
 		}
 		.floor-item{
-			width: 150upx;
-			margin-right: 20upx;
-			font-size: $font-sm+2upx;
+			display:flex;
+			flex-direction: column;
+			align-items: center;
+			width: 240rpx;
+			margin-right: 50upx;
+			font-size: 32rpx;
+			font-weight: 800;
 			color: $font-color-dark;
+			font-family:PingFang SC;
 			line-height: 1.8;
 			image{
-				width: 150upx;
-				height: 150upx;
+				width: 240rpx;
+				height: 240rpx;
 				border-radius: 6upx;
 			}
-			.price{
-				color: $uni-color-primary;
+			.PriceArea{
+				display:flex;
+				justify-content: center;
+				align-items: center;
+			}
+			.clamp{
+				display: -webkit-box;
+				-webkit-box-orient: vertical;
+				-webkit-line-clamp:2;
+				overflow: hidden;
+				word-break: break-all;
+				text-overflow: ellipsis;
+			}
+			.priceOrigin{
+				font-size: 32rpx;
+				font-family:PingFang SC;
+				font-weight: 500;
+				color:rgba(255,126,48,1);
+			}
+			.priceCurrent{
+				margin-left: 10rpx;
+				font-size: 28rpx;
+				font-family:PingFang SC;
+				font-weight: 500;
+				color:rgba(153,153,153,1);
+				text-decoration: line-through;
 			}
 		}
 	}
 	
 	.f-header{
-		display:flex;
+		// display:flex;
+		
 		align-items:center;
-		height: 140upx;
-		padding: 6upx 30upx 8upx;
+		height: 90upx;
+		padding: 20upx 30upx 8upx;
 		background: #fff;
 		image{
 			flex-shrink: 0;
@@ -357,9 +498,10 @@
 			flex-direction: column;
 		}
 		.tit{
-			font-size: $font-lg +2upx;
-			color: #font-color-dark;
-			line-height: 1.3;
+			font-size:32rpx;
+			font-family:PingFang SC;
+			font-weight:bold;
+			color:rgba(51,51,51,1);
 		}
 		.tit2{
 			font-size: $font-sm;

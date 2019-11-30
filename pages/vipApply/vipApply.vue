@@ -3,7 +3,7 @@
         <view v-if="isCanUse">
 			<view class='header'>
 				<view class="vipApplyLogo">
-					<image src='../../static/会员卡片.png'></image>
+					<image src='/static/vip.png'></image>
 					<text class="text1">囧途宝盒会员</text>
 					<text class="text2">免费申请啦！</text>
 					<text class="text3">名额有限！时间有限！快快报名申请吧！！</text>
@@ -11,7 +11,7 @@
 				<view class="exclusive">专属权益</view>
 				<view class="legalRight">
 					<view class="recommend">
-						<image src="../../static/ic-返佣.png"></image>
+						<image src="/static/return.png"></image>
 						<view class="referee">推荐人返佣</view>
 					</view>
 					<!-- <view class="vip">
@@ -52,25 +52,26 @@
         },
         methods: {
             recommend:function(options){
+				var parms = {
+					userName:this.applyInformation.name,
+					phoneNum:this.applyInformation.phone,
+					remark:this.applyInformation.remarks
+				}
+				console.log(parms)
+				api.sendData(parms).then(res=>{
+					wx.showToast({
+					  title: '申请成功,我们客服人员会尽快联系您',
+					  icon: 'success',
+					  duration: 3000
+					})
+				}).catch(err=>{
+					wx.showToast({
+					  title: '申请失败，请重试！',
+					  icon: 'fail',
+					  duration: 3000
+					})
+				})
 				
-				console.log(this.applyInformation.name);
-				// wx.navigateTo({
-				//   url: '../index/index?id=1',
-				//   events: {
-				//     // 为指定事件添加一个监听器，获取被打开页面传送到当前页面的数据
-				//     acceptDataFromOpenedPage: function(data) {
-				//       console.log(data)
-				//     },
-				//     someEvent: function(data) {
-				//       console.log(data)
-				//     }
-				    
-				//   },
-				//   success: function(res) {
-				//     // 通过eventChannel向被打开页面传送数据
-				//     console.log("success");
-				//   }
-				// })
 			}
         },
     }
@@ -184,7 +185,7 @@
 		margin-left: 530rpx;
 		margin-top: -40rpx;
 		font-size: 30rpx;
-		color: #CCCCCC;
+		color: black;
 		text-align: center;
 	}
 	
@@ -192,7 +193,7 @@
 		margin-left: 470rpx;
 		margin-top: -40rpx;
 		font-size: 30rpx;
-		color: #CCCCCC;
+		color: black;
 		text-align: center;
 	}
 
