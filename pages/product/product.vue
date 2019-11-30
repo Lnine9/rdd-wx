@@ -2,10 +2,10 @@
 	<view class="container">
 		<view class="carousel">
 			<swiper indicator-dots circular=true duration="400">
-				<swiper-item class="swiper-item" v-for="(item,index) in imgList" :key="index">
+				<swiper-item class="swiper-item" v-for="(item,index) in commodityImg" :key="index">
 					<view class="image-wrapper">
 						<image
-							:src="item.src" 
+							:src="item" 
 							class="loaded" 
 							mode="aspectFill"
 						></image>
@@ -15,43 +15,22 @@
 		</view>
 		
 		<view class="introduce-section">
-			<text class="title">恒源祥2019春季长袖白色t恤 新款春装</text>
+			<text class="title">{{commodityTitle}}</text>
 			<view class="price-box">
 				<text class="price-tip">¥</text>
-				<text class="price">341.6</text>
-				<text class="m-price">¥488</text>
-				<text class="coupon-tip">7折</text>
+				<text class="price">{{originalPrice}}</text>
+				<text class="m-price">¥{{salePrice}}</text>
+				<!-- <text class="coupon-tip">7折</text> -->
 			</view>
 			<view class="bot-row">
-				<text>销量: 108</text>
-				<text>库存: 4690</text>
-				<text>浏览量: 768</text>
+				<text>销量: {{salesVolume}}</text>
+				<text>库存: {{commodityNum}}</text>
 			</view>
 		</view>
 		
-		<!--  分享 -->
-		<view class="share-section" @click="share">
-			<view class="share-icon">
-				<text class="yticon icon-xingxing"></text>
-				 返
-			</view>
-			<text class="tit">该商品分享可领49减10红包</text>
-			<text class="yticon icon-bangzhu1"></text>
-			<view class="share-btn">
-				立即分享
-				<text class="yticon icon-you"></text>
-			</view>
-			
-		</view>
-		
-		<view class="c-list">
+		<view class="c-list">		
 			<view class="c-row b-b">
-				<text class="tit">优惠券</text>
-				<text class="con t-r red">领取优惠券</text>
-				<text class="yticon icon-you"></text>
-			</view>
-			<view class="c-row b-b">
-				<text class="tit">促销活动</text>
+				<text class="tit">{{commodityInfo}}</text>
 				<view class="con-list">
 					<text>新人首单送20元无门槛代金券</text>
 					<text>订单满50减10</text>
@@ -59,25 +38,18 @@
 					<text>单笔购买满两件免邮费</text>
 				</view>
 			</view>
-			<view class="c-row b-b">
-				<text class="tit">服务</text>
-				<view class="bz-list con">
-					<text>7天无理由退换货 ·</text>
-					<text>假一赔十 ·</text>
-				</view>
-			</view>
 		</view>
 		
 		<view class="detail-desc">
 			<view class="d-header">
-				<text>图文详情</text>
+				<text>商品介绍</text>
 			</view>
 			<rich-text :nodes="desc"></rich-text>
 		</view>
 		
 		<!-- 底部操作菜单 -->
 		<view class="page-bottom">
-			<navigator url="/pages/homePage/homePage" open-type="switchTab" class="p-b-btn">
+			<navigator url="/pages/index/index" open-type="switchTab" class="p-b-btn">
 				<text class="yticon icon-xiatubiao--copy"></text>
 				<text>首页</text>
 			</navigator>
@@ -95,17 +67,23 @@
 				<button type="primary" class=" action-btn no-border add-cart-btn">加入购物车</button>
 			</view>
 		</view>
-	
 	</view>
 </template>
 
 <script>
+	import {api} from "./api.js"
 	export default{
 		data() {
 			return {
+				commodityTitle: '',    // 商品描述标题
+				commodityImg: [],      // 商品图片
+				commodityInfo: '',     // 商品信息
+				originalPrice: '',     // 商品原价
+				salePrice: '',         // 商品现价
+				salesVolume: '',       // 销量
+				commodityNum: '',      // 库存
 				specClass: 'none',
-				specSelected:[],
-				
+				specSelected:[],				
 				favorite: true,
 				shareList: [],
 				imgList: [
@@ -127,74 +105,15 @@
 						<img style="width:100%;display:block;" src="https://gd4.alicdn.com/imgextra/i4/479184430/O1CN01tWg4Us1iaz4auqelt_!!479184430.jpg_400x400.jpg" />
 						<img style="width:100%;display:block;" src="https://gd1.alicdn.com/imgextra/i1/479184430/O1CN01Tnm1rU1iaz4aVKcwP_!!479184430.jpg_400x400.jpg" />
 					</div>
-				`,
-				specList: [
-					{
-						id: 1,
-						name: '尺寸',
-					},
-					{	
-						id: 2,
-						name: '颜色',
-					},
-				],
-				specChildList: [
-					{
-						id: 1,
-						pid: 1,
-						name: 'XS',
-					},
-					{
-						id: 2,
-						pid: 1,
-						name: 'S',
-					},
-					{
-						id: 3,
-						pid: 1,
-						name: 'M',
-					},
-					{
-						id: 4,
-						pid: 1,
-						name: 'L',
-					},
-					{
-						id: 5,
-						pid: 1,
-						name: 'XL',
-					},
-					{
-						id: 6,
-						pid: 1,
-						name: 'XXL',
-					},
-					{
-						id: 7,
-						pid: 2,
-						name: '白色',
-					},
-					{
-						id: 8,
-						pid: 2,
-						name: '珊瑚粉',
-					},
-					{
-						id: 9,
-						pid: 2,
-						name: '草木绿',
-					},
-				]
+				`	
 			};
 		},
 		async onLoad(options){
-			
 			//接收传值,id里面放的是标题，因为测试数据并没写id 
 			let id = options.id;
 			if(id){
 				this.$api.msg(`点击了${id}`);
 			}
-			
 			
 			//规格 默认选中第一条
 			this.specList.forEach(item=>{
@@ -205,10 +124,36 @@
 						break; //forEach不能使用break
 					}
 				}
-			})
-			this.shareList = await this.$api.json('shareList');
+			})						
+		},
+		
+		onLoad(data) {
+			console.log("asdfasdfasfasfasdfasdfasf" + data.id)
 		},
 		methods:{
+			/**
+			 * 获取商品详细信息
+			 * @param {Object} commodityId
+			 */
+			getData(commodityId) {
+				let data={
+					commodityId:commodityId
+				}
+				api.getList(data).then(res =>{
+					this.service = res.data.data,
+					console.log(this.service),
+					this.commodityTitle=this.service.commodityTitle
+					this.commodityInfo=this.service.commodityInfo
+					this.originalPrice=this.service.originalPrice
+					this.salePrice=this.service.salePrice
+					this.salesVolume=this.service.salesVolume
+					this.commodityNum=this.service.commodityNum		
+					this.commodityImg=this.service.commodityImg
+				}).catch(err => {
+					console.log(err)
+				})		
+			},
+			
 			//规格弹窗开关
 			toggleSpec() {
 				if(this.specClass === 'show'){
@@ -220,6 +165,7 @@
 					this.specClass = 'show';
 				}
 			},
+			
 			//选择规格
 			selectSpec(index, pid){
 				let list = this.specChildList;
@@ -230,6 +176,7 @@
 				})
 
 				this.$set(list[index], 'selected', true);
+				
 				//存储已选择
 				/**
 				 * 修复选择规格存储错误
@@ -254,16 +201,18 @@
 			},
 			buy(){
 				uni.navigateTo({
-					// url: `/pages/order/createOrder`
+					url: `/pages/order/createOrder`
 				})
 			},
 			stopPrevent(){}
 		},
-
+		mounted() {
+			this.getData("1")
+		}
 	}
 </script>
 
-<style lang="scss">
+<style lang='scss'>
 	page{
 		background: $page-color-base;
 		padding-bottom: 160upx;
@@ -275,7 +224,7 @@
 	.carousel {
 		height: 722upx;
 		position:relative;
-		.swiper{
+		swiper{
 			height: 100%;
 		}
 		.image-wrapper{
@@ -344,7 +293,7 @@
 			}
 		}
 	}
-	
+
 	.c-list{
 		font-size: $font-sm + 2upx;
 		color: $font-color-base;
@@ -386,7 +335,6 @@
 		}
 	}
 	
-
 	/*  详情 */
 	.detail-desc{
 		background: #fff;
@@ -418,7 +366,158 @@
 			}
 		}
 	}
-
+	
+	/* 规格选择弹窗 */
+	.attr-content{
+		padding: 10upx 30upx;
+		.a-t{
+			display: flex;
+			image{
+				width: 170upx;
+				height: 170upx;
+				flex-shrink: 0;
+				margin-top: -40upx;
+				border-radius: 8upx;;
+			}
+			.right{
+				display: flex;
+				flex-direction: column;
+				padding-left: 24upx;
+				font-size: $font-sm + 2upx;
+				color: $font-color-base;
+				line-height: 42upx;
+				.price{
+					font-size: $font-lg;
+					color: $uni-color-primary;
+					margin-bottom: 10upx;
+				}
+				.selected-text{
+					margin-right: 10upx;
+				}
+			}
+		}
+		.attr-list{
+			display: flex;
+			flex-direction: column;
+			font-size: $font-base + 2upx;
+			color: $font-color-base;
+			padding-top: 30upx;
+			padding-left: 10upx;
+		}
+		.item-list{
+			padding: 20upx 0 0;
+			display: flex;
+			flex-wrap: wrap;
+			text{
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				background: #eee;
+				margin-right: 20upx;
+				margin-bottom: 20upx;
+				border-radius: 100upx;
+				min-width: 60upx;
+				height: 60upx;
+				padding: 0 20upx;
+				font-size: $font-base;
+				color: $font-color-dark;
+			}
+			.selected{
+				background: #fbebee;
+				color: $uni-color-primary;
+			}
+		}
+	}
+	
+	/*  弹出层 */
+	.popup {
+		position: fixed;
+		left: 0;
+		top: 0;
+		right: 0;
+		bottom: 0;
+		z-index: 99;
+		
+		&.show {
+			display: block;
+			.mask{
+				animation: showPopup 0.2s linear both;
+			}
+			.layer {
+				animation: showLayer 0.2s linear both;
+			}
+		}
+		&.hide {
+			.mask{
+				animation: hidePopup 0.2s linear both;
+			}
+			.layer {
+				animation: hideLayer 0.2s linear both;
+			}
+		}
+		&.none {
+			display: none;
+		}
+		.mask{
+			position: fixed;
+			top: 0;
+			width: 100%;
+			height: 100%;
+			z-index: 1;
+			background-color: rgba(0, 0, 0, 0.4);
+		}
+		.layer {
+			position: fixed;
+			z-index: 99;
+			bottom: 0;
+			width: 100%;
+			min-height: 40vh;
+			border-radius: 10upx 10upx 0 0;
+			background-color: #fff;
+			.btn{
+				height: 66upx;
+				line-height: 66upx;
+				border-radius: 100upx;
+				background: $uni-color-primary;
+				font-size: $font-base + 2upx;
+				color: #fff;
+				margin: 30upx auto 20upx;
+			}
+		}
+		@keyframes showPopup {
+			0% {
+				opacity: 0;
+			}
+			100% {
+				opacity: 1;
+			}
+		}
+		@keyframes hidePopup {
+			0% {
+				opacity: 1;
+			}
+			100% {
+				opacity: 0;
+			}
+		}
+		@keyframes showLayer {
+			0% {
+				transform: translateY(120%);
+			}
+			100% {
+				transform: translateY(0%);
+			}
+		}
+		@keyframes hideLayer {
+			0% {
+				transform: translateY(0);
+			}
+			100% {
+				transform: translateY(120%);
+			}
+		}
+	}
+	
 	/* 底部操作菜单 */
 	.page-bottom{
 		position:fixed;
