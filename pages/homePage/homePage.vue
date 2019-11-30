@@ -3,7 +3,10 @@
 		<!-- 小程序头部兼容 -->
 		<!-- #ifdef MP -->
 		<!-- #endif -->
-		
+		<view class="header"><label class="head-text">首页</label>
+		<picker class="head-region" @change="bindPickerChange" :value="regionIndex" :range="region">
+			 <view class="uni-input">{{region[regionIndex]}}</view>
+		</picker></view>
 		<!-- 头部轮播 -->
 		<view class="carousel-section">
 			<!-- 标题栏和状态栏占位符 -->
@@ -24,10 +27,8 @@
 		</view>
 		<!-- 分类 -->
 		<view class="f-header m-t">
-			<image src="/static/temp/h1.png"></image>
 			<view class="tit-box">
 				<text class="tit">精选商品</text>
-				<text class="tit2">Recommand To You</text>
 			</view>
 		</view>
 		<view class="cate-section">
@@ -49,9 +50,12 @@
 							v-for="(item, index) in goodsList" :key="index"
 							class="floor-item"
 							@click="navToDetailPage(index)">
-							<image :src="item.image" mode="aspectFill"></image>
-							<!-- <text class="title clamp">{{item.title}}</text>
-							<text class="price">￥{{item.price}}</text> -->
+							<image :src="item.commodityImg[0]" mode="aspectFill"></image>
+							<text class="clamp">{{item.commodityTitle}}</text>
+							<view class="PriceArea">
+								<text class="priceOrigin">￥{{item.salePrice}}</text>
+								<text class="priceCurrent">￥{{item.originalPrice}}</text>
+							</view>
 						</view>
 					</view>
 				</scroll-view>
@@ -93,14 +97,16 @@
 				swiperCurrent: 0,
 				swiperLength: 0,
 				carouselList: [],
+				region:['重庆市','上海市','山西'],
+				regionIndex: 0,
 				goodsList: [
-					{image:"https://static.runoob.com/images/demo/demo1.jpg", title:"哈哈哈", price:"12"},
-					{image:"https://static.runoob.com/images/demo/demo1.jpg", title:"哈哈哈", price:"12"},
-					{image:"https://static.runoob.com/images/demo/demo1.jpg", title:"哈哈哈", price:"12"},
-					{image:"https://static.runoob.com/images/demo/demo1.jpg", title:"哈哈哈", price:"12"},
-					{image:"https://static.runoob.com/images/demo/demo1.jpg", title:"哈哈哈", price:"12"},
-					{image:"https://static.runoob.com/images/demo/demo1.jpg", title:"哈哈哈", price:"12"},
-					{image:"https://static.runoob.com/images/demo/demo1.jpg", title:"哈哈哈", price:"12"}
+					// {image:"https://static.runoob.com/images/demo/demo1.jpg", title:"哈哈哈", price:"12"},
+					// {image:"https://static.runoob.com/images/demo/demo1.jpg", title:"哈哈哈", price:"12"},
+					// {image:"https://static.runoob.com/images/demo/demo1.jpg", title:"哈哈哈", price:"12"},
+					// {image:"https://static.runoob.com/images/demo/demo1.jpg", title:"哈哈哈", price:"12"},
+					// {image:"https://static.runoob.com/images/demo/demo1.jpg", title:"哈哈哈", price:"12"},
+					// {image:"https://static.runoob.com/images/demo/demo1.jpg", title:"哈哈哈", price:"12"},
+					// {image:"https://static.runoob.com/images/demo/demo1.jpg", title:"哈哈哈", price:"12"}
 				]
 			};
 		},
@@ -120,10 +126,12 @@
 					url: `/pages/product/product?id=${id}`,
 					// url: `/pages/product/product`,			
 				})				
-			},		
+			},	
+			bindPickerChange() {
+			}
+					
 		},
-		
-		
+			
 		mounted() {	
 			/**
 			 * 获取设备定位
@@ -191,13 +199,13 @@
 			 */
 			let userAndLocalMes = {
 				// area: uni.getStorageSync('location'),
-				area: '重庆',
+				area: '重庆市',
 				longitude: '',
 				latitude: '',
-				showPlace: 'Recommend'
+				shopPlace: 'Recommend'
 			};
 			api.getProducts(userAndLocalMes).then(res =>{
-				this.goodsList = res.data.data,
+				this.goodsList = res.data,
 				console.log(this.goodsList)		
 			}).catch(err => {
 				console.log(err)
@@ -211,8 +219,7 @@
 				console.log(this.goodsList)		
 			}).catch(err => {
 				console.log(err)
-			})	
-			
+			})				
 		},
 		
 		// #ifndef MP
@@ -240,6 +247,19 @@
 </script>
 
 <style lang="scss">
+	.header{
+		width: 90%;
+		height: 100rpx;
+		line-height: 100rpx;
+		margin: 0 auto;
+	}
+	.head-text {
+		float: left;
+	}
+	.head-region{
+		float: right;
+	}
+	
 	/* #ifdef MP */
 	.mp-search-box{
 		position:absolute;
@@ -264,9 +284,11 @@
 			position:relative;
 			z-index:5;
 			border-radius:16upx 16upx 0 0;
-			margin-top:-20upx;
+			margin-top:-50upx;
 		}
 		.carousel-section{
+			margin: 0 auto;
+			width: 90%;
 			padding: 0;
 			.titleNview-placing {
 				padding-top: 0;
@@ -287,7 +309,7 @@
 	
 	
 	page {
-		background: #f5f5f5;
+		background: #ffffff;
 	}
 	.m-t{
 		margin-top: 16upx;
@@ -308,7 +330,7 @@
 			top: 0;
 			left: 0;
 			width: 100%;
-			height: 426upx;
+			// height: 400upx;
 			transition: .4s;
 		}
 	}
@@ -405,27 +427,57 @@
 			align-items: flex-start;
 		}
 		.floor-item{
-			width: 150upx;
-			margin-right: 20upx;
-			font-size: $font-sm+2upx;
+			display:flex;
+			flex-direction: column;
+			align-items: center;
+			width: 240rpx;
+			margin-right: 50upx;
+			font-size: 32rpx;
+			font-weight: 800;
 			color: $font-color-dark;
+			font-family:PingFang SC;
 			line-height: 1.8;
 			image{
-				width: 150upx;
-				height: 150upx;
+				width: 240rpx;
+				height: 240rpx;
 				border-radius: 6upx;
 			}
-			.price{
-				color: $uni-color-primary;
+			.PriceArea{
+				display:flex;
+				justify-content: center;
+				align-items: center;
+			}
+			.clamp{
+				display: -webkit-box;
+				-webkit-box-orient: vertical;
+				-webkit-line-clamp:2;
+				overflow: hidden;
+				word-break: break-all;
+				text-overflow: ellipsis;
+			}
+			.priceOrigin{
+				font-size: 32rpx;
+				font-family:PingFang SC;
+				font-weight: 500;
+				color:rgba(255,126,48,1);
+			}
+			.priceCurrent{
+				margin-left: 10rpx;
+				font-size: 28rpx;
+				font-family:PingFang SC;
+				font-weight: 500;
+				color:rgba(153,153,153,1);
+				text-decoration: line-through;
 			}
 		}
 	}
 	
 	.f-header{
-		display:flex;
+		// display:flex;
+		
 		align-items:center;
-		height: 140upx;
-		padding: 6upx 30upx 8upx;
+		height: 90upx;
+		padding: 20upx 30upx 8upx;
 		background: #fff;
 		image{
 			flex-shrink: 0;
@@ -439,9 +491,10 @@
 			flex-direction: column;
 		}
 		.tit{
-			font-size: $font-lg +2upx;
-			color: #font-color-dark;
-			line-height: 1.3;
+			font-size:32rpx;
+			font-family:PingFang SC;
+			font-weight:bold;
+			color:rgba(51,51,51,1);
 		}
 		.tit2{
 			font-size: $font-sm;
