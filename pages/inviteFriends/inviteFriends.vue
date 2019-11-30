@@ -3,19 +3,26 @@
 	   <image src="../../static/邀请好友/ic-背景.png" class="imageBackground"></image>
 	   <view class="invite"></view>
 	   <view class="scan"></view>
-	   <image src="../../static/二维码.png" class="QRCode"></image>
+	   <image class="QRCode" :src="QR"></image>
 	   <image src="../../static/邀请好友/按钮.png" class="btn" @click="open"></image>
 	   <uni-popup ref="popup" type="bottom">
 		   <view class="share">
 			   <view class="text">分享到</view>
-			   <image src="../../static/share/wx.png" class="wx"></image>
-			   <image src="../../static/share/pyq.png" class="wxpyq"></image>
-			   <image src="../../static/share/qq.png" class="qq"></image>
-			   <image src="../../static/share/qqkj.jpg" class="qqkj"></image>
-			   <br/>
+			   <button  open-type='share' class="wxshare">
+				   <image src="../../static/share/wx.png" class="wx"></image>
+			   </button>
+			   <button  open-type='share' class="wxpyqshare">
+				   <image src="../../static/share/pyq.png" class="wxpyq" @click="save()"></image>
+			   </button>
+			   <button  open-type='share' class="qqshare">
+				   <image src="../../static/share/qq.png" class="qq" @click="save()"></image>
+			   </button>
+			   <button  open-type='share' class="qqkjshare">
+				   <image src="../../static/share/qqkj.jpg" class="qqkj" @click="save()"></image>
+			   </button>
 			   <text class="wxtext">微信</text>   
-			   <text class="wxtext">朋友圈</text>    
-			   <text class="wxtext">QQ</text>  
+			   <text class="wxpyqtext">朋友圈</text>    
+			   <text class="wxpyqtext">QQ</text> 
 			   <text class="qqkjtext">QQ空间</text>
 		   </view>
 		   <view class="cancel" @click="cancel()">取消分享</view>
@@ -24,15 +31,27 @@
 </template>
 
 <script>
+	import {api} from	'./api.js'
 	import uniPopup from "../components/uni-popup/uni-popup.vue"
     export default {
         data() {
             return {
-               
+               QR:""
             };
         },
 		components: {
 			uniPopup
+		},
+		onLoad:function(){
+			api.getQR().then(res=>{
+				var QR="data:image/jpeg|png|gif;base64,"+res.data.data
+				uni.setStorageSync('QR',QR)
+			}).catch(err=>{
+				console.log(err)
+			})
+		},
+		onReady() {
+			this.QR=uni.getStorageSync("QR");
 		},
         methods: {
             open(){
@@ -41,8 +60,29 @@
             },
 			cancel(){
 				this.$refs.popup.close();
+			},
+			save(){
+				console.log(111);
+				//保存图片到相册
+				uni.showActionSheet({
+					itemList:['保存图片到相册'],
+					success: () => {
+						plus.gallery.save('D:\Backup\桌面\软件工程', function() {
+							uni.showToast({
+								title:'保存成功',
+								icon:'none'
+							})
+						}, function() {
+							uni.showToast({
+								title:'保存失败，请重试！',
+								icon:'none'
+							})
+						});
+					}
+				})
+				console.log(222);
 			}
-        },
+        }
     }
 </script>
 
@@ -97,30 +137,62 @@
 		font-size: 30rpx;
 		font-weight: 550;
 	}
+	.wxshare{
+		width: 110rpx;
+		height: 110rpx;
+		margin: 40rpx 0 0 60rpx;
+		background-color: white;
+	}
+	
+	.wxpyqshare{
+		width: 110rpx;
+		height: 110rpx;
+		margin: -110rpx 0 0 240rpx;
+		background-color: white;
+	}
+	
+	.qqshare{
+		width: 110rpx;
+		height: 110rpx;
+		margin: -110rpx 0 0 420rpx;
+		background-color: white;
+	}
+	
+	.qqkjshare{
+		width: 110rpx;
+		height: 110rpx;
+		margin: -110rpx 0 0 600rpx;
+		background-color: white;
+	}
 	
 	.wx{
-		margin: 40rpx 0 0 80rpx;
+		margin: 0 0 0 -30rpx;
 	}
 	
 	.wxpyq{
-		margin: 40rpx 0 0 60rpx;
+		margin: 0 0 0 -30rpx;
 	}
 	
 	.qq{
-		margin: 40rpx 0 0 60rpx;
+		margin: 0 0 0 -30rpx;
 	}
 	
 	.qqkj{
-		margin: 40rpx 0 0 50rpx;
+		margin: 0 0 0 -30rpx;
 	}
 	
 	.wxtext{
-		margin-left: 100rpx;
+		margin: 50rpx 0 0 80rpx;
+		font-size: 30rpx;
+	}
+	
+	.wxpyqtext{
+		margin: 50rpx 0 0 110rpx;
 		font-size: 30rpx;
 	}
 	
 	.qqkjtext{
-		margin-left: 80rpx;
+		margin: 50rpx 0 0 105rpx;
 		font-size: 30rpx;
 	}
 	
