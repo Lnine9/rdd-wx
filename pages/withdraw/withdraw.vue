@@ -97,7 +97,11 @@
 					keyWord: this.keyWord,
 					paymentAmount: this.paymentAmount
 				}).then(res => {
-					console.log(res.data.message)
+					wx.showToast({
+					  title: res.data.message,
+					  icon: 'none',
+					  duration: 1500
+					})
 				}).catch(_ => {
 					console.log(res.data.message)
 				})
