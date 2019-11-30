@@ -11,10 +11,9 @@ export class PayOrderAPI {
 	
 	/**
 	 * 获取用户默认收货地址
-	 * @param {Object} params
 	 */
-	static getDefaultAddress(params) {
-	  return minRequest.get('', params)
+	static getDefaultAddress() {
+	  return minRequest.get('/api/userAddress/getDefaultAddress')
 	}
 	
 	/**
