@@ -21,9 +21,7 @@
 		{
 			"path": "pages/inviteFriends/inviteFriends",
 			"style": {
-				"navigationBarTitleText": "分享赚钱",
-				"navigationBarBackgroundColor": "#0086f1",
-				"navigationBarTextStyle": "white"
+				"navigationBarTitleText": "邀请好友"
 			}
 		},
 		{
@@ -67,7 +65,8 @@
 		{
 		    "path" : "pages/myOrder/myOrder",
 		    "style" : {
-				"navigationBarTitleText":"我的订单"
+				"navigationBarTitleText":"我的订单",
+				"enablePullDownRefresh": true
 			}
 		},
 		{
