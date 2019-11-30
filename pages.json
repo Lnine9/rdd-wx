@@ -25,6 +25,12 @@
 			}
 		},
 		{
+			"path": "pages/address/address",
+			"style": {
+				"navigationBarTitleText": "收货地址"
+			}
+		},
+		{
 			"path": "pages/vipApply/vipApply",
 			"style": {
 				"navigationBarTitleText": "申请会员",
@@ -43,11 +49,13 @@
 			"style": {
 				"navigationBarTitleText": "新增地址"
 			}
-		},
-		{
+		},{
 			"path": "pages/address/address",
 			"style": {
-				"navigationBarTitleText": "收货地址"
+				"navigationBarTitleText": "收货地址",
+				"titleNView": {
+					"fontSize": "30px"
+				}
 			}
 		},
 		{
@@ -121,7 +129,7 @@
 			{
 				"name": "订单详情",
 				"path": "pages/orderDetail/orderDetail",
-				"query": "orderId=1"
+				"query": "orderid=1575036170665008-4"
 			},
 			{
 				"name": "首页",
