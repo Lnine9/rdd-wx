@@ -24,7 +24,7 @@
 		<!-- 地址展示 -->
 		<view v-if="commodity.takeWay === 1 && hasDefaultAddress" class="address-container" @tap="chooseAddress">
 			<view class="addres-img-container">
-				<image src="../../static/payOrder/ic-地址.png" mode="" class="addres-img"></image>
+				<image src="/static/payOrder/ic-address.png" mode="" class="addres-img"></image>
 			</view>
 
 			<view class="address-content-container">
@@ -44,7 +44,7 @@
 			</view>
 
 			<view class="address-more-address-container">
-				<image src="../../static/payOrder/ic-更多电子码.png" mode="" class="address-more-address-img"></image>
+				<image src="/static/payOrder/ic-more-el-code.png" mode="" class="address-more-address-img"></image>
 			</view>
 		</view>
 
@@ -52,7 +52,7 @@
 		<view v-if="commodity.takeWay === 1 && !hasDefaultAddress" class="address-container" @tap="addAddress">
 			<view class="addrees-add-container">
 				<view class="addrees-add-content-container">
-					<image src="../../static/payOrder/ic-新增地址.png" mode="" class="addrees-add-img"></image>
+					<image src="/static/payOrder/ic-add-address.png" mode="" class="addrees-add-img"></image>
 
 					<text class="address-add-text">新增地址</text>
 				</view>
@@ -165,8 +165,6 @@
 							showCancel: false
 						});
 						console.log(err);
-						
-						// uni.stopPullDownRefresh();
 					})
 				} else {
 					console.log("返回上一个页面");
@@ -195,14 +193,14 @@
 				console.log('你点击了选择地址')
 				// 跳转到选择地址页面，并且标明是从支付订单页面跳转
 				uni.navigateTo({
-					url: '../address/address?payOrder=true'
+					url: '/pages/address/address'
 				})
 			},
 			addAddress: function() {
 				console.log('你点击了新增地址')
 				// 跳转到选择地址页面，并且标明是从支付订单页面跳转
 				uni.navigateTo({
-					url: '../address/address?payOrder=true'
+					url: '/pages/address/address'
 				})
 				console.log('你点击了新增地址End')
 			},
@@ -241,22 +239,24 @@
 							'success': function(res) {
 								console.log(res);
 								console.log('成功');
-								// 购买成功去往首页
+								
 								uni.showToast({
-									title: '购买成功!'
+									title: '购买成功!',
+									icon: 'success',
+									
 								});
-								uni.redirectTo({
-									url: '../homePage/homePage'
+								// 购买成功去往首页
+								uni.switchTab({
+									url: '/pages/homePage/homePage'
 								});
 							},
 							'fail': function(res) {
 								console.log(res);
 								console.log('失败');
 								// 购买成功去往首页
-								uni.showModal({
-									title: '提示',
-									content: '取消支付',
-									showCancel: false
+								uni.showToast({
+									title: '取消支付',
+									icon: 'none'
 								});
 							},
 							'complete': function(res) {
@@ -268,21 +268,6 @@
 				}).catch(err => {
 					console.log(err);
 				});
-
-				// uni.navigateTo({
-				// 	url: './imageTest/imageTest'
-				// });
-				// let params = {
-				// 	commodityId: this.commmodityId,
-				// 	commodityNum: this.commmodityNum
-				// }
-			},
-			test1: function() {
-				console.log('radsfasdfasdf');
-				uni.redirectTo({
-					url: '../homePage/homePage'
-				});
-				console.log('radsfasdfasdf');
 			},
 			imgStorage: function() {
 				console.log('test')
