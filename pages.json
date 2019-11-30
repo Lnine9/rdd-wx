@@ -108,10 +108,6 @@
 				"iconPath": "static/mineNo.png",
 				"selectedIconPath": "static/mine.png",
 				"text": "我的"
-			},
-			{
-				"text": "邀请好友",
-				"pagePath":"pages/inviteFriends/inviteFriends"
 			}
 		]
 	},
