@@ -44,6 +44,7 @@
 				this.inputValue = +val;
 			},
 			inputValue(newVal, oldVal) {
+				event.stopPropagation();
 				if (+newVal !== +oldVal) {
 					this.$emit("change", newVal);
 				}

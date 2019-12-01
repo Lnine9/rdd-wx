@@ -3,7 +3,7 @@
 		<!-- 小程序头部兼容 -->
 		<!-- #ifdef MP -->
 		<!-- #endif -->
-		<view class="header"><label class="head-text">首页</label>
+		<view class="header"><label class="head-text">囧途宝盒</label>
 			<picker class="head-region" @change="bindPickerChange" :value="regionIndex" :range="areas">
 				<view class="uni-input" v-if="this.defaultRegion==''">{{areas[regionIndex]}}</view>
 				<view class="uni-input" v-if="this.defaultRegion!=''">{{defaultRegion}}</view>
@@ -208,8 +208,10 @@
 				api.getAreas().then(res =>{
 					var array = res.data.data
 					this.areas = array.split(",")
+					uni.stopPullDownRefresh()
 				}).catch(err => {
 					console.log(err)
+					uni.stopPullDownRefresh()
 				})		
 			},
 			
@@ -220,8 +222,6 @@
 				let userAndLocalMes = {
 					// area: uni.getStorageSync('location'),
 					area: this.addressName,
-					longitude: '',
-					latitude: '',
 					shopPlace: 'Recommend'
 				};
 				api.getProducts(userAndLocalMes).then(res =>{
@@ -248,7 +248,7 @@
 			}
 														
 		},
-							
+			
 		/**
 		 * 猜你喜欢列表
 		 */
@@ -284,10 +284,23 @@
 				this.getRecommend(),
 				this.getGuess(),
 				this.getAreas()
-		}
+		},
+		onPullDownRefresh() {
+			
+			this.getBanner(),	
+			this.getUserMes(),	
+			this.getRecommend(),
+			this.getGuess(),
+			this.getAreas()
+			// setTimeout(function ()
+			// // uni.stopPullDownRefresh();
+			// 				}, 
+			// 				2000);		
+			},		
 		// #ifndef MP
 
 		// #endif
+		
 	}
 </script>
 
