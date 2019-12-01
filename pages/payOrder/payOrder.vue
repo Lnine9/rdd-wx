@@ -60,6 +60,12 @@
 		</view>
 
 		<!-- 输入备注 -->
+		<view v-if="takeWay === 2" class="remark-container">
+			<text class="remark-text">联系电话</text>
+			<input class="remark-input" placeholder="请输入联系电话" v-model="userPhone" />
+		</view>
+
+		<!-- 输入备注 -->
 		<view class="remark-container">
 			<text class="remark-text">备注</text>
 			<input class="remark-input" placeholder="选填，输入订单相关的备注" v-model="remark" />
@@ -113,6 +119,7 @@
 				},
 				wholeAddress: '', // 完整路径(上方字符串的拼接)
 				hasDefaultAddress: false,
+				userPhone: '', // 核销类型的商品需要填写电话号码
 				remark: '',
 				totalPrice: 0,
 			}
@@ -125,11 +132,8 @@
 			// uni.startPullDownRefresh();
 			this.getCommodityInfo();
 		},
-		onPullDownRefresh: function() {
-			// console.log(this.commodityId);
-			// setTimeout(function() {
-			// 	uni.stopPullDownRefresh();
-			// }, 1000);
+		onPullDownRefresh: function () {
+			this.getCommodityInfo();
 		},
 		methods: {
 			getCommodityInfo: function() {
@@ -137,10 +141,10 @@
 				// 获取商品信息
 				console.log(this.commmodityId);
 				if (this.commodityId != null && this.commodityId != undefined) {
-					console.log("开始请求");
 					PayOrderAPI.getCommodityInfo({
 						commodityId: this.commodityId
 					}).then(res => {
+						console.log("商品信息");
 						console.log(res);
 						this.commodity = res.data.data;
 						this.commodity.salePrice = Number(this.commodity.salePrice);
@@ -156,8 +160,8 @@
 						if (this.commodity.takeWay === 1) {
 							this.getDefaultAddress();
 						}
-						
-						// uni.stopPullDownRefresh();
+
+						uni.stopPullDownRefresh();
 					}).catch(err => {
 						uni.showModal({
 							title: '提示',
@@ -165,6 +169,7 @@
 							showCancel: false
 						});
 						console.log(err);
+						uni.stopPullDownRefresh();
 					})
 				} else {
 					console.log("返回上一个页面");
@@ -205,11 +210,27 @@
 				console.log('你点击了新增地址End')
 			},
 			payOrder: function() {
+
+				if (this.commodity.takeWay === 1) { // 寄送类型的商品
+					if (this.address.addressId === null || this.address.addressId === undefined || this.address.addressId === '') {
+						this.showNotice('请选择收货地址');
+						return;
+					}
+				} else if (this.takeWay === 2) { // 核销类型的商品
+					if (this.userPhone === '') {
+						this.showNotice('请输入联系电话');
+						return;
+					}
+					if (!this.checkPhone(this.userPhone)) {
+						return;
+					}
+				}
+
 				// 测试支付
 				let params = {
 					commodityId: this.commodityId,
 					commodityNum: this.commodityNum,
-					userPhone: '15936528693',
+					userPhone: this.userPhone,
 					remark: this.remark,
 					addressId: this.address.addressId
 				};
@@ -239,11 +260,11 @@
 							'success': function(res) {
 								console.log(res);
 								console.log('成功');
-								
+
 								uni.showToast({
 									title: '购买成功!',
 									icon: 'success',
-									
+
 								});
 								// 购买成功去往首页
 								uni.switchTab({
@@ -267,6 +288,21 @@
 					}
 				}).catch(err => {
 					console.log(err);
+				});
+			},
+			checkPhone: function(phone) {
+				if (!(/^1[3456789]\d{9}$/.test(phone))) {
+					this.showNotice('手机号码格式有误，请重填')
+					return false;
+				} else {
+					return true;
+				}
+			},
+			showNotice: function(content) {
+				uni.showModal({
+					title: '提示',
+					content: content,
+					showCancel: false
 				});
 			},
 			imgStorage: function() {

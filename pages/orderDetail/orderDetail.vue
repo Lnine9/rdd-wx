@@ -293,6 +293,7 @@
 					'&orderId=' + this.order.shopId +  
 					'&time=' + this.order.createAt;
 				this.qrImageUrl = qr.createQrCodeImg(content);
+				console.log(this.qrImageUrl);
 			}
 		}
 	}
