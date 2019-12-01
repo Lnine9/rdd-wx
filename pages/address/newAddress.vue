@@ -19,7 +19,7 @@
 		
 		<view class="row default-row">
 			<text class="tit">设为默认</text>
-			<switch :checked="Default" color="#4CD964" @change="switchChange" />
+			<switch checked="Default" color="#4CD964" @change="switchChange" />
 		</view>
 		<button class="add-btn" @click="confirm">保存</button>
 		<w-picker
@@ -53,7 +53,7 @@
 					area:'',
 					detail: '',
 					isDefault: 0,
-					},
+					}
 				}
 		},
 		onLoad(option){
@@ -63,8 +63,7 @@
 				this.addressData = JSON.parse(option.data);
 			}
 			this.manageType = option.type;
-			console.log(this.addressData.isDefault)
-			if(this.addressData.isDefault==0){
+			if(this.addressData.isDefault===0){
 				this.Default=false
 			}else{
 				this.Default=true
@@ -75,14 +74,12 @@
 		},
 		methods: {
 			switchChange(e){
-				this.Default = e.detail;
-				if(this.Default.value===true){
+				if(e.detail.value===true){
 					this.addressData.isDefault=1;
 				}
 				else{
 					this.addressData.isDefault=0;
 				}
-				console.log(this.addressData.isDefault)
 			},
 			
 			//打开底部弹出层
@@ -199,7 +196,7 @@
 		flex-shrink: 0;
 		flex: 1;
 		width: 120rpx;
-		font-size: 36rpx;
+		font-size: 32rpx;
 	}
 	.input{
 		flex: 1;
@@ -224,16 +221,19 @@
 		position: fixed;
 		left: 24rpx;
 		right: 30rpx;
-		bottom: 16rpx;
+		bottom: 50rpx;
 		z-index: 95;
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		width: 600rpx;
+		width: 670rpx;
 		height: 80rpx;
-		font-size: 38rpx;
+		font-size: 32rpx;
 		color: #FFFFFF;
 		background-color: #06C1AE;
 		border-radius: 40rpx;	
+	}
+	switch{
+		transform: translateX(16rpx) scale(.9);
 	}
 </style>
