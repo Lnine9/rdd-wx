@@ -4,8 +4,8 @@
 		<!-- #ifdef MP -->
 		<!-- #endif -->
 		<view class="header"><label class="head-text">首页</label>
-		<picker class="head-region" @change="bindPickerChange" :value="regionIndex" :range="region">
-			<view class="uni-input" v-if="this.defaultRegion==''">{{region[regionIndex]}}</view>
+		<picker class="head-region" @change="bindPickerChange" :value="regionIndex" :range="areas">
+			<view class="uni-input" v-if="this.defaultRegion==''">{{areas[regionIndex]}}</view>
 			 <view class="uni-input" v-if="this.defaultRegion!=''">{{defaultRegion}}</view>
 		</picker></view>
 		<!-- 头部轮播 -->
@@ -55,8 +55,7 @@
 		</view>
 		
 		<!-- 猜你喜欢 -->
-		<view class="f-header m-t">
-		
+		<view class="f-header m-t">	
 			<view class="tit-box">
 				<text class="tit">猜你喜欢</text>
 			</view>
@@ -86,6 +85,7 @@
 	export default {
 		data() {
 			return {
+				areas: [],
 				amapPlugin: null,
 				key: '8aa790ec80dd04abdf75736893a84613',
 				titleNViewBackground: '',
@@ -93,7 +93,7 @@
 				swiperLength: 0,
 				carouselList: [],
 				defaultRegion: '',
-				region:['重庆市','上海市','山西'],
+				// region:['重庆市','上海市','山西'],
 				regionIndex: 1,
 				guessList:[],
 				goodsList: [],
@@ -116,12 +116,13 @@
 				})				
 			},	
 			bindPickerChange(val) {
-				uni.setStorageSync('location',this.region[val.detail.value]);
-				this.defaultRegion = this.region[val.detail.value]
+				uni.setStorageSync('location',this.areas[val.detail.value]);
+				this.defaultRegion = this.areas[val.detail.value]
 				this.getBanner(),
 				this.getUserMes(),
 				this.getRecommend(),
-				this.getGuess()
+				this.getGuess(),
+				this.getAreas()
 			},
 			/**
 			 * 获取用户信息
@@ -166,6 +167,18 @@
 					this.carouselList = res.data.data,
 					this.swiperLength = this.carouselList.length;
 					this.carouselList = this.carouselList;
+				}).catch(err => {
+					console.log(err)
+				})		
+			},
+			
+			/**
+			 * 获取地区列表信息
+			 */
+			getAreas() {				
+				api.getAreas().then(res =>{
+					var array = res.data.data
+					this.areas = array.split(",")
 				}).catch(err => {
 					console.log(err)
 				})		
@@ -240,12 +253,12 @@
 						}
 					}); 
 				}	
-					this.defaultRegion = uni.getStorageSync('location')||'';
-					this.getBanner(),
-					this.getUserMes(),
-					this.getRecommend(),
-					this.getGuess()
-			
+				this.defaultRegion = uni.getStorageSync('location')||'';
+				this.getBanner(),
+				this.getUserMes(),
+				this.getRecommend(),
+				this.getGuess(),
+				this.getAreas()
 		}
 		// #ifndef MP
 
