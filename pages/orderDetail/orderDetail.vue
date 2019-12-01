@@ -176,13 +176,16 @@
 				qrImageUrl: '', // 二维码图片
 			}
 		},
+		onLoad: function(params) {
+			console.log(params);
+			this.orderId = params.orderid;
+		
+			this.getOrderInfo();
+		},
+		onPullDownRefresh: function() {
+			this.getOrderInfo();
+		},
 		methods: {
-			onLoad: function(params) {
-				console.log(params);
-				this.orderId = params.orderid;
-
-				this.getOrderInfo();
-			},
 			getOrderInfo: function() {
 				OrderDetailAPI.getOrderDetail({
 					orderId: this.orderId
@@ -236,8 +239,10 @@
 					} else {
 						this.sureBtnText = '确认完成';
 					}
+					uni.stopPullDownRefresh();
 				}).catch(err => {
 					console.log(err);
+					uni.stopPullDownRefresh();
 				});
 			},
 			lookLogistics: function() {
