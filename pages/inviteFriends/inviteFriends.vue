@@ -4,21 +4,22 @@
 	   <view class="invite"></view>
 	   <view class="scan"></view>
 	   <image class="QRCode" :src="QR"></image>
-	   <image src="/static/inviteFriends/button.png" class="btn" @click="open"></image>
-	   <uni-popup ref="popup" type="bottom">
+	   <!-- <button class="button" type="primary" @click="togglePopup('bottom', 'share')">底部分享</button> -->
+	   <image src="/static/inviteFriends/button.png" class="btn" @click="togglePopup('bottom', 'share')"></image>
+	   <uni-popup ref="popup" type="bottom" @change="change">
 		   <view class="share">
 			   <view class="text">分享到</view>
 			   <button  open-type='share' class="wxshare">
 				   <image src='/static/share/wx.png' class="wx"></image>
 			   </button>
 			   <button  open-type='share' class="wxpyqshare">
-				   <image src="/static/share/pyq.png" class="wxpyq" @click="save()"></image>
+				   <image src="/static/share/pyq.png" class="wxpyq"></image>
 			   </button>
 			   <button  open-type='share' class="qqshare">
-				   <image src="/static/share/qq.png" class="qq" @click="save()"></image>
+				   <image src="/static/share/qq.png" class="qq"></image>
 			   </button>
 			   <button  open-type='share' class="qqkjshare">
-				   <image src="/static/share/qqkj.jpg" class="qqkj" @click="save()"></image>
+				   <image src="/static/share/qqkj.jpg" class="qqkj"></image>
 			   </button>
 			   <text class="wxtext">微信</text>   
 			   <text class="wxpyqtext">朋友圈</text>    
@@ -27,6 +28,21 @@
 		   </view>
 		   <view class="cancel" @click="cancel()">取消分享</view>
 	   </uni-popup>
+	   <!-- 底部分享弹窗 -->
+	   <!-- <uni-popup ref="popup" type="bottom" @change="change">
+	   	<view class="uni-share">
+	   		<text class="uni-share-title">分享到</text>
+	   		<view class="uni-share-content">
+	   			<view v-for="(item, index) in bottomData" :key="index" class="uni-share-content-box">
+	   				<view class="uni-share-content-image">
+	   					<image :src="item.icon" class="content-image" mode="widthFix" />
+	   				</view>
+	   				<text class="uni-share-content-text">{{ item.text }}</text>
+	   			</view>
+	   		</view>
+	   		<text class="uni-share-btn" @click="cancel('share')">取消分享</text>
+	   	</view>
+	   </uni-popup> -->
    </view>
 </template>
 
@@ -37,6 +53,27 @@
         data() {
             return {
                QR:"",
+			   bottomData: [{
+			   		text: '微信',
+			   		icon: 'https://img-cdn-qiniu.dcloud.net.cn/uni-ui/grid-2.png',
+			   		name: 'wx'
+			   	},
+			   	{
+			   		text: '朋友圈',
+			   		icon: '/static/share/pyq.png',
+			   		name: 'wx'
+			   	},
+			   	{
+			   		text: 'QQ',
+			   		icon: 'https://img-cdn-qiniu.dcloud.net.cn/uni-ui/gird-3.png',
+			   		name: 'qq'
+			   	},
+			   	{
+			   		text: 'QQ空间',
+			   		icon: '/static/share/qqkj.jpg',
+			   		name: 'sina'
+			   	}
+			   ]
             };
         },
 		components: {
@@ -63,15 +100,37 @@
 			this.QR=uni.getStorageSync("QR");
 		},
         methods: {
+			togglePopup(type, open) {
+				switch (type) {
+					case 'top':
+						this.content = '顶部弹出 popup'
+						break
+			
+					case 'bottom':
+						this.content = '底部弹出 popup'
+						break
+					case 'center':
+						this.content = '居中弹出 popup'
+						break
+				}
+				this.type = type
+				this.$nextTick(() => {
+					// this.$refs['show' + open].open()
+					this.$refs["popup"].open();
+				})
+			},
             open(){
 				console.log(111)
 				// 需要在 popup 组件，指定 ref 为 popup
-				 this.$refs.popup.open();
+				 this.$refs["popup"].open();
 				 console.log(222)
 			
             },
+			change(e) {
+				console.log('是否打开:' + e.show)
+			},
 			cancel(){
-				this.$refs.popup.close();
+				this.$refs["popup"].close();
 			},
 			//点击保存图片
 			save () {
@@ -167,6 +226,75 @@
 	    width: 469rpx;
 		height: 124rpx;
 	    margin: 100rpx 40rpx 0 152rpx;
+	}
+	
+	.uni-share {
+		/* #ifndef APP-NVUE */
+		display: flex;
+		flex-direction: column;
+		/* #endif */
+		background-color: #fff;
+	}
+	.uni-share-title {
+		line-height: 60rpx;
+		font-size: 24rpx;
+		padding: 15rpx 0;
+		text-align: center;
+	}
+	
+	.uni-share-content {
+		/* #ifndef APP-NVUE */
+		display: flex;
+		/* #endif */
+		flex-direction: row;
+		flex-wrap: wrap;
+		/* justify-content: center; */
+		padding: 35px;
+	}
+	
+	.uni-share-content-box {
+		/* #ifndef APP-NVUE */
+		display: flex;
+		/* #endif */
+		flex-direction: column;
+		align-items: center;
+		width: 200rpx;
+	}
+	
+	.uni-share-content-image {
+		/* #ifndef APP-NVUE */
+		display: flex;
+		/* #endif */
+		flex-direction: row;
+		justify-content: center;
+		align-items: center;
+		width: 60rpx;
+		height: 60rpx;
+		overflow: hidden;
+		border-radius: 10rpx;
+	}
+	
+	.content-image {
+		width: 60rpx;
+		height: 60rpx;
+	}
+	
+	.uni-share-content-text {
+		font-size: 26rpx;
+		color: #333;
+		padding-top: 5px;
+		padding-bottom: 10px;
+	}
+	
+	.uni-share-btn {
+		height: 90rpx;
+		line-height: 90rpx;
+		font-size: 14px;
+		border-top-color: #f5f5f5;
+		border-top-width: 1px;
+		border-top-style: solid;
+		text-align: center;
+		color: #666;
 	}
 	.share{
 		width: 100%;
