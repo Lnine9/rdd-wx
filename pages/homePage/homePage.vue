@@ -164,12 +164,9 @@
 					// 用户信息和地区无关
 					area:'重庆市'
 				};
-<<<<<<< HEAD
 				api.getUserInfo().then(res =>{
 					console.log(res)
-=======
 				api.getUserInfo(user).then(res =>{
->>>>>>> a9fcfab85f24b9c3c9ad367f4b51d341c21e6d3e
 					this.service = res.data.data,
 				
 					// userType 说明
@@ -186,11 +183,9 @@
 					// 当前用户是否为VIP
 					uni.setStorageSync('isVip', this.service.isVip==0?false:true)
 					// 当前地区是否有VIP业务
-<<<<<<< HEAD
 					uni.setStorageSync('haveVip', this.service.haveVip==0?false:true)	
-=======
 					uni.setStorageSync('haveVip', this.service.haveVip==0?false:true)				
->>>>>>> a9fcfab85f24b9c3c9ad367f4b51d341c21e6d3e
+					uni.setStorageSync('haveVip', this.service.haveVip==0?false:true)				
 				}).catch(err => {
 					console.log(err)
 				});		
@@ -639,4 +634,5 @@
 	
 
 </style>
+
 
