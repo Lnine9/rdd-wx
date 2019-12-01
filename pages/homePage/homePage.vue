@@ -71,8 +71,11 @@
 				<view class="image-wrapper">
 					<image :src="item.commodityImg[0]" mode="aspectFill"></image>
 				</view>
-				<text class="title clamp">{{item.commodityTitle}}</text>
-				<text class="price">￥{{item.salePrice}}</text>
+				<text class="clamp">{{item.commodityTitle}}</text>
+				<view class="PriceArea">
+					<text class="priceOrigin">￥{{item.salePrice}}</text>
+					<text class="priceCurrent">￥{{item.originalPrice}}</text>
+				</view>
 			</view>
 		</view>
 	</view>
@@ -107,17 +110,28 @@
 				const index = e.detail.current;
 				this.swiperCurrent = index;
 			},
+			/**
+			 * web页面跳转
+			 * 0. 后台公告页面跳转
+			 * 1. 无跳转
+			 * 2. 小程序页面跳转
+			 * @param {Object} item
+			 */
 			navToWebView(item) {
 				if(item.announcementType == '0') {
-					return
-				}
-				else if (item.announcementType == '1') {
+					// 公告页面跳转
 					let resulturl = item.announcementContent
+					getApp().globalData.desc = resulturl 
 					uni.navigateTo({
-						url: `/pages/webView/webView?url=${resulturl}`
+						url: `/pages/webView/webView`
 					})
 				}
+				else if (item.announcementType == '1') {
+					// 无跳转
+					return
+				}
 				else {
+					// 本地页面跳转
 					let resulturl = item.announcementContent
 					uni.navigateTo({
 						url: `${resulturl}`
@@ -141,6 +155,7 @@
 				this.getGuess(),
 				this.getAreas()
 			},
+			
 			/**
 			 * 获取用户信息
 			 */
@@ -150,7 +165,7 @@
 					// 用户信息和地区无关
 					area:'重庆市'
 				};
-				api.getUserInfo().then(res =>{
+				api.getUserInfo(user).then(res =>{
 					this.service = res.data.data,
 				
 					// userType 说明
@@ -223,8 +238,6 @@
 				let userAndLocalMes_1 = {
 					// area: uni.getStorageSync('location'),
 					area: this.addressName,
-					longitude: '',
-					latitude: '',
 					shopPlace: 'Guess'
 				};
 				api.getProducts(userAndLocalMes_1).then(res =>{
@@ -315,7 +328,7 @@
 		.cate-section{
 			position:relative;
 			z-index:5;
-			border-radius:16upx 16upx 0 0;
+			border-radius:25upx 25upx 0 0;
 			margin-top:-50upx;
 		}
 		.carousel-section{
@@ -380,7 +393,7 @@
 		image {
 			width: 100%;
 			height: 100%;
-			border-radius: 10upx;
+			border-radius: 20upx;
 		}
 	}
 	.swiper-dots {
@@ -441,7 +454,7 @@
 				margin-right: 14upx;
 				font-size: $font-sm+2upx;
 				color: #fff;
-				border-radius: 2px;
+				border-radius: 20px;
 				background: rgba(0,0,0,.8);
 			}
 			.icon-you{
@@ -472,7 +485,7 @@
 			image{
 				width: 240rpx;
 				height: 240rpx;
-				border-radius: 6upx;
+				border-radius: 20upx;
 			}
 			.PriceArea{
 				display:flex;
@@ -486,6 +499,8 @@
 				overflow: hidden;
 				word-break: break-all;
 				text-overflow: ellipsis;
+				font-size: 30rpx;
+				color:rgba(51,51,51,1);
 			}
 			.priceOrigin{
 				font-size: 32rpx;
@@ -502,6 +517,44 @@
 				text-decoration: line-through;
 			}
 		}
+	}
+	.PriceArea{
+		margin-top: 10rpx;
+		display:flex;
+		justify-content: center;
+		align-items: center;
+	}
+	.clamp{
+		margin-top: 10rpx;
+		display:flex;
+		justify-content: center;
+		align-items: center;
+		display: -webkit-box;
+		-webkit-box-orient: vertical;
+		-webkit-line-clamp:2;
+		overflow: hidden;
+		word-break: break-all;
+		text-overflow: ellipsis;
+		font-size: 37rpx;
+		font-family:PingFang SC;
+		font-weight: 650;
+		color:rgba(51,51,51,1);
+	}
+	
+	.priceOrigin{
+		font-size: 35rpx;
+		font-family:PingFang SC;
+		font-weight: 600;
+		color:rgba(255,126,48,1);
+	}
+	
+	.priceCurrent{
+		margin-left: 10rpx;
+		font-size: 30rpx;
+		font-family:PingFang SC;
+		font-weight: 700;
+		color:rgba(153,153,153,1);
+		text-decoration: line-through;
 	}
 	
 	.f-header{
@@ -556,7 +609,7 @@
 		.image-wrapper{
 			width: 100%;
 			height: 330upx;
-			border-radius: 3px;
+			border-radius: 10px;
 			overflow: hidden;
 			image{
 				width: 100%;
