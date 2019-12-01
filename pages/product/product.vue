@@ -65,7 +65,7 @@
 		</view>
 		<!-- 选择购买数量 -->
 		
-					<view v-if="isBuy" style="background-color: rgba(0,0,0,0.5); z-index: 3;position: fixed;bottom: 0rpx;right: 0rpx;width: 100vw;height: 100vh;">
+					<view v-if="isBuy"  style="background-color: rgba(0,0,0,0.5); z-index: 3;position: fixed;bottom: 0rpx;right: 0rpx;width: 100vw;height: 100vh;">
 					<view class="cart-item" >
 						<view class="image-wrapper">
 							<image :src="titleImg[0]"
@@ -78,14 +78,13 @@
 							<text class=" title">{{dataDic.commodityTitle}}</text>
 							<text class="del-btn" @click="cancel">取消</text>
 							</view>
-							<text class="price">¥{{buyNum}}</text>
+							<text class="price">¥{{buyNum * dataDic.salePrice}}</text>
 							<view style="display: flex;justify-content: space-between;margin-top: 40rpx;align-items: center;">
 							<uniNumberBox 
-						
-								:min=1 
-								:max=dataDic.commodityNum
-								:value=buyNum>dataDic.commodityNum?dataDic.commodityNum:buyNum
-								@change="numberChange"
+								:min="1" 
+								:max= "dataDic.commodityNum"
+								:value="buyNum>dataDic.commodityNum?dataDic.commodityNum:buyNum"
+								@change="numberChange()"
 							></uniNumberBox>
 							<button class="buyButton" @click="buy()">立即购买</button>
 							</view>
@@ -136,6 +135,9 @@
 				api.getList({commodityId:commodityId}).then(res =>{
 					console.log(res.data.data)
 					this.dataDic = res.data.data,
+					this.dataDic.commodityNum = Number.parseInt(this.dataDic.commodityNum)
+					this.dataDic.salePrice = Number.parseFloat(this.dataDic.salePrice)
+					
 					console.log(this.dataDic)
 					this.titleImg = this.dataDic.commodityImg.filter((item, index, arr) => { // item为数组中的元素，index为下标，arr为目标数组
 						return index < 3
@@ -434,10 +436,10 @@
 	.buyButton{
 		color: rgba(6,193,174,1);
 		font-size: 24rpx;
-		height: 60rpx;
+		height: 62rpx;
 		width: 180rpx;
 		border: 1rpx solid rgba(6,193,174,1);
-		border-radius: 20rpx;
+		
 		margin-left: 100rpx;
 	}
 	
