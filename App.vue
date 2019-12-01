@@ -19,25 +19,25 @@
 			 */
 			let amapPlugin =  null;
 			this.amapPlugin = new amap.AMapWX({
-			    key: this.key  
-			});  
-			
-			uni.showLoading({  
-				title: '获取信息中'  
-			});  
-			// this.amapPlugin.getRegeo({  
-			this.amapPlugin.getPoiAround({  
-				success: (data) => {  
-					console.log(data)  
-					uni.hideLoading();  
-					this.addressName = data.poisData[0].cityname;  
+			    key: this.key
+			});
+
+			uni.showLoading({
+				title: '获取信息中'
+			});
+			// this.amapPlugin.getRegeo({
+			this.amapPlugin.getPoiAround({
+				success: (data) => {
+					console.log(data)
+					uni.hideLoading();
+					this.addressName = data.poisData[0].cityname;
 					console.info("asdfasdfasdf" + data.poisData[0].cityname)
 					uni.setStorageSync('location', this.addressName)
 				},
 				fail: (res) => {
-					console.log(res)  
+					console.log(res)
 				}
-			}); 	
+			});
 			
 		},
 		onShow: function() {
@@ -51,4 +51,7 @@
 
 <style>
 	/*每个页面公共css */
+	page{
+		font-family:PingFang SC;
+	}
 </style>

@@ -5,13 +5,15 @@
 				<image class="photo" :src="user.photo"></image>
 				<text class="name">{{user.name}}</text>
 				<text class="account">{{user.account}}</text>
+				<image class="scan" src="../../static/code/scan.png" @click="scanCode()" :style="{display:code.commodityType == 2 ? 'block' : 'none' }"></image>
 			</view>
 		</view>	
 		<view class="vip">
-			<image class="vipPhoto" src="../../static/vip/ic-会员价购买.png"></image>
-			<text class="applyVip" @click="getVip()">申请会员</text>
-			<text class="freeVip"  @click="getVip()">囧途宝盒会员免费申请啦！</text>
-			<image class="more" src="../../static/vip/ic-更多.png" @click="getVip()"></image>
+			<image class="vipPhoto" src="../../static/vip/icVipPrice.png"></image>
+			<text class="applyVip" @click="getVip()" :style="{display: isVip == 0 ? 'block' :'none' }">申请会员</text>
+			<text class="applyVip"  :style="{display:isVip == 1 ? 'block' :'none' }">囧途宝盒会员</text>
+			<text class="freeVip"  @click="getVip()" :style="{display: isVip == 0 ? 'block' :'none' }">囧途宝盒会员免费申请啦！</text>
+			<image class="more" src="../../static/vip/icVipMore.png" @click="getVip()" :style="{display: isVip == 0 ? 'block' :'none' }"></image>
 		</view>	
 		<view class="service">
 			<text class="myService">我的服务</text>
@@ -22,37 +24,59 @@
 				</view>
 			</view>	
 		</view>
-		<text class="myElectronicCode">我的电子码</text>
-		<text class="lookMore">查看更多</text>
-		<image class="moreCode" src="../../static/code/ic-更多电子码.png"></image>
-		<view class="electronicCode">
-			<view class="subElectronicCode">
-				<image class="codePhoto" :src="code.commodityImgList[0]"></image>
-				<text class="codeName" :style="{display:code.commodityType == 2 ? 'block' : 'none' }">电子码：{{code.electronicCode}}</text>
-				<text class="codeAccount" :style="{display:code.commodityType == 2 ? 'block' : 'none' }">订单号码：{{code.orderId}}</text>
-				<text class="codeName" :style="{display:code.commodityType == 1 ? 'block' : 'none' }">快递单号：{{code.deliveryNum}}</text>
-				<button class="copy" :style="{display:code.commodityType == 1 ? 'block' : 'none' }">复制</button>
-				<text class="codeAccount" :style="{display:code.commodityType == 1 ? 'block' : 'none' }">邮寄状态：{{this.getdeliveryState(code.deliveryState)}}</text>
+		<view :style="{display:code == null ? 'none' :'block' }">
+			<text class="myElectronicCode">我的电子码</text>
+			<text class="lookMore" @click="codeLook()">查看更多</text>
+			<image class="moreCode" src="../../static/code/moreCode.png" @click="codeLook()"></image>
+			<view class="electronicCode">
+				<view class="subElectronicCode">
+					<image class="codePhoto" :src="code.commodityImgList[0]"></image>
+					<text class="codeName" :style="{display:code.commodityType == 2 ? 'block' : 'none' }">电子码：{{code.electronicCode}}</text>
+					<text class="codeAccount" :style="{display:code.commodityType == 2 ? 'block' : 'none' }">订单号码：{{code.orderId}}</text>
+					<text class="codeName" :style="{display:code.commodityType == 1 ? 'block' : 'none' }" >
+						快递单号：<text selectable="true" @longtap="copy(code.deliveryNum)">{{code.deliveryNum}}</text>
+						</text>
+					<button class="copy" :style="{display:code.commodityType == 1 ? 'block' : 'none' }" @click="copyBtu(code.deliveryNum)">复制</button>
+					<text class="codeAccount" :style="{display:code.commodityType == 1 ? 'block' : 'none' }">邮寄状态：{{this.getdeliveryState()}}</text>
+				</view>
+				<view class="introduction">
+					<view class="dottedLineOne"></view>
+					<text class="codeInfo">{{code.commodityInfo}}</text>
+					<view class="dottedLineTwo"></view>
+				</view>
+				<view class="bottom">
+					<text class="shopName">{{code.commodityTitle}}</text>
+					<button class="QR-Code" :style="{display:code.commodityType == 2 ? 'block' : 'none'}" @click="lookQRCode()"><text class="fontTwo">查看二维码</text></button>
+					<button class="lookDetails" :style="{marginRight:code.commodityType == 2 ? '25rpx' : '0rpx'}" @click="lookDetails()"><text class="fontOne">查看详情</text></button>
+					<uni-popup ref='popup' type="center" maskClick="true">
+						<view class="popUp">
+							<text class="popupCodeName" >电子码：{{code.electronicCode}}</text>
+							<text class="popupCodeAccount">订单号码：{{code.orderId}}</text>
+							<!-- <view class="halfCircle"></view>
+							<view class="halfCircle"></view> -->	
+							<view class="dottedLineThree"></view>
+							<image class="qrCode" :src="qr"></image>
+							<text class="codeShopName">{{code.commodityTitle}}</text>
+						</view>
+						<view class="circle" @click="close()">
+							<image src="../../static/popup/closePopUp.png" class="close"></image>
+						</view>
+					</uni-popup>
+				</view>
 			</view>
-			<view class="introduction">
-				<view class="dottedLineOne"></view>
-				<text class="codeInfo">{{code.commodityInfo}}</text>
-				<view class="dottedLineTwo"></view>
-			</view>
-			<view class="bottom">
-				<text class="shopName">{{code.commodityTitle}}</text>
-				<button class="QR-Code" :style="{display:code.commodityType == 2 ? 'block' : 'none'}"><text class="fontTwo">查看二维码</text></button>
-				<button class="lookDetails" :style="{marginRight:code.commodityType == 2 ? '25rpx' : '0rpx'}"><text class="fontOne">查看详情</text></button>
-				
-			</view>
+		</view>	
+		<view class="noCode" :style="{display:code == null ? 'block' :'none' }">
+			<image class="noCodePicture" src="../../static/code/noCode.png"></image>
+			<text class="noCodeText">暂无电子码</text>
 		</view>
-	
 	</view>
 	
 </template>
 
 <script>
 	import {api} from './api.js'
+	import uniPopup from "../components/uni-popup/uni-popup.vue"
+	import Qr from "../utils/wxqrcode.js"
 	    export default {
 	        data() {
 	            return {
@@ -63,20 +87,19 @@
 					},
 					service:[
 					],
-					codes:{
-						codeName:'乌拉拉',
-						codeAccount:'153897433204',
-						codeIntroduction:'电子电子码简介电子码简介电子码简介简介电子介简介电子码简介简介电子码简介电子码简介简介电子码简介电子码简介电子码简介电子码简介简介电子介简介电子码简介简介电子码简介电子码简介简介电子码简介电子码简介电子码简介电子码简介简介电子介简介电子码简介简介电子码简介电子码简介简介电子码简介码简介电子码简介电子码简介简介电子介简介电子码简介简介电子码简介电子码简介简介电子码简介电子码简介电子码简介电子码简介简介电子介简介电子码简介简介电子码简介电子码简介简介电子码简介电子码简介电子码简介电子码简介简介电子介简介电子码简介简介电子码简介电子码简介简介电子码简介电子码简介电子码简介电子码简介简介电子介简介电子码简介简介电子码简介电子码简介简介电子码简介',
-						shopName:'水晶玻璃纸',
-						photo:'../../static/code/logo.png',
-					},
 					code:[],
+					qr:'',
+					isVip:0
 	            };
 	        },
 			onShow() {
 				this.wxGetUserInfo();
 				this.getData();
 				this.getCode();
+				this.judgeVip();
+			},
+			components:{
+				uniPopup,
 			},
 	        methods: {
 				// 获取登录信息
@@ -86,6 +109,7 @@
 				    uni.getUserInfo({
 				        provider: 'weixin',
 				        success: function(infoRes) {
+							console.log(infoRes);
 				           _this.user.name = infoRes.userInfo.nickName; //昵称
 				           _this.user.photo = infoRes.userInfo.avatarUrl; //头像
 				        },
@@ -110,6 +134,17 @@
 						console.log(err)
 					})
 				},
+				//判断是否为vip
+				judgeVip(){
+					try {
+					    const value = uni.getStorageSync('isVip');
+					    if (value) {
+					        console.log(value);
+					    }
+					} catch (e) {
+					    console.log(e);
+					}
+				},
 				//跳转申请vip
 				getVip(){
 					uni.navigateTo({
@@ -130,22 +165,77 @@
 						console.log(this.code)
 					})
 				},
+				//电子码查看更多
+				codeLook(){
+					api.getCodeInfo().then(res=>{
+						// this.code = res.data.data,
+						console.log(123)
+					})
+				},
+				//扫码二维码
+				scanCode(){
+					uni.scanCode({
+					    success: function (res) {
+					        console.log('条码类型：' + res.scanType);
+					        console.log('条码内容：' + res.result);
+					    }
+					});
+				},
 				//获取邮寄状态
-				getdeliveryState(index){
-					if(index == 0){
-						return '未邮寄'
+				getdeliveryState(){
+					if(this.code != null){
+						let index = this.code.deliveryState
+						if(index == 0){
+							return '未邮寄'
+						}	
+						else if(index == 1){
+							return '邮寄中'
+						}	
+						else if(index == 2){
+							return '已发送'
+						}
+						else
+							return '未知'
 					}	
-					else if(index == 1){
-						return '邮寄中'
-					}	
-					else if(index == 2){
-						return '已发送'
-					}
-					else
-						return '未知'
+				},
+				//长按复制
+				copy(data){
+					// var that = this;
+					uni.setClipboardData({
+					  data: data,
+					  success: function (res) {
+						console.log('复制成功')
+					  }
+					});
+				},
+				//一键复制
+				copyBtu(data){
+					console.log(data);
+					var that = this;
+					uni.setClipboardData({
+					  data: data,
+					  success: function (res) {
+						  console.log('复制成功')
+					  }
+					});
+					
+				},
+				//查看二维码
+				lookQRCode(){
+					this.$refs.popup.open()
+					this.qr = Qr.createQrCodeImg(this.code.qrcode)
+				},
+				//查看详情
+				lookDetails(){
+					uni.navigateTo({
+						url: `/pages/product/product`
+					})
+				},
+				//关闭弹窗
+				close(){
+					this.$refs.popup.close()
 				}
-				
-			},
+			}
 	           
 	    }
 </script>
@@ -163,6 +253,7 @@
 	}
 	.subHead{
 		position: relative;
+		width: 640rpx;
 		left: 45.4rpx;
 		top: 59.4rpx;	
 	}
@@ -185,6 +276,13 @@
 		bottom:17.6rpx;
 		left: 149.6rpx;
 		font-size: 26rpx;
+	}
+	.scan{
+		position: absolute;
+		right: 0rpx;
+		top: 17.6rpx;
+		width: 40rpx;
+		height: 40rpx;
 	}
 	.vip{
 		width: 690rpx;
@@ -418,6 +516,95 @@
 		font-family:PingFang SC;
 		font-weight:500;
 		color:#06C1AE;
+	}
+	.popUp{
+		position: relative;
+		width: 580rpx;
+		height: 629rpx;
+		background-color: #FFFFFF;
+		border-radius: 15rpx;
+		border-style: dashed;
+		border-width: 1rpx;
+	}
+	.popupCodeName{
+		display: inline-block;
+		height:28rpx;
+		font-size:30rpx;
+		font-family:PingFang SC;
+		font-weight:bold;
+		color:#333333;
+		margin-left: 53rpx;
+		margin-top: 50rpx;
+	}
+	.popupCodeAccount{
+		display: inline-block;
+		height:23rpx;
+		font-size:24rpx;
+		font-family:PingFang SC;
+		font-weight:500;
+		color:#999999;
+		line-height:38rpx;
+		margin-left: 53rpx;
+		margin-top: 30rpx;
+	}
+	/* .halfCircle{
+		position: absolute;
+		width: 15rpx;
+		height: 15rpx;
+		background:rgba(255,255,255,1);
+		box-shadow:0px 6px 10px 0px rgba(153,153,153,0.05);
+	} */
+	.dottedLineThree{
+		display: inline-block;
+		margin: 41rpx 49rpx;
+		width:482rpx;
+		height:1rpx;
+		border:1rpx dotted rgba(227,227,227,1);
+	}
+	.circle{
+		position: relative;
+		left: 255rpx;
+		top: 30rpx;
+		width: 80rpx;
+		height: 80rpx;
+		background-color: #FFFFFF;
+		border-radius: 80rpx;
+	}
+	.qrCode{
+		width: 270rpx;
+		height: 276rpx;
+		margin: 0 156rpx;
+	}
+	.codeShopName{
+		display: inline-block;
+		margin-top: 20rpx;
+		text-align: center;
+	    width:580rpx;
+		font-size:28rpx;
+		color:rgba(204,204,204,1);
+	}
+	.close{
+		width: 60rpx;
+		height: 60rpx;
+		padding: 6rpx 10rpx;
+	}
+	.noCode{
+		width: 750rpx;
+		height: 400rpx;
+		margin-top: 120rpx;
+	}
+	.noCodePicture{
+		width: 300rpx;
+		height: 300rpx;
+		margin: 0  225rpx;
+	}
+	.noCodeText{
+		display: inline-block;
+		color: #999999;
+		font-size: 26rpx;
+		margin-top: 10rpx;
+		width: 750rpx;
+		text-align: center;
 	}
 </style>
 
