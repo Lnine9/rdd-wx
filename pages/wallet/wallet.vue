@@ -4,14 +4,14 @@
 			<view class="left">
 				<image class="backImg" src="../../static/wallet/incomeBack.png"></image>
 				<view class="incomeType">总收益</view>
-				<view class="theIncome">{{wallet.totalIncome}}
+				<view class="theIncome">{{wallet.totalIncome.toFixed(2)}}
 					<text style="font-size: 28rpx;margin-left: 15rpx;">元</text>
 				</view>
 			</view>
 			<view class="right">
 				<image class="backImg" src="../../static/wallet/balance.png"></image>
 				<view class="incomeType">余额</view>
-				<view class="theIncome">{{wallet.blance}}
+				<view class="theIncome">{{wallet.blance.toFixed(2)}}
 					<text style="font-size: 28rpx;margin-left: 15rpx;">元</text>
 				</view>
 			</view>

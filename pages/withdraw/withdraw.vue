@@ -7,7 +7,7 @@
 				可提现金额 （元）
 			</text>
 			<view style="width: 700rpx;text-align: center;font-weight: bold;font-size: 60rpx;position: relative;top: 40rpx;left: 20rpx;">
-			{{amount}}
+			{{amount.toFixed(2)}}
 			</view>
 		</view>
 		<view id="account" class="info">
@@ -48,7 +48,7 @@
 			if (option.data == null) {
 				this.amount = 0;
 			} else {
-				this.amount = parseFloat(option.data).toFixed(2);
+				this.amount = parseFloat(option.data);
 			}
 		},
 		methods: {
