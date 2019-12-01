@@ -4,8 +4,7 @@
 	   <view class="invite"></view>
 	   <view class="scan"></view>
 	   <image class="QRCode" :src="QR"></image>
-	   <!-- <button class="button" type="primary" @click="togglePopup('bottom', 'share')">底部分享</button> -->
-	   <image src="/static/inviteFriends/button.png" class="btn" @click="togglePopup('bottom', 'share')"></image>
+	   <image src="/static/inviteFriends/button.png" class="btn" @tap="togglePopup('bottom')"></image>
 	   <uni-popup ref="popup" type="bottom" @change="change">
 		   <view class="share">
 			   <view class="text">分享到</view>
@@ -26,23 +25,8 @@
 			   <text class="wxpyqtext">QQ</text> 
 			   <text class="qqkjtext">QQ空间</text>
 		   </view>
-		   <view class="cancel" @click="cancel()">取消分享</view>
+		   <view class="cancel" @tap="cancel()">取消分享</view>
 	   </uni-popup>
-	   <!-- 底部分享弹窗 -->
-	   <!-- <uni-popup ref="popup" type="bottom" @change="change">
-	   	<view class="uni-share">
-	   		<text class="uni-share-title">分享到</text>
-	   		<view class="uni-share-content">
-	   			<view v-for="(item, index) in bottomData" :key="index" class="uni-share-content-box">
-	   				<view class="uni-share-content-image">
-	   					<image :src="item.icon" class="content-image" mode="widthFix" />
-	   				</view>
-	   				<text class="uni-share-content-text">{{ item.text }}</text>
-	   			</view>
-	   		</view>
-	   		<text class="uni-share-btn" @click="cancel('share')">取消分享</text>
-	   	</view>
-	   </uni-popup> -->
    </view>
 </template>
 
@@ -52,28 +36,7 @@
     export default {
         data() {
             return {
-               QR:"",
-			   bottomData: [{
-			   		text: '微信',
-			   		icon: 'https://img-cdn-qiniu.dcloud.net.cn/uni-ui/grid-2.png',
-			   		name: 'wx'
-			   	},
-			   	{
-			   		text: '朋友圈',
-			   		icon: '/static/share/pyq.png',
-			   		name: 'wx'
-			   	},
-			   	{
-			   		text: 'QQ',
-			   		icon: 'https://img-cdn-qiniu.dcloud.net.cn/uni-ui/gird-3.png',
-			   		name: 'qq'
-			   	},
-			   	{
-			   		text: 'QQ空间',
-			   		icon: '/static/share/qqkj.jpg',
-			   		name: 'sina'
-			   	}
-			   ]
+               QR:""
             };
         },
 		components: {
@@ -100,95 +63,18 @@
 			this.QR=uni.getStorageSync("QR");
 		},
         methods: {
-			togglePopup(type, open) {
-				switch (type) {
-					case 'top':
-						this.content = '顶部弹出 popup'
-						break
-			
-					case 'bottom':
-						this.content = '底部弹出 popup'
-						break
-					case 'center':
-						this.content = '居中弹出 popup'
-						break
-				}
+			togglePopup(type) {
 				this.type = type
 				this.$nextTick(() => {
-					// this.$refs['show' + open].open()
 					this.$refs["popup"].open();
 				})
 			},
-            open(){
-				console.log(111)
-				// 需要在 popup 组件，指定 ref 为 popup
-				 this.$refs["popup"].open();
-				 console.log(222)
-			
-            },
 			change(e) {
 				console.log('是否打开:' + e.show)
 			},
 			cancel(){
 				this.$refs["popup"].close();
-			},
-			//点击保存图片
-			save () {
-			  let that = this
-			  //若二维码未加载完毕，加个动画提高用户体验
-			  wx.showToast({
-			   icon: 'loading',
-			   title: '正在保存图片',
-			   duration: 1000
-			  })
-			  //判断用户是否授权"保存到相册"
-			  wx.getSetting({
-			   success (res) {
-			    //没有权限，发起授权
-			    if (!res.authSetting['scope.writePhotosAlbum']) {
-			     wx.authorize({
-			      scope: 'scope.writePhotosAlbum',
-			      success () {//用户允许授权，保存图片到相册
-			       that.savePhoto();
-			      },
-			      fail () {//用户点击拒绝授权，跳转到设置页，引导用户授权
-			       wx.openSetting({
-			        success () {
-			         wx.authorize({
-			          scope: 'scope.writePhotosAlbum',
-			          success() {
-			           that.savePhoto();
-			          }
-			         })
-			        }
-			       })
-			      }
-			     })
-			    } else {//用户已授权，保存到相册
-			     that.savePhoto()
-			    }
-			   }
-			  })
-			 },
-			//保存图片到相册，提示保存成功
-			 savePhoto() {
-			  let that = this
-			  wx.getImageInfo({
-			   url: that.$data.QR,
-			   success: function (res) {
-			    wx.saveImageToPhotosAlbum({
-			     filePath: res.tempFilePath,
-			     success(res) {
-			      wx.showToast({
-			       title: '保存成功',
-			       icon: "success",
-			       duration: 1000
-			      })
-			     }
-			    })
-			   }
-			  })
-			 }
+			}
         }
     }
 </script>
@@ -196,7 +82,7 @@
 <style>
    .imageBackground{
 	   width: 750rpx;
-	   height: 1230rpx;
+	   height: 1250rpx;
    }
    
    .invite{
@@ -228,52 +114,6 @@
 	    margin: 100rpx 40rpx 0 152rpx;
 	}
 	
-	.uni-share {
-		/* #ifndef APP-NVUE */
-		display: flex;
-		flex-direction: column;
-		/* #endif */
-		background-color: #fff;
-	}
-	.uni-share-title {
-		line-height: 60rpx;
-		font-size: 24rpx;
-		padding: 15rpx 0;
-		text-align: center;
-	}
-	
-	.uni-share-content {
-		/* #ifndef APP-NVUE */
-		display: flex;
-		/* #endif */
-		flex-direction: row;
-		flex-wrap: wrap;
-		/* justify-content: center; */
-		padding: 35px;
-	}
-	
-	.uni-share-content-box {
-		/* #ifndef APP-NVUE */
-		display: flex;
-		/* #endif */
-		flex-direction: column;
-		align-items: center;
-		width: 200rpx;
-	}
-	
-	.uni-share-content-image {
-		/* #ifndef APP-NVUE */
-		display: flex;
-		/* #endif */
-		flex-direction: row;
-		justify-content: center;
-		align-items: center;
-		width: 60rpx;
-		height: 60rpx;
-		overflow: hidden;
-		border-radius: 10rpx;
-	}
-	
 	.content-image {
 		width: 60rpx;
 		height: 60rpx;
@@ -296,6 +136,13 @@
 		text-align: center;
 		color: #666;
 	}
+	
+	.vh{
+		width: 100%;
+		height: 430rpx;
+		padding-top: 20rpx;
+	}
+	
 	.share{
 		width: 100%;
 		height: 350rpx;

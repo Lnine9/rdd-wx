@@ -1,6 +1,11 @@
 <template>
 	<view v-bind:style="noDataCenter">
-		<image v-if="isNodata" src="../../static/code/logo.png" class="noDataPic"></image>
+		<view v-if="isNodata" class="nodataText">
+		
+		<image src="../../static/myOrder/我的订单缺省图_icon.png" class="noDataPic"></image>
+		<text class="nodataText" >暂无订单</text>
+		
+		</view>
 		<view v-if="!isNodata" class="orderList" v-for="(item,index) in shopList" :key="index">
 			<view class="shopContainer normalFontWeight">
 				<view class="shopTitle boldFontWeight">
@@ -59,6 +64,7 @@
 	export default {
 		data() {
 			return {
+				
 				isNodata: false,
 				statusStyle: [],
 
@@ -144,7 +150,7 @@
 
 					if (res.statusCode == "200") {
 						this.shopList = res.data.data
-						this.isNodata = (this.shopList.length == 0)
+						this.isNodata = this.shopList.length == 0
 						uni.stopPullDownRefresh()
 					} else {
 						this.isNodata = true
@@ -156,6 +162,9 @@
 						content: '刷新失败',
 						showCancel: false
 					});
+					if (this.shopList.length == 0){
+						this.isNodata = true
+					}
 					uni.stopPullDownRefresh()
 				})
 			},
@@ -353,7 +362,7 @@
 	.button {
 		height: 60rpx;
 		width: 160rpx;
-		border: 1px solid rgba(204, 204, 204, 1);
+		border: 1rpx solid rgba(204, 204, 204, 1);
 		border-radius: 30rpx;
 	}
 
@@ -367,6 +376,15 @@
 	}
 
 	.noDataPic {
+		width: 200rpx;	
+		height: 200rpx;	
 		padding-top: 20vh;
+	}
+	.nodataText{
+		display: flex;	
+		align-items: center;
+		flex-direction: column;
+		justify-content: center;
+		color: #CCCCCC;
 	}
 </style>

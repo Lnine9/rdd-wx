@@ -1,7 +1,7 @@
 import {minRequest} from '../../Config/MinRequest'
 
 export class api{
-
+	
   /**
    * 获取用户基本信息
    * 并存入缓存
@@ -26,4 +26,12 @@ export class api{
   static getProducts(userAndLocalMes){
   	  return minRequest.get('/api/WCPCommodityInfo/getCommodityList', userAndLocalMes)
   } 
+  
+  /**
+   * 获取地址列表
+   */
+  static getAreas(){
+  	  return minRequest.get('/api/WCPCommodityInfo/getAreas')
+  }
+  
 }
