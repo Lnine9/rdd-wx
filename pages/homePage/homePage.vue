@@ -104,6 +104,14 @@
 			};
 		},
 		
+		onPullDownRefresh() {
+			this.getBanner(),
+			this.getUserMes(),
+			this.getRecommend(),
+			this.getGuess(),
+			this.getAreas()
+		},
+		
 		methods: {
 			//轮播图切换
 			swiperChange(e) {
@@ -238,12 +246,17 @@
 				let userAndLocalMes_1 = {
 					// area: uni.getStorageSync('location'),
 					area: this.addressName,
-					shopPlace: 'Guess'
+					shopPlace: 'Guess',
+					
 				};
 				api.getProducts(userAndLocalMes_1).then(res =>{
-					this.guessList = res.data.data
+					this.guessList = res.data.data,
+					 uni.stopPullDownRefresh()
+
 				}).catch(err => {
-					console.log(err)
+					console.log(err),
+					 uni.stopPullDownRefresh()
+
 				})			
 			}
 														
@@ -641,6 +654,13 @@
 			line-height: 1;
 		}
 	}
+	
+	::-webkit-scrollbar{
+		       width: 0;
+		       height: 0;
+		       color: transparent;
+		}
+
 	
 
 </style>
