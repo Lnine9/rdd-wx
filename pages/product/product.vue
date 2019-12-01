@@ -18,8 +18,8 @@
 			<text class="title">{{dataDic.commodityTitle}}</text>
 			<view class="price-box">
 				<view style="display: block;">
-				<text class="price">{{dataDic.originalPrice}}</text>
-				<text class="m-price">{{"￥" + dataDic.salePrice}}</text>
+				<text class="price">{{"￥" + dataDic.salePrice}}</text>
+				<text class="m-price">{{dataDic.originalPrice}}</text>
 				</view>
 				<view style="color: #999999;">
 				<text style="margin-right: 20rpx;">销量: {{dataDic.salesVolume}}</text>
@@ -43,7 +43,7 @@
 		<view class="c-list">		
 			<view class="c-row b-b">
 				<view class="con-list"  style="font-size:24rpx;font-family:PingFang SC;font-weight:400;color:rgba(153,153,153,1);">
-					<template>{{dataDic.shopContent}}</template>
+					<template>{{dataDic.commodityInfo}}</template>
 				</view>
 			</view>
 		</view>
@@ -59,21 +59,53 @@
 			<image style="width: 31rpx;height: 30rpx;margin-right: 10rpx;" src="../../static/product/ic-客服@2x.png"></image>
 			<text style="color:rgba(51,51,51,1);">联系客服</text>
 			</view>
-			<view @click="buy()" class="buyView">
+			<view @click="reayToBuy()" class="buyView">
 			<text >立即购买</text>
 			</view>
 		</view>
-			</view>
-			
-		</view>
+		<!-- 选择购买数量 -->
+		
+					<view v-if="isBuy" style="background-color: rgba(0,0,0,0.5); z-index: 3;position: fixed;bottom: 0rpx;right: 0rpx;width: 100vw;height: 100vh;">
+					<view class="cart-item" >
+						<view class="image-wrapper">
+							<image :src="titleImg[0]"
+								style="width: 200rpx;height: 200rpx;"
+
+							></image>
+						</view>
+						<view class="item-right">
+							<view style="display: flex;justify-content: space-between;align-items: center;">
+							<text class=" title">{{dataDic.commodityTitle}}</text>
+							<text class="del-btn" @click="cancel">取消</text>
+							</view>
+							<text class="price">¥{{buyNum}}</text>
+							<view style="display: flex;justify-content: space-between;margin-top: 40rpx;align-items: center;">
+							<uniNumberBox 
+						
+								:min=1 
+								:max=dataDic.commodityNum
+								:value=buyNum>dataDic.commodityNum?dataDic.commodityNum:buyNum
+								@change="numberChange"
+							></uniNumberBox>
+							<button class="buyButton" @click="buy()">立即购买</button>
+							</view>
+						</view>
+						
+						
+					</view>
+					</view>
 	</view>
 </template>
 
 <script>
+	import uniNumberBox from '../components/uni-number-box/uni-number-box.vue'
 	import {api} from "./api.js"
 	export default{
+		components:{uniNumberBox},
 		data() {
 			return {
+				buyNum:1,
+				isBuy:false,
 				dataDic:{},
 				commodityImg: [],
 				specClass: 'none',
@@ -90,6 +122,15 @@
 			 * 获取商品详细信息
 			 * @param {Object} commodityId
 			 */
+			numberChange(data){
+				console.log(data)
+				this.buyNum = data;
+				
+			},
+			cancel(){
+				this.isBuy = false
+			},
+			
 			getData(commodityId) {
 			
 				api.getList({commodityId:commodityId}).then(res =>{
@@ -153,11 +194,16 @@
 				  });
 			},
 			
+			reayToBuy(){
+				console.log("flkasjfl")
+				this.isBuy = true
+			},
+			
 			buy(){
 				console.log("购买")
 				uni.navigateTo({
 					url: `/pages/payOrder/payOrder?commodityId=${this.dataDic.commodityId}&commodityNum=
-					${this.dataDic.commodityNum}&remark = ${this.dataDic.remark}&addressId=${this.dataDic.addressId}` 
+					${this.buyNum}&remark = ${this.dataDic.remark}&addressId=${this.dataDic.addressId}` 
 				})
 			},
 		},
@@ -325,7 +371,75 @@
 		background-color: #06C1AE;
 	}
 	
+	.cart-item{
+		background-color:#FFFFFF;
+		width: 100vw;
+		z-index: 4;
+		display:flex;
+		position:fixed;
+		bottom: 0rpx;
+		padding-top:  30rpx;
+		padding-left: 20rpx;
+		
+		.image-wrapper{
+			width: 230upx;
+			height: 230upx;
+			flex-shrink: 0;
+			position:relative;
+			image{
+				border-radius:8upx;
+			}
+		}
+		.item-right{
+			display:flex;
+			flex-direction: column;
+			flex: 1;
 	
+			position:relative;
+			padding-left: 30upx;
+			.title,.price{
+				font-size:$font-base + 2upx;
+				color: $font-color-dark;
+				height: 40upx;
+				line-height: 40upx;
+			}
+			.attr{
+				display: -webkit-box;
+				-webkit-box-orient: vertical;
+				-webkit-line-clamp: 1;
+				overflow: hidden;
+				word-break: break-all;
+				text-overflow: ellipsis;
+				font-size: $font-sm + 2upx;
+				color: $font-color-light;
+				height: 50upx;
+				line-height: 50upx;
+			}
+			.price{
+				height: 50upx;
+				line-height:50upx;
+			}
+		}
+		.del-btn{
+			position: relative;
+			width: 100rpx;
+			right: 20rpx;
+			font-size:28rpx; 
+			height: 50rpx;
+			color: $font-color-light;
+		}
+	}
+	
+		
+	.buyButton{
+		color: rgba(6,193,174,1);
+		font-size: 24rpx;
+		height: 60rpx;
+		width: 180rpx;
+		border: 1rpx solid rgba(6,193,174,1);
+		border-radius: 20rpx;
+		margin-left: 100rpx;
+	}
 	
 	/*  详情 */
 	.detail-desc{

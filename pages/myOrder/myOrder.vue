@@ -144,6 +144,7 @@
 
 
 			},
+			
 			// 加载数据
 			getData: function() {
 				api.getComidityList().then(res => {
@@ -169,7 +170,9 @@
 				})
 			},
 		},
-
+		
+		
+		
 		onShow: function(options) {
 
 			uni.startPullDownRefresh({
