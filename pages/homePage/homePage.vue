@@ -3,7 +3,7 @@
 		<!-- 小程序头部兼容 -->
 		<!-- #ifdef MP -->
 		<!-- #endif -->
-		<view class="header"><label class="head-text">首页</label>
+		<view class="header"><label class="head-text">囧途宝盒</label>
 			<picker class="head-region" @change="bindPickerChange" :value="regionIndex" :range="areas">
 				<view class="uni-input" v-if="this.defaultRegion==''">{{areas[regionIndex]}}</view>
 				<view class="uni-input" v-if="this.defaultRegion!=''">{{defaultRegion}}</view>
