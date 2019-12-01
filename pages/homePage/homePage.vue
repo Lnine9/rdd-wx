@@ -133,6 +133,7 @@
 					area:'重庆市'
 				};
 				api.getUserInfo().then(res =>{
+					console.log(res)
 					this.service = res.data.data,
 				
 					// userType 说明
@@ -143,13 +144,13 @@
 					// 默认重庆（debug）
 					uni.setStorageSync('location', "重庆"),
 					// 存储角色信息
+					uni.setStorageSync('roleNameList', this.service.roleNameList),
+					// 存储角色信息
 					uni.setStorageSync('roleName', this.service.roleName),
 					// 当前用户是否为VIP
 					uni.setStorageSync('isVip', this.service.isVip==0?false:true)
 					// 当前地区是否有VIP业务
-					uni.setStorageSync('haveVip', this.service.haveVip==0?false:true)
-					
-						
+					uni.setStorageSync('haveVip', this.service.haveVip==0?false:true)	
 				}).catch(err => {
 					console.log(err)
 				});		
@@ -178,8 +179,6 @@
 				let userAndLocalMes = {
 					// area: uni.getStorageSync('location'),
 					area: this.addressName,
-					longitude: '',
-					latitude: '',
 					shopPlace: 'Recommend'
 				};
 				api.getProducts(userAndLocalMes).then(res =>{
@@ -197,8 +196,6 @@
 				let userAndLocalMes_1 = {
 					// area: uni.getStorageSync('location'),
 					area: this.addressName,
-					longitude: '',
-					latitude: '',
 					shopPlace: 'Guess'
 				};
 				api.getProducts(userAndLocalMes_1).then(res =>{
