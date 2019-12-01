@@ -25,12 +25,6 @@
 			}
 		},
 		{
-			"path": "pages/address/address",
-			"style": {
-				"navigationBarTitleText": "收货地址"
-			}
-		},
-		{
 			"path": "pages/vipApply/vipApply",
 			"style": {
 				"navigationBarTitleText": "申请会员",
@@ -48,6 +42,15 @@
 			"path": "pages/address/newAddress",
 			"style": {
 				"navigationBarTitleText": "新增地址"
+			}
+		},
+		{
+			"path": "pages/address/address",
+			"style": {
+				"navigationBarTitleText": "收货地址",
+				"titleNView": {
+					"fontSize": "30px"
+				}
 			}
 		},
 		{
@@ -84,7 +87,18 @@
             "style" : {
 				"navigationBarTitleText":"商品详情"
 			}
-        }
+        },{
+			"path":"pages/withdraw/withdraw",
+			"style" : {
+				"navigationBarTitleText":"提现"
+			}
+		}
+        },{
+		    "path" : "pages/webView/webView",
+		    "style" : {
+				"navigationBarTitleText":""
+			}
+		}
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",

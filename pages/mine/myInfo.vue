@@ -9,11 +9,11 @@
 			</view>
 		</view>	
 		<view class="vip">
-			<image class="vipPhoto" src="../../static/vip/ic-会员价购买.png"></image>
+			<image class="vipPhoto" src="../../static/vip/icVipPrice.png"></image>
 			<text class="applyVip" @click="getVip()" :style="{display: isVip == 0 ? 'block' :'none' }">申请会员</text>
 			<text class="applyVip"  :style="{display:isVip == 1 ? 'block' :'none' }">囧途宝盒会员</text>
 			<text class="freeVip"  @click="getVip()" :style="{display: isVip == 0 ? 'block' :'none' }">囧途宝盒会员免费申请啦！</text>
-			<image class="more" src="../../static/vip/ic-更多.png" @click="getVip()" :style="{display: isVip == 0 ? 'block' :'none' }"></image>
+			<image class="more" src="../../static/vip/icVipMore.png" @click="getVip()" :style="{display: isVip == 0 ? 'block' :'none' }"></image>
 		</view>	
 		<view class="service">
 			<text class="myService">我的服务</text>
@@ -27,7 +27,7 @@
 		<view :style="{display:code == null ? 'none' :'block' }">
 			<text class="myElectronicCode">我的电子码</text>
 			<text class="lookMore" @click="codeLook()">查看更多</text>
-			<image class="moreCode" src="../../static/code/ic-更多电子码.png" @click="codeLook()"></image>
+			<image class="moreCode" src="../../static/code/moreCode.png" @click="codeLook()"></image>
 			<view class="electronicCode">
 				<view class="subElectronicCode">
 					<image class="codePhoto" :src="code.commodityImgList[0]"></image>
@@ -59,7 +59,7 @@
 							<text class="codeShopName">{{code.commodityTitle}}</text>
 						</view>
 						<view class="circle" @click="close()">
-							<image src="../../static/popup/关闭弹窗.png" class="close"></image>
+							<image src="../../static/popup/closePopUp.png" class="close"></image>
 						</view>
 					</uni-popup>
 				</view>
@@ -76,7 +76,7 @@
 <script>
 	import {api} from './api.js'
 	import uniPopup from "../components/uni-popup/uni-popup.vue"
-	import Qr from "../components/wxqrcode/wxqrcode.js"
+	import Qr from "../utils/wxqrcode.js"
 	    export default {
 	        data() {
 	            return {
@@ -89,7 +89,7 @@
 					],
 					code:[],
 					qr:'',
-					isVip:1
+					isVip:0
 	            };
 	        },
 			onShow() {
