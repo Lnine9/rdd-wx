@@ -4,10 +4,11 @@
 		<!-- #ifdef MP -->
 		<!-- #endif -->
 		<view class="header"><label class="head-text">首页</label>
-		<picker class="head-region" @change="bindPickerChange" :value="regionIndex" :range="areas">
-			<view class="uni-input" v-if="this.defaultRegion==''">{{areas[regionIndex]}}</view>
-			 <view class="uni-input" v-if="this.defaultRegion!=''">{{defaultRegion}}</view>
-		</picker></view>
+			<picker class="head-region" @change="bindPickerChange" :value="regionIndex" :range="areas">
+				<view class="uni-input" v-if="this.defaultRegion==''">{{areas[regionIndex]}}</view>
+				<view class="uni-input" v-if="this.defaultRegion!=''">{{defaultRegion}}</view>
+			</picker>
+		</view>
 		<!-- 头部轮播 -->
 		<view class="carousel-section">
 			<!-- 标题栏和状态栏占位符 -->
@@ -15,7 +16,7 @@
 			<!-- 背景色区域 -->
 			<view class="titleNview-background" :style="{backgroundColor:titleNViewBackground}"></view>
 			<swiper class="carousel" circular @change="swiperChange">
-				<swiper-item v-for="(item, index) in carouselList" :key="index" class="carousel-item" @click="navToDetailPage({title: '轮播广告'})">
+				<swiper-item v-for="(item, index) in carouselList" :key="index" class="carousel-item" @click="navToWebView(item)">
 					<image :src="item.savePath" />
 				</swiper-item>
 			</swiper>
@@ -26,14 +27,15 @@
 				<text class="num">{{swiperLength}}</text>
 			</view>
 		</view>
-		<!-- 分类 -->
+		
+		
+		<!-- 精选商品 -->
 		<view class="f-header m-t">
 			<view class="tit-box">
 				<text class="tit">精选商品</text>
 			</view>
 		</view>
-		<view class="cate-section">
-			<!-- 精选商品 -->
+		<view class="cate-section">			
 			<view class="seckill-section m-t">			
 				<text class="yticon icon-you"></text>
 				<scroll-view class="floor-list" scroll-x>
@@ -60,8 +62,7 @@
 				<text class="tit">猜你喜欢</text>
 			</view>
 			<text class="yticon icon-you"></text>
-		</view>
-		
+		</view>		
 		<view class="guess-section">
 			<view 
 				v-for="(item, index) in goodsList" :key="index"
@@ -93,7 +94,6 @@
 				swiperLength: 0,
 				carouselList: [],
 				defaultRegion: '',
-				// region:['重庆市','上海市','山西'],
 				regionIndex: 1,
 				guessList:[],
 				goodsList: [],
@@ -106,6 +106,23 @@
 			swiperChange(e) {
 				const index = e.detail.current;
 				this.swiperCurrent = index;
+			},
+			navToWebView(item) {
+				if(item.announcementType == '0') {
+					return
+				}
+				else if (item.announcementType == '1') {
+					let resulturl = item.announcementContent
+					uni.navigateTo({
+						url: `/pages/webView/webView?url=${resulturl}`
+					})
+				}
+				else {
+					let resulturl = item.announcementContent
+					uni.navigateTo({
+						url: `${resulturl}`
+					})
+				}							
 			},
 			//详情页
 			navToDetailPage(item) {
@@ -148,9 +165,7 @@
 					// 当前用户是否为VIP
 					uni.setStorageSync('isVip', this.service.isVip==0?false:true)
 					// 当前地区是否有VIP业务
-					uni.setStorageSync('haveVip', this.service.haveVip==0?false:true)
-					
-						
+					uni.setStorageSync('haveVip', this.service.haveVip==0?false:true)				
 				}).catch(err => {
 					console.log(err)
 				});		
@@ -166,7 +181,6 @@
 				api.getBannerImgs(location).then(res =>{
 					this.carouselList = res.data.data,
 					this.swiperLength = this.carouselList.length;
-					this.carouselList = this.carouselList;
 				}).catch(err => {
 					console.log(err)
 				})		
@@ -196,8 +210,7 @@
 					shopPlace: 'Recommend'
 				};
 				api.getProducts(userAndLocalMes).then(res =>{
-					this.goodsList = res.data.data,
-					console.log(this.goodsList)		
+					this.goodsList = res.data.data
 				}).catch(err => {
 					console.log(err)
 				})	
@@ -215,8 +228,7 @@
 					shopPlace: 'Guess'
 				};
 				api.getProducts(userAndLocalMes_1).then(res =>{
-					this.guessList = res.data.data,
-					console.log(this.guessList)		
+					this.guessList = res.data.data
 				}).catch(err => {
 					console.log(err)
 				})			
