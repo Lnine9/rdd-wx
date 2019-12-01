@@ -96,6 +96,9 @@
 				if (this.isNodata) {
 					return "text-align:center"
 				}
+				else{
+					return ""
+				}
 
 			}
 		},

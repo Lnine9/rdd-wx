@@ -1,5 +1,12 @@
 <template>
-	<view  class="container">
+	
+	<view v-bind:style="noDataCenter" v-if="showPage" class="container">
+		<view v-if="!showPage" class="nodataText">
+		
+		<image src="../../static/myOrder/我的订单缺省图_icon.png" class="noDataPic"></image>
+		<text class="nodataText" >暂无数据</text>
+		
+		</view>
 		<view  class="carousel">
 			<swiper indicator-dots circular=true duration="400">
 				<swiper-item class="swiper-item"  v-for="(item,index) in titleImg" :key="index">
@@ -65,8 +72,8 @@
 		</view>
 		<!-- 选择购买数量 -->
 		
-					<view v-if="isBuy"  style="background-color: rgba(0,0,0,0.5); z-index: 3;position: fixed;bottom: 0rpx;right: 0rpx;width: 100vw;height: 100vh;">
-					<view class="cart-item" >
+					<view v-if="isBuy"  @click="cancel()" style="background-color: rgba(0,0,0,0.5); z-index: 3;position: fixed;bottom: 0rpx;right: 0rpx;width: 100vw;height: 100vh;"></view>
+					<view  v-if="isBuy" class="cart-item" >
 						<view class="image-wrapper">
 							<image :src="titleImg[0]"
 								style="width: 200rpx;height: 200rpx;"
@@ -92,7 +99,7 @@
 						
 						
 					</view>
-					</view>
+					
 	</view>
 </template>
 
@@ -103,6 +110,7 @@
 		components:{uniNumberBox},
 		data() {
 			return {
+				showPage:false,
 				buyNum:1,
 				isBuy:false,
 				dataDic:{},
@@ -114,6 +122,17 @@
 				imgList: [],
 				
 			};
+		},
+		computed: {
+			noDataCenter() {
+				if (!this.showPage) {
+					return "text-align:center"
+				}
+				else{
+					return ""
+				}
+		
+			}
 		},
 		
 		methods:{
@@ -131,7 +150,9 @@
 			},
 			
 			getData(commodityId) {
-			
+				uni.showLoading({
+					title:"正在加载"
+				})
 				api.getList({commodityId:commodityId}).then(res =>{
 					console.log(res.data.data)
 					this.dataDic = res.data.data,
@@ -154,8 +175,14 @@
 					this.bottomImg += `</div>`
 			
 					this.commodityImg=this.dataDic.commodityImg
+					uni.hideLoading()
+					this.showPage = true
 				}).catch(err => {
-					console.log(err)
+					
+					uni.hideLoading()
+					uni.showToast({
+						title:"网络错误，请稍后重试"
+					})
 				})		
 			},
 			// 放大查看图片
@@ -202,10 +229,10 @@
 			},
 			
 			buy(){
+				
 				console.log("购买")
 				uni.navigateTo({
-					url: `/pages/payOrder/payOrder?commodityId=${this.dataDic.commodityId}&commodityNum=
-					${this.buyNum}&remark = ${this.dataDic.remark}&addressId=${this.dataDic.addressId}` 
+					url: `/pages/payOrder/payOrder?commodityId=${this.dataDic.commodityId}&commodityNum=${this.buyNum}&remark = ${this.dataDic.remark}&addressId=${this.dataDic.addressId}` 
 				})
 			},
 		},
@@ -378,7 +405,7 @@
 		width: 100vw;
 		z-index: 4;
 		display:flex;
-		position:fixed;
+		position:absolute;
 		bottom: 0rpx;
 		padding-top:  30rpx;
 		padding-left: 20rpx;
@@ -432,11 +459,24 @@
 		}
 	}
 	
+	.noDataPic {
+		width: 200rpx;	
+		height: 200rpx;	
+		padding-top: 20vh;
+	}
+	.nodataText{
+		display: flex;	
+		align-items: center;
+		flex-direction: column;
+		justify-content: center;
+		color: #CCCCCC;
+	}
 		
 	.buyButton{
+		background-color: #FFFFFF;
 		color: rgba(6,193,174,1);
 		font-size: 24rpx;
-		height: 62rpx;
+		height: 63rpx;
 		width: 180rpx;
 		border: 1rpx solid rgba(6,193,174,1);
 		
