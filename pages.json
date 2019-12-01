@@ -47,7 +47,10 @@
 		{
 			"path": "pages/address/address",
 			"style": {
-				"navigationBarTitleText": "收货地址"
+				"navigationBarTitleText": "收货地址",
+				"titleNView": {
+					"fontSize": "30px"
+				}
 			}
 		},
 		{
@@ -94,7 +97,7 @@
 	},
 	"tabBar": {
 		"color": "#C0C4CC",
-		"selectedColor": "#fa436a",
+		"selectedColor": "#333333",
 		"borderStyle": "black",
 		"backgroundColor": "#ffffff",
 		"list": [{
@@ -105,7 +108,7 @@
 			},
 			{
 				"pagePath": "pages/mine/myInfo",
-				"iconPath": "static/mineNo.png",
+				"iconPath": "static/mine.png",
 				"selectedIconPath": "static/mine.png",
 				"text": "我的"
 			}
@@ -121,7 +124,7 @@
 			{
 				"name": "订单详情",
 				"path": "pages/orderDetail/orderDetail",
-				"query": "orderId=1"
+				"query": "orderid=1575036170665008-4"
 			},
 			{
 				"name": "首页",
