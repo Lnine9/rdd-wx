@@ -1,8 +1,10 @@
 <template>
 	<view v-bind:style="noDataCenter">
 		<view v-if="isNodata" class="nodataText">
+		
 		<image src="../../static/myOrder/我的订单缺省图_icon.png" class="noDataPic"></image>
 		<text class="nodataText" >暂无订单</text>
+		
 		</view>
 		<view v-if="!isNodata" class="orderList" v-for="(item,index) in shopList" :key="index">
 			<view class="shopContainer normalFontWeight">
@@ -148,7 +150,7 @@
 
 					if (res.statusCode == "200") {
 						this.shopList = res.data.data
-						this.isNodata = true
+						this.isNodata = this.shopList.length == 0
 						uni.stopPullDownRefresh()
 					} else {
 						this.isNodata = true
@@ -160,6 +162,9 @@
 						content: '刷新失败',
 						showCancel: false
 					});
+					if (this.shopList.length == 0){
+						this.isNodata = true
+					}
 					uni.stopPullDownRefresh()
 				})
 			},
