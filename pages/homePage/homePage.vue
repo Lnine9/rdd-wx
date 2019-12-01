@@ -41,7 +41,7 @@
 						<view 
 							v-for="(item, index) in goodsList" :key="index"
 							class="floor-item"
-							@click="navToDetailPage(index)">
+							@click="navToDetailPage(item)">
 							<image :src="item.commodityImg[0]" mode="aspectFill"></image>
 							<text class="clamp">{{item.commodityTitle}}</text>
 							<view class="PriceArea">
@@ -67,7 +67,7 @@
 			<view 
 				v-for="(item, index) in goodsList" :key="index"
 				class="guess-item"
-				@click="navToDetailPage(index)">
+				@click="navToDetailPage(item)">
 				<view class="image-wrapper">
 					<image :src="item.commodityImg[0]" mode="aspectFill"></image>
 				</view>
