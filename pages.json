@@ -145,6 +145,10 @@
 			{
 				"name": "收益",
 				"path":"pages/income/income"
+			},
+			{
+				"name": "邀請",
+				"path":"pages/inviteFriends/inviteFriends"
 			}
 		]
 	}
