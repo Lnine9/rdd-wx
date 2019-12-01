@@ -328,7 +328,7 @@
 		.cate-section{
 			position:relative;
 			z-index:5;
-			border-radius:16upx 16upx 0 0;
+			border-radius:25upx 25upx 0 0;
 			margin-top:-50upx;
 		}
 		.carousel-section{
@@ -393,7 +393,7 @@
 		image {
 			width: 100%;
 			height: 100%;
-			border-radius: 10upx;
+			border-radius: 20upx;
 		}
 	}
 	.swiper-dots {
@@ -454,7 +454,7 @@
 				margin-right: 14upx;
 				font-size: $font-sm+2upx;
 				color: #fff;
-				border-radius: 2px;
+				border-radius: 20px;
 				background: rgba(0,0,0,.8);
 			}
 			.icon-you{
@@ -485,7 +485,7 @@
 			image{
 				width: 240rpx;
 				height: 240rpx;
-				border-radius: 6upx;
+				border-radius: 20upx;
 			}
 			.PriceArea{
 				display:flex;
@@ -500,6 +500,7 @@
 				word-break: break-all;
 				text-overflow: ellipsis;
 				font-size: 30rpx;
+				color:rgba(51,51,51,1);
 			}
 			.priceOrigin{
 				font-size: 32rpx;
@@ -517,13 +518,14 @@
 			}
 		}
 	}
-	
 	.PriceArea{
+		margin-top: 10rpx;
 		display:flex;
 		justify-content: center;
 		align-items: center;
 	}
 	.clamp{
+		margin-top: 10rpx;
 		display:flex;
 		justify-content: center;
 		align-items: center;
@@ -536,11 +538,11 @@
 		font-size: 37rpx;
 		font-family:PingFang SC;
 		font-weight: 650;
-		color:rgba(255,126,48,1);
+		color:rgba(51,51,51,1);
 	}
 	
 	.priceOrigin{
-		font-size: 37rpx;
+		font-size: 35rpx;
 		font-family:PingFang SC;
 		font-weight: 600;
 		color:rgba(255,126,48,1);
@@ -607,7 +609,7 @@
 		.image-wrapper{
 			width: 100%;
 			height: 330upx;
-			border-radius: 3px;
+			border-radius: 10px;
 			overflow: hidden;
 			image{
 				width: 100%;
