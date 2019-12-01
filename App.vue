@@ -2,6 +2,10 @@
 	import {Json}  from './Json.js'
 	import {amap} from './libs/amap-wx.js';
 	export default {
+		globalData: {  
+		    desc: ``  
+		},  
+
 		onLaunch: function() {
 			console.log('App Launch')
 			let token = uni.getStorageSync('token') || '';

@@ -107,17 +107,28 @@
 				const index = e.detail.current;
 				this.swiperCurrent = index;
 			},
+			/**
+			 * web页面跳转
+			 * 0. 后台公告页面跳转
+			 * 1. 无跳转
+			 * 2. 小程序页面跳转
+			 * @param {Object} item
+			 */
 			navToWebView(item) {
 				if(item.announcementType == '0') {
-					return
-				}
-				else if (item.announcementType == '1') {
+					// 公告页面跳转
 					let resulturl = item.announcementContent
+					getApp().globalData.desc = resulturl 
 					uni.navigateTo({
-						url: `/pages/webView/webView?url=${resulturl}`
+						url: `/pages/webView/webView`
 					})
 				}
+				else if (item.announcementType == '1') {
+					// 无跳转
+					return
+				}
 				else {
+					// 本地页面跳转
 					let resulturl = item.announcementContent
 					uni.navigateTo({
 						url: `${resulturl}`

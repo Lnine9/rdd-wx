@@ -87,7 +87,12 @@
             "style" : {
 				"navigationBarTitleText":"商品详情"
 			}
-        }
+        },{
+		    "path" : "pages/webView/webView",
+		    "style" : {
+				"navigationBarTitleText":""
+			}
+		}
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",

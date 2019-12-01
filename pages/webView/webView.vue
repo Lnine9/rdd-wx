@@ -1,18 +1,19 @@
 <template>
     <view>
-        <web-view :webview-styles="webviewStyles" :src="src"></web-view>
-    </view>
+		<rich-text :nodes="desc"></rich-text>
+	</view>
 </template>
 
 <script>
 	export default {
 		data() {
 			return {
-				src: 'https://www.baidu.com',
+				desc: '',
 			}
 		},
 		onLoad(data) {
-			this.src = data.src
+			this.desc = getApp().globalData.desc
+			getApp().globalData.desc = ``
 		},
 		methods: {
 			
