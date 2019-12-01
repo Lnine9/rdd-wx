@@ -1,13 +1,13 @@
 <template>
-	<view id="whole">
+	<view>
 		<view id="header">
 			<button class="recording" @click="toIncome(1)">提现记录</button>
-			<image class="pic" src="../../static/withdraw/ic-提现金额.png"></image>
-			<text style="font-size: 23rpx;color: #999999;position: relative;top: 28rpx;left: 280rpx;">
+			<image class="pic" src="../../static/withdraw/withdraw.png"></image>
+			<text style="font-size: 23rpx;color: #999999;position: relative;top: 28rpx;left: 270rpx;">
 				可提现金额 （元）
 			</text>
 			<view style="width: 700rpx;text-align: center;font-weight: bold;font-size: 60rpx;position: relative;top: 40rpx;left: 20rpx;">
-			{{amount}}
+			{{amount.toFixed(2)}}
 			</view>
 		</view>
 		<view id="account" class="info">
@@ -18,15 +18,12 @@
 			<text class="title">真实姓名</text>
 			<input class="inputBox" v-model="paymentName" placeholder="请输入支付宝真实姓名"/>
 		</view>
-		<view class="info">
-			<text class="title">密码</text>
-			<input class="inputBox" v-model="keyWord" password="true" placeholder="请输入RenDuoDuo登录密码"/>
-		</view>
+		
 		<view id="wAmount">
 			<view style="font-size: 25rpx;padding: 39rpx 0 0 40rpx;">提现金额</view>
 			<view style="display: flex;">
 				<text style="font-size: 50rpx;margin: 20rpx 0 0 40rpx;">¥</text>
-				<input type="number" v-model="paymentAmount" style="width: 550rpx;margin: 33rpx 0 0 30rpx;font-size: 30rpx;" placeholder="请输入提现金额"/>
+				<input type="number" v-model="paymentAmount" style="width: 550rpx;margin: 35rpx 0 0 30rpx;font-size: 30rpx;" placeholder="请输入提现金额"/>
 			</view>
 		</view>
 		
@@ -39,7 +36,7 @@
 	export default {
 		data() {
 			return {
-				amount: 255.34,
+				amount: 0,
 				paymentAccount: "",
 				paymentName: "",
 				keyWord:"",
@@ -47,7 +44,12 @@
 			}
 		},
 		onLoad(option) {
-			this.amount = option.data;
+			
+			if (option.data == null) {
+				this.amount = 0;
+			} else {
+				this.amount = parseFloat(option.data);
+			}
 		},
 		methods: {
 			toIncome(type) {
@@ -72,17 +74,17 @@
 					})
 					return;
 				}
-				if (this.keyWord == "") {
+				if (this.paymentAmount == "") {
 					wx.showToast({
-					  title: '请填写密码！',
+					  title: '请填写提现金额！',
 					  icon: 'none',
 					  duration: 1500
 					})
 					return;
 				}
-				if (this.paymentAmount == "") {
+				if (this.paymentAmount < 0) {
 					wx.showToast({
-					  title: '请填写提现金额！',
+					  title: '提现金额不能为负数！',
 					  icon: 'none',
 					  duration: 1500
 					})
@@ -94,7 +96,7 @@
 				api.postData({
 					paymentAccount: this.paymentAccount,
 					paymentName: this.paymentName,
-					keyWord: this.keyWord,
+					keyWord: "000000",
 					paymentAmount: this.paymentAmount
 				}).then(res => {
 					wx.showToast({
@@ -103,7 +105,11 @@
 					  duration: 1500
 					})
 				}).catch(_ => {
-					console.log(res.data.message)
+					wx.showToast({
+						title: '网络繁忙！',
+						icon: 'none',
+						duration: 1500
+					})
 				})
 			}
 		}
@@ -118,9 +124,8 @@
 		width: 43rpx;
 		height: 43rpx;
 	}
-	#whole {
-		width:750rpx;
-		height: 1200rpx;
+	page {
+		padding-bottom: 50rpx;
 		background:rgba(248,249,251,1);
 	}
 	#header {
@@ -146,17 +151,23 @@
 		margin-top: 30rpx;
 	}
 	.goWithdraw {
-		margin-top: 230rpx;
-		font-size: 30rpx;
-		color: white;
-		line-height: 88rpx;
-		width:670rpx;
-		height:88rpx;
-		background:rgba(6,193,174,1);
-		border-radius:44rpx;
+		position: fixed;
+		left: 24rpx;
+		right: 30rpx;
+		bottom: 50rpx;
+		z-index: 95;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 670rpx;
+		height: 80rpx;
+		font-size: 32rpx;
+		color: #FFFFFF;
+		background-color: #06C1AE;
+		border-radius: 40rpx;	
 	}
 	#wAmount {
-		margin-top: 20rpx;
+		margin-top: 30rpx;
 		width:749rpx;
 		height:200rpx;
 		background:rgba(255,255,255,1);
@@ -172,7 +183,7 @@
 		position: relative;
 		top: 20rpx;
 		left: 280rpx;
-		width: 140rpx;
+		width: 150rpx;
 		height: 50rpx;
 		background:rgba(6,193,174,1);
 		border-radius:44rpx;

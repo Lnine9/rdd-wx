@@ -88,6 +88,12 @@
 				"navigationBarTitleText":"商品详情"
 			}
         },{
+			"path":"pages/withdraw/withdraw",
+			"style" : {
+				"navigationBarTitleText":"提现"
+			}
+		}
+        },{
 		    "path" : "pages/webView/webView",
 		    "style" : {
 				"navigationBarTitleText":""
