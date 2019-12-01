@@ -1,9 +1,9 @@
 <template>
 	<view  class="container">
-		<view class="carousel">
+		<view  class="carousel">
 			<swiper indicator-dots circular=true duration="400">
-				<swiper-item class="swiper-item" v-for="(item,index) in titleImg" :key="index">
-					<view class="image-wrapper">
+				<swiper-item class="swiper-item"  v-for="(item,index) in titleImg" :key="index">
+					<view @click="checkPicture(titleImg ,index)" class="image-wrapper">
 						<image
 							:src="item" 
 							class="loaded" 
@@ -99,20 +99,41 @@
 					this.titleImg = this.dataDic.commodityImg.filter((item, index, arr) => { // item为数组中的元素，index为下标，arr为目标数组
 						return index < 3
 					})
+					let bottomPicture = this.dataDic.commodityImg.filter((item, index, arr) => { // item为数组中的元素，index为下标，arr为目标数组
+						return index >= 3
+					})
 					this.bottomImg = `<div style="width:100%">`
 					this.dataDic.commodityImg.forEach((item, index, arr) => { // item为arr的元素，index为下标，arr原数组
 						if(index >= 3){
-							this.bottomImg += `<img style="width:100%;display:block;" src="${item}" />`
+							this.bottomImg += `<img style="width:100%;display:block;" src="${item}"/>`
 						}
 					});
 					this.bottomImg += `</div>`
-					console.log(this.bottomImg)
+			
 					this.commodityImg=this.dataDic.commodityImg
 				}).catch(err => {
 					console.log(err)
 				})		
 			},
-			
+			// 放大查看图片
+			checkPicture:function(url,index){
+				 uni.previewImage({
+							current:index,
+				            urls: url,
+							indicator:"default",
+							loop:true,
+							
+				            // longPressActions: {
+				            //     itemList: ['发送给朋友', '保存图片', '收藏'],
+				            //     success: function(data) {
+				            //         console.log('选中了第' + (data.tapIndex + 1) + '个按钮,第' + (data.index + 1) + '张图片');
+				            //     },
+				            //     fail: function(err) {
+				            //         console.log(err.errMsg);
+				            //     }
+				            // }
+				        });
+			},
 			makeCall(){
 				uni.makePhoneCall({
 				 	
@@ -158,7 +179,7 @@
 		color: #888;
 	}
 	.carousel {
-		height: 722upx;
+		height: 400upx;
 		position:relative;
 		swiper{
 			height: 100%;
