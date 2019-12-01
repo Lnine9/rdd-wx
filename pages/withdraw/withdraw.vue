@@ -43,6 +43,8 @@
 				paymentAmount: ""
 			}
 		},
+		
+		// 上一个页面传来的值
 		onLoad(option) {
 			
 			if (option.data == null) {
@@ -52,11 +54,15 @@
 			}
 		},
 		methods: {
+			
+			// 页面的跳转
 			toIncome(type) {
 				uni.navigateTo({
 					url:`/pages/income/income?type=${type}`
 				})
 			},
+			
+			// 提交数据并验证
 			toSubmit() {
 				if (this.paymentAccount == "") {
 					wx.showToast({
@@ -92,6 +98,8 @@
 				}
 				this.toWithdraw();
 			},
+			
+			// 后端数据的返回
 			toWithdraw() {
 				api.postData({
 					paymentAccount: this.paymentAccount,

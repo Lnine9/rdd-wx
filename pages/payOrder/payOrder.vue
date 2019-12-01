@@ -59,8 +59,8 @@
 			</view>
 		</view>
 
-		<!-- 输入备注 -->
-		<view v-if="takeWay === 2" class="remark-container">
+		<!-- 输入联系电话 -->
+		<view v-if="commodity.takeWay === 2" class="remark-container">
 			<text class="remark-text">联系电话</text>
 			<input class="remark-input" placeholder="请输入联系电话" v-model="userPhone" />
 		</view>
@@ -124,6 +124,7 @@
 				totalPrice: 0,
 			}
 		},
+		
 		onLoad: function(params) {
 			console.log(params);
 			this.commodityId = params.commodityId;
@@ -132,7 +133,10 @@
 			// uni.startPullDownRefresh();
 			this.getCommodityInfo();
 		},
-		onPullDownRefresh: function () {
+		onShow: function() {
+			this.getCommodityInfo();
+		},
+		onPullDownRefresh: function() {
 			this.getCommodityInfo();
 		},
 		methods: {
@@ -216,7 +220,7 @@
 						this.showNotice('请选择收货地址');
 						return;
 					}
-				} else if (this.takeWay === 2) { // 核销类型的商品
+				} else if (this.commodity.takeWay === 2) { // 核销类型的商品
 					if (this.userPhone === '') {
 						this.showNotice('请输入联系电话');
 						return;
@@ -411,8 +415,8 @@
 
 	.address-content-container {
 		display: flex;
-		margin-top: 20rpx;
-		margin-bottom: 20rpx;
+		margin: auto 0 auto 0;
+		justify-content: center;
 		width: 600rpx;
 		display: flex;
 		flex-direction: column;
