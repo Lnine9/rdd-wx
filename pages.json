@@ -8,9 +8,7 @@
 		}, {
 			"path": "pages/homePage/homePage",
 			"style": {
-				"navigationBarTitleText": "首页",
-				"enablePullDownRefresh": true
-
+				"navigationBarTitleText": "首页"
 			}
 		}, {
 			"path": "pages/mine/myInfo",
@@ -51,8 +49,7 @@
 		}, {
 			"path": "pages/payOrder/payOrder",
 			"style": {
-				"navigationBarTitleText": "支付订单",
-				"enablePullDownRefresh": true
+				"navigationBarTitleText": "支付订单"
 			}
 		},
 		{
@@ -69,8 +66,7 @@
 		}, {
 			"path": "pages/orderDetail/orderDetail",
 			"style": {
-				"navigationBarTitleText": "订单详情",
-				"enablePullDownRefresh": true
+				"navigationBarTitleText": "订单详情"
 			}
 		}, {
 			"path": "pages/income/income",

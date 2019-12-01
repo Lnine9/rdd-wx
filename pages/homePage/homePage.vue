@@ -28,7 +28,6 @@
 			</view>
 		</view>
 		
-		
 		<!-- 精选商品 -->
 		<view class="f-header m-t">
 			<view class="tit-box">
@@ -102,14 +101,6 @@
 				goodsList: [],
 				addressName: ''
 			};
-		},
-		
-		onPullDownRefresh() {
-			this.getBanner(),
-			this.getUserMes(),
-			this.getRecommend(),
-			this.getGuess(),
-			this.getAreas()
 		},
 		
 		methods: {
@@ -246,17 +237,12 @@
 				let userAndLocalMes_1 = {
 					// area: uni.getStorageSync('location'),
 					area: this.addressName,
-					shopPlace: 'Guess',
-					
+					shopPlace: 'Guess'
 				};
 				api.getProducts(userAndLocalMes_1).then(res =>{
-					this.guessList = res.data.data,
-					 uni.stopPullDownRefresh()
-
+					this.guessList = res.data.data
 				}).catch(err => {
-					console.log(err),
-					 uni.stopPullDownRefresh()
-
+					console.log(err)
 				})			
 			}
 														
@@ -641,13 +627,6 @@
 			line-height: 1;
 		}
 	}
-	
-	::-webkit-scrollbar{
-		       width: 0;
-		       height: 0;
-		       color: transparent;
-		}
-
 	
 
 </style>
