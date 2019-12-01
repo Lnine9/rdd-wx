@@ -71,8 +71,11 @@
 				<view class="image-wrapper">
 					<image :src="item.commodityImg[0]" mode="aspectFill"></image>
 				</view>
-				<text class="title clamp">{{item.commodityTitle}}</text>
-				<text class="price">￥{{item.salePrice}}</text>
+				<text class="clamp">{{item.commodityTitle}}</text>
+				<view class="PriceArea">
+					<text class="priceOrigin">￥{{item.salePrice}}</text>
+					<text class="priceCurrent">￥{{item.originalPrice}}</text>
+				</view>
 			</view>
 		</view>
 	</view>
@@ -152,6 +155,7 @@
 				this.getGuess(),
 				this.getAreas()
 			},
+			
 			/**
 			 * 获取用户信息
 			 */
@@ -161,7 +165,7 @@
 					// 用户信息和地区无关
 					area:'重庆市'
 				};
-				api.getUserInfo().then(res =>{
+				api.getUserInfo(user).then(res =>{
 					this.service = res.data.data,
 				
 					// userType 说明
@@ -234,8 +238,6 @@
 				let userAndLocalMes_1 = {
 					// area: uni.getStorageSync('location'),
 					area: this.addressName,
-					longitude: '',
-					latitude: '',
 					shopPlace: 'Guess'
 				};
 				api.getProducts(userAndLocalMes_1).then(res =>{
@@ -497,6 +499,7 @@
 				overflow: hidden;
 				word-break: break-all;
 				text-overflow: ellipsis;
+				font-size: 30rpx;
 			}
 			.priceOrigin{
 				font-size: 32rpx;
@@ -513,6 +516,43 @@
 				text-decoration: line-through;
 			}
 		}
+	}
+	
+	.PriceArea{
+		display:flex;
+		justify-content: center;
+		align-items: center;
+	}
+	.clamp{
+		display:flex;
+		justify-content: center;
+		align-items: center;
+		display: -webkit-box;
+		-webkit-box-orient: vertical;
+		-webkit-line-clamp:2;
+		overflow: hidden;
+		word-break: break-all;
+		text-overflow: ellipsis;
+		font-size: 37rpx;
+		font-family:PingFang SC;
+		font-weight: 650;
+		color:rgba(255,126,48,1);
+	}
+	
+	.priceOrigin{
+		font-size: 37rpx;
+		font-family:PingFang SC;
+		font-weight: 600;
+		color:rgba(255,126,48,1);
+	}
+	
+	.priceCurrent{
+		margin-left: 10rpx;
+		font-size: 30rpx;
+		font-family:PingFang SC;
+		font-weight: 700;
+		color:rgba(153,153,153,1);
+		text-decoration: line-through;
 	}
 	
 	.f-header{
