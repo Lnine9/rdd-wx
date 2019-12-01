@@ -1,40 +1,40 @@
 <template>
-	<view class="whole">
+	<view>
 		<view class="header">
 			<view class="left">
-				<image class="backImg" src="../../static/wallet/ic-收益背景图.png"></image>
+				<image class="backImg" src="../../static/wallet/incomeBack.png"></image>
 				<view class="incomeType">总收益</view>
 				<view class="theIncome">{{wallet.totalIncome}}
 					<text style="font-size: 28rpx;margin-left: 15rpx;">元</text>
 				</view>
 			</view>
 			<view class="right">
-				<image class="backImg" src="../../static/wallet/ic-余额背景图.png"></image>
+				<image class="backImg" src="../../static/wallet/balance.png"></image>
 				<view class="incomeType">余额</view>
 				<view class="theIncome">{{wallet.blance}}
 					<text style="font-size: 28rpx;margin-left: 15rpx;">元</text>
 				</view>
 			</view>
 		</view>
-		<view class="incomes">
-			<view class="income" @click="toIncome(3)">
-				<image class="incomePic" src='../../static/wallet/ic-推荐收益.png'></image>推荐收益 （元）
+		<view class="incomes" @click="toIncome(3)">
+			<view class="income">
+				<image class="incomePic" src='../../static/wallet/share.png'></image>推荐收益 （元）
 			</view>
-			<text class="text">{{wallet.shareIncome}}</text>
+			<text class="text">{{wallet.shareIncome.toFixed(2)}}</text>
 			<image class="arrow" src="../../static/wallet/arrow.png"></image>
 		</view>
 		<view class="incomes" @click="toIncome(0)">
 			<view class="income">
-				<image class="incomePic" src='../../static/wallet/ic-返佣收益.png'>返佣收益 （元）
+				<image class="incomePic" src='../../static/wallet/fanyong.png'>返佣收益 （元）
 			</view>
-			<text class="text">{{wallet.fanyongIncome}}</text>
+			<text class="text">{{wallet.fanyongIncome.toFixed(2)}}</text>
 			<image class="arrow" src="../../static/wallet/arrow.png"></image>
 		</view>
 		<view class="incomes" @click="toIncome(4)">
 			<view class="income">
-				<image class="incomePic" src='../../static/wallet/ic-其他收益.png'>其他收益 （元）
+				<image class="incomePic" src='../../static/wallet/other.png'>其他收益 （元）
 			</view>
-			<text class="text">{{wallet.otherIncome}}</text>
+			<text class="text">{{wallet.otherIncome.toFixed(2)}}</text>
 			<image class="arrow" src="../../static/wallet/arrow.png"></image>
 		</view>
 
@@ -103,6 +103,11 @@
 </script>
 
 <style>
+	page {
+		padding-bottom: 50rpx;
+		background:rgba(248,249,251,1);
+	}
+	
 	.backImg {
 		float: right;
 		width: 110rpx;
@@ -132,12 +137,6 @@
 
 	.theType {
 		font-size: 25rpx;
-	}
-
-	.whole {
-		width: 750rpx;
-		height: 1206rpx;
-		background: rgba(248, 249, 251, 1);
 	}
 
 	.header {
@@ -176,14 +175,20 @@
 	}
 
 	.withdraw {
-		margin-top: 380rpx;
-		font-size: 30rpx;
-		color: white;
-		line-height: 88rpx;
+		position: fixed;
+		left: 24rpx;
+		right: 30rpx;
+		bottom: 50rpx;
+		z-index: 95;
+		display: flex;
+		align-items: center;
+		justify-content: center;
 		width: 670rpx;
-		height: 88rpx;
-		background: rgba(6, 193, 174, 1);
-		border-radius: 44rpx;
+		height: 80rpx;
+		font-size: 32rpx;
+		color: #FFFFFF;
+		background-color: #06C1AE;
+		border-radius: 40rpx;	
 	}
 
 	.incomeType {
