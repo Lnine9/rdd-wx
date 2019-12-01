@@ -1,7 +1,7 @@
 <template>
-	<view id="whole">
-		<view v-show="showTypeImg" style="background: #FFFFFF;">
-			<image src="../../static/income/返佣收益缺省图_icon.png" class="noImg"></image>
+	<view>
+		<view v-show="showTypeImg">
+			<image src="../../static/income/noIncome.png" class="noImg"></image>
 			<text class="noIncome">暂无收益</text>
 		</view>
 		<view v-for="(income, index1) in incomes" :key="index1" v-show="showTypeIncome">
@@ -10,11 +10,11 @@
 			</view>
 
 			<view class="list" v-if="item.amount!=0" v-for="(item, index) in income" :key="index">
-				<image src="../../static/income/ic-返利.png" class="img"></image>
+				<image src="../../static/income/fanIncome.png" class="img"></image>
 				<text class="remark">{{item.remark}}</text>
-				<text class="number">{{item.userAccount}}</text>
+				<text class="number">{{item.userName}}</text>
 				<text class="updateAt">{{item.createAt}}</text>
-				<text class="amount">+{{item.amount}}</text>
+				<text class="amount">{{symbol}} {{item.amount}}</text>
 			</view>
 		</view>
 	</view>
@@ -32,7 +32,8 @@
 				type: 1,
 				income: [],
 				incomes: [],
-				date: []
+				date: [],
+				symbol: "+"
 			}
 		},
 		onLoad(option) {
@@ -43,6 +44,7 @@
 				title = '返佣收益'
 			}
 			if (option.type == 1) {
+				this.symbol="-"
 				title = '提现记录'
 			}
 			if (option.type == 4) {
@@ -58,6 +60,7 @@
 		},
 		methods: {
 			getIncome() {
+				console.log(this.symbol)
 				api.getData({
 					type: this.type
 				}).then(res => {
@@ -66,7 +69,11 @@
 					this.formatDate(this.income);
 
 				}).catch(_ => {
-					console.log("数据未获取")
+					wx.showToast({
+						title: '网络繁忙！',
+						icon: 'none',
+						duration: 1500
+					})
 				})
 			},
 			formatDate(income) {
@@ -129,15 +136,14 @@
 </script>
 
 <style>
+	page {
+		padding-bottom: 50rpx;
+		background:rgba(248,249,251,1);
+	}
 	.noImg {
 		width: 200rpx;
 		height: 200rpx;
 		margin: 370rpx 0 0 270rpx;
-	}
-
-	#whole {
-		width: 750rpx;
-		background: rgba(248, 249, 251, 1);
 	}
 
 	.list {
@@ -156,6 +162,7 @@
 	}
 
 	.remark {
+		
 		letter-spacing: 3rpx;
 		margin: 0 0 0 70rpx;
 		font-size: 28rpx;
@@ -175,7 +182,7 @@
 	.updateAt {
 		position: relative;
 		top: 80rpx;
-		right: 287rpx;
+		right: 170rpx;
 		font-size: 24rpx;
 		color: #CCCCCC;
 	}
@@ -184,7 +191,7 @@
 		font-size: 24rpx;
 		position: relative;
 		top: 40rpx;
-		right: 150rpx;
+		right: 98rpx;
 	}
 
 	.theDate {

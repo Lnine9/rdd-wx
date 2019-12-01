@@ -5,8 +5,7 @@ const requestAfter = Symbol('requestAfter')
 
 class MinRequest {
   [config] = {
-    baseURL: 'http://127.0.0.1:8899',
-	// baseURL: 'http://106.91.19.132:8899',
+    baseURL: 'http://192.168.43.59:8899',
     method: 'GET',
     dataType: 'json',
     responseType: 'text'
