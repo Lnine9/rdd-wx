@@ -5,7 +5,7 @@
 				<image class="photo" :src="user.photo"></image>
 				<text class="name">{{user.name}}</text>
 				<text class="account">{{user.account}}</text>
-				<image class="scan" src="../../static/code/scan.png" @click="scanCode()" :style="{display:code.commodityType == 2 ? 'block' : 'none' }"></image>
+				<image class="scan" src="../../static/code/scan.png" @click="scanCode()" :style="{display:isShop == 1 ? 'block' : 'none' }"></image>
 			</view>
 		</view>	
 		<view class="vip">
@@ -52,8 +52,6 @@
 						<view class="popUp">
 							<text class="popupCodeName" >电子码：{{code.electronicCode}}</text>
 							<text class="popupCodeAccount">订单号码：{{code.orderId}}</text>
-							<!-- <view class="halfCircle"></view>
-							<view class="halfCircle"></view> -->	
 							<view class="dottedLineThree"></view>
 							<image class="qrCode" :src="qr"></image>
 							<text class="codeShopName">{{code.commodityTitle}}</text>
@@ -69,6 +67,22 @@
 			<image class="noCodePicture" src="../../static/code/noCode.png"></image>
 			<text class="noCodeText">暂无电子码</text>
 		</view>
+		<uni-popup ref='order' type="center" maskClick="true">
+			<view class="orderPopUp">
+				<!-- <image class="orderPicture" :src="order.commodityImgList[1]"></image> -->
+				<image class="orderPicture" :src="code.commodityImgList[0]"></image>
+				<view class="dottedLineThree"></view>
+				<view>
+					<text class="orderInfo">商品：{{orderInfo.commodityTitle}}</text>
+					<text class="orderInfo">商品信息：{{orderInfo.commodityInfo}}</text>
+					<text class="orderInfo">地址：{{orderInfo.addressDetail}}</text>
+					<text class="orderInfo">收货人：{{orderInfo.receiver}}</text>
+					<text class="orderInfo">联系电话：{{orderInfo.contactNumber}}</text>
+				</view>
+				<button class="cancle" @click="closeOrder()">取消</button>
+				<button class="update" @click="comfirmOrder(order)">确定</button>
+			</view>
+		</uni-popup>
 	</view>
 	
 </template>
@@ -88,8 +102,11 @@
 					service:[
 					],
 					code:[],
+					orderInfo:[],
+					order:[],
 					qr:'',
-					isVip:0
+					isVip:0,
+					isShop:1,
 	            };
 	        },
 			onShow() {
@@ -97,6 +114,7 @@
 				this.getData();
 				this.getCode();
 				this.judgeVip();
+				this.judgeScan()
 			},
 			components:{
 				uniPopup,
@@ -109,7 +127,7 @@
 				    uni.getUserInfo({
 				        provider: 'weixin',
 				        success: function(infoRes) {
-							console.log(infoRes);
+							// console.log(infoRes);
 				           _this.user.name = infoRes.userInfo.nickName; //昵称
 				           _this.user.photo = infoRes.userInfo.avatarUrl; //头像
 				        },
@@ -126,7 +144,7 @@
 					let p = {
 						userType: 0,
 						menuIdentityCode: 'WCPPersonCenter',
-					}
+					};
 					api.getList(p).then(res =>{
 						this.service = res.data.data,
 						console.log(this.service)
@@ -136,8 +154,23 @@
 				},
 				//判断是否为vip
 				judgeVip(){
+					// console.log(11);
 					try {
-					    const value = uni.getStorageSync('isVip');
+						// console.log(12);
+					    let value = uni.getStorageSync('isVip');
+					    if (value) {
+					        console.log(value);
+					    }
+					} catch (e) {
+					    console.log(e);
+					}
+				},
+				//判断是否为商家
+				judgeScan(){
+					// console.log(11);
+					try {
+						// console.log(12);
+					    let value = uni.getStorageSync('roleName');
 					    if (value) {
 					        console.log(value);
 					    }
@@ -167,19 +200,79 @@
 				},
 				//电子码查看更多
 				codeLook(){
-					api.getCodeInfo().then(res=>{
-						// this.code = res.data.data,
-						console.log(123)
+					uni.navigateTo({
+						url:`/pages/orderDetail/orderDetail`
 					})
 				},
 				//扫码二维码
 				scanCode(){
+					let _this = this;
 					uni.scanCode({
 					    success: function (res) {
-					        console.log('条码类型：' + res.scanType);
-					        console.log('条码内容：' + res.result);
+							//截取二维码信息
+							let str = res.result.slice(3);
+							let subStr  = str.split('&&')
+							let shopId = subStr[0].slice(7);
+							let orderId = subStr[1].slice(8);
+							let date = _this.getDate();
+							let p = {
+								orderId:orderId
+							}
+							let param = {
+								shopId:shopId,
+								orderId:orderId,
+								time:date,
+							}
+							api.getOrderByShop(p).then(res=>{
+								if(res.data.data !=null){
+									console.log(res.data.data);
+									_this.orderInfo = res.data.data;
+									_this.order = param;
+									_this.comfirmOrderPopUp();
+								}else {
+									console.log(123);
+									uni.showToast({
+									    title: '无订单',
+									    duration: 2000,
+										icon:'none'
+									});
+								}
+							}).catch(err => {
+								console.log(err)
+							})
 					    }
 					});
+				},
+				//确认订单弹窗
+				comfirmOrderPopUp(){
+					this.$refs.order.open();					
+				},
+				//确认订单
+				comfirmOrder(data){
+					console.log(data)
+					api.comfirmOrder(data).then(res=>{
+						console.log(res);
+						this.$refs.order.close();
+					})
+				},
+				//取消订单
+				closeOrder(){
+					this.$refs.order.close();
+				},
+				//获取当前时间
+				getDate(){
+					var date=new Date();
+					var year=date.getFullYear();
+					/* 在日期格式中，月份是从0开始的，因此要加0
+					 * 使用三元表达式在小于10的前面加0，以达到格式统一  如 09:11:05
+					 * */
+					var month= date.getMonth()+1<10 ? "0"+(date.getMonth()+1) : date.getMonth()+1;
+					var day=date.getDate()<10 ? "0"+date.getDate() : date.getDate();
+					var hours=date.getHours()<10 ? "0"+date.getHours() : date.getHours();
+					var minutes=date.getMinutes()<10 ? "0"+date.getMinutes() : date.getMinutes();
+					var seconds=date.getSeconds()<10 ? "0"+date.getSeconds() : date.getSeconds();
+					// 拼接
+					return year+"-"+month+"-"+day+" "+hours+":"+minutes+":"+seconds;
 				},
 				//获取邮寄状态
 				getdeliveryState(){
@@ -605,6 +698,44 @@
 		margin-top: 10rpx;
 		width: 750rpx;
 		text-align: center;
+	}
+	.orderPopUp{
+		position: relative;
+		width: 580rpx;
+		height: 720rpx;
+		background-color: #FFFFFF;
+		border-radius: 15rpx;
+		border-width: 1rpx;
+	}
+	.orderPicture{
+		display: inline-block;
+		margin: 20rpx  190rpx;
+		width: 200rpx;
+		height: 200rpx;
+	}
+	.orderInfo{
+		display: inline-block;
+		width: 482rpx;
+		text-align: left;
+		font-size: 28rpx;
+		margin: 10rpx 49rpx;
+	}
+	.cancle{
+		position: absolute;
+		display: inline-block;
+		bottom: 0;
+		width: 290rpx;
+		border-radius: 0;
+	}
+	.update{
+		position: absolute;
+		display: inline-block;
+		background-color: #06C1AE;
+		bottom: 0;
+		width: 290rpx;
+		left: 290rpx;
+		color: #FFFFFF;
+		border-radius: 0;
 	}
 </style>
 
