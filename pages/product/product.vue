@@ -1,5 +1,5 @@
 <template>
-	<view class="container">
+	<view  class="container">
 		<view class="carousel">
 			<swiper indicator-dots circular=true duration="400">
 				<swiper-item class="swiper-item" v-for="(item,index) in titleImg" :key="index">
@@ -15,32 +15,35 @@
 		</view>
 		
 		<view class="introduce-section">
-			<text class="title">{{commodityTitle}}</text>
+			<text class="title">{{dataDic.commodityTitle}}</text>
 			<view class="price-box">
-				<text class="price-tip">¥</text>
-				<text class="price">{{originalPrice}}</text>
-				<text class="m-price">¥{{salePrice}}</text>
-				<!-- <text class="coupon-tip">7折</text> -->
-				<text>销量: {{salesVolume}}</text>
-				<text>库存: {{commodityNum}}</text>
+				<view style="display: block;">
+				<text class="price">{{dataDic.originalPrice}}</text>
+				<text class="m-price">{{"￥" + dataDic.salePrice}}</text>
+				</view>
+				<view style="color: #999999;">
+				<text style="margin-right: 20rpx;">销量: {{dataDic.salesVolume}}</text>
+				<text style="display: inline-block;">库存: {{dataDic.commodityNum}}</text>
+				</view>
 			</view>
-			<view class="bot-row">
-				<!-- <text>销量: {{salesVolume}}</text>
-				<text>库存: {{commodityNum}}</text> -->
-			</view>
+
 		</view>
 		<view class="c-list">
 			<view class="c-row b-b">
 				<view class="con-list">
-					<text>{{commodityInfo}}</text>
+					<view style="display: inline-block;">
+					<image style="width: 24rpx;height: 28rpx;margin-right: 10rpx;" src="../../static/product/ic-定位@2x.png"></image>
+					<text style="font-size:28rpx;font-family:PingFang SC;font-weight:500;color:rgba(51,51,51,1);">{{dataDic.shopName}}</text>
+					</view>
+					<text style="font-size:24rpx;font-family:PingFang SC;font-weight:400;color:rgba(204,204,204,1);">{{dataDic.shopAddress}}</text>
 				</view>
 			</view>
 		</view>
 		
 		<view class="c-list">		
 			<view class="c-row b-b">
-				<view class="con-list">
-					<text>{{commodityInfo}}</text>
+				<view class="con-list"  style="font-size:24rpx;font-family:PingFang SC;font-weight:400;color:rgba(153,153,153,1);">
+					<template>{{dataDic.shopContent}}</template>
 				</view>
 			</view>
 		</view>
@@ -51,26 +54,17 @@
 			</view>
 			<rich-text :nodes="bottomImg"></rich-text>
 		</view>
-		
-		<!-- 底部操作菜单 -->
-		<view class="page-bottom">
-			<navigator url="/pages/index/index" open-type="switchTab" class="p-b-btn">
-				<text class="yticon icon-xiatubiao--copy"></text>
-				<text>首页</text>
-			</navigator>
-			<navigator url="/pages/cart/cart" open-type="switchTab" class="p-b-btn">
-				<text class="yticon icon-gouwuche"></text>
-				<text>购物车</text>
-			</navigator>
-			<view class="p-b-btn" :class="{active: favorite}" @click="toFavorite">
-				<text class="yticon icon-shoucang"></text>
-				<text>收藏</text>
+		<view class="bottom">
+			<view @click="makeCall()" class="buyView" style="background-color: #FFFFFF;">
+			<image style="width: 31rpx;height: 30rpx;margin-right: 10rpx;" src="../../static/product/ic-客服@2x.png"></image>
+			<text style="color:rgba(51,51,51,1);">联系客服</text>
+			</view>
+			<view @click="buy()" class="buyView">
+			<text >立即购买</text>
+			</view>
+		</view>
 			</view>
 			
-			<view class="action-btn-group">
-				<button type="primary" class=" action-btn no-border buy-now-btn" @click="buy">立即购买</button>
-				<!-- <button type="primary" class=" action-btn no-border add-cart-btn">加入购物车</button> -->
-			</view>
 		</view>
 	</view>
 </template>
@@ -80,161 +74,84 @@
 	export default{
 		data() {
 			return {
-				commodityTitle: '',    // 商品描述标题
-				commodityImg: [],      // 商品图片
-				commodityInfo: '',     // 商品信息
-				originalPrice: '',     // 商品原价
-				salePrice: '',         // 商品现价
-				salesVolume: '',       // 销量
-				commodityNum: '',      // 库存
+				dataDic:{},
+				commodityImg: [],
 				specClass: 'none',
-				specSelected:[],	
 				titleImg:[],		
-				favorite: true,
 				shareList: [],
 				bottomImg: [],
-				imgList: [
-					{
-						src: 'https://gd3.alicdn.com/imgextra/i3/0/O1CN01IiyFQI1UGShoFKt1O_!!0-item_pic.jpg_400x400.jpg'
-					},
-					{
-						src: 'https://gd3.alicdn.com/imgextra/i3/TB1RPFPPFXXXXcNXpXXXXXXXXXX_!!0-item_pic.jpg_400x400.jpg'
-					},
-					{
-						src: 'https://gd2.alicdn.com/imgextra/i2/38832490/O1CN01IYq7gu1UGShvbEFnd_!!38832490.jpg_400x400.jpg'
-					}
-				],
-				desc: `
-					<div style="width:100%">
-						<img style="width:100%;display:block;" src="https://gd3.alicdn.com/imgextra/i4/479184430/O1CN01nCpuLc1iaz4bcSN17_!!479184430.jpg_400x400.jpg" />
-						<img style="width:100%;display:block;" src="https://gd2.alicdn.com/imgextra/i2/479184430/O1CN01gwbN931iaz4TzqzmG_!!479184430.jpg_400x400.jpg" />
-						<img style="width:100%;display:block;" src="https://gd3.alicdn.com/imgextra/i3/479184430/O1CN018wVjQh1iaz4aupv1A_!!479184430.jpg_400x400.jpg" />
-						<img style="width:100%;display:block;" src="https://gd4.alicdn.com/imgextra/i4/479184430/O1CN01tWg4Us1iaz4auqelt_!!479184430.jpg_400x400.jpg" />
-						<img style="width:100%;display:block;" src="https://gd1.alicdn.com/imgextra/i1/479184430/O1CN01Tnm1rU1iaz4aVKcwP_!!479184430.jpg_400x400.jpg" />
-					</div>
-				`	
+				imgList: [],
+				
 			};
 		},
-		async onLoad(options){
-			//接收传值,id里面放的是标题，因为测试数据并没写id 
-			let id = options.id;
-			if(id){
-				this.$api.msg(`点击了${id}`);
-			}
-			
-			//规格 默认选中第一条
-			this.specList.forEach(item=>{
-				for(let cItem of this.specChildList){
-					if(cItem.pid === item.id){
-						this.$set(cItem, 'selected', true);
-						this.specSelected.push(cItem);
-						break; //forEach不能使用break
-					}
-				}
-			})						
-		},
 		
-		onLoad(data) {
-			console.log("asdfasdfasfasfasdfasdfasf" + data.id)
-		},
 		methods:{
 			/**
 			 * 获取商品详细信息
 			 * @param {Object} commodityId
 			 */
 			getData(commodityId) {
-				let data={
-					commodityId:commodityId
-				}
-				api.getList(data).then(res =>{
-					console.log(res)
-					this.service = res.data.data,
-					console.log(this.service),
-					this.commodityTitle=this.service.commodityTitle
-					this.commodityInfo=this.service.commodityInfo
-					this.originalPrice=this.service.originalPrice
-					this.salePrice=this.service.salePrice
-					this.salesVolume=this.service.salesVolume
-					this.commodityNum=this.service.commodityNum
-					this.titleImg = this.service.commodityImg.filter((item, index, arr) => { // item为数组中的元素，index为下标，arr为目标数组
+			
+				api.getList({commodityId:commodityId}).then(res =>{
+					console.log(res.data.data)
+					this.dataDic = res.data.data,
+					console.log(this.dataDic)
+					this.titleImg = this.dataDic.commodityImg.filter((item, index, arr) => { // item为数组中的元素，index为下标，arr为目标数组
 						return index < 3
 					})
 					this.bottomImg = `<div style="width:100%">`
-					this.service.commodityImg.forEach((item, index, arr) => { // item为arr的元素，index为下标，arr原数组
+					this.dataDic.commodityImg.forEach((item, index, arr) => { // item为arr的元素，index为下标，arr原数组
 						if(index >= 3){
 							this.bottomImg += `<img style="width:100%;display:block;" src="${item}" />`
 						}
 					});
 					this.bottomImg += `</div>`
 					console.log(this.bottomImg)
-					this.commodityImg=this.service.commodityImg
+					this.commodityImg=this.dataDic.commodityImg
 				}).catch(err => {
 					console.log(err)
 				})		
 			},
 			
-			//规格弹窗开关
-			toggleSpec() {
-				if(this.specClass === 'show'){
-					this.specClass = 'hide';
-					setTimeout(() => {
-						this.specClass = 'none';
-					}, 250);
-				}else if(this.specClass === 'none'){
-					this.specClass = 'show';
-				}
+			makeCall(){
+				uni.makePhoneCall({
+				 	
+				 	// 手机号
+				    phoneNumber: this.dataDic.shopPhone, 
+				
+					// 成功回调
+					success: (res) => {
+						console.log('调用成功!')	
+					},
+				
+					// 失败回调
+					fail: (res) => {
+						console.log('调用失败!')
+					}
+					
+				  });
 			},
 			
-			//选择规格
-			selectSpec(index, pid){
-				let list = this.specChildList;
-				list.forEach(item=>{
-					if(item.pid === pid){
-						this.$set(item, 'selected', false);
-					}
-				})
-
-				this.$set(list[index], 'selected', true);
-				
-				//存储已选择
-				/**
-				 * 修复选择规格存储错误
-				 * 将这几行代码替换即可
-				 * 选择的规格存放在specSelected中
-				 */
-				this.specSelected = []; 
-				list.forEach(item=>{ 
-					if(item.selected === true){ 
-						this.specSelected.push(item); 
-					} 
-				})
-				
-			},
-			//分享
-			share(){
-				this.$refs.share.toggleMask();	
-			},
-			//收藏
-			toFavorite(){
-				this.favorite = !this.favorite;
-			},
 			buy(){
+				console.log("购买")
 				uni.navigateTo({
-					url: `/pages/order/createOrder`
+					url: `/pages/payOrder/payOrder?commodityId=${this.dataDic.commodityId}&commodityNum=
+					${this.dataDic.commodityNum}&remark = ${this.dataDic.remark}&addressId=${this.dataDic.addressId}` 
 				})
 			},
-			stopPrevent(){}
 		},
-		mounted() {
-			this.getData("1")
-		}
+		onLoad: function(params) {
+			console.log(params);
+			let Id = params.id;
+			this.getData(Id);
+		},
 	}
 </script>
 
 <style lang='scss'>
 	page{
 		background: $page-color-base;
-		padding-bottom: 160upx;
+		padding-bottom: 98rpx;
 	}
 	.icon-you{
 		font-size: $font-base + 2upx;
@@ -270,25 +187,31 @@
 		padding: 20upx 30upx;
 		
 		.title{
-			font-size: 32upx;
+			font-size: 32rpx;
+			font-family:PingFang SC;
+			font-weight:bold;
+			color:rgba(48,48,56,1);
 			color: $font-color-dark;
+			padding: 10rpx;
 			height: 50upx;
 			line-height: 50upx;
 		}
 		.price-box{
 			display:flex;
+			justify-content: space-between;
 			align-items:baseline;
 			height: 64upx;
-			padding: 10upx 0;
+			padding: 10rpx 0;
 			font-size: 26upx;
 			color:$uni-color-primary;
 		}
 		.price{
 			font-size: $font-lg + 2upx;
+			color: #FF7E30;
 		}
 		.m-price{
 			margin:0 12upx;
-			color: $font-color-light;
+			color: #999999;
 			text-decoration: line-through;
 		}
 		.coupon-tip{
@@ -314,6 +237,9 @@
 	}
 
 	.c-list{
+		border-width: 1px 0 1px 0;
+		border-style: solid;
+		border-color: rgba(243, 243, 243, 1);
 		font-size: $font-sm + 2upx;
 		color: $font-color-base;
 		background: #fff;
@@ -354,6 +280,32 @@
 		}
 	}
 	
+	.buyView{
+		display: inline-block;
+		background-color: #06C1AE;
+		height: 98rpx;
+		width: 50vw;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+	
+	.bottom{
+		z-index: 2;
+		box-shadow:0px -6px 10px 0px rgba(116,116,116,0.06);
+		position: fixed;
+		bottom: 0rpx;
+		left: 0rpx;
+		display: flex;
+		font-size:28rpx;
+		font-family:PingFang SC;
+		font-weight:400;
+		color:#FFFFFF;
+		background-color: #06C1AE;
+	}
+	
+	
+	
 	/*  详情 */
 	.detail-desc{
 		background: #fff;
@@ -386,229 +338,8 @@
 		}
 	}
 	
-	/* 规格选择弹窗 */
-	.attr-content{
-		padding: 10upx 30upx;
-		.a-t{
-			display: flex;
-			image{
-				width: 170upx;
-				height: 170upx;
-				flex-shrink: 0;
-				margin-top: -40upx;
-				border-radius: 8upx;;
-			}
-			.right{
-				display: flex;
-				flex-direction: column;
-				padding-left: 24upx;
-				font-size: $font-sm + 2upx;
-				color: $font-color-base;
-				line-height: 42upx;
-				.price{
-					font-size: $font-lg;
-					color: $uni-color-primary;
-					margin-bottom: 10upx;
-				}
-				.selected-text{
-					margin-right: 10upx;
-				}
-			}
-		}
-		.attr-list{
-			display: flex;
-			flex-direction: column;
-			font-size: $font-base + 2upx;
-			color: $font-color-base;
-			padding-top: 30upx;
-			padding-left: 10upx;
-		}
-		.item-list{
-			padding: 20upx 0 0;
-			display: flex;
-			flex-wrap: wrap;
-			text{
-				display: flex;
-				align-items: center;
-				justify-content: center;
-				background: #eee;
-				margin-right: 20upx;
-				margin-bottom: 20upx;
-				border-radius: 100upx;
-				min-width: 60upx;
-				height: 60upx;
-				padding: 0 20upx;
-				font-size: $font-base;
-				color: $font-color-dark;
-			}
-			.selected{
-				background: #fbebee;
-				color: $uni-color-primary;
-			}
-		}
-	}
 	
-	/*  弹出层 */
-	.popup {
-		position: fixed;
-		left: 0;
-		top: 0;
-		right: 0;
-		bottom: 0;
-		z-index: 99;
-		
-		&.show {
-			display: block;
-			.mask{
-				animation: showPopup 0.2s linear both;
-			}
-			.layer {
-				animation: showLayer 0.2s linear both;
-			}
-		}
-		&.hide {
-			.mask{
-				animation: hidePopup 0.2s linear both;
-			}
-			.layer {
-				animation: hideLayer 0.2s linear both;
-			}
-		}
-		&.none {
-			display: none;
-		}
-		.mask{
-			position: fixed;
-			top: 0;
-			width: 100%;
-			height: 100%;
-			z-index: 1;
-			background-color: rgba(0, 0, 0, 0.4);
-		}
-		.layer {
-			position: fixed;
-			z-index: 99;
-			bottom: 0;
-			width: 100%;
-			min-height: 40vh;
-			border-radius: 10upx 10upx 0 0;
-			background-color: #fff;
-			.btn{
-				height: 66upx;
-				line-height: 66upx;
-				border-radius: 100upx;
-				background: $uni-color-primary;
-				font-size: $font-base + 2upx;
-				color: #fff;
-				margin: 30upx auto 20upx;
-			}
-		}
-		@keyframes showPopup {
-			0% {
-				opacity: 0;
-			}
-			100% {
-				opacity: 1;
-			}
-		}
-		@keyframes hidePopup {
-			0% {
-				opacity: 1;
-			}
-			100% {
-				opacity: 0;
-			}
-		}
-		@keyframes showLayer {
-			0% {
-				transform: translateY(120%);
-			}
-			100% {
-				transform: translateY(0%);
-			}
-		}
-		@keyframes hideLayer {
-			0% {
-				transform: translateY(0);
-			}
-			100% {
-				transform: translateY(120%);
-			}
-		}
-	}
 	
-	/* 底部操作菜单 */
-	.page-bottom{
-		position:fixed;
-		left: 30upx;
-		bottom:30upx;
-		z-index: 95;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		width: 690upx;
-		height: 100upx;
-		background: rgba(255,255,255,.9);
-		box-shadow: 0 0 20upx 0 rgba(0,0,0,.5);
-		border-radius: 16upx;
-		
-		.p-b-btn{
-			display:flex;
-			flex-direction: column;
-			align-items: center;
-			justify-content: center;
-			font-size: $font-sm;
-			color: $font-color-base;
-			width: 96upx;
-			height: 80upx;
-			.yticon{
-				font-size: 40upx;
-				line-height: 48upx;
-				color: $font-color-light;
-			}
-			&.active, &.active .yticon{
-				color: $uni-color-primary;
-			}
-			.icon-fenxiang2{
-				font-size: 42upx;
-				transform: translateY(-2upx);
-			}
-			.icon-shoucang{
-				font-size: 46upx;
-			}
-		}
-		.action-btn-group{
-			display: flex;
-			height: 76upx;
-			border-radius: 100px;
-			overflow: hidden;
-			box-shadow: 0 20upx 40upx -16upx #fa436a;
-			box-shadow: 1px 2px 5px rgba(219, 63, 96, 0.4);
-			background: linear-gradient(to right, #ffac30,#fa436a,#F56C6C);
-			margin-left: 20upx;
-			position:relative;
-			&:after{
-				content: '';
-				position:absolute;
-				top: 50%;
-				right: 50%;
-				transform: translateY(-50%);
-				height: 28upx;
-				width: 0;
-				border-right: 1px solid rgba(255,255,255,.5);
-			}
-			.action-btn{
-				display:flex;
-				align-items: center;
-				justify-content: center;
-				width: 180upx;
-				height: 100%;
-				font-size: $font-base ;
-				padding: 0;
-				border-radius: 0;
-				background: transparent;
-			}
-		}
-	}
+	
 	
 </style>
