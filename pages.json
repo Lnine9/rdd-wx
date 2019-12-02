@@ -9,7 +9,8 @@
 		{
 			"path": "pages/homePage/homePage",
 			"style": {
-				"navigationBarTitleText": "首页"
+				"navigationBarTitleText": "首页",
+				"enablePullDownRefresh": true
 			}
 		},
 		{
@@ -87,7 +88,18 @@
             "style" : {
 				"navigationBarTitleText":"商品详情"
 			}
-        }
+        },{
+			"path":"pages/withdraw/withdraw",
+			"style" : {
+				"navigationBarTitleText":"提现"
+			}
+		}
+        ,{
+		    "path" : "pages/webView/webView",
+		    "style" : {
+				"navigationBarTitleText":""
+			}
+		}
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
@@ -145,10 +157,6 @@
 			{
 				"name": "收益",
 				"path":"pages/income/income"
-			},
-			{
-				"name": "邀請",
-				"path":"pages/inviteFriends/inviteFriends"
 			}
 		]
 	}
