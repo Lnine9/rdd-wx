@@ -145,7 +145,7 @@
 		data() {
 			return {
 				orderId: '',
-				hasLogistics: true,
+				hasLogistics: false,
 				takeWay: 1, // 1,寄送，2,核销
 				order: {
 					orderId: '',

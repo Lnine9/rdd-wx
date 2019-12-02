@@ -149,7 +149,7 @@
 			{
 				"name": "订单详情",
 				"path": "pages/orderDetail/orderDetail",
-				"query": "orderid=1575189560837677-4"
+				"query": "orderid=1575275886571b6d-4"
 			},
 			{
 				"name": "首页",

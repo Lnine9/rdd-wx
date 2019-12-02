@@ -1,11 +1,12 @@
 <template>
 	<view>
+		<web-view src="../../hybrid/html/KDNWidget/KDNWidget.html"></web-view>
 	</view>
 </template>
 
 <script>
-	import '../../hybrid/html/KDNWidget/KDNWidget.css'
-	import '../../hybrid/html/KDNWidget/KDNWidget.js'
+	// import '../../hybrid/html/KDNWidget/KDNWidget.css'
+	// import '../../hybrid/html/KDNWidget/KDNWidget.js'
 
 	export default {
 		data() {
@@ -16,13 +17,13 @@
 		onLoad: function(params) {
 			console.log(params);
 
-			window.onload = function() {
-				KDNWidget.run({
-					serviceType: "A",
-					expCode: "ZTO",
-					expNo: "453428852106",
-				})
-			}
+			// window.onload = function() {
+				// KDNWidget.run({
+				// 	serviceType: "A",
+				// 	expCode: "ZTO",
+				// 	expNo: "453428852106",
+				// })
+			// }
 			// this.url = this.url + '&a=' + params.expCode + '&b=' + params.expNo;
 			// this.url = '/hybrid/html/deliver.html?expCode=ZTO&expNo=453428852106';
 
