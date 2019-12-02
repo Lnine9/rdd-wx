@@ -51,7 +51,7 @@
 	export default {
 		data() {
 			return {
-				
+
 				// 初始化数据
 				wallet: {
 					blance: 0,
@@ -62,14 +62,25 @@
 				}
 			}
 		},
-		
+
 		// 加载后端数据
 		mounted() {
 			this.getInfo();
 		},
-		
+
 		// 页面的跳转
 		methods: {
+			// 下拉刷新
+			onPullDownRefresh: function() {
+				wx.showNavigationBarLoading() //在标题栏中显示加载
+				this.getInfo() //重新加载数据
+				//模拟加载  1秒
+				setTimeout(function() {
+					// complete
+					wx.hideNavigationBarLoading() //完成停止加载
+					wx.stopPullDownRefresh() //停止下拉刷新
+				}, 1000);
+			},
 			toWithdraw(data) {
 				uni.navigateTo({
 					url: `/pages/withdraw/withdraw?data=${data}`
@@ -80,7 +91,7 @@
 					url: `/pages/income/income?type=${type}`
 				})
 			},
-			
+
 			// 后端数据的返回
 			getInfo() {
 				api.getWallet().then(res => {
@@ -112,9 +123,9 @@
 <style>
 	page {
 		padding-bottom: 50rpx;
-		background:rgba(248,249,251,1);
+		background: rgba(248, 249, 251, 1);
 	}
-	
+
 	.backImg {
 		float: right;
 		width: 110rpx;
@@ -195,7 +206,7 @@
 		font-size: 32rpx;
 		color: #FFFFFF;
 		background-color: #06C1AE;
-		border-radius: 40rpx;	
+		border-radius: 40rpx;
 	}
 
 	.incomeType {

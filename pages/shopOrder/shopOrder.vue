@@ -1,5 +1,5 @@
 <template>
-	<view>
+	<view style="margin-bottom: 40rpx;">
 		<view class="QS-tabs-box">
 			<QSTabs 
 			ref="tabs" 
@@ -29,24 +29,30 @@
 								<view style="width: 700rpx;text-align: center;font-weight: bold;font-size: 60rpx;position: relative;top: 40rpx;left: 20rpx;">
 								{{total.toFixed(2)}}
 								</view>
-								
+							</view >
+							<view v-show="showType">
+								<image class="noAddress" src="../../static/myOrder/我的订单缺省图_icon.png"></image>
+								<text class="warning">暂无订单</text>
 							</view>
-							<view style="width: 750rpx;background: #FFFFFF;">
-								<view style="border-left: #BE8E39 5rpx solid;margin: 20rpx 0 0 20rpx;padding-left: 20rpx;">订单信息</view>
-								<view>
-									<view class="theType" v-show="commodityType==1">
-										<view class="detail">订单号:<text class="text"> {{orderId}}</text></view>
-										<view class="detail">电子码:<text class="text"> {{eleCode}}</text></view>
+							<view style="width: 750rpx;background: #FFFFFF;" v-show="!showType">
+								<view style="border-left: rgb(39, 134, 217) 5rpx solid;margin: 30rpx 0 0 20rpx;padding: 10rpx 0 0 20rpx ;">订单信息</view>
+								<view v-for="(commodity, index) in commodityList" :key="index" class="commodity">
+									<view class="theType" v-show="commodity.commodityType==1">
+										<view class="detail1">订单号:
+										<text class="text"> {{commodity.orderId}}</text>
+										<text class="orderState" :class="{'active':commodity.orderState==1}">{{orderState[index]}}</text>
+										</view>
+										<view class="detail1">电子码:<text class="text"> {{commodity.electronicCode}}</text></view>
 									</view>
-									<view class="theType" v-show="commodityType==2">
-										<view class="detail">快递单号:<text class="text"> {{expressId}}</text></view>
-										<view class="detail">快递状态:<text class="text"> {{state}}</text></view>
+									<view class="theType" v-show="commodity.commodityType==2">
+										<view class="detail1">快递单号:<text class="text"> {{commodity.orderId}}</text></view>
+										<view class="detail1">快递状态:<text class="text"> {{state[index]}}</text></view>
 									</view>
 									<view class="details">
-										<view class="detail">商品名:<text class="text"> {{name}}</text></view>
-										<view class="detail">数量 (个):<text class="text"> {{number}}</text></view>
-										<view class="detail">支付金额 (元):<text class="text"> {{pay.toFixed(2)}}</text></view>
-										<view class="detail">时间:<text class="text"> {{time}}</text></view>
+										<view class="detail3">商品名:<text class="text"> {{commodity.commodityTitle}}</text></view>
+										<view class="detail">支付金额 (元):<text class="text"> {{commodity.actualPrice*commodity.commodityNum}}</text></view>
+										<view class="detail">数量 (个):<text class="text"> {{commodity.commodityNum}}</text></view>
+										<view class="detail2">时间:<text class="text"> {{commodity.createAt}}</text></view>
 									</view>
 								</view>
 							</view>
@@ -60,6 +66,7 @@
 
 <script>
 	import QSTabs from '../../components/QS-tabs/QS-tabs.vue';
+	import {api} from './api.js';
 	const Sys = uni.getSystemInfoSync();
 	const wH = Sys.windowHeight;
 	let n = 1;
@@ -70,34 +77,84 @@
 		},
 		data() {
 			return {
-				commodityType: 2,
-				orderId: "45454545454",
-				name: "玛蒂蒂",
-				expressId:"fsdfa45454545",
-				eleCode: "zdsfs454545sdf",
-				state: "运送中",
-				number: 20,
-				total:20,
-				pay:200,
-				time: "2019-11-12 23:02:12",
+				orderState:[],
+				state:[],
+				total:0,
+				showType:true,
 				tabs:["全部","未确认","已确认"],
 				current: 0,
 				swiperCurrent: 0,
 				tabsHeight: 0,
-				dx: 0
+				dx: 0,
+				commodityList:[]
 			}
+		},
+		onLoad() {
+			this.getAllCommodityOrderByLeader(this.swiperCurrent);
 		},
 		methods: {
 			change(index) {
+				this.getAllCommodityOrderByLeader(index);
 				this.swiperCurrent = index;
+				
 			},
 			transition({ detail: { dx } }) {
 				this.$refs.tabs.setDx(dx);
 			},
 			animationfinish({detail: { current }}) {
 				this.$refs.tabs.setFinishCurrent(current);
+				this.getAllCommodityOrderByLeader(current);
 				this.swiperCurrent = current;
 				this.current = current;
+				
+			},
+			getAllCommodityOrderByLeader(index){
+				this.total=0;
+				this.state=[];
+				this.orderState=[];
+				if(index==0){
+					index='';
+				}
+				else{
+					index=index-1;
+				}
+				api.getAllCommodityOrderByLeader({
+					orderState: index
+				}).then(res=>{
+					this.commodityList=[];
+					if(res.data.data!=null)
+					{
+						console.log(res)
+						this.commodityList=res.data.data;
+						this.showType=false;
+						for(let i=0;i<res.data.data.length;i++){
+							this.total=this.total+this.commodityList[i].actualPrice*this.commodityList[i].commodityNum;
+							if(this.commodityList[i].deliveryState==0){
+								this.state[i]='未寄送';
+							}else if(this.commodityList[i].deliveryState==1){
+								this.state[i]='已寄送';
+							}else if(this.commodityList[i].deliveryState==2){
+								this.state[i]='已签收';
+							}else{
+								this.state[i]='';
+							};
+							
+							
+							if(this.commodityList[i].orderState==0){
+								this.orderState[i]='已确认付款';
+							}else if(this.commodityList[i].orderState==1){
+								this.orderState[i]='未确认付款';
+							}else{
+								this.orderState[i]='';
+							}
+						}
+					}
+					else{
+						this.showType=true;
+					}
+				}).catch(err=>{
+					console.log(err)
+				});
 			}
 		}
 	}
@@ -105,7 +162,8 @@
 
 <style scoped>
 	page {
-		background:rgba(248,249,251,1);
+		padding-bottom: 50rpx;
+		background: #F8F9FB;
 	}
 	.pic {
 		position: relative;
@@ -210,23 +268,70 @@
 		left: 180rpx;
 	}
 	.details {
-		padding-bottom: 20rpx;
 		justify-content: center;
 		display: flex;
 		flex-wrap: wrap;
 	}
 	.detail {
+		color: #CCCCCC;
 		margin-top: 20rpx;
 		width: 350rpx;
 		font-size: 35rpx;
 	}
+	.detail1 {
+		color: #CCCCCC;
+		margin-top: 20rpx;
+		width: 900rpx;
+		font-size: 35rpx;
+	}
+	.detail2 {
+		color: #CCCCCC;
+		width: 400rpx;
+		font-size: 35rpx;
+		margin: 20rpx 295rpx 0 0;
+	}
+	.detail3 {
+		color: #CCCCCC;
+		width: 450rpx;
+		font-size: 35rpx;
+		margin:20rpx 245rpx 0 0;
+	}
+	.detail4{
+		color: #CCCCCC;
+		width: 500rpx;
+		font-size: 35rpx;
+		margin-top: 15rpx;
+	}
+	.orderState{
+		color: #06C1AE;
+		margin-left: 120rpx;
+		font-size: 30rpx;
+	}
+	.active{
+		color: red;
+	}
 	.text {
-		
-		color: #999999;
+		color: black;
 		margin-left: 15rpx;
-		font-size: 25rpx;
+		font-size: 30rpx;
 	}
 	.theType {
 		margin-left: 29rpx;
+	}
+	.warning{
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		color: #CCCCCC;
+	}
+	.noAddress{
+		margin-left: 280rpx;
+		margin-top: 200rpx;
+		width: 200rpx;
+		height: 200rpx;
+	}
+	.commodity{
+		margin-top: 40rpx;
+		border-top: 1rpx solid #CCCCCC;
 	}
 </style>

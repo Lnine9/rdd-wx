@@ -19,7 +19,7 @@
 		
 		<view class="row default-row">
 			<text class="tit">设为默认</text>
-			<switch checked="Default" color="#4CD964" @change="switchChange" />
+			<switch :checked="Default" color="#4CD964" @change="switchChange" />
 		</view>
 		<button class="add-btn" @click="confirm">保存</button>
 		<w-picker
