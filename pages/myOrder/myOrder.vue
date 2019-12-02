@@ -10,7 +10,7 @@
 			<view class="shopContainer normalFontWeight">
 				<view class="shopTitle boldFontWeight">
 					<image class="shopPic" src="../../static/myOrder/shop.png"></image>
-					<text class="shopName normalFontDark bigFontSize">{{item.commodityTitle}}</text>
+					<text class="shopName normalFontDark bigFontSize">{{item.shopName}}</text>
 					<text class="status smallFontSize" v-bind:style="statusStyle[index]">{{judgeOrderState(index)}}</text>
 				</view>
 				<view class="goodsMessageContainer">
@@ -20,8 +20,8 @@
 					</view>
 					<!-- 商品信息 -->
 					<view class="goodsMessage">
-
-						<text class="goodsName normalFontDark bigFontSize">{{item.commodityInfo}}</text>
+											
+						<text class="goodsName normalFontDark bigFontSize">{{item.commodityTitle}}</text>
 						<view style="display: flex;flex-direction: row;margin-top: 40rpx;align-items: center;width: 67.5vw;">
 							<text class="actualPrice boldFontWeight largeFontSize">{{"￥"+item.actualPrice}}</text>
 							<text class="originPrice normalGray midalFontSize">{{"￥"+item.originalPrice}}</text>
