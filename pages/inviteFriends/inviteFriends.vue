@@ -182,8 +182,9 @@
    .QRCode{
 	   width: 250rpx;
 	   height: 250rpx;
-	   margin-left: 265rpx;
-	   margin-top: 70rpx;
+	   position: absolute;
+	   bottom: 266rpx;
+	   left: 259rpx;
    }
 	
 	.btn{
@@ -198,9 +199,11 @@
 		padding: 0;
 		background-color: #ffb600;
 		border-radius: 62rpx;
-		margin: 100rpx 40rpx 0 170rpx;
 		color: #a1450c;
 		font-size: 35rpx;
+		position: absolute;
+		left: 155rpx;
+		bottom: 21rpx;
 	}
 	
 	.save{

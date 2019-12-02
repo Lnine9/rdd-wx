@@ -51,6 +51,10 @@
             };
         },
         methods: {
+			/**
+			 * 
+			 * @param {Object} options
+			 */
             recommend:function(options){
 				var parms = {
 					userName:this.applyInformation.name,
@@ -58,15 +62,40 @@
 					remark:this.applyInformation.remarks
 				}
 				console.log(parms)
+				if(this.applyInformation.name==''){
+					wx.showToast({
+					  title: '请输入姓名',
+					  icon: 'none',
+					  duration: 3000
+					})
+					return null;
+				}
+				if(this.applyInformation.phone==''){
+					wx.showToast({
+					  title: '请输入电话号码',
+					  icon: 'none',
+					  duration: 3000
+					})
+					return null;
+				}else{
+					 if(!(/^1[34578]\d{9}$/).test(this.applyInformation.phone)){
+						wx.showToast({
+						  title: '请输入正确的电话号码',
+						  icon: 'none',
+						  duration: 3000
+						})	 
+						return null;
+					}
+				}
 				api.sendData(parms).then(res=>{
 					wx.showToast({
 					  title: '申请成功,我们客服人员会尽快联系您',
-					  icon: 'success',
+					  icon: 'none',
 					  duration: 3000
 					})
 				}).catch(err=>{
 					wx.showToast({
-					  title: '申请失败，请重试！',
+					  title: '申请失败请重试！',
 					  icon: 'fail',
 					  duration: 3000
 					})
@@ -167,7 +196,7 @@
 
     .applyInformation {
 		background: #FFFFFF;
-        width: 729rpx;
+        width: 699rpx;
 		height: 60rpx;
 		padding: 25rpx;
 		margin-top: 2rpx;
@@ -182,11 +211,11 @@
 	}
 	
 	.applyInformation .inputName{
-		margin-left: 530rpx;
+		/* margin-left: -30rpx; */
 		margin-top: -40rpx;
 		font-size: 30rpx;
 		color: black;
-		text-align: center;
+		text-align: right;
 	}
 	
 	.applyInformation .inputPhoneAndRemarks{
@@ -194,12 +223,16 @@
 		margin-top: -40rpx;
 		font-size: 30rpx;
 		color: black;
-		text-align: center;
+		text-align: right;
 	}
 
     button {
         border-radius: 80rpx;
-        margin: 140rpx 40rpx 0 40rpx;
+        width: 670rpx;
+		height: 88rpx;
+		position: absolute;
+		left: 40rpx;
+		bottom: 50rpx;
         font-size: 35rpx;
 		background-color: #313134;
 		color: #FFFFFF;
