@@ -66,13 +66,22 @@
 				"navigationBarTitleText": "我的订单",
 				"enablePullDownRefresh": true
 			}
-		}, {
+		}, 
+		{
 			"path": "pages/orderDetail/orderDetail",
 			"style": {
 				"navigationBarTitleText": "订单详情",
 				"enablePullDownRefresh": true
 			}
-		}, {
+		}, 
+		{
+			"path": "pages/orderDetail/deliver",
+			"style": {
+				"navigationBarTitleText": "物流信息",
+				"enablePullDownRefresh": true
+			}
+		}, 
+		{
 			"path": "pages/income/income",
 			"style": {
 				"navigationBarTitleText": "收益"
@@ -140,7 +149,7 @@
 			{
 				"name": "订单详情",
 				"path": "pages/orderDetail/orderDetail",
-				"query": "orderid=1575189560837677-4"
+				"query": "orderid=1575275886571b6d-4"
 			},
 			{
 				"name": "首页",
