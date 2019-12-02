@@ -77,6 +77,7 @@
 				</view>
 			</view>
 		</view>
+		<tabBar :currentPage="currentPage"></tabBar>
 	</view>
 </template>
 
@@ -104,7 +105,7 @@
 			};
 		},
 		components:{
-					tabBar
+			tabBar
 		},
 		methods: {
 			//轮播图切换
@@ -499,11 +500,14 @@
 				display: -webkit-box;
 				-webkit-box-orient: vertical;
 				-webkit-line-clamp:2;
-				overflow: hidden;
 				word-break: break-all;
-				text-overflow: ellipsis;
 				font-size: 30rpx;
 				color:rgba(51,51,51,1);
+				margin-top: 0rpx;
+				max-width: 200rpx;
+				white-space: nowrap;
+				text-overflow:ellipsis; 
+				overflow:hidden; 
 			}
 			.priceOrigin{
 				font-size: 32rpx;
@@ -528,20 +532,21 @@
 		align-items: center;
 	}
 	.clamp{
-		margin-top: 10rpx;
-		display:flex;
 		justify-content: center;
 		align-items: center;
-		display: -webkit-box;
+		text-align:center;
 		-webkit-box-orient: vertical;
 		-webkit-line-clamp:2;
-		overflow: hidden;
 		word-break: break-all;
-		text-overflow: ellipsis;
-		font-size: 37rpx;
+		margin-top: 10rpx;
+		font-size: 32rpx;
+		font-weight: 520;
 		font-family:PingFang SC;
-		font-weight: 650;
 		color:rgba(51,51,51,1);
+		max-width: 300rpx;
+		white-space: nowrap;
+		text-overflow:ellipsis; 
+		overflow:hidden; 
 	}
 	
 	.priceOrigin{
