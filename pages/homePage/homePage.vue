@@ -3,12 +3,11 @@
 		<!-- 小程序头部兼容 -->
 		<!-- #ifdef MP -->
 		<!-- #endif -->
-		<view class="header"><label class="head-text">囧途宝盒</label>
-			<picker class="head-region" @change="bindPickerChange" :value="regionIndex" :range="areas">
-				<view class="uni-input" v-if="this.defaultRegion==''">{{areas[regionIndex]}}</view>
-				<view class="uni-input" v-if="this.defaultRegion!=''">{{defaultRegion}}</view>
-			</picker>
-		</view>
+		<view class="header"><label class="head-text">首页</label>
+		<picker class="head-region" @change="bindPickerChange" :value="regionIndex" :range="region">
+			<view class="uni-input" v-if="this.defaultRegion==''">{{region[regionIndex]}}</view>
+			 <view class="uni-input" v-if="this.defaultRegion!=''">{{defaultRegion}}</view>
+		</picker></view>
 		<!-- 头部轮播 -->
 		<view class="carousel-section">
 			<!-- 标题栏和状态栏占位符 -->
@@ -16,7 +15,7 @@
 			<!-- 背景色区域 -->
 			<view class="titleNview-background" :style="{backgroundColor:titleNViewBackground}"></view>
 			<swiper class="carousel" circular @change="swiperChange">
-				<swiper-item v-for="(item, index) in carouselList" :key="index" class="carousel-item" @click="navToWebView(item)">
+				<swiper-item v-for="(item, index) in carouselList" :key="index" class="carousel-item" @click="navToDetailPage({title: '轮播广告'})">
 					<image :src="item.savePath" />
 				</swiper-item>
 			</swiper>
@@ -27,14 +26,14 @@
 				<text class="num">{{swiperLength}}</text>
 			</view>
 		</view>
-		
-		<!-- 精选商品 -->
+		<!-- 分类 -->
 		<view class="f-header m-t">
 			<view class="tit-box">
 				<text class="tit">精选商品</text>
 			</view>
 		</view>
-		<view class="cate-section">			
+		<view class="cate-section">
+			<!-- 精选商品 -->
 			<view class="seckill-section m-t">			
 				<text class="yticon icon-you"></text>
 				<scroll-view class="floor-list" scroll-x>
@@ -42,7 +41,7 @@
 						<view 
 							v-for="(item, index) in goodsList" :key="index"
 							class="floor-item"
-							@click="navToDetailPage(item)">
+							@click="navToDetailPage(index)">
 							<image :src="item.commodityImg[0]" mode="aspectFill"></image>
 							<text class="clamp">{{item.commodityTitle}}</text>
 							<view class="PriceArea">
@@ -56,25 +55,24 @@
 		</view>
 		
 		<!-- 猜你喜欢 -->
-		<view class="f-header m-t">	
+		<view class="f-header m-t">
+		
 			<view class="tit-box">
 				<text class="tit">猜你喜欢</text>
 			</view>
 			<text class="yticon icon-you"></text>
-		</view>		
+		</view>
+		
 		<view class="guess-section">
 			<view 
 				v-for="(item, index) in goodsList" :key="index"
 				class="guess-item"
-				@click="navToDetailPage(item)">
+				@click="navToDetailPage(index)">
 				<view class="image-wrapper">
 					<image :src="item.commodityImg[0]" mode="aspectFill"></image>
 				</view>
-				<text class="clamp">{{item.commodityTitle}}</text>
-				<view class="PriceArea">
-					<text class="priceOrigin">￥{{item.salePrice}}</text>
-					<text class="priceCurrent">￥{{item.originalPrice}}</text>
-				</view>
+				<text class="title clamp">{{item.commodityTitle}}</text>
+				<text class="price">￥{{item.salePrice}}</text>
 			</view>
 		</view>
 	</view>
@@ -88,7 +86,6 @@
 	export default {
 		data() {
 			return {
-				areas: [],
 				amapPlugin: null,
 				key: '8aa790ec80dd04abdf75736893a84613',
 				titleNViewBackground: '',
@@ -96,6 +93,7 @@
 				swiperLength: 0,
 				carouselList: [],
 				defaultRegion: '',
+				region:['重庆市','上海市','山西'],
 				regionIndex: 1,
 				guessList:[],
 				goodsList: [],
@@ -109,34 +107,6 @@
 				const index = e.detail.current;
 				this.swiperCurrent = index;
 			},
-			/**
-			 * web页面跳转
-			 * 0. 后台公告页面跳转
-			 * 1. 无跳转
-			 * 2. 小程序页面跳转
-			 * @param {Object} item
-			 */
-			navToWebView(item) {
-				if(item.announcementType == '0') {
-					// 公告页面跳转
-					let resulturl = item.announcementContent
-					getApp().globalData.desc = resulturl 
-					uni.navigateTo({
-						url: `/pages/webView/webView`
-					})
-				}
-				else if (item.announcementType == '1') {
-					// 无跳转
-					return
-				}
-				else {
-					// 本地页面跳转
-					let resulturl = item.announcementContent
-					uni.navigateTo({
-						url: `${resulturl}`
-					})
-				}							
-			},
 			//详情页
 			navToDetailPage(item) {
 				//测试数据没有写id，用title代替
@@ -146,15 +116,13 @@
 				})				
 			},	
 			bindPickerChange(val) {
-				uni.setStorageSync('location',this.areas[val.detail.value]);
-				this.defaultRegion = this.areas[val.detail.value]
+				uni.setStorageSync('location',this.region[val.detail.value]);
+				this.defaultRegion = this.region[val.detail.value]
 				this.getBanner(),
 				this.getUserMes(),
 				this.getRecommend(),
-				this.getGuess(),
-				this.getAreas()
+				this.getGuess()
 			},
-			
 			/**
 			 * 获取用户信息
 			 */
@@ -166,7 +134,6 @@
 				};
 				api.getUserInfo().then(res =>{
 					console.log(res)
-				api.getUserInfo(user).then(res =>{
 					this.service = res.data.data,
 				
 					// userType 说明
@@ -184,8 +151,6 @@
 					uni.setStorageSync('isVip', this.service.isVip==0?false:true)
 					// 当前地区是否有VIP业务
 					uni.setStorageSync('haveVip', this.service.haveVip==0?false:true)	
-					uni.setStorageSync('haveVip', this.service.haveVip==0?false:true)				
-					uni.setStorageSync('haveVip', this.service.haveVip==0?false:true)				
 				}).catch(err => {
 					console.log(err)
 				});		
@@ -201,18 +166,7 @@
 				api.getBannerImgs(location).then(res =>{
 					this.carouselList = res.data.data,
 					this.swiperLength = this.carouselList.length;
-				}).catch(err => {
-					console.log(err)
-				})		
-			},
-			
-			/**
-			 * 获取地区列表信息
-			 */
-			getAreas() {				
-				api.getAreas().then(res =>{
-					var array = res.data.data
-					this.areas = array.split(",")
+					this.carouselList = this.carouselList;
 				}).catch(err => {
 					console.log(err)
 				})		
@@ -228,7 +182,8 @@
 					shopPlace: 'Recommend'
 				};
 				api.getProducts(userAndLocalMes).then(res =>{
-					this.goodsList = res.data.data
+					this.goodsList = res.data.data,
+					console.log(this.goodsList)		
 				}).catch(err => {
 					console.log(err)
 				})	
@@ -244,7 +199,8 @@
 					shopPlace: 'Guess'
 				};
 				api.getProducts(userAndLocalMes_1).then(res =>{
-					this.guessList = res.data.data
+					this.guessList = res.data.data,
+					console.log(this.guessList)		
 				}).catch(err => {
 					console.log(err)
 				})			
@@ -281,12 +237,12 @@
 						}
 					}); 
 				}	
-				this.defaultRegion = uni.getStorageSync('location')||'';
-				this.getBanner(),
-				this.getUserMes(),
-				this.getRecommend(),
-				this.getGuess(),
-				this.getAreas()
+					this.defaultRegion = uni.getStorageSync('location')||'';
+					this.getBanner(),
+					this.getUserMes(),
+					this.getRecommend(),
+					this.getGuess()
+			
 		}
 		// #ifndef MP
 
@@ -331,7 +287,7 @@
 		.cate-section{
 			position:relative;
 			z-index:5;
-			border-radius:25upx 25upx 0 0;
+			border-radius:16upx 16upx 0 0;
 			margin-top:-50upx;
 		}
 		.carousel-section{
@@ -396,7 +352,7 @@
 		image {
 			width: 100%;
 			height: 100%;
-			border-radius: 20upx;
+			border-radius: 10upx;
 		}
 	}
 	.swiper-dots {
@@ -457,7 +413,7 @@
 				margin-right: 14upx;
 				font-size: $font-sm+2upx;
 				color: #fff;
-				border-radius: 20px;
+				border-radius: 2px;
 				background: rgba(0,0,0,.8);
 			}
 			.icon-you{
@@ -488,7 +444,7 @@
 			image{
 				width: 240rpx;
 				height: 240rpx;
-				border-radius: 20upx;
+				border-radius: 6upx;
 			}
 			.PriceArea{
 				display:flex;
@@ -502,8 +458,6 @@
 				overflow: hidden;
 				word-break: break-all;
 				text-overflow: ellipsis;
-				font-size: 30rpx;
-				color:rgba(51,51,51,1);
 			}
 			.priceOrigin{
 				font-size: 32rpx;
@@ -520,44 +474,6 @@
 				text-decoration: line-through;
 			}
 		}
-	}
-	.PriceArea{
-		margin-top: 10rpx;
-		display:flex;
-		justify-content: center;
-		align-items: center;
-	}
-	.clamp{
-		margin-top: 10rpx;
-		display:flex;
-		justify-content: center;
-		align-items: center;
-		display: -webkit-box;
-		-webkit-box-orient: vertical;
-		-webkit-line-clamp:2;
-		overflow: hidden;
-		word-break: break-all;
-		text-overflow: ellipsis;
-		font-size: 37rpx;
-		font-family:PingFang SC;
-		font-weight: 650;
-		color:rgba(51,51,51,1);
-	}
-	
-	.priceOrigin{
-		font-size: 35rpx;
-		font-family:PingFang SC;
-		font-weight: 600;
-		color:rgba(255,126,48,1);
-	}
-	
-	.priceCurrent{
-		margin-left: 10rpx;
-		font-size: 30rpx;
-		font-family:PingFang SC;
-		font-weight: 700;
-		color:rgba(153,153,153,1);
-		text-decoration: line-through;
 	}
 	
 	.f-header{
@@ -612,7 +528,7 @@
 		.image-wrapper{
 			width: 100%;
 			height: 330upx;
-			border-radius: 10px;
+			border-radius: 3px;
 			overflow: hidden;
 			image{
 				width: 100%;
@@ -634,5 +550,3 @@
 	
 
 </style>
-
-
