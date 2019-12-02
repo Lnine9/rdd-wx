@@ -4,16 +4,15 @@
 			<view class="subHead">
 				<image class="photo" :src="user.photo"></image>
 				<text class="name">{{user.name}}</text>
-				<text class="account">{{user.account}}</text>
 				<image class="scan" src="../../static/code/scan.png" @click="scanCode()" :style="{display:isShop == 1 ? 'block' : 'none' }"></image>
 			</view>
 		</view>	
 		<view class="vip">
 			<image class="vipPhoto" src="../../static/vip/icVipPrice.png"></image>
-			<text class="applyVip" @click="getVip()" :style="{display: isVip == 0 ? 'block' :'none' }">申请会员</text>
-			<text class="applyVip"  :style="{display:isVip == 1 ? 'block' :'none' }">囧途宝盒会员</text>
-			<text class="freeVip"  @click="getVip()" :style="{display: isVip == 0 ? 'block' :'none' }">囧途宝盒会员免费申请啦！</text>
-			<image class="more" src="../../static/vip/icVipMore.png" @click="getVip()" :style="{display: isVip == 0 ? 'block' :'none' }"></image>
+			<text class="applyVip" @click="getVip()" :style="{display: isVip == false ? 'block' :'none' }">申请会员</text>
+			<text class="applyVip"  :style="{display:isVip == true ? 'block' :'none' }">囧途宝盒会员</text>
+			<text class="freeVip"  @click="getVip()" :style="{display: isVip == false ? 'block' :'none' }">囧途宝盒会员免费申请啦！</text>
+			<image class="more" src="../../static/vip/icVipMore.png" @click="getVip()" :style="{display: isVip == false ? 'block' :'none' }"></image>
 		</view>	
 		<view class="service">
 			<text class="myService">我的服务</text>
@@ -34,7 +33,7 @@
 					<text class="codeName" :style="{display:code.commodityType == 2 ? 'block' : 'none' }">电子码：{{code.electronicCode}}</text>
 					<text class="codeAccount" :style="{display:code.commodityType == 2 ? 'block' : 'none' }">订单号码：{{code.orderId}}</text>
 					<text class="codeName" :style="{display:code.commodityType == 1 ? 'block' : 'none' }" >
-						快递单号：<text selectable="true" @longtap="copy(code.deliveryNum)">{{code.deliveryNum}}</text>
+						快递单号：<text selectable="true" >{{code.deliveryNum}}</text>
 						</text>
 					<button class="copy" :style="{display:code.commodityType == 1 ? 'block' : 'none' }" @click="copyBtu(code.deliveryNum)">复制</button>
 					<text class="codeAccount" :style="{display:code.commodityType == 1 ? 'block' : 'none' }">邮寄状态：{{this.getdeliveryState()}}</text>
@@ -48,7 +47,7 @@
 					<text class="shopName">{{code.commodityTitle}}</text>
 					<button class="QR-Code" :style="{display:code.commodityType == 2 ? 'block' : 'none'}" @click="lookQRCode()"><text class="fontTwo">查看二维码</text></button>
 					<button class="lookDetails" :style="{marginRight:code.commodityType == 2 ? '25rpx' : '0rpx'}" @click="lookDetails()"><text class="fontOne">查看详情</text></button>
-					<uni-popup ref='popup' type="center" maskClick="true">
+					<uni-popup ref="popup" type="center" maskClick="true">
 						<view class="popUp">
 							<text class="popupCodeName" >电子码：{{code.electronicCode}}</text>
 							<text class="popupCodeAccount">订单号码：{{code.orderId}}</text>
@@ -69,8 +68,7 @@
 		</view>
 		<uni-popup ref='order' type="center" maskClick="true">
 			<view class="orderPopUp">
-				<!-- <image class="orderPicture" :src="order.commodityImgList[1]"></image> -->
-				<image class="orderPicture" :src="code.commodityImgList[0]"></image>
+				<image class="orderPicture" :src="order.commodityImgList[1]"></image>
 				<view class="dottedLineThree"></view>
 				<view>
 					<text class="orderInfo">商品：{{orderInfo.commodityTitle}}</text>
@@ -80,7 +78,7 @@
 					<text class="orderInfo">联系电话：{{orderInfo.contactNumber}}</text>
 				</view>
 				<button class="cancle" @click="closeOrder()">取消</button>
-				<button class="update" @click="comfirmOrder(order)">确定</button>
+				<button class="update" @click="comfirmOrder(order)">确认提交</button>
 			</view>
 		</uni-popup>
 	</view>
@@ -96,7 +94,6 @@
 	            return {
 					user:{
 						name:'',
-						account:'153897433204',
 						photo:'',
 					},
 					service:[
@@ -105,8 +102,8 @@
 					orderInfo:[],
 					order:[],
 					qr:'',
-					isVip:0,
-					isShop:1,
+					isVip:false,
+					isShop:0,
 	            };
 	        },
 			onShow() {
@@ -127,7 +124,6 @@
 				    uni.getUserInfo({
 				        provider: 'weixin',
 				        success: function(infoRes) {
-							// console.log(infoRes);
 				           _this.user.name = infoRes.userInfo.nickName; //昵称
 				           _this.user.photo = infoRes.userInfo.avatarUrl; //头像
 				        },
@@ -154,28 +150,22 @@
 				},
 				//判断是否为vip
 				judgeVip(){
-					// console.log(11);
-					try {
-						// console.log(12);
-					    let value = uni.getStorageSync('isVip');
-					    if (value) {
-					        console.log(value);
-					    }
-					} catch (e) {
-					    console.log(e);
-					}
+					let value = uni.getStorageSync('isVip');
+					this.isVip = value;
 				},
 				//判断是否为商家
 				judgeScan(){
-					// console.log(11);
-					try {
-						// console.log(12);
-					    let value = uni.getStorageSync('roleName');
-					    if (value) {
-					        console.log(value);
-					    }
-					} catch (e) {
-					    console.log(e);
+					let value = uni.getStorageSync('roleNameList');
+					if(value != null){
+						for (var i = 0; i < value.length; i++) {
+							if(value[i].roleName === "微信商家"){
+								this.isShop = 1;
+							}else{
+								this.isShop = 0
+							}
+						}
+					}else{
+						this.isShop = 0
 					}
 				},
 				//跳转申请vip
@@ -194,14 +184,20 @@
 				//获取电子码信息
 				getCode(){
 					api.getCodeInfo().then(res=>{
-						this.code = res.data.data,
+						this.code = res.data.data
+						if(res.data.data.electronicCode == null || res.data.data.electronicCode == ''){
+							this.code.electronicCode = '暂无'
+						}
+						if(res.data.data.deliveryNum == null || res.data.data.deliveryNum == ''){
+							this.code.deliveryNum = '暂无'
+						}
 						console.log(this.code)
 					})
 				},
 				//电子码查看更多
 				codeLook(){
 					uni.navigateTo({
-						url:`/pages/orderDetail/orderDetail`
+						url:`/pages/myOrder/myOrder`
 					})
 				},
 				//扫码二维码
@@ -253,6 +249,19 @@
 					api.comfirmOrder(data).then(res=>{
 						console.log(res);
 						this.$refs.order.close();
+						if(res.data.data == true){
+							uni.showToast({
+							    title: '提交成功',
+							    duration: 2000,
+								icon:'success'
+							});
+						}else{
+							uni.showToast({
+							    title: '提交失败',
+							    duration: 2000,
+								icon:'none'
+							});
+						}
 					})
 				},
 				//取消订单
@@ -291,16 +300,6 @@
 							return '未知'
 					}	
 				},
-				//长按复制
-				copy(data){
-					// var that = this;
-					uni.setClipboardData({
-					  data: data,
-					  success: function (res) {
-						console.log('复制成功')
-					  }
-					});
-				},
 				//一键复制
 				copyBtu(data){
 					console.log(data);
@@ -321,12 +320,23 @@
 				//查看详情
 				lookDetails(){
 					uni.navigateTo({
-						url: `/pages/product/product`
+						url: `/pages/orderDetail/orderDetail`
 					})
 				},
 				//关闭弹窗
 				close(){
 					this.$refs.popup.close()
+				},
+				//下拉刷新
+				onPullDownRefresh(){
+					this.wxGetUserInfo();
+					this.getData();
+					this.getCode();
+					this.judgeVip();
+					this.judgeScan();
+					setTimeout(function(){
+						uni.stopPullDownRefresh();
+					},2000);
 				}
 			}
 	           
@@ -335,6 +345,7 @@
 
 <style>
 	.main{
+		overflow-x: hidden;
 		width: 750rpx;
 		height: 1479rpx;
 		background-color: #F8F9FB;
@@ -361,14 +372,6 @@
 		top:17.6rpx;
 		left: 148.6rpx;
 		font-size: 32rpx;
-	}
-	.account{
-		display: inline-block;
-		color: #FFFFFF;
-		position: absolute;
-		bottom:17.6rpx;
-		left: 149.6rpx;
-		font-size: 26rpx;
 	}
 	.scan{
 		position: absolute;
@@ -436,7 +439,7 @@
 		display: inline-block;
 		margin-right: 60rpx;
 		margin-top: 40rpx;
-		margin-bottom: 20rpx;
+		margin-bottom: 40rpx;
 		width: 100rpx;
 		height: 100rpx;
 	}
@@ -516,13 +519,15 @@
 	.copy{
 		display: inline-block;
 		position: absolute;
-		border:1rpx solid rgba(6,193,174,1);
-		border-radius:10rpx;
-		width: 70rpx;
-		height: 50rpx;
+		border:1rpx solid #06C1AE;
+		color: #06C1AE;
+		/* border-radius:10rpx; */
+		width: 60rpx;
+		height: 40rpx;
 		font-size: 20rpx;
 		right: 40rpx;
-		top: 0rpx;
+		top: 6rpx;
+		line-height: 40rpx;
 		padding: 0;
 	}
 	.introduction{
@@ -540,7 +545,7 @@
 		position: relative;
 		top: 0rpx;
 		width:602rpx;
-		height:1rpx;
+		/* height:1rpx; */
 		border:1rpx dotted rgba(227,227,227,1);
 	}
 	.codeInfo{
@@ -553,7 +558,7 @@
 		position: relative;
 		bottom: 0rpx;
 		width:602rpx;
-		height:1rpx;
+		/* height:1rpx; */
 		border:1rpx dotted rgba(227,227,227,1);
 	}
 	.bottom{
@@ -568,6 +573,8 @@
 	}
 	.shopName{
 		display: inline-block;
+		position: absolute;
+		width: 250rpx;
 		margin-top: 15rpx;
 		font-size:24rpx;
 		font-family:PingFang SC;
@@ -651,7 +658,7 @@
 		display: inline-block;
 		margin: 41rpx 49rpx;
 		width:482rpx;
-		height:1rpx;
+		/* height:1rpx; */
 		border:1rpx dotted rgba(227,227,227,1);
 	}
 	.circle{
@@ -670,9 +677,9 @@
 	}
 	.codeShopName{
 		display: inline-block;
-		margin-top: 20rpx;
+		margin: 20rpx  50rpx;
 		text-align: center;
-	    width:580rpx;
+	    width:480rpx;
 		font-size:28rpx;
 		color:rgba(204,204,204,1);
 	}
@@ -725,7 +732,7 @@
 		display: inline-block;
 		bottom: 0;
 		width: 290rpx;
-		border-radius: 0;
+		/* border-radius: 0; */
 	}
 	.update{
 		position: absolute;
@@ -735,7 +742,7 @@
 		width: 290rpx;
 		left: 290rpx;
 		color: #FFFFFF;
-		border-radius: 0;
+		/* border-radius: 0; */
 	}
 </style>
 

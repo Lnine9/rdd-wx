@@ -1,9 +1,7 @@
 <template>
 	<view class="main-container">
 		<!-- 订单状态 -->
-		<view
-			v-if="order.deliveryState === 2"
-			class="order-state-container">
+		<view v-if="order.deliveryState === 2" class="order-state-container">
 			<view class="order-state-text-container">
 				<text class="order-state">已签收</text>
 				<text class="order-state-notice">您的订单已签收，感谢您的使用</text>
@@ -99,15 +97,13 @@
 					<text class="order-text">下单时间</text>
 					<text class="order-value">{{order.createAt}}</text>
 				</view>
-				
+
 				<view v-if="order.takeWay === 2">
 					<text class="order-text">电子码<text style="color: #FFFFFF;">白</text></text>
 					<text class="order-value">{{order.electronicCode}}</text>
 				</view>
-				
-				<view 
-					v-else 
-					class="qr-code-container">
+
+				<view v-else class="qr-code-container">
 					<text class="order-text">二维码</text>
 					<image :src="qrImageUrl" mode="" class="qr-code-img"></image>
 				</view>
@@ -125,11 +121,9 @@
 		</view>
 
 		<!-- 底部操作栏 -->
-		<view class="bottom-btn-container">
-			<button 
-				v-if="this.order.commodityType === '1'"
-				class="bottom-btn-look-logistics">
-				<text class="bottom-btn-look-logistics-text" @click="lookLogistics">查看物流</text>
+		<view v-if="order.commodityType === '1'" class="bottom-btn-container">
+			<button v-if="hasLogistics" class="bottom-btn-look-logistics" @click="lookLogistics">
+				<text class="bottom-btn-look-logistics-text">查看物流</text>
 			</button>
 
 			<button class="bottom-btn-sure-receive" @click="confirmDelivery">
@@ -176,13 +170,16 @@
 				qrImageUrl: '', // 二维码图片
 			}
 		},
-		methods: {
-			onLoad: function(params) {
-				console.log(params);
-				this.orderId = params.orderid;
+		onLoad: function(params) {
+			console.log(params);
+			this.orderId = params.orderid;
 
-				this.getOrderInfo();
-			},
+			this.getOrderInfo();
+		},
+		onPullDownRefresh: function() {
+			this.getOrderInfo();
+		},
+		methods: {
 			getOrderInfo: function() {
 				OrderDetailAPI.getOrderDetail({
 					orderId: this.orderId
@@ -236,39 +233,50 @@
 					} else {
 						this.sureBtnText = '确认完成';
 					}
+					uni.stopPullDownRefresh();
 				}).catch(err => {
-					console.log(err);
+					uni.showToast({
+						title: '获取订单信息失败，刷新试试',
+						icon: 'none'
+					});
+					uni.stopPullDownRefresh();
 				});
 			},
 			lookLogistics: function() {
 				// todo 查看物流
+
+				uni.navigateTo({
+					url: '/pages/orderDetail/deliver'
+				});
+				
+				// uni.navigateTo({
+				// 	url: '/pages/orderDetail/deliver.html?a=1000'
+				// });
 			},
 			confirmDelivery: function() {
-				if (this.order.commodityType === 1) {
-					OrderDetailAPI.confirmDelivery({orderId: this.order.orderId}).then(res => {
-						console.log(res);
+				if (this.order.commodityType === '1') {
+					OrderDetailAPI.confirmDelivery({
+						orderId: this.order.orderId
+					}).then(res => {
 						if (res.data.data) {
 							uni.showToast({
 								title: '确认收货成功',
+								icon: 'success'
 							});
+							// 刷新订单状态
 							this.getOrderInfo();
 						} else {
-							uni.showModal({
-								title: '提示',
-								content: '确认收货失败',
-								showCancel: false
+							uni.showToast({
+								title: '确认收货失败',
+								icon: 'none'
 							});
 						}
 					}).catch(err => {
-						console.log(err);
-						uni.showModal({
-							title: '提示',
-							content: '确认收货失败',
-							showCancel: false
+						uni.showToast({
+							title: '确认收货失败',
+							icon: 'none'
 						});
 					});
-				} else {
-					// todo
 				}
 			},
 			getFormatDate: function(str) {
@@ -289,11 +297,10 @@
 			},
 			getQRCodeImage: function() {
 				// 二维码内容
-				let content = 'wx:shopId=' + this.order.shopId + 
-					'&orderId=' + this.order.shopId +  
+				let content = 'wx:shopId=' + this.order.shopId +
+					'&orderId=' + this.order.shopId +
 					'&time=' + this.order.createAt;
 				this.qrImageUrl = qr.createQrCodeImg(content);
-				console.log(this.qrImageUrl);
 			}
 		}
 	}
@@ -560,12 +567,12 @@
 		font-size: 24rpx;
 		margin: 10rpx 0 10rpx 93rpx;
 	}
-	
+
 	.qr-code-container {
 		display: flex;
 		flex-direction: column;
 	}
-	
+
 	.qr-code-img {
 		margin: 10rpx 220rpx 0 230rpx;
 		width: 300rpx;

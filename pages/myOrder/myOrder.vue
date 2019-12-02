@@ -98,9 +98,6 @@
 				if (this.isNodata) {
 					return "text-align:center"
 				}
-				else{
-					return ""
-				}
 
 			}
 		},
@@ -149,7 +146,6 @@
 
 
 			},
-			
 			// 加载数据
 			getData: function() {
 				api.getComidityList().then(res => {
@@ -176,9 +172,7 @@
 				})
 			},
 		},
-		
-		
-		
+
 		onShow: function(options) {
 
 			uni.startPullDownRefresh({

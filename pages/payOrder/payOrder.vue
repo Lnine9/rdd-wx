@@ -126,7 +126,6 @@
 		},
 		
 		onLoad: function(params) {
-			console.log(params);
 			this.commodityId = params.commodityId;
 			this.commodityNum = params.commodityNum;
 
@@ -141,15 +140,11 @@
 		},
 		methods: {
 			getCommodityInfo: function() {
-				// uni.startPullDownRefresh();
 				// 获取商品信息
-				console.log(this.commmodityId);
 				if (this.commodityId != null && this.commodityId != undefined) {
 					PayOrderAPI.getCommodityInfo({
 						commodityId: this.commodityId
 					}).then(res => {
-						console.log("商品信息");
-						console.log(res);
 						this.commodity = res.data.data;
 						this.commodity.salePrice = Number(this.commodity.salePrice);
 						this.commodity.originalPrice = Number(this.commodity.originalPrice);
@@ -167,23 +162,19 @@
 
 						uni.stopPullDownRefresh();
 					}).catch(err => {
-						uni.showModal({
-							title: '提示',
-							content: '商品信息获取失败，刷新试试',
-							showCancel: false
+						uni.showToast({
+							title: '商品信息获取失败，刷新试试',
+							icon: 'none'
 						});
-						console.log(err);
 						uni.stopPullDownRefresh();
 					})
 				} else {
-					console.log("返回上一个页面");
 					uni.navigateBack();
 				}
 			},
 			getDefaultAddress: function() {
 				// todo获取默认地址，如果没有数据，更改样式，要求用户选择地址or
 				PayOrderAPI.getDefaultAddress().then(res => {
-					console.log(res);
 					if (res.data.data != null && res.data.data != undefined) {
 						this.hasDefaultAddress = true;
 						this.address = res.data.data;
@@ -195,34 +186,41 @@
 						this.hasDefaultAddress = false;
 					}
 				}).catch(err => {
-					console.log(err);
+					uni.showToast({
+						title: '默认地址获取失败，刷新试试',
+						icon: 'none'
+					});
 				});
 			},
 			chooseAddress: function() {
-				console.log('你点击了选择地址')
 				// 跳转到选择地址页面，并且标明是从支付订单页面跳转
 				uni.navigateTo({
 					url: '/pages/address/address'
 				})
 			},
 			addAddress: function() {
-				console.log('你点击了新增地址')
 				// 跳转到选择地址页面，并且标明是从支付订单页面跳转
 				uni.navigateTo({
 					url: '/pages/address/address'
 				})
-				console.log('你点击了新增地址End')
 			},
 			payOrder: function() {
-
 				if (this.commodity.takeWay === 1) { // 寄送类型的商品
 					if (this.address.addressId === null || this.address.addressId === undefined || this.address.addressId === '') {
-						this.showNotice('请选择收货地址');
+						uni.showToast({
+							title: '请选择收货地址',
+							icon: 'none'
+						});
+						// this.showNotice('请选择收货地址');
 						return;
 					}
 				} else if (this.commodity.takeWay === 2) { // 核销类型的商品
 					if (this.userPhone === '') {
-						this.showNotice('请输入联系电话');
+						uni.showToast({
+							title: '请输入联系电话',
+							icon: 'none'
+						});
+						// this.showNotice('请输入联系电话');
 						return;
 					}
 					if (!this.checkPhone(this.userPhone)) {
@@ -240,20 +238,15 @@
 				};
 
 				PayOrderAPI.payOrder(params).then(res => {
-					console.log(res);
 					if (res.data.data) {
-						console.log(res.data.data)
-						console.log(data)
 						let data = res.data.data;
 						let result = 'appId=' + data.appid +
 							'&nonceStr=' + data.noncestr +
 							'&package=prepay_id=' + data.prepayid +
 							'&signType=MD5&timeStamp=' + data.timestamp +
 							'&key=CHONGQINGAiDonginformation201808';
-						console.log(result);
 						// MD5加密
 						let paySignStr = md5(result).toUpperCase();
-						console.log(paySignStr);
 						// 起调支付接口
 						wx.requestPayment({
 							'timeStamp': data.timestamp,
@@ -262,41 +255,41 @@
 							'signType': 'MD5',
 							'paySign': paySignStr,
 							'success': function(res) {
-								console.log(res);
-								console.log('成功');
-
 								uni.showToast({
 									title: '购买成功!',
 									icon: 'success',
-
 								});
-								// 购买成功去往首页
-								uni.switchTab({
-									url: '/pages/homePage/homePage'
-								});
+								setTimeout(() => {
+									// 购买成功去往首页
+									uni.switchTab({
+										url: '/pages/homePage/homePage'
+									});
+								}, 2000);
 							},
 							'fail': function(res) {
-								console.log(res);
-								console.log('失败');
-								// 购买成功去往首页
 								uni.showToast({
 									title: '取消支付',
 									icon: 'none'
 								});
 							},
 							'complete': function(res) {
-								console.log(res);
-								console.log('完成');
 							}
 						});
 					}
 				}).catch(err => {
-					console.log(err);
+					uni.showToast({
+						title: '支付请求失败，刷新试试',
+						icon: 'none'
+					});
 				});
 			},
 			checkPhone: function(phone) {
 				if (!(/^1[3456789]\d{9}$/.test(phone))) {
-					this.showNotice('手机号码格式有误，请重填')
+					uni.showToast({
+						title: '手机号码格式有误，请重填',
+						icon: 'none'
+					});
+					// this.showNotice('手机号码格式有误，请重填')
 					return false;
 				} else {
 					return true;
@@ -310,7 +303,6 @@
 				});
 			},
 			imgStorage: function() {
-				console.log('test')
 			}
 		}
 	}
