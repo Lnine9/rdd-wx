@@ -47,7 +47,7 @@
 				<!-- 底部 -->
 				<view class="bottom">
 					<view class="totalText bigFontSize">
-						<text>合计:</text>
+						<text>合计：</text>
 						<text class="totalPrice boldFontWeight">{{"￥"+item.actualPrice * item.commodityNum}}</text>
 					</view>
 
@@ -348,12 +348,12 @@
 
 	.bottom {
 		display: flex;
-		align-items: flex-start;
+		align-items: center;
 		justify-content: space-around;
 		position: relative;
 		left: 5vw;
-		padding-top: 2.5vw;
-		height: 180rpx;
+		
+		height: 100rpx;
 		width: 90vw;
 	}
 
