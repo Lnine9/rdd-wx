@@ -1,5 +1,12 @@
 <template>
-	<view  class="container">
+	
+	<view v-bind:style="noDataCenter" v-if="showPage" class="container">
+		<view v-if="!showPage" class="nodataText">
+		
+		<image src="../../static/myOrder/myOrderNoData.png" class="noDataPic"></image>
+		<text class="nodataText" >暂无数据</text>
+		
+		</view>
 		<view  class="carousel">
 			<swiper indicator-dots circular=true duration="400">
 				<swiper-item class="swiper-item"  v-for="(item,index) in titleImg" :key="index">
@@ -18,8 +25,8 @@
 			<text class="title">{{dataDic.commodityTitle}}</text>
 			<view class="price-box">
 				<view style="display: block;">
-				<text class="price">{{dataDic.originalPrice}}</text>
-				<text class="m-price">{{"￥" + dataDic.salePrice}}</text>
+				<text class="price">{{"￥" + dataDic.salePrice}}</text>
+				<text class="m-price">{{"￥" + dataDic.originalPrice}}</text>
 				</view>
 				<view style="color: #999999;">
 				<text style="margin-right: 20rpx;">销量: {{dataDic.salesVolume}}</text>
@@ -32,7 +39,7 @@
 			<view class="c-row b-b">
 				<view class="con-list">
 					<view style="display: inline-block;">
-					<image style="width: 24rpx;height: 28rpx;margin-right: 10rpx;" src="../../static/product/ic-定位@2x.png"></image>
+					<image style="width: 24rpx;height: 28rpx;margin-right: 10rpx;" src="../../static/product/location.png"></image>
 					<text style="font-size:28rpx;font-family:PingFang SC;font-weight:500;color:rgba(51,51,51,1);">{{dataDic.shopName}}</text>
 					</view>
 					<text style="font-size:24rpx;font-family:PingFang SC;font-weight:400;color:rgba(204,204,204,1);">{{dataDic.shopAddress}}</text>
@@ -43,7 +50,7 @@
 		<view class="c-list">		
 			<view class="c-row b-b">
 				<view class="con-list"  style="font-size:24rpx;font-family:PingFang SC;font-weight:400;color:rgba(153,153,153,1);">
-					<template>{{dataDic.shopContent}}</template>
+					<template>{{dataDic.commodityInfo}}</template>
 				</view>
 			</view>
 		</view>
@@ -56,24 +63,56 @@
 		</view>
 		<view class="bottom">
 			<view @click="makeCall()" class="buyView" style="background-color: #FFFFFF;">
-			<image style="width: 31rpx;height: 30rpx;margin-right: 10rpx;" src="../../static/product/ic-客服@2x.png"></image>
+			<image style="width: 31rpx;height: 30rpx;margin-right: 10rpx;" src="../../static/product/server.png"></image>
 			<text style="color:rgba(51,51,51,1);">联系客服</text>
 			</view>
-			<view @click="buy()" class="buyView">
+			<view @click="reayToBuy()" class="buyView">
 			<text >立即购买</text>
 			</view>
 		</view>
-			</view>
-			
-		</view>
+		<!-- 选择购买数量 -->
+		
+					<view v-if="isBuy" style="background-color: rgba(0,0,0,0.5); z-index: 3;position: fixed;bottom: 0rpx;right: 0rpx;width: 100vw;height: 100vh;"></view>
+					<view  v-if="isBuy" class="cart-item" >
+						<view class="image-wrapper">
+							<image :src="titleImg[0]"
+								style="width: 200rpx;height: 200rpx;"
+
+							></image>
+						</view>
+						<view class="item-right">
+							<view style="display: flex;justify-content: space-between;align-items: center;">
+							<text class=" title">{{dataDic.commodityTitle}}</text>
+							<text class="del-btn" @click="cancel">取消</text>
+							</view>
+							<text class="price">¥{{buyNum * dataDic.salePrice}}</text>
+							<view style="display: flex;justify-content: space-between;margin-top: 40rpx;align-items: center;">
+							<uniNumberBox 
+								:min="1" 
+								:max= "dataDic.commodityNum"
+								:value="buyNum>dataDic.commodityNum?dataDic.commodityNum:buyNum"
+								@change="numberChange()"
+							></uniNumberBox>
+							<button class="buyButton" @click="buy()">立即购买</button>
+							</view>
+						</view>
+						
+						
+					</view>
+					
 	</view>
 </template>
 
 <script>
+	import uniNumberBox from '../components/uni-number-box/uni-number-box.vue'
 	import {api} from "./api.js"
 	export default{
+		components:{uniNumberBox},
 		data() {
 			return {
+				showPage:false,
+				buyNum:1,
+				isBuy:false,
 				dataDic:{},
 				commodityImg: [],
 				specClass: 'none',
@@ -84,17 +123,42 @@
 				
 			};
 		},
+		computed: {
+			noDataCenter() {
+				if (!this.showPage) {
+					return "text-align:center"
+				}
+				else{
+					return ""
+				}
+		
+			}
+		},
 		
 		methods:{
 			/**
 			 * 获取商品详细信息
 			 * @param {Object} commodityId
 			 */
-			getData(commodityId) {
+			numberChange(data){
+				console.log(data)
+				this.buyNum = data;
+				
+			},
+			cancel(){
+				this.isBuy = false
+			},
 			
+			getData(commodityId) {
+				uni.showLoading({
+					title:"正在加载"
+				})
 				api.getList({commodityId:commodityId}).then(res =>{
 					console.log(res.data.data)
 					this.dataDic = res.data.data,
+					this.dataDic.commodityNum = Number.parseInt(this.dataDic.commodityNum)
+					this.dataDic.salePrice = Number.parseFloat(this.dataDic.salePrice)
+					
 					console.log(this.dataDic)
 					this.titleImg = this.dataDic.commodityImg.filter((item, index, arr) => { // item为数组中的元素，index为下标，arr为目标数组
 						return index < 3
@@ -111,8 +175,14 @@
 					this.bottomImg += `</div>`
 			
 					this.commodityImg=this.dataDic.commodityImg
+					uni.hideLoading()
+					this.showPage = true
 				}).catch(err => {
-					console.log(err)
+					
+					uni.hideLoading()
+					uni.showToast({
+						title:"网络错误，请稍后重试"
+					})
 				})		
 			},
 			// 放大查看图片
@@ -153,11 +223,16 @@
 				  });
 			},
 			
+			reayToBuy(){
+				console.log("flkasjfl")
+				this.isBuy = true
+			},
+			
 			buy(){
+				
 				console.log("购买")
 				uni.navigateTo({
-					url: `/pages/payOrder/payOrder?commodityId=${this.dataDic.commodityId}&commodityNum=
-					${this.dataDic.commodityNum}&remark = ${this.dataDic.remark}&addressId=${this.dataDic.addressId}` 
+					url: `/pages/payOrder/payOrder?commodityId=${this.dataDic.commodityId}&commodityNum=${this.buyNum}&remark = ${this.dataDic.remark}&addressId=${this.dataDic.addressId}` 
 				})
 			},
 		},
@@ -325,7 +400,91 @@
 		background-color: #06C1AE;
 	}
 	
+	.cart-item{
+		background-color:#FFFFFF;
+		width: 100vw;
+		z-index: 4;
+		display:flex;
+		position:fixed;
+		bottom: 0rpx;
+		padding-top:  30rpx;
+		padding-left: 20rpx;
+		
+		.image-wrapper{
+			width: 230upx;
+			height: 230upx;
+			flex-shrink: 0;
+			position:relative;
+			image{
+				border-radius:8upx;
+			}
+		}
+		.item-right{
+			display:flex;
+			flex-direction: column;
+			flex: 1;
 	
+			position:relative;
+			padding-left: 30upx;
+			.title,.price{
+				font-size:$font-base + 2upx;
+				color: $font-color-dark;
+				height: 40upx;
+				line-height: 40upx;
+			}
+			.attr{
+				display: -webkit-box;
+				-webkit-box-orient: vertical;
+				-webkit-line-clamp: 1;
+				overflow: hidden;
+				word-break: break-all;
+				text-overflow: ellipsis;
+				font-size: $font-sm + 2upx;
+				color: $font-color-light;
+				height: 50upx;
+				line-height: 50upx;
+			}
+			.price{
+				height: 50upx;
+				line-height:50upx;
+			}
+		}
+		.del-btn{
+			position: relative;
+			width: 100rpx;
+			right: 20rpx;
+			font-size:28rpx; 
+			height: 50rpx;
+			color: $font-color-light;
+		}
+	}
+	
+	.noDataPic {
+		width: 200rpx;	
+		height: 200rpx;	
+		padding-top: 20vh;
+	}
+		
+	.nodataText{
+		font-size: 24rpx;
+		margin-top: 20rpx;
+		display: flex;	
+		align-items: center;
+		flex-direction: column;
+		justify-content: center;
+		color: #CCCCCC;
+	}
+		
+	.buyButton{
+		background-color: #FFFFFF;
+		color: rgba(6,193,174,1);
+		font-size: 24rpx;
+		height: 63rpx;
+		width: 180rpx;
+		border: 1rpx solid rgba(6,193,174,1);
+		
+		margin-left: 100rpx;
+	}
 	
 	/*  详情 */
 	.detail-desc{

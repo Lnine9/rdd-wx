@@ -9,7 +9,8 @@
 		{
 			"path": "pages/homePage/homePage",
 			"style": {
-				"navigationBarTitleText": "首页"
+				"navigationBarTitleText": "首页",
+				"enablePullDownRefresh": true
 			}
 		},
 		{
@@ -93,7 +94,7 @@
 				"navigationBarTitleText":"提现"
 			}
 		}
-        },{
+        ,{
 		    "path" : "pages/webView/webView",
 		    "style" : {
 				"navigationBarTitleText":""

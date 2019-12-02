@@ -3,7 +3,7 @@
 		<!-- 小程序头部兼容 -->
 		<!-- #ifdef MP -->
 		<!-- #endif -->
-		<view class="header"><label class="head-text">首页</label>
+		<view class="header"><label class="head-text">囧途宝盒</label>
 			<picker class="head-region" @change="bindPickerChange" :value="regionIndex" :range="areas">
 				<view class="uni-input" v-if="this.defaultRegion==''">{{areas[regionIndex]}}</view>
 				<view class="uni-input" v-if="this.defaultRegion!=''">{{defaultRegion}}</view>
@@ -27,8 +27,7 @@
 				<text class="num">{{swiperLength}}</text>
 			</view>
 		</view>
-		
-		
+				
 		<!-- 精选商品 -->
 		<view class="f-header m-t">
 			<view class="tit-box">
@@ -147,6 +146,7 @@
 				})				
 			},	
 			bindPickerChange(val) {
+				this.addressName=this.areas[val.detail.value]
 				uni.setStorageSync('location',this.areas[val.detail.value]);
 				this.defaultRegion = this.areas[val.detail.value]
 				this.getBanner(),
@@ -218,10 +218,7 @@
 			 */
 			getRecommend() {
 				let userAndLocalMes = {
-					// area: uni.getStorageSync('location'),
 					area: this.addressName,
-					longitude: '',
-					latitude: '',
 					shopPlace: 'Recommend'
 				};
 				api.getProducts(userAndLocalMes).then(res =>{
@@ -236,17 +233,29 @@
 			 */
 			getGuess() {
 				let userAndLocalMes_1 = {
-					// area: uni.getStorageSync('location'),
 					area: this.addressName,
 					shopPlace: 'Guess'
 				};
 				api.getProducts(userAndLocalMes_1).then(res =>{
 					this.guessList = res.data.data
+					uni.stopPullDownRefresh();
 				}).catch(err => {
 					console.log(err)
+					uni.stopPullDownRefresh();
 				})			
 			}
 														
+		},
+		
+		onPullDownRefresh() {
+			this.getBanner(),
+			this.getUserMes(),
+			this.getRecommend(),
+			this.getGuess(),
+			this.getAreas(),
+			setTimeout(function () {
+			            uni.stopPullDownRefresh();
+			}, 2000);
 		},
 							
 		/**
@@ -300,9 +309,11 @@
 	}
 	.head-text {
 		float: left;
+		font-weight: bold;
 	}
 	.head-region{
 		float: right;
+		font-size: 34rpx;
 	}
 	
 	/* #ifdef MP */
@@ -340,6 +351,7 @@
 				height: 0;
 			}
 			.carousel{
+				margin-top: 10rpx;
 				.carousel-item{
 					padding: 0;
 				}
@@ -430,6 +442,7 @@
 	/* 秒杀专区 */
 	.seckill-section{
 		padding: 4upx 30upx 24upx;
+		margin-top: 50rpx;
 		background: #fff;
 		.s-header{
 			display:flex;
@@ -491,6 +504,7 @@
 				display:flex;
 				justify-content: center;
 				align-items: center;
+				margin-top: 0rpx;
 			}
 			.clamp{
 				display: -webkit-box;
@@ -501,6 +515,7 @@
 				text-overflow: ellipsis;
 				font-size: 30rpx;
 				color:rgba(51,51,51,1);
+				margin-top: 0rpx;
 			}
 			.priceOrigin{
 				font-size: 32rpx;
@@ -519,40 +534,40 @@
 		}
 	}
 	.PriceArea{
-		margin-top: 10rpx;
 		display:flex;
 		justify-content: center;
 		align-items: center;
+		margin-top: 010rpx;
 	}
 	.clamp{
-		margin-top: 10rpx;
 		display:flex;
 		justify-content: center;
 		align-items: center;
-		display: -webkit-box;
 		-webkit-box-orient: vertical;
 		-webkit-line-clamp:2;
 		overflow: hidden;
 		word-break: break-all;
 		text-overflow: ellipsis;
-		font-size: 37rpx;
+		margin-top: 10rpx;
+		font-size: 32rpx;
+		font-weight: 520;
+		color: $font-color-dark;
 		font-family:PingFang SC;
-		font-weight: 650;
 		color:rgba(51,51,51,1);
 	}
 	
 	.priceOrigin{
-		font-size: 35rpx;
+		font-size: 32rpx;
 		font-family:PingFang SC;
-		font-weight: 600;
+		font-weight: 500;
 		color:rgba(255,126,48,1);
 	}
 	
 	.priceCurrent{
 		margin-left: 10rpx;
-		font-size: 30rpx;
+		font-size: 28rpx;
 		font-family:PingFang SC;
-		font-weight: 700;
+		font-weight: 500;
 		color:rgba(153,153,153,1);
 		text-decoration: line-through;
 	}
@@ -561,7 +576,7 @@
 		// display:flex;
 		
 		align-items:center;
-		height: 90upx;
+		height: 80upx;
 		padding: 20upx 30upx 8upx;
 		background: #fff;
 		image{
@@ -576,7 +591,7 @@
 			flex-direction: column;
 		}
 		.tit{
-			font-size:32rpx;
+			font-size:36rpx;
 			font-family:PingFang SC;
 			font-weight:bold;
 			color:rgba(51,51,51,1);
@@ -627,6 +642,12 @@
 			color: $uni-color-primary;
 			line-height: 1;
 		}
+	}
+	
+	::-webkit-scrollbar{
+	       width: 0;
+	       height: 0;
+	       color: transparent;
 	}
 	
 
