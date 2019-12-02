@@ -9,8 +9,10 @@
 		<view v-if="!isNodata" class="orderList" v-for="(item,index) in shopList" :key="index">
 			<view class="shopContainer normalFontWeight">
 				<view class="shopTitle boldFontWeight">
+					<view style="display: flex;align-items: center;margin-left: 5vw;">
 					<image class="shopPic" src="../../static/myOrder/shop.png"></image>
 					<text class="shopName normalFontDark bigFontSize">{{item.shopName}}</text>
+					</view>
 					<text class="status smallFontSize" v-bind:style="statusStyle[index]">{{judgeOrderState(index)}}</text>
 				</view>
 				<view class="goodsMessageContainer">
@@ -249,27 +251,22 @@
 	}
 
 	.shopPic {
-		padding-top: 36rpx;
-		padding-left: 5vw;
+		margin-right: 10rpx;
 		height: 29rpx;
 		width: 30rpx;
 
 	}
 
-	.shopName {
-		position: absolute;
-		padding-top: 40rpx;
-		margin-top: -10rpx;
-		margin-left: 10rpx;
-	}
+	
 
 	.status {
-		position: absolute;
-		right: 5vw;
-		top: 32rpx;
+		margin-right: 5vw;
 	}
 
 	.shopTitle {
+		justify-content: space-between;
+		display: flex;
+		align-items: center;
 		position: relative;
 		height: 95rpx;
 	}
