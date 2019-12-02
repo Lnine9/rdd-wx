@@ -56,13 +56,13 @@
 		</view>
 		
 		<!-- 猜你喜欢 -->
-		<view class="f-header m-t">	
+		<view class="f-header m-t r-m-t">	
 			<view class="tit-box">
 				<text class="tit">猜你喜欢</text>
 			</view>
 			<text class="yticon icon-you"></text>
 		</view>		
-		<view class="guess-section">
+		<view class="guess-section r-m-t">
 			<view 
 				v-for="(item, index) in goodsList" :key="index"
 				class="guess-item"
@@ -180,7 +180,7 @@
 					// 默认重庆（debug）
 					uni.setStorageSync('location', "重庆"),
 					// 存储角色信息
-					uni.setStorageSync('roleName', this.service.roleName),
+					uni.setStorageSync('roleNameList', this.service.roleNameList),
 					// 当前用户是否为VIP
 					uni.setStorageSync('isVip', this.service.isVip==0?false:true)
 					// 当前地区是否有VIP业务
@@ -304,9 +304,16 @@
 	}
 	.head-text {
 		float: left;
+		font-size: 36rpx;
+		font-weight: bold;
 	}
 	.head-region{
 		float: right;
+		font-size: 34rpx;
+	}
+	
+	.r-m-t {
+		margin-top: -15rpx;
 	}
 	
 	/* #ifdef MP */
@@ -435,6 +442,7 @@
 	.seckill-section{
 		padding: 4upx 30upx 24upx;
 		background: #fff;
+		margin-top: 30rpx;
 		.s-header{
 			display:flex;
 			align-items:center;
@@ -480,7 +488,7 @@
 			flex-direction: column;
 			align-items: center;
 			width: 240rpx;
-			margin-right: 50upx;
+			margin-right: 40upx;
 			font-size: 32rpx;
 			font-weight: 800;
 			color: $font-color-dark;
@@ -489,35 +497,40 @@
 			image{
 				width: 240rpx;
 				height: 240rpx;
-				border-radius: 20upx;
+				border-radius: 20upx;	
+				border: 2upx solid #E3E3E3
 			}
 			.PriceArea{
 				display:flex;
 				justify-content: center;
 				align-items: center;
 			}
-			.clamp{
-				display: -webkit-box;
+			.clamp{ 
+				justify-content: center;
+				align-items: center;
+				text-align:center;
 				-webkit-box-orient: vertical;
 				-webkit-line-clamp:2;
 				word-break: break-all;
-				font-size: 30rpx;
+				margin-top: 10rpx;
+				font-size: 28rpx;
+				font-weight: 500;
+				font-family:PingFang SC;
 				color:rgba(51,51,51,1);
-				margin-top: 0rpx;
-				max-width: 200rpx;
+				max-width: 220rpx;
 				white-space: nowrap;
 				text-overflow:ellipsis; 
 				overflow:hidden; 
 			}
 			.priceOrigin{
-				font-size: 32rpx;
+				font-size: 34rpx;
 				font-family:PingFang SC;
-				font-weight: 500;
+				font-weight: 700;
 				color:rgba(255,126,48,1);
 			}
 			.priceCurrent{
 				margin-left: 10rpx;
-				font-size: 28rpx;
+				font-size: 26rpx;
 				font-family:PingFang SC;
 				font-weight: 500;
 				color:rgba(153,153,153,1);
@@ -525,12 +538,16 @@
 			}
 		}
 	}
+	.uni-input {
+		font-weight: 545;
+	}
 	.PriceArea{
 		margin-top: 10rpx;
 		display:flex;
 		justify-content: center;
 		align-items: center;
 	}
+	
 	.clamp{
 		justify-content: center;
 		align-items: center;
@@ -539,28 +556,28 @@
 		-webkit-line-clamp:2;
 		word-break: break-all;
 		margin-top: 10rpx;
-		font-size: 32rpx;
-		font-weight: 520;
+		font-size: 28rpx;
+		font-weight: 500;
 		font-family:PingFang SC;
 		color:rgba(51,51,51,1);
-		max-width: 300rpx;
+		max-width: 290rpx;
 		white-space: nowrap;
 		text-overflow:ellipsis; 
 		overflow:hidden; 
 	}
 	
 	.priceOrigin{
-		font-size: 35rpx;
+		font-size: 34rpx;
 		font-family:PingFang SC;
-		font-weight: 600;
+		font-weight: 700;
 		color:rgba(255,126,48,1);
 	}
 	
 	.priceCurrent{
 		margin-left: 10rpx;
-		font-size: 30rpx;
+		font-size: 26rpx;
 		font-family:PingFang SC;
-		font-weight: 700;
+		font-weight: 500;
 		color:rgba(153,153,153,1);
 		text-decoration: line-through;
 	}
@@ -584,9 +601,9 @@
 			flex-direction: column;
 		}
 		.tit{
-			font-size:32rpx;
+			font-size:30rpx;
 			font-family:PingFang SC;
-			font-weight:bold;
+			font-weight: 570;
 			color:rgba(51,51,51,1);
 		}
 		.tit2{
@@ -605,6 +622,7 @@
 		flex-wrap:wrap;
 		padding: 0 30upx;
 		background: #fff;
+		margin-top: -15rpx;
 		.guess-item{
 			display:flex;
 			flex-direction: column;
@@ -619,10 +637,13 @@
 			height: 330upx;
 			border-radius: 10px;
 			overflow: hidden;
+			border-color: #E3E3E3;
+			border-width: 1px;
+			border: 2upx solid #E3E3E3
 			image{
 				width: 100%;
 				height: 100%;
-				opacity: 1;
+				opacity: 1;	
 			}
 		}
 		.title{
@@ -636,6 +657,9 @@
 			line-height: 1;
 		}
 	}
-	
-
+	::-webkit-scrollbar {
+		width: 0;
+		height: 0;
+		background-color: transparent;
+	}
 </style>
