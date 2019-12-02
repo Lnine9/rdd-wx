@@ -2,8 +2,8 @@
 	<view v-bind:style="noDataCenter">
 		<view v-if="isNodata" class="nodataText">
 		
-		<image src="../../static/myOrder/我的订单缺省图_icon.png" class="noDataPic"></image>
-		<text class="nodataText" >暂无订单</text>
+		<image src="../../static/myOrder/myOrderNoData.png" class="noDataPic"></image>
+		<text class="nodataText smallFontSize" >暂无订单</text>
 		
 		</view>
 		<view v-if="!isNodata" class="orderList" v-for="(item,index) in shopList" :key="index">
@@ -136,7 +136,7 @@
 				} else {
 					if (item.orderState == 0) {
 						this.statusStyle[index] = "color:#CCCCCC"
-						console.log(this.statusStyle[index])
+						
 						return "订单已完成"
 
 					} else {
@@ -159,6 +159,7 @@
 					} else {
 						this.isNodata = true
 						uni.stopPullDownRefresh()
+						
 					}
 				}).catch(() => {
 					uni.showModal({
@@ -387,6 +388,7 @@
 		padding-top: 20vh;
 	}
 	.nodataText{
+		margin-top: 20rpx;
 		display: flex;	
 		align-items: center;
 		flex-direction: column;
