@@ -51,7 +51,8 @@
 	export default {
 		data() {
 			return {
-
+				
+				// 初始化数据
 				wallet: {
 					blance: 0,
 					totalIncome: 0,
@@ -61,9 +62,13 @@
 				}
 			}
 		},
+		
+		// 加载后端数据
 		mounted() {
 			this.getInfo();
 		},
+		
+		// 页面的跳转
 		methods: {
 			toWithdraw(data) {
 				uni.navigateTo({
@@ -75,6 +80,8 @@
 					url: `/pages/income/income?type=${type}`
 				})
 			},
+			
+			// 后端数据的返回
 			getInfo() {
 				api.getWallet().then(res => {
 					console.log(res.data.data);

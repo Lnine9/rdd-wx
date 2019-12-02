@@ -6,6 +6,12 @@ export class api{
 	  return minRequest.get('/api/AppHomePage/selectHomePageRouters',data)
   }
   static getCodeInfo(){
-	  	  return minRequest.get('/api/WCPCommodityOrder/getCurrentOrder')
+	  return minRequest.get('/api/WCPCommodityOrder/getCurrentOrder')
+  }
+  static getOrderByShop(data){
+	  return minRequest.get('/api/WCPCommodityOrder/getOneCommodityOrderByShop',data)
+  }
+  static comfirmOrder(data){
+	  return minRequest.post('/api/WCPCommodityOrder/comfirmWCPCommodityOrder',data)
   }
 }

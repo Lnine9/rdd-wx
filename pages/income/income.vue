@@ -8,34 +8,67 @@
 			<view style="height: 88rpx;">
 				<text class="theDate">{{date[index1]}}</text>
 			</view>
-
-			<view class="list" v-if="item.amount!=0" v-for="(item, index) in income" :key="index">
-				<image src="../../static/income/fanIncome.png" class="img"></image>
-				<text class="remark">{{item.remark}}</text>
-				<text class="number">{{item.userName}}</text>
-				<text class="updateAt">{{item.createAt}}</text>
-				<text class="amount">{{symbol}} {{item.amount}}</text>
-			</view>
+			
+				<view class="list" v-if="item.amount!=0" v-for="(item, index) in income" :key="index">
+					<view style="width: 500rpx;height: 186rpx;position: relative">
+						<image src="../../static/income/fanIncome.png" class="img"></image>
+						<view class="remark">{{item.remark}}</view>
+						<view class="number">{{item.userName}}</view>
+						<view class="updateAt">{{item.createAt}}</view>
+					</view>
+					<text class="amount">{{symbol}} {{item.amount.toFixed(2)}}</text>
+				</view>
+		
 		</view>
 	</view>
 </template>
 
 <script>
-	import {
-		api
-	} from './api.js'
+	import {api} from './api.js'
 	export default {
 		data() {
 			return {
 				showTypeImg: true,
 				showTypeIncome: false,
 				type: 1,
-				income: [],
+				income: [ {
+					remark:"VIP充值返利",
+					userName:"骂街",
+					createAt:"2019-11-03 20:11:45",
+					amount: 21,
+				},
+				{
+					remark:"VIP充值返利",
+					userName:"骂街",
+					createAt:"2019-11-01 20:11:45",
+					amount: 21122,
+				},
+				{
+					remark:"VIP充值返利打法",
+					userName:"骂街大夫十分",
+					createAt:"2019-10-25 20:11:45",
+					amount: 2122,
+				},
+				{
+					remark:"VIP充值返利 范德萨发",
+					userName:"骂街",
+					createAt:"2019-10-15 20:11:45",
+					amount: 211,
+				},
+				{
+					remark:"VIP充值返利",
+					userName:"骂街",
+					createAt:"2019-09-01 20:11:45",
+					amount: 21
+				}
+				],
 				incomes: [],
 				date: [],
 				symbol: "+"
 			}
 		},
+		
+		// 上页面传来的数据
 		onLoad(option) {
 			let title = '收益';
 			this.type = option.type;
@@ -59,6 +92,8 @@
 			this.getIncome();
 		},
 		methods: {
+			
+			// 访问后端接口
 			getIncome() {
 				console.log(this.symbol)
 				api.getData({
@@ -76,6 +111,8 @@
 					})
 				})
 			},
+			
+			// 分类后端数据
 			formatDate(income) {
 				// 数据分类存放数组
 				let theDate = [];
@@ -154,44 +191,47 @@
 	}
 
 	.img {
-		position: relative;
+		position: absolute;
 		top: 45rpx;
-		left: 60rpx;
+		left: 40rpx;
 		width: 70rpx;
 		height: 70rpx;
 	}
 
 	.remark {
-		
+		width: 320rpx;
 		letter-spacing: 3rpx;
-		margin: 0 0 0 70rpx;
-		font-size: 28rpx;
-		position: relative;
+		font-size: 30rpx;
 		color: #333333;
-		left: 20rpx;
+		position: absolute;
+		top: 40rpx;
+		left: 140rpx;
 	}
 
 	.amount {
 		float: right;
-		padding: 60rpx 50rpx 0 0;
+		margin: -120rpx 50rpx 0 0;
 		font-size: 32rpx;
 		color: #FF7E30;
 		font-weight: bold;
 	}
 
 	.updateAt {
+		width: 320rpx;
 		position: relative;
-		top: 80rpx;
-		right: 170rpx;
+		top: 100rpx;
+		left: 140rpx;
 		font-size: 24rpx;
 		color: #CCCCCC;
 	}
 
 	.number {
+		width: 320rpx;
+		color: #CCCCCC;
 		font-size: 24rpx;
 		position: relative;
-		top: 40rpx;
-		right: 98rpx;
+		top: 90rpx;
+		left: 140rpx;
 	}
 
 	.theDate {
