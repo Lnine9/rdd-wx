@@ -3,7 +3,7 @@
 		<!-- 小程序头部兼容 -->
 		<!-- #ifdef MP -->
 		<!-- #endif -->
-		<view class="header"><label class="head-text">首页</label>
+		<view class="header"><label class="head-text">囧途宝盒</label>
 			<picker class="head-region" @change="bindPickerChange" :value="regionIndex" :range="areas">
 				<view class="uni-input" v-if="this.defaultRegion==''">{{areas[regionIndex]}}</view>
 				<view class="uni-input" v-if="this.defaultRegion!=''">{{defaultRegion}}</view>
@@ -27,7 +27,6 @@
 				<text class="num">{{swiperLength}}</text>
 			</view>
 		</view>
-		
 		
 		<!-- 精选商品 -->
 		<view class="f-header m-t">
@@ -78,7 +77,6 @@
 				</view>
 			</view>
 		</view>
-		<tabBar :currentPage="currentPage"></tabBar>
 	</view>
 </template>
 
@@ -151,6 +149,7 @@
 				})				
 			},	
 			bindPickerChange(val) {
+				this.addressName=this.areas[val.detail.value]
 				uni.setStorageSync('location',this.areas[val.detail.value]);
 				this.defaultRegion = this.areas[val.detail.value]
 				this.getBanner(),
@@ -171,6 +170,7 @@
 				};
 				api.getUserInfo(user).then(res =>{
 					this.service = res.data.data,
+				
 					// userType 说明
 					// 0: app
 					// 1: 企业
@@ -179,7 +179,7 @@
 					// 默认重庆（debug）
 					uni.setStorageSync('location', "重庆"),
 					// 存储角色信息
-					uni.setStorageSync('roleNameList', this.service.roleNameList)
+					uni.setStorageSync('roleName', this.service.roleName),
 					// 当前用户是否为VIP
 					uni.setStorageSync('isVip', this.service.isVip==0?false:true)
 					// 当前地区是否有VIP业务

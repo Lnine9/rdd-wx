@@ -9,7 +9,7 @@
 	"compileType": "miniprogram",
 	"libVersion": "2.9.2",
 	"appid": "wxd2d0171429ac208f",
-	"projectname": "囧途宝盒",
+	"projectname": "%E5%9B%A7%E9%80%94%E5%AE%9D%E7%9B%92",
 	"simulatorType": "wechat",
 	"simulatorPluginLibVersion": {},
 	"condition": {
@@ -26,44 +26,13 @@
 			"list": []
 		},
 		"miniprogram": {
-			"current": 1,
+			"current": 0,
 			"list": [
 				{
-					"name": "支付订单",
-					"query": "commodityId=1&commodityNum=1",
-					"id": 0,
-					"pathName": "pages/payOrder/payOrder"
-				},
-				{
-					"name": "订单详情",
-					"query": "orderid=1575036170665008-4",
-					"id": 1,
-					"pathName": "pages/orderDetail/orderDetail"
-				},
-				{
 					"name": "首页",
-					"id": 2,
+					"query": "",
+					"id": 0,
 					"pathName": "pages/homePage/homePage"
-				},
-				{
-					"name": "产品详情",
-					"id": 3,
-					"pathName": "pages/product/product"
-				},
-				{
-					"name": "登录",
-					"id": 4,
-					"pathName": "pages/index/index"
-				},
-				{
-					"name": "我的订单",
-					"id": 5,
-					"pathName": "pages/myOrder/myOrder"
-				},
-				{
-					"name": "收益",
-					"id": 6,
-					"pathName": "pages/income/income"
 				}
 			]
 		}

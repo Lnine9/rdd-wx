@@ -125,9 +125,11 @@
 		</view>
 
 		<!-- 底部操作栏 -->
-		<view class="bottom-btn-container">
-			<button 
-				v-if="this.order.commodityType === '1'"
+		<view 
+			v-if="order.commodityType === '1'"
+			class="bottom-btn-container">
+			<button
+				v-if="hasLogistics"
 				class="bottom-btn-look-logistics">
 				<text class="bottom-btn-look-logistics-text" @click="lookLogistics">查看物流</text>
 			</button>
@@ -176,13 +178,15 @@
 				qrImageUrl: '', // 二维码图片
 			}
 		},
+		onLoad: function(params) {
+			this.orderId = params.orderid;
+		
+			this.getOrderInfo();
+		},
+		onPullDownRefresh: function() {
+			this.getOrderInfo();
+		},
 		methods: {
-			onLoad: function(params) {
-				console.log(params);
-				this.orderId = params.orderid;
-
-				this.getOrderInfo();
-			},
 			getOrderInfo: function() {
 				OrderDetailAPI.getOrderDetail({
 					orderId: this.orderId
@@ -236,39 +240,40 @@
 					} else {
 						this.sureBtnText = '确认完成';
 					}
+					uni.stopPullDownRefresh();
 				}).catch(err => {
-					console.log(err);
+					uni.showToast({
+						title: '获取订单信息失败，刷新试试',
+						icon: 'none'
+					});
+					uni.stopPullDownRefresh();
 				});
 			},
 			lookLogistics: function() {
 				// todo 查看物流
 			},
 			confirmDelivery: function() {
-				if (this.order.commodityType === 1) {
+				if (this.order.commodityType === '1') {
 					OrderDetailAPI.confirmDelivery({orderId: this.order.orderId}).then(res => {
-						console.log(res);
 						if (res.data.data) {
 							uni.showToast({
 								title: '确认收货成功',
+								icon: 'success'
 							});
+							// 刷新订单状态
 							this.getOrderInfo();
 						} else {
-							uni.showModal({
-								title: '提示',
-								content: '确认收货失败',
-								showCancel: false
+							uni.showToast({
+								title: '确认收货失败',
+								icon: 'none'
 							});
 						}
 					}).catch(err => {
-						console.log(err);
-						uni.showModal({
-							title: '提示',
-							content: '确认收货失败',
-							showCancel: false
+						uni.showToast({
+							title: '确认收货失败',
+							icon: 'none'
 						});
 					});
-				} else {
-					// todo
 				}
 			},
 			getFormatDate: function(str) {
