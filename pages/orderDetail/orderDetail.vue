@@ -1,9 +1,7 @@
 <template>
 	<view class="main-container">
 		<!-- 订单状态 -->
-		<view
-			v-if="order.deliveryState === 2"
-			class="order-state-container">
+		<view v-if="order.deliveryState === 2" class="order-state-container">
 			<view class="order-state-text-container">
 				<text class="order-state">已签收</text>
 				<text class="order-state-notice">您的订单已签收，感谢您的使用</text>
@@ -99,15 +97,13 @@
 					<text class="order-text">下单时间</text>
 					<text class="order-value">{{order.createAt}}</text>
 				</view>
-				
+
 				<view v-if="order.takeWay === 2">
 					<text class="order-text">电子码<text style="color: #FFFFFF;">白</text></text>
 					<text class="order-value">{{order.electronicCode}}</text>
 				</view>
-				
-				<view 
-					v-else 
-					class="qr-code-container">
+
+				<view v-else class="qr-code-container">
 					<text class="order-text">二维码</text>
 					<image :src="qrImageUrl" mode="" class="qr-code-img"></image>
 				</view>
@@ -125,13 +121,9 @@
 		</view>
 
 		<!-- 底部操作栏 -->
-		<view 
-			v-if="order.commodityType === '1'"
-			class="bottom-btn-container">
-			<button
-				v-if="hasLogistics"
-				class="bottom-btn-look-logistics">
-				<text class="bottom-btn-look-logistics-text" @click="lookLogistics">查看物流</text>
+		<view v-if="order.commodityType === '1'" class="bottom-btn-container">
+			<button v-if="hasLogistics" class="bottom-btn-look-logistics" @click="lookLogistics">
+				<text class="bottom-btn-look-logistics-text">查看物流</text>
 			</button>
 
 			<button class="bottom-btn-sure-receive" @click="confirmDelivery">
@@ -153,7 +145,7 @@
 		data() {
 			return {
 				orderId: '',
-				hasLogistics: false,
+				hasLogistics: true,
 				takeWay: 1, // 1,寄送，2,核销
 				order: {
 					orderId: '',
@@ -179,8 +171,9 @@
 			}
 		},
 		onLoad: function(params) {
+			console.log(params);
 			this.orderId = params.orderid;
-		
+
 			this.getOrderInfo();
 		},
 		onPullDownRefresh: function() {
@@ -251,10 +244,20 @@
 			},
 			lookLogistics: function() {
 				// todo 查看物流
+
+				uni.navigateTo({
+					url: '/pages/orderDetail/deliver'
+				});
+				
+				// uni.navigateTo({
+				// 	url: '/pages/orderDetail/deliver.html?a=1000'
+				// });
 			},
 			confirmDelivery: function() {
 				if (this.order.commodityType === '1') {
-					OrderDetailAPI.confirmDelivery({orderId: this.order.orderId}).then(res => {
+					OrderDetailAPI.confirmDelivery({
+						orderId: this.order.orderId
+					}).then(res => {
 						if (res.data.data) {
 							uni.showToast({
 								title: '确认收货成功',
@@ -294,8 +297,8 @@
 			},
 			getQRCodeImage: function() {
 				// 二维码内容
-				let content = 'wx:shopId=' + this.order.shopId + 
-					'&orderId=' + this.order.shopId +  
+				let content = 'wx:shopId=' + this.order.shopId +
+					'&orderId=' + this.order.shopId +
 					'&time=' + this.order.createAt;
 				this.qrImageUrl = qr.createQrCodeImg(content);
 			}
@@ -564,12 +567,12 @@
 		font-size: 24rpx;
 		margin: 10rpx 0 10rpx 93rpx;
 	}
-	
+
 	.qr-code-container {
 		display: flex;
 		flex-direction: column;
 	}
-	
+
 	.qr-code-img {
 		margin: 10rpx 220rpx 0 230rpx;
 		width: 300rpx;
