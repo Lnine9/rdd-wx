@@ -3,7 +3,7 @@
 	<view v-bind:style="noDataCenter" v-if="showPage" class="container">
 		<view v-if="!showPage" class="nodataText">
 		
-		<image src="../../static/myOrder/我的订单缺省图_icon.png" class="noDataPic"></image>
+		<image src="../../static/myOrder/myOrderNoData.png" class="noDataPic"></image>
 		<text class="nodataText" >暂无数据</text>
 		
 		</view>
@@ -26,7 +26,7 @@
 			<view class="price-box">
 				<view style="display: block;">
 				<text class="price">{{"￥" + dataDic.salePrice}}</text>
-				<text class="m-price">{{dataDic.originalPrice}}</text>
+				<text class="m-price">{{"￥" + dataDic.originalPrice}}</text>
 				</view>
 				<view style="color: #999999;">
 				<text style="margin-right: 20rpx;">销量: {{dataDic.salesVolume}}</text>
@@ -38,11 +38,11 @@
 		<view class="c-list">
 			<view class="c-row b-b">
 				<view class="con-list">
-					<view style="display: inline-block;">
-					<image style="width: 24rpx;height: 28rpx;margin-right: 10rpx;" src="../../static/product/ic-定位@2x.png"></image>
+					<view style="display: flex;align-items: center;">
+					<image style="width: 24rpx;height: 28rpx;margin-right: 10rpx;" src="../../static/product/location.png"></image>
 					<text style="font-size:28rpx;font-family:PingFang SC;font-weight:500;color:rgba(51,51,51,1);">{{dataDic.shopName}}</text>
 					</view>
-					<text style="font-size:24rpx;font-family:PingFang SC;font-weight:400;color:rgba(204,204,204,1);">{{dataDic.shopAddress}}</text>
+					<text style="font-size:24rpx;font-family:PingFang SC;font-weight:400;color:rgba(204,204,204,1);margin-left: 34rpx;">{{dataDic.shopAddress}}</text>
 				</view>
 			</view>
 		</view>
@@ -63,7 +63,7 @@
 		</view>
 		<view class="bottom">
 			<view @click="makeCall()" class="buyView" style="background-color: #FFFFFF;">
-			<image style="width: 31rpx;height: 30rpx;margin-right: 10rpx;" src="../../static/product/ic-客服@2x.png"></image>
+			<image style="width: 31rpx;height: 30rpx;margin-right: 10rpx;" src="../../static/product/server.png"></image>
 			<text style="color:rgba(51,51,51,1);">联系客服</text>
 			</view>
 			<view @click="reayToBuy()" class="buyView">
@@ -72,7 +72,7 @@
 		</view>
 		<!-- 选择购买数量 -->
 		
-					<view v-if="isBuy"  @click="cancel()" style="background-color: rgba(0,0,0,0.5); z-index: 3;position: fixed;bottom: 0rpx;right: 0rpx;width: 100vw;height: 100vh;"></view>
+					<view v-if="isBuy" style="background-color: rgba(0,0,0,0.5); z-index: 3;position: fixed;bottom: 0rpx;right: 0rpx;width: 100vw;height: 100vh;"></view>
 					<view  v-if="isBuy" class="cart-item" >
 						<view class="image-wrapper">
 							<image :src="titleImg[0]"
@@ -405,7 +405,7 @@
 		width: 100vw;
 		z-index: 4;
 		display:flex;
-		position:absolute;
+		position:fixed;
 		bottom: 0rpx;
 		padding-top:  30rpx;
 		padding-left: 20rpx;
@@ -464,7 +464,10 @@
 		height: 200rpx;	
 		padding-top: 20vh;
 	}
+		
 	.nodataText{
+		font-size: 24rpx;
+		margin-top: 20rpx;
 		display: flex;	
 		align-items: center;
 		flex-direction: column;

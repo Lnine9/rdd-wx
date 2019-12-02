@@ -2,15 +2,17 @@
 	<view v-bind:style="noDataCenter">
 		<view v-if="isNodata" class="nodataText">
 		
-		<image src="../../static/myOrder/我的订单缺省图_icon.png" class="noDataPic"></image>
-		<text class="nodataText" >暂无订单</text>
+		<image src="../../static/myOrder/myOrderNoData.png" class="noDataPic"></image>
+		<text class="nodataText smallFontSize" >暂无订单</text>
 		
 		</view>
 		<view v-if="!isNodata" class="orderList" v-for="(item,index) in shopList" :key="index">
 			<view class="shopContainer normalFontWeight">
 				<view class="shopTitle boldFontWeight">
+					<view style="display: flex;align-items: center;margin-left: 5vw;">
 					<image class="shopPic" src="../../static/myOrder/shop.png"></image>
-					<text class="shopName normalFontDark bigFontSize">{{item.commodityTitle}}</text>
+					<text class="shopName normalFontDark bigFontSize">{{item.shopName}}</text>
+					</view>
 					<text class="status smallFontSize" v-bind:style="statusStyle[index]">{{judgeOrderState(index)}}</text>
 				</view>
 				<view class="goodsMessageContainer">
@@ -20,8 +22,8 @@
 					</view>
 					<!-- 商品信息 -->
 					<view class="goodsMessage">
-
-						<text class="goodsName normalFontDark bigFontSize">{{item.commodityInfo}}</text>
+											
+						<text class="goodsName normalFontDark bigFontSize">{{item.commodityTitle}}</text>
 						<view style="display: flex;flex-direction: row;margin-top: 40rpx;align-items: center;width: 67.5vw;">
 							<text class="actualPrice boldFontWeight largeFontSize">{{"￥"+item.actualPrice}}</text>
 							<text class="originPrice normalGray midalFontSize">{{"￥"+item.originalPrice}}</text>
@@ -87,7 +89,7 @@
 				m = m < 10 ? ('0' + m) : m;
 				let s = date.getSeconds();
 				s = s < 10 ? ('0' + s) : s;
-				return y + '-' + MM + '-' + d;
+				return y + '-' + MM + '-' + d + " " + h + ':' + m + ":" + s ;
 			}
 		},
 
@@ -136,7 +138,7 @@
 				} else {
 					if (item.orderState == 0) {
 						this.statusStyle[index] = "color:#CCCCCC"
-						console.log(this.statusStyle[index])
+						
 						return "订单已完成"
 
 					} else {
@@ -159,6 +161,7 @@
 					} else {
 						this.isNodata = true
 						uni.stopPullDownRefresh()
+						
 					}
 				}).catch(() => {
 					uni.showModal({
@@ -248,27 +251,22 @@
 	}
 
 	.shopPic {
-		padding-top: 36rpx;
-		padding-left: 5vw;
+		margin-right: 15rpx;
 		height: 29rpx;
 		width: 30rpx;
 
 	}
 
-	.shopName {
-		position: absolute;
-		padding-top: 40rpx;
-		margin-top: -10rpx;
-		margin-left: 10rpx;
-	}
+	
 
 	.status {
-		position: absolute;
-		right: 5vw;
-		top: 32rpx;
+		margin-right: 5vw;
 	}
 
 	.shopTitle {
+		justify-content: space-between;
+		display: flex;
+		align-items: center;
 		position: relative;
 		height: 95rpx;
 	}
@@ -387,6 +385,7 @@
 		padding-top: 20vh;
 	}
 	.nodataText{
+		margin-top: 20rpx;
 		display: flex;	
 		align-items: center;
 		flex-direction: column;

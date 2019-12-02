@@ -3,11 +3,12 @@
 		<!-- 小程序头部兼容 -->
 		<!-- #ifdef MP -->
 		<!-- #endif -->
-		<view class="header"><label class="head-text">首页</label>
-		<picker class="head-region" @change="bindPickerChange" :value="regionIndex" :range="region">
-			<view class="uni-input" v-if="this.defaultRegion==''">{{region[regionIndex]}}</view>
-			 <view class="uni-input" v-if="this.defaultRegion!=''">{{defaultRegion}}</view>
-		</picker></view>
+		<view class="header"><label class="head-text">囧途宝盒</label>
+			<picker class="head-region" @change="bindPickerChange" :value="regionIndex" :range="areas">
+				<view class="uni-input" v-if="this.defaultRegion==''">{{areas[regionIndex]}}</view>
+				<view class="uni-input" v-if="this.defaultRegion!=''">{{defaultRegion}}</view>
+			</picker>
+		</view>
 		<!-- 头部轮播 -->
 		<view class="carousel-section">
 			<!-- 标题栏和状态栏占位符 -->
@@ -15,7 +16,7 @@
 			<!-- 背景色区域 -->
 			<view class="titleNview-background" :style="{backgroundColor:titleNViewBackground}"></view>
 			<swiper class="carousel" circular @change="swiperChange">
-				<swiper-item v-for="(item, index) in carouselList" :key="index" class="carousel-item" @click="navToDetailPage({title: '轮播广告'})">
+				<swiper-item v-for="(item, index) in carouselList" :key="index" class="carousel-item" @click="navToWebView(item)">
 					<image :src="item.savePath" />
 				</swiper-item>
 			</swiper>
@@ -26,14 +27,14 @@
 				<text class="num">{{swiperLength}}</text>
 			</view>
 		</view>
-		<!-- 分类 -->
+				
+		<!-- 精选商品 -->
 		<view class="f-header m-t">
 			<view class="tit-box">
 				<text class="tit">精选商品</text>
 			</view>
 		</view>
-		<view class="cate-section">
-			<!-- 精选商品 -->
+		<view class="cate-section">			
 			<view class="seckill-section m-t">			
 				<text class="yticon icon-you"></text>
 				<scroll-view class="floor-list" scroll-x>
@@ -41,7 +42,7 @@
 						<view 
 							v-for="(item, index) in goodsList" :key="index"
 							class="floor-item"
-							@click="navToDetailPage(index)">
+							@click="navToDetailPage(item)">
 							<image :src="item.commodityImg[0]" mode="aspectFill"></image>
 							<text class="clamp">{{item.commodityTitle}}</text>
 							<view class="PriceArea">
@@ -55,24 +56,25 @@
 		</view>
 		
 		<!-- 猜你喜欢 -->
-		<view class="f-header m-t">
-		
+		<view class="f-header m-t">	
 			<view class="tit-box">
 				<text class="tit">猜你喜欢</text>
 			</view>
 			<text class="yticon icon-you"></text>
-		</view>
-		
+		</view>		
 		<view class="guess-section">
 			<view 
-				v-for="(item, index) in goodsList" :key="index"
+				v-for="(item, index) in guessList" :key="index"
 				class="guess-item"
-				@click="navToDetailPage(index)">
+				@click="navToDetailPage(item)">
 				<view class="image-wrapper">
 					<image :src="item.commodityImg[0]" mode="aspectFill"></image>
 				</view>
-				<text class="title clamp">{{item.commodityTitle}}</text>
-				<text class="price">￥{{item.salePrice}}</text>
+				<text class="clamp">{{item.commodityTitle}}</text>
+				<view class="PriceArea">
+					<text class="priceOrigin">￥{{item.salePrice}}</text>
+					<text class="priceCurrent">￥{{item.originalPrice}}</text>
+				</view>
 			</view>
 		</view>
 	</view>
@@ -86,6 +88,7 @@
 	export default {
 		data() {
 			return {
+				areas: [],
 				amapPlugin: null,
 				key: '8aa790ec80dd04abdf75736893a84613',
 				titleNViewBackground: '',
@@ -93,7 +96,6 @@
 				swiperLength: 0,
 				carouselList: [],
 				defaultRegion: '',
-				region:['重庆市','上海市','山西'],
 				regionIndex: 1,
 				guessList:[],
 				goodsList: [],
@@ -107,6 +109,34 @@
 				const index = e.detail.current;
 				this.swiperCurrent = index;
 			},
+			/**
+			 * web页面跳转
+			 * 0. 后台公告页面跳转
+			 * 1. 无跳转
+			 * 2. 小程序页面跳转
+			 * @param {Object} item
+			 */
+			navToWebView(item) {
+				if(item.announcementType == '0') {
+					// 公告页面跳转
+					let resulturl = item.announcementContent
+					getApp().globalData.desc = resulturl 
+					uni.navigateTo({
+						url: `/pages/webView/webView`
+					})
+				}
+				else if (item.announcementType == '1') {
+					// 无跳转
+					return
+				}
+				else {
+					// 本地页面跳转
+					let resulturl = item.announcementContent
+					uni.navigateTo({
+						url: `${resulturl}`
+					})
+				}							
+			},
 			//详情页
 			navToDetailPage(item) {
 				//测试数据没有写id，用title代替
@@ -116,13 +146,16 @@
 				})				
 			},	
 			bindPickerChange(val) {
-				uni.setStorageSync('location',this.region[val.detail.value]);
-				this.defaultRegion = this.region[val.detail.value]
+				this.addressName=this.areas[val.detail.value]
+				uni.setStorageSync('location',this.areas[val.detail.value]);
+				this.defaultRegion = this.areas[val.detail.value]
 				this.getBanner(),
 				this.getUserMes(),
 				this.getRecommend(),
-				this.getGuess()
+				this.getGuess(),
+				this.getAreas()
 			},
+			
 			/**
 			 * 获取用户信息
 			 */
@@ -132,8 +165,7 @@
 					// 用户信息和地区无关
 					area:'重庆市'
 				};
-				api.getUserInfo().then(res =>{
-					console.log(res)
+				api.getUserInfo(user).then(res =>{
 					this.service = res.data.data,
 				
 					// userType 说明
@@ -144,13 +176,11 @@
 					// 默认重庆（debug）
 					uni.setStorageSync('location', "重庆"),
 					// 存储角色信息
-					uni.setStorageSync('roleNameList', this.service.roleNameList),
-					// 存储角色信息
 					uni.setStorageSync('roleName', this.service.roleName),
 					// 当前用户是否为VIP
 					uni.setStorageSync('isVip', this.service.isVip==0?false:true)
 					// 当前地区是否有VIP业务
-					uni.setStorageSync('haveVip', this.service.haveVip==0?false:true)	
+					uni.setStorageSync('haveVip', this.service.haveVip==0?false:true)				
 				}).catch(err => {
 					console.log(err)
 				});		
@@ -166,7 +196,18 @@
 				api.getBannerImgs(location).then(res =>{
 					this.carouselList = res.data.data,
 					this.swiperLength = this.carouselList.length;
-					this.carouselList = this.carouselList;
+				}).catch(err => {
+					console.log(err)
+				})		
+			},
+			
+			/**
+			 * 获取地区列表信息
+			 */
+			getAreas() {				
+				api.getAreas().then(res =>{
+					var array = res.data.data
+					this.areas = array.split(",")
 				}).catch(err => {
 					console.log(err)
 				})		
@@ -177,13 +218,12 @@
 			 */
 			getRecommend() {
 				let userAndLocalMes = {
-					// area: uni.getStorageSync('location'),
 					area: this.addressName,
 					shopPlace: 'Recommend'
 				};
 				api.getProducts(userAndLocalMes).then(res =>{
-					this.goodsList = res.data.data,
-					console.log(this.goodsList)		
+					this.goodsList = res.data.data
+					console.log(this.goodsList)
 				}).catch(err => {
 					console.log(err)
 				})	
@@ -194,18 +234,30 @@
 			 */
 			getGuess() {
 				let userAndLocalMes_1 = {
-					// area: uni.getStorageSync('location'),
 					area: this.addressName,
 					shopPlace: 'Guess'
 				};
 				api.getProducts(userAndLocalMes_1).then(res =>{
-					this.guessList = res.data.data,
-					console.log(this.guessList)		
+					this.guessList = res.data.data
+					uni.stopPullDownRefresh();
+					console.log(this.guessList)
 				}).catch(err => {
 					console.log(err)
+					uni.stopPullDownRefresh();
 				})			
 			}
 														
+		},
+		
+		onPullDownRefresh() {
+			this.getBanner(),
+			this.getUserMes(),
+			this.getRecommend(),
+			this.getGuess(),
+			this.getAreas(),
+			setTimeout(function () {
+			            uni.stopPullDownRefresh();
+			}, 2000);
 		},
 							
 		/**
@@ -237,12 +289,12 @@
 						}
 					}); 
 				}	
-					this.defaultRegion = uni.getStorageSync('location')||'';
-					this.getBanner(),
-					this.getUserMes(),
-					this.getRecommend(),
-					this.getGuess()
-			
+				this.defaultRegion = uni.getStorageSync('location')||'';
+				this.getBanner(),
+				this.getUserMes(),
+				this.getRecommend(),
+				this.getGuess(),
+				this.getAreas()
 		}
 		// #ifndef MP
 
@@ -259,9 +311,11 @@
 	}
 	.head-text {
 		float: left;
+		font-weight: bold;
 	}
 	.head-region{
 		float: right;
+		font-size: 34rpx;
 	}
 	
 	/* #ifdef MP */
@@ -287,7 +341,7 @@
 		.cate-section{
 			position:relative;
 			z-index:5;
-			border-radius:16upx 16upx 0 0;
+			border-radius:25upx 25upx 0 0;
 			margin-top:-50upx;
 		}
 		.carousel-section{
@@ -299,6 +353,7 @@
 				height: 0;
 			}
 			.carousel{
+				margin-top: 10rpx;
 				.carousel-item{
 					padding: 0;
 				}
@@ -352,7 +407,7 @@
 		image {
 			width: 100%;
 			height: 100%;
-			border-radius: 10upx;
+			border-radius: 20upx;
 		}
 	}
 	.swiper-dots {
@@ -389,6 +444,7 @@
 	/* 秒杀专区 */
 	.seckill-section{
 		padding: 4upx 30upx 24upx;
+		margin-top: 50rpx;
 		background: #fff;
 		.s-header{
 			display:flex;
@@ -413,7 +469,7 @@
 				margin-right: 14upx;
 				font-size: $font-sm+2upx;
 				color: #fff;
-				border-radius: 2px;
+				border-radius: 20px;
 				background: rgba(0,0,0,.8);
 			}
 			.icon-you{
@@ -444,12 +500,13 @@
 			image{
 				width: 240rpx;
 				height: 240rpx;
-				border-radius: 6upx;
+				border-radius: 20upx;
 			}
 			.PriceArea{
 				display:flex;
 				justify-content: center;
 				align-items: center;
+				margin-top: 0rpx;
 			}
 			.clamp{
 				display: -webkit-box;
@@ -458,6 +515,9 @@
 				overflow: hidden;
 				word-break: break-all;
 				text-overflow: ellipsis;
+				font-size: 30rpx;
+				color:rgba(51,51,51,1);
+				margin-top: 0rpx;
 			}
 			.priceOrigin{
 				font-size: 32rpx;
@@ -475,12 +535,50 @@
 			}
 		}
 	}
+	.PriceArea{
+		display:flex;
+		justify-content: center;
+		align-items: center;
+		margin-top: 010rpx;
+	}
+	.clamp{
+		display:flex;
+		justify-content: center;
+		align-items: center;
+		-webkit-box-orient: vertical;
+		-webkit-line-clamp:2;
+		overflow: hidden;
+		word-break: break-all;
+		text-overflow: ellipsis;
+		margin-top: 10rpx;
+		font-size: 32rpx;
+		font-weight: 520;
+		color: $font-color-dark;
+		font-family:PingFang SC;
+		color:rgba(51,51,51,1);
+	}
+	
+	.priceOrigin{
+		font-size: 32rpx;
+		font-family:PingFang SC;
+		font-weight: 500;
+		color:rgba(255,126,48,1);
+	}
+	
+	.priceCurrent{
+		margin-left: 10rpx;
+		font-size: 28rpx;
+		font-family:PingFang SC;
+		font-weight: 500;
+		color:rgba(153,153,153,1);
+		text-decoration: line-through;
+	}
 	
 	.f-header{
 		// display:flex;
 		
 		align-items:center;
-		height: 90upx;
+		height: 80upx;
 		padding: 20upx 30upx 8upx;
 		background: #fff;
 		image{
@@ -495,7 +593,7 @@
 			flex-direction: column;
 		}
 		.tit{
-			font-size:32rpx;
+			font-size:36rpx;
 			font-family:PingFang SC;
 			font-weight:bold;
 			color:rgba(51,51,51,1);
@@ -528,7 +626,7 @@
 		.image-wrapper{
 			width: 100%;
 			height: 330upx;
-			border-radius: 3px;
+			border-radius: 10px;
 			overflow: hidden;
 			image{
 				width: 100%;
@@ -546,6 +644,12 @@
 			color: $uni-color-primary;
 			line-height: 1;
 		}
+	}
+	
+	::-webkit-scrollbar{
+	       width: 0;
+	       height: 0;
+	       color: transparent;
 	}
 	
 
