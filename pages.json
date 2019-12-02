@@ -51,7 +51,8 @@
 		}, {
 			"path": "pages/payOrder/payOrder",
 			"style": {
-				"navigationBarTitleText": "支付订单"
+				"navigationBarTitleText": "支付订单",
+				"enablePullDownRefresh": true
 			}
 		},
 		{
@@ -68,7 +69,8 @@
 		}, {
 			"path": "pages/orderDetail/orderDetail",
 			"style": {
-				"navigationBarTitleText": "订单详情"
+				"navigationBarTitleText": "订单详情",
+				"enablePullDownRefresh": true
 			}
 		}, {
 			"path": "pages/income/income",
