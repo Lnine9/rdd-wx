@@ -141,7 +141,7 @@
 			 * @param {Object} commodityId
 			 */
 			numberChange(data){
-				console.log(data)
+				
 				this.buyNum = data;
 				
 			},
@@ -154,12 +154,12 @@
 					title:"正在加载"
 				})
 				api.getList({commodityId:commodityId}).then(res =>{
-					console.log(res.data.data)
+					
 					this.dataDic = res.data.data,
 					this.dataDic.commodityNum = Number.parseInt(this.dataDic.commodityNum)
 					this.dataDic.salePrice = Number.parseFloat(this.dataDic.salePrice)
 					
-					console.log(this.dataDic)
+					
 					this.titleImg = this.dataDic.commodityImg.filter((item, index, arr) => { // item为数组中的元素，index为下标，arr为目标数组
 						return index < 3
 					})
@@ -224,13 +224,13 @@
 			},
 			
 			reayToBuy(){
-				console.log("flkasjfl")
+				
 				this.isBuy = true
 			},
 			
 			buy(){
 				
-				console.log("购买")
+				
 				uni.navigateTo({
 					url: `/pages/payOrder/payOrder?commodityId=${this.dataDic.commodityId}&commodityNum=${this.buyNum}&remark = ${this.dataDic.remark}&addressId=${this.dataDic.addressId}` 
 				})
