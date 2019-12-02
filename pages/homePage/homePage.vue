@@ -64,7 +64,7 @@
 		</view>		
 		<view class="guess-section">
 			<view 
-				v-for="(item, index) in goodsList" :key="index"
+				v-for="(item, index) in guessList" :key="index"
 				class="guess-item"
 				@click="navToDetailPage(item)">
 				<view class="image-wrapper">
@@ -223,6 +223,7 @@
 				};
 				api.getProducts(userAndLocalMes).then(res =>{
 					this.goodsList = res.data.data
+					console.log(this.goodsList)
 				}).catch(err => {
 					console.log(err)
 				})	
@@ -239,6 +240,7 @@
 				api.getProducts(userAndLocalMes_1).then(res =>{
 					this.guessList = res.data.data
 					uni.stopPullDownRefresh();
+					console.log(this.guessList)
 				}).catch(err => {
 					console.log(err)
 					uni.stopPullDownRefresh();
