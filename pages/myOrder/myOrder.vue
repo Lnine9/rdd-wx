@@ -89,7 +89,7 @@
 				m = m < 10 ? ('0' + m) : m;
 				let s = date.getSeconds();
 				s = s < 10 ? ('0' + s) : s;
-				return y + '-' + MM + '-' + d;
+				return y + '-' + MM + '-' + d + " " + h + ':' + m + ":" + s ;
 			}
 		},
 
@@ -251,7 +251,7 @@
 	}
 
 	.shopPic {
-		margin-right: 10rpx;
+		margin-right: 15rpx;
 		height: 29rpx;
 		width: 30rpx;
 
