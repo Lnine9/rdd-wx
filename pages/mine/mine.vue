@@ -197,7 +197,7 @@
 				//电子码查看更多
 				codeLook(){
 					uni.navigateTo({
-						url:`pages/myOrder/myOrder`
+						url:`/pages/myOrder/myOrder`
 					})
 				},
 				//扫码二维码
