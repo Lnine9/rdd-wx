@@ -1,35 +1,11 @@
 <template>
    <view>
 	   <image src="/static/inviteFriends/background.png" class="imageBackground"></image>
-	   <view class="invite"></view>
-	   <view class="scan"></view>
 	   <image class="QRCode" :src="QR"></image>
 	   <button class="btnimage" open-type='share'>
 		<image src="/static/inviteFriends/button.png" class="btn"></image>
 	   </button>
 	   <!-- <text class="save" @click="createCanvasImageEvn">保存图片到相册</text> -->
-	   <!-- <uni-popup ref="popup" type="bottom" @change="change">
-		   <view class="share">
-			   <view class="text">分享到</viewl>
-			   <button  open-type='share' class="wxshare">
-				   <image src='/static/share/wx.png'></image>
-			   </button>
-			   <button  open-type='share' class="wxpyqshare">
-				   <image src="/static/share/pyq.png"></image>
-			   </button>
-			   <button  open-type='share' class="qqshare">
-				   <image src="/static/share/qq.png"></image>
-			   </button>
-			   <button  open-type='share' class="qqkjshare">
-				   <image src="/static/share/qqkj.jpg"></image>
-			   </button>
-			   <text class="wxtext">微信</text>   
-			   <text class="wxpyqtext">朋友圈</text>    
-			   <text class="wxpyqtext">QQ</text> 
-			   <text class="qqkjtext">QQ空间</text>
-		   </view>
-		   <view class="cancel" @tap="cancel()">取消分享</view>
-	   </uni-popup> -->
 	   <hchPoster ref="hchPoster" :canvasFlag.sync="canvasFlag" @cancel="canvasCancel" :posterObj.sync="posterData"/>
 	   <view :hidden="canvasFlag"><!-- 海报 要放外面放组件里面 会找不到 canvas-->
 	   	<canvas class="canvas"  canvas-id="myCanvas" ></canvas><!-- 海报 -->
@@ -47,11 +23,12 @@
                QR:"",
 			   deliveryFlag: false,
 			   canvasFlag: true,
-			   posterData:{}
+			   posterData:{},
+			   width:'',
+			   height:''
             };
         },
 		components: {
-			hchPoster,
 			uniPopup
 		},
 		onShareAppMessage:function(res){
@@ -71,23 +48,23 @@
 			}).catch(err=>{
 				console.log(err)
 			})
+			
+			uni.getSystemInfo({
+				success(res) {
+					// 获取手机屏幕宽，高
+					var width=res.screenWidth;
+					var height=res.screenHeight
+					uni.setStorageSync('width',width)
+					uni.setStorageSync('height',height)
+				}
+			});
 		},
 		onReady() {
 			this.QR=uni.getStorageSync("QR");
+			this.width=uni.getStorageSync("width");
+			this.height=uni.getStorageSync("height");
 		},
         methods: {
-			togglePopup(type) {
-				this.type = type
-				this.$nextTick(() => {
-					this.$refs["popup"].open();
-				})
-			},
-			change(e) {
-				console.log('是否打开:' + e.show)
-			},
-			cancel(){
-				this.$refs["popup"].close();
-			},
 			createCanvasImageEvn(){
 				// 以下是根据后端接口动态生成小程序码
 				let code="https://img0.zuipin.cn/mp_zuipin/poster/hch-code.png";
@@ -147,44 +124,23 @@
 </script>
 
 <style lang="scss">
-	
-	.canvas{
-	    position: fixed !important;
-	    top: 0 !important;
-	    left: 0 !important;
-	    display: block !important;
-	    width: 100% !important;
-	    height: 100% !important;
-	    z-index: 10;
+	page{
+		width: 100%;
+		height: 100%;
 	}
 	
    .imageBackground{
-	   width: 750rpx;
-	   height: 1250rpx;
-   }
-   
-   .invite{
-	   font-size: 24rpx;
-	   font-weight: bold;
-	   color: white;
-	   text-align: center;
-	   margin: -610rpx 0 0 0;
-   }
-   
-   .scan{
-	   font-size: 24rpx;
-	   font-weight: bold;
-	   color: white;
-	   text-align: center;
-	   margin: 10rpx 0 0 0;
+	   position: absolute;
+	   width: 100%;
+	   height: 100%;
    }
    
    .QRCode{
 	   width: 250rpx;
 	   height: 250rpx;
 	   position: absolute;
-	   bottom: 266rpx;
-	   left: 259rpx;
+	   bottom: 22%;
+	   left: 35%;
    }
 	
 	.btn{
@@ -202,91 +158,13 @@
 		color: #a1450c;
 		font-size: 35rpx;
 		position: absolute;
-		left: 155rpx;
-		bottom: 21rpx;
+		left: 20%;
+		bottom: 2%;
 	}
 	
 	.save{
 		font-size: 24rpx;
 		color: #a1450c;
 		margin-left: 300rpx;
-	}
-	
-	.content-image {
-		width: 60rpx;
-		height: 60rpx;
-	}
-	
-	.share{
-		width: 100%;
-		height: 350rpx;
-		background: #FFFFFF;
-		padding-top: 20rpx;
-	}
-	
-	.share image{
-		width: 110rpx;
-		height: 110rpx;
-	}
-	
-	.share .text{
-		margin-left: 320rpx;
-		font-size: 30rpx;
-		font-weight: 550;
-	}
-	.wxshare{
-		width: 110rpx;
-		height: 110rpx;
-		margin: 40rpx 0 0 60rpx;
-		background-color: white;
-		padding: 0;
-	}
-	
-	.wxpyqshare{
-		width: 110rpx;
-		height: 110rpx;
-		margin: -110rpx 0 0 240rpx;
-		background-color: white;
-		padding: 0;
-	}
-	
-	.qqshare{
-		width: 110rpx;
-		height: 110rpx;
-		margin: -110rpx 0 0 420rpx;
-		background-color: white;
-		padding: 0;
-	}
-	
-	.qqkjshare{
-		width: 110rpx;
-		height: 110rpx;
-		margin: -110rpx 0 0 600rpx;
-		background-color: white;
-		padding: 0;
-	}
-	
-	.wxtext{
-		margin: 50rpx 0 0 80rpx;
-		font-size: 30rpx;
-	}
-	
-	.wxpyqtext{
-		margin: 50rpx 0 0 110rpx;
-		font-size: 30rpx;
-	}
-	
-	.qqkjtext{
-		margin: 50rpx 0 0 105rpx;
-		font-size: 30rpx;
-	}
-	
-	.cancel{
-		width: 100%;
-		height: 80rpx;
-		background: #FFFFFF;
-		padding-top: 20rpx;
-		border-top: #555555 1rpx solid;
-		text-align: center;
 	}
 </style>
