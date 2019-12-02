@@ -46,7 +46,6 @@
 		
 		// 上一个页面传来的值
 		onLoad(option) {
-			
 			if (option.data == null) {
 				this.amount = 0;
 			} else {
@@ -108,7 +107,7 @@
 					paymentAmount: this.paymentAmount
 				}).then(res => {
 					wx.showToast({
-					  title: res.data.message,
+					  title: res.data.data,
 					  icon: 'none',
 					  duration: 1500
 					})
