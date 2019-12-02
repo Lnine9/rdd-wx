@@ -65,6 +65,16 @@
 			this.getInfo();
 		},
 		methods: {
+			 onPullDownRefresh: function() {
+			　　　wx.showNavigationBarLoading()  //在标题栏中显示加载
+			    this.getInfo()  //重新加载数据
+			　　　　//模拟加载  1秒
+			　　　　setTimeout(function () {
+			　　　　// complete
+			　　　　wx.hideNavigationBarLoading() //完成停止加载
+			　　　　wx.stopPullDownRefresh() //停止下拉刷新
+			　　　　}, 1000);
+			  },
 			toWithdraw(data) {
 				uni.navigateTo({
 					url: `/pages/withdraw/withdraw?data=${data}`

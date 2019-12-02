@@ -1,7 +1,7 @@
 +;;<template>
 	<view>
 		<view v-show="showtype">
-			<image class="noAddress" src="../../static/收货地址缺省图_icon.png"></image>
+			<image class="noAddress" src="../../static/noAdress.png"></image>
 			<text class="warning">暂无收货地址</text>
 		</view>
 		<view class="list" v-for="(item, index) in addressList" :key="index" v-show="!showtype">
@@ -46,13 +46,19 @@
 		},
 		onShow() {
 			this.getData();
+			uni.setTabBarItem({
+				index: 3,
+				text: '订单',
+			})
 		},
 		methods: {
+			//跳转页面
 			addAddress(type, item){
 				uni.navigateTo({
 					url: `/pages/address/newAddress?type=${type}&data=${JSON.stringify(item)}`
 				})
 			},
+			//获取地址
 			getData(){
 				api.getData().then(res=>{
 					console.log(res.data.data);
@@ -66,9 +72,6 @@
 				}).catch(err=>{
 					console.log(err)
 				})
-			},
-			reLoad(){
-				this.getData();
 			}
 		}
 	}
