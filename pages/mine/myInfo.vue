@@ -343,6 +343,17 @@
 				//关闭弹窗
 				close(){
 					this.$refs.popup.close()
+				},
+				//下拉刷新
+				onPullDownRefresh(){
+					this.wxGetUserInfo();
+					this.getData();
+					this.getCode();
+					this.judgeVip();
+					this.judgeScan();
+					setTimeout(function(){
+						uni.stopPullDownRefresh();
+					},2000);
 				}
 			}
 	           
@@ -351,6 +362,7 @@
 
 <style>
 	.main{
+		overflow-x: hidden;
 		width: 750rpx;
 		height: 1479rpx;
 		background-color: #F8F9FB;
