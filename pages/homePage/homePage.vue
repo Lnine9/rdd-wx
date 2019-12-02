@@ -512,12 +512,14 @@
 				display: -webkit-box;
 				-webkit-box-orient: vertical;
 				-webkit-line-clamp:2;
-				overflow: hidden;
 				word-break: break-all;
-				text-overflow: ellipsis;
 				font-size: 30rpx;
 				color:rgba(51,51,51,1);
 				margin-top: 0rpx;
+				max-width: 200rpx;
+				white-space: nowrap;
+				text-overflow:ellipsis; 
+				overflow:hidden; 
 			}
 			.priceOrigin{
 				font-size: 32rpx;
@@ -542,20 +544,22 @@
 		margin-top: 010rpx;
 	}
 	.clamp{
-		display:flex;
 		justify-content: center;
 		align-items: center;
+		text-align:center;
 		-webkit-box-orient: vertical;
 		-webkit-line-clamp:2;
-		overflow: hidden;
 		word-break: break-all;
-		text-overflow: ellipsis;
 		margin-top: 10rpx;
 		font-size: 32rpx;
 		font-weight: 520;
 		color: $font-color-dark;
 		font-family:PingFang SC;
 		color:rgba(51,51,51,1);
+		max-width: 300rpx;
+		white-space: nowrap;
+		text-overflow:ellipsis; 
+		overflow:hidden; 
 	}
 	
 	.priceOrigin{
