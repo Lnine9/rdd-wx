@@ -176,7 +176,7 @@
 					// 默认重庆（debug）
 					uni.setStorageSync('location', "重庆"),
 					// 存储角色信息
-					uni.setStorageSync('roleName', this.service.roleName),
+					uni.setStorageSync('roleNameList', this.service.roleNameList),
 					// 当前用户是否为VIP
 					uni.setStorageSync('isVip', this.service.isVip==0?false:true)
 					// 当前地区是否有VIP业务

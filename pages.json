@@ -16,7 +16,8 @@
 		{
 			"path": "pages/mine/myInfo",
 			"style": {
-				"navigationBarTitleText": "我的"
+				"navigationBarTitleText": "我的",
+				"enablePullDownRefresh": true
 			}
 		},
 		{

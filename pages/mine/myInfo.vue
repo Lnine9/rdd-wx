@@ -10,10 +10,10 @@
 		</view>	
 		<view class="vip">
 			<image class="vipPhoto" src="../../static/vip/icVipPrice.png"></image>
-			<text class="applyVip" @click="getVip()" :style="{display: isVip == 0 ? 'block' :'none' }">申请会员</text>
-			<text class="applyVip"  :style="{display:isVip == 1 ? 'block' :'none' }">囧途宝盒会员</text>
-			<text class="freeVip"  @click="getVip()" :style="{display: isVip == 0 ? 'block' :'none' }">囧途宝盒会员免费申请啦！</text>
-			<image class="more" src="../../static/vip/icVipMore.png" @click="getVip()" :style="{display: isVip == 0 ? 'block' :'none' }"></image>
+			<text class="applyVip" @click="getVip()" :style="{display: isVip == false ? 'block' :'none' }">申请会员</text>
+			<text class="applyVip"  :style="{display:isVip == true ? 'block' :'none' }">囧途宝盒会员</text>
+			<text class="freeVip"  @click="getVip()" :style="{display: isVip == false ? 'block' :'none' }">囧途宝盒会员免费申请啦！</text>
+			<image class="more" src="../../static/vip/icVipMore.png" @click="getVip()" :style="{display: isVip == false ? 'block' :'none' }"></image>
 		</view>	
 		<view class="service">
 			<text class="myService">我的服务</text>
@@ -69,8 +69,8 @@
 		</view>
 		<uni-popup ref='order' type="center" maskClick="true">
 			<view class="orderPopUp">
-				<!-- <image class="orderPicture" :src="order.commodityImgList[1]"></image> -->
-				<image class="orderPicture" :src="code.commodityImgList[0]"></image>
+				<image class="orderPicture" :src="order.commodityImgList[1]"></image>
+				<!-- <image class="orderPicture" :src="code.commodityImgList[0]"></image> -->
 				<view class="dottedLineThree"></view>
 				<view>
 					<text class="orderInfo">商品：{{orderInfo.commodityTitle}}</text>
@@ -80,7 +80,7 @@
 					<text class="orderInfo">联系电话：{{orderInfo.contactNumber}}</text>
 				</view>
 				<button class="cancle" @click="closeOrder()">取消</button>
-				<button class="update" @click="comfirmOrder(order)">确定</button>
+				<button class="update" @click="comfirmOrder(order)">确认提交</button>
 			</view>
 		</uni-popup>
 	</view>
@@ -105,8 +105,8 @@
 					orderInfo:[],
 					order:[],
 					qr:'',
-					isVip:0,
-					isShop:1,
+					isVip:false,
+					isShop:0,
 	            };
 	        },
 			onShow() {
@@ -127,7 +127,6 @@
 				    uni.getUserInfo({
 				        provider: 'weixin',
 				        success: function(infoRes) {
-							// console.log(infoRes);
 				           _this.user.name = infoRes.userInfo.nickName; //昵称
 				           _this.user.photo = infoRes.userInfo.avatarUrl; //头像
 				        },
@@ -154,28 +153,22 @@
 				},
 				//判断是否为vip
 				judgeVip(){
-					// console.log(11);
-					try {
-						// console.log(12);
-					    let value = uni.getStorageSync('isVip');
-					    if (value) {
-					        console.log(value);
-					    }
-					} catch (e) {
-					    console.log(e);
-					}
+					let value = uni.getStorageSync('isVip');
+					this.isVip = value;
 				},
 				//判断是否为商家
 				judgeScan(){
-					// console.log(11);
-					try {
-						// console.log(12);
-					    let value = uni.getStorageSync('roleName');
-					    if (value) {
-					        console.log(value);
-					    }
-					} catch (e) {
-					    console.log(e);
+					let value = uni.getStorageSync('roleNameList');
+					if(value != null){
+						for (var i = 0; i < value.length; i++) {
+							if(value[i].roleName === "微信商家"){
+								this.isShop = 1;
+							}else{
+								this.isShop = 0
+							}
+						}
+					}else{
+						this.isShop = 0
 					}
 				},
 				//跳转申请vip
@@ -194,7 +187,15 @@
 				//获取电子码信息
 				getCode(){
 					api.getCodeInfo().then(res=>{
-						this.code = res.data.data,
+						this.code = res.data.data
+						if(res.data.data.electronicCode == null || res.data.data.electronicCode == ''){
+							this.code.electronicCode = '暂无'
+							console.log('电子码' + this.code.electronicCode)
+						}
+						if(res.data.data.deliveryNum == null || res.data.data.deliveryNum == ''){
+							this.code.deliveryNum = '暂无'
+							console.log('邮寄' + this.code.deliveryNum)
+						}
 						console.log(this.code)
 					})
 				},
@@ -253,6 +254,21 @@
 					api.comfirmOrder(data).then(res=>{
 						console.log(res);
 						this.$refs.order.close();
+						if(res.data.data == true){
+							uni.showToast({
+							    title: '提交成功',
+							    duration: 2000,
+								icon:'success'
+							});
+						}else{
+							uni.showToast({
+							    title: '提交失败',
+							    duration: 2000,
+								icon:'none'
+							});
+						}
+						
+						
 					})
 				},
 				//取消订单
@@ -293,7 +309,7 @@
 				},
 				//长按复制
 				copy(data){
-					// var that = this;
+					console.log(data)
 					uni.setClipboardData({
 					  data: data,
 					  success: function (res) {
@@ -327,6 +343,17 @@
 				//关闭弹窗
 				close(){
 					this.$refs.popup.close()
+				},
+				//下拉刷新
+				onPullDownRefresh(){
+					this.wxGetUserInfo();
+					this.getData();
+					this.getCode();
+					this.judgeVip();
+					this.judgeScan();
+					setTimeout(function(){
+						uni.stopPullDownRefresh();
+					},2000);
 				}
 			}
 	           
@@ -335,6 +362,7 @@
 
 <style>
 	.main{
+		overflow-x: hidden;
 		width: 750rpx;
 		height: 1479rpx;
 		background-color: #F8F9FB;
@@ -436,7 +464,7 @@
 		display: inline-block;
 		margin-right: 60rpx;
 		margin-top: 40rpx;
-		margin-bottom: 20rpx;
+		margin-bottom: 40rpx;
 		width: 100rpx;
 		height: 100rpx;
 	}
@@ -516,13 +544,15 @@
 	.copy{
 		display: inline-block;
 		position: absolute;
-		border:1rpx solid rgba(6,193,174,1);
+		border:1rpx solid #06C1AE;
+		color: #06C1AE;
 		border-radius:10rpx;
-		width: 70rpx;
-		height: 50rpx;
+		width: 60rpx;
+		height: 40rpx;
 		font-size: 20rpx;
 		right: 40rpx;
-		top: 0rpx;
+		top: 6rpx;
+		line-height: 40rpx;
 		padding: 0;
 	}
 	.introduction{
@@ -725,7 +755,7 @@
 		display: inline-block;
 		bottom: 0;
 		width: 290rpx;
-		border-radius: 0;
+		/* border-radius: 0; */
 	}
 	.update{
 		position: absolute;
@@ -735,7 +765,7 @@
 		width: 290rpx;
 		left: 290rpx;
 		color: #FFFFFF;
-		border-radius: 0;
+		/* border-radius: 0; */
 	}
 </style>
 
