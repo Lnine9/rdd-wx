@@ -523,7 +523,7 @@
 				overflow:hidden; 
 			}
 			.priceOrigin{
-				font-size: 34rpx;
+				font-size: 32rpx;
 				font-family:PingFang SC;
 				font-weight: 700;
 				color:rgba(255,126,48,1);
@@ -549,13 +549,14 @@
 	}
 	
 	.clamp{
+		margin-bottom: 5rpx;
 		justify-content: center;
 		align-items: center;
 		text-align:center;
 		-webkit-box-orient: vertical;
 		-webkit-line-clamp:2;
 		word-break: break-all;
-		margin-top: 10rpx;
+		margin-top: 16rpx;
 		font-size: 28rpx;
 		font-weight: 500;
 		font-family:PingFang SC;
@@ -567,7 +568,7 @@
 	}
 	
 	.priceOrigin{
-		font-size: 34rpx;
+		font-size: 32rpx;
 		font-family:PingFang SC;
 		font-weight: 700;
 		color:rgba(255,126,48,1);
@@ -601,7 +602,7 @@
 			flex-direction: column;
 		}
 		.tit{
-			font-size:30rpx;
+			font-size:32rpx;
 			font-family:PingFang SC;
 			font-weight: 570;
 			color:rgba(51,51,51,1);
@@ -639,11 +640,12 @@
 			overflow: hidden;
 			border-color: #E3E3E3;
 			border-width: 1px;
-			border: 2upx solid #E3E3E3
+			
 			image{
 				width: 100%;
 				height: 100%;
 				opacity: 1;	
+				border: 2upx solid #E3E3E3
 			}
 		}
 		.title{
