@@ -49,7 +49,7 @@
 					"fontSize": "30px"
 				}
 			}
-		},{
+		}, {
 			"path": "pages/payOrder/payOrder",
 			"style": {
 				"navigationBarTitleText": "支付订单",
@@ -67,21 +67,21 @@
 				"navigationBarTitleText": "我的订单",
 				"enablePullDownRefresh": true
 			}
-		}, 
+		},
 		{
 			"path": "pages/orderDetail/orderDetail",
 			"style": {
 				"navigationBarTitleText": "订单详情",
 				"enablePullDownRefresh": true
 			}
-		}, 
+		},
 		{
 			"path": "pages/orderDetail/deliver",
 			"style": {
 				"navigationBarTitleText": "物流信息",
 				"enablePullDownRefresh": true
 			}
-		}, 
+		},
 		{
 			"path": "pages/income/income",
 			"style": {
@@ -174,7 +174,6 @@
 				"path": "pages/myOrder/myOrder"
 			},
 			{
-
 				"name": "收益",
 				"path": "pages/income/income"
 			},
@@ -185,6 +184,10 @@
 			{
 				"name": "我的团队",
 				"path": "pages/myTeam/myTeam"
+			},
+			{
+				"name": "物流信息",
+				"path": "pages/orderDetail/deliver"
 			}
 		]
 	}
