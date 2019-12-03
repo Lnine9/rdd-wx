@@ -1,9 +1,9 @@
 <template>
 	<view class="tabBar">
 		<view
-		 v-for="(item, index) in tabBar" 
-		 :key="index" 
-		 class="tabbar_item" 
+		 v-for="(item, index) in tabBar"
+		 :key="index"
+		 class="tabbar_item"
 		 :class="{'active':item.url == currentPage}"
 		 @click="navTo(item)"
 		 >	<view style="display: flex;flex-direction: column;align-items: center;">
@@ -34,7 +34,7 @@
 			})
 		},
 		computed:{
-			
+
 		},
 		methods:{
 			navTo(item){
@@ -49,6 +49,7 @@
 				}
 			}
 		}
+		
 	}
 </script>
 
@@ -58,11 +59,11 @@
 		$isWidth:100vw; //导航栏宽度
 		$isBorder:3px solid white; //边框 不需要则设为0px
 		$isBg:#ffffff; //背景
-	
+
 	// 选中设置
 		$chooseTextColor:#50B7EA; //选中时字体颜色
 		$chooseBgColor:white; //选中时背景颜色 transparent为透明
-	
+
 	//未选中设置
 		$normalTextColor:#999; //未选中颜色
 	.tabBar{
@@ -103,7 +104,7 @@
 		image{
 			width: 40upx;
 			height:40upx;
-			
+
 		}
 	}
 </style>
