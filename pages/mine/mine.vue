@@ -44,7 +44,7 @@
 					<view class="dottedLineTwo"></view>
 				</view>
 				<view class="bottom">
-					<text class="shopName">{{code.commodityTitle}}</text>
+					<text class="shopName" :style="{width:code.commodityType == 2 ? '250rpx' : '400rpx'}">{{code.commodityTitle}}</text>
 					<button class="QR-Code" :style="{display:code.commodityType == 2 ? 'block' : 'none'}" @click="lookQRCode()"><text class="fontTwo">查看二维码</text></button>
 					<button class="lookDetails" :style="{marginRight:code.commodityType == 2 ? '25rpx' : '0rpx'}" @click="lookDetails()"><text class="fontOne">查看详情</text></button>
 					<!-- <uni-popup ref="popup" type="center" maskClick="true">
@@ -638,7 +638,6 @@
 	.shopName{
 		display: inline-block;
 		position: absolute;
-		width: 250rpx;
 		margin-top: 15rpx;
 		font-size: 28rpx;
 		font-weight:545;
