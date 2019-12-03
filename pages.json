@@ -112,12 +112,13 @@
 		    "style" : {
 				"navigationBarTitleText":"我的团队"
 			}
-		},{
-		    "path" : "pages/buyVip/buyVip",
-		    "style" : {
-				"navigationBarTitleText":"充值VIP"
-			}
 		}
+		// {
+		//     "path" : "pages/buyVip/buyVip",
+		//     "style" : {
+		// 		"navigationBarTitleText":"充值VIP"
+		// 	}
+		// }
 	],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
