@@ -444,7 +444,7 @@
 	.main{
 		overflow-x: hidden;
 		width: 750rpx;
-		height: 1600rpx;
+		/* height: 1600rpx; */
 		background-color: #F8F9FB;
 	}
 	.head{
@@ -795,7 +795,7 @@
 	}
 	.noCode{
 		width: 750rpx;
-		height: 400rpx;
+		height: 600rpx;
 		margin-top: 120rpx;
 	}
 	.noCodePicture{
