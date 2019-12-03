@@ -3,13 +3,14 @@
 	   <image src="/static/inviteFriends/background.png" class="imageBackground"></image>
 	   <image class="QRCode" :src="QR"></image>
 	   <button class="btnimage" open-type='share'>
-		<image src="/static/inviteFriends/button.png" class="btn"></image>
+			立即分享
+			<text style="width: 17rpx;height: 17rpx;background-color: #FFFFFF;position: absolute;top: 15rpx;left: 20rpx;border-radius: 50%;"></text>
 	   </button>
 	   <!-- <text class="save" @click="createCanvasImageEvn">保存图片到相册</text> -->
-	   <hchPoster ref="hchPoster" :canvasFlag.sync="canvasFlag" @cancel="canvasCancel" :posterObj.sync="posterData"/>
-	   <view :hidden="canvasFlag"><!-- 海报 要放外面放组件里面 会找不到 canvas-->
-	   	<canvas class="canvas"  canvas-id="myCanvas" ></canvas><!-- 海报 -->
-	   </view>
+	   <!-- <hchPoster ref="hchPoster" :canvasFlag.sync="canvasFlag" @cancel="canvasCancel" :posterObj.sync="posterData"/>
+	   <view :hidden="canvasFlag">
+	   	<canvas class="canvas"  canvas-id="myCanvas" ></canvas>
+	   </view> -->
    </view>
 </template>
 
@@ -41,7 +42,9 @@
 			}
 		},
 		onLoad:function(){
+			wx.showLoading({ title: '加载中', }) 
 			api.getQR().then(res=>{
+				wx.hideLoading()
 				var QR="data:image/jpeg|png|gif;base64,"+res.data.data
 				var QR1=res.data.data
 				uni.setStorageSync('QR',QR)
@@ -139,7 +142,7 @@
 	   width: 250rpx;
 	   height: 250rpx;
 	   position: absolute;
-	   bottom: 22%;
+	   bottom: 23%;
 	   left: 35%;
    }
 	
@@ -151,15 +154,22 @@
 	
 	.btnimage{
 		width: 440rpx;
-		height: 100rpx;
-		padding: 0;
-		background-color: #ffb600;
+		height: 95rpx;
+		padding: 5rpx;
+		background-color: #ffbd19;
 		border-radius: 62rpx;
 		color: #a1450c;
 		font-size: 35rpx;
 		position: absolute;
 		left: 20%;
 		bottom: 2%;
+	}
+	
+	.circle{
+		width: 10rpx;
+		height: 10rpx;
+		// border-radius: 50%;
+		background-color: #FFFFFF;
 	}
 	
 	.save{

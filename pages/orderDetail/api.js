@@ -16,4 +16,12 @@ export class OrderDetailAPI {
 	static confirmDelivery(params) {
 	  return minRequest.post('/api/WCPCommodityOrder/comfirmDeliveryState', params)
 	}
+	
+	/**
+	 * 获取物流信息
+	 * @param {Object} params
+	 */
+	static getDeliverInfo(params) {
+	  return minRequest.post('/api/petrolDelivery/selectLogistics', params)
+	}
 }

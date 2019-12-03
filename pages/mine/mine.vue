@@ -1,118 +1,122 @@
 <template>
-	<view class="main">
-		<view class="head">
-			<view class="subHead">
-				<image class="photo" :src="user.photo"></image>
-				<text class="name">{{user.name}}</text>
-				<image class="scan" src="../../static/code/scan.png" @click="scanCode()" :style="{display:isShop == 1 ? 'block' : 'none' }"></image>
+		<view v-show="flag" class="main">
+			<view class="head">
+				<view class="subHead">
+					<image class="photo" :src="user.photo"></image>
+					<text class="name">{{user.name}}</text>
+					<image class="scan" src="../../static/code/scanBut.png" @click="scanCode()" :style="{display:isShop == 1 ? 'block' : 'none' }"></image>
+				</view>
 			</view>
-		</view>	
-		<view class="vip">
-			<image class="vipPhoto" src="../../static/vip/icVipPrice.png"></image>
-			<text class="applyVip" @click="getVip()" :style="{display: isVip == false ? 'block' :'none' }">申请会员</text>
-			<text class="applyVip"  :style="{display:isVip == true ? 'block' :'none' }">囧途宝盒会员</text>
-			<text class="freeVip"  @click="getVip()" :style="{display: isVip == false ? 'block' :'none' }">囧途宝盒会员免费申请啦！</text>
-			<image class="more" src="../../static/vip/icVipMore.png" @click="getVip()" :style="{display: isVip == false ? 'block' :'none' }"></image>
-		</view>	
-		<view class="service">
-			<text class="myService">我的服务</text>
-			<view style="width: 700rpx;margin-left: 50rpx;">
-				<view class="serciceList" v-for="item in service" :key="item" >
-					<image class="servicePicture"  :src="item.savePath" @click="getRouter(item.androidPath)"></image>
-					<text class="serciceFont" @click="getRouter(item.androidPath)">{{item.menuName}}</text>
+			<view class="vip">
+				<image class="vipPhoto" src="../../static/vip/icVipPrice.png"></image>
+				<text class="applyVip" @click="getVip()" :style="{display: isVip == false ? 'block' :'none' }">申请会员</text>
+				<text class="applyVip"  :style="{display:isVip == true ? 'block' :'none' }">囧途宝盒会员</text>
+				<text class="freeVip"  @click="getVip()" :style="{display: isVip == false ? 'block' :'none' }">囧途宝盒会员免费申请啦！</text>
+				<image class="more" src="../../static/vip/icVipMore.png" @click="getVip()" :style="{display: isVip == false ? 'block' :'none' }"></image>
+			</view>
+			<view class="service">
+				<text class="myService">我的服务</text>
+				<view style="width: 700rpx;margin-left: 50rpx;">
+					<view class="serciceList" v-for="item in service" :key="item" >
+						<image class="servicePicture"  :src="item.savePath" @click="getRouter(item.androidPath)"></image>
+						<text class="serciceFont" @click="getRouter(item.androidPath)">{{item.menuName}}</text>
+					</view>
 				</view>
-			</view>	
-		</view>
-		<view :style="{display:code == null ? 'none' :'block' }">
-			<text class="myElectronicCode">我的电子码</text>
-			<text class="lookMore" @click="codeLook()">查看更多</text>
-			<image class="moreCode" src="../../static/code/moreCode.png" @click="codeLook()"></image>
-			<view class="electronicCode">
-				<view class="subElectronicCode">
-					<image class="codePhoto" :src="code.commodityImgList[0]"></image>
-					<text class="codeName" :style="{display:code.commodityType == 2 ? 'block' : 'none' }">电子码：{{code.electronicCode}}</text>
-					<text class="codeAccount" :style="{display:code.commodityType == 2 ? 'block' : 'none' }">订单号码：{{code.orderId}}</text>
-					<text class="codeName" :style="{display:code.commodityType == 1 ? 'block' : 'none' }" >
-						快递单号：<text selectable="true" >{{code.deliveryNum}}</text>
-						</text>
-					<button class="copy" :style="{display:code.commodityType == 1 ? 'block' : 'none' }" @click="copyBtu(code.deliveryNum)">复制</button>
-					<text class="codeAccount" :style="{display:code.commodityType == 1 ? 'block' : 'none' }">邮寄状态：{{this.getdeliveryState()}}</text>
+			</view>
+			<view :style="{display:code == null ? 'none' :'block' }">
+				<view class="codeTitle">
+					<text class="myElectronicCode">我的电子码</text>
+					<view>
+					<text class="lookMore" @click="codeLook()">查看更多</text>
+					<image class="moreCode" src="../../static/code/moreCode.png" @click="codeLook()"></image>
+					</view>
 				</view>
-				<view class="introduction">
-					<view class="dottedLineOne"></view>
-					<text class="codeInfo">{{code.commodityInfo}}</text>
-					<view class="dottedLineTwo"></view>
-				</view>
-				<view class="bottom">
-					<text class="shopName">{{code.commodityTitle}}</text>
-					<button class="QR-Code" :style="{display:code.commodityType == 2 ? 'block' : 'none'}" @click="lookQRCode()"><text class="fontTwo">查看二维码</text></button>
-					<button class="lookDetails" :style="{marginRight:code.commodityType == 2 ? '25rpx' : '0rpx'}" @click="lookDetails()"><text class="fontOne">查看详情</text></button>
-					<!-- <uni-popup ref="popup" type="center" maskClick="true">
-						<view class="popUp">
-							<text class="popupCodeName" >电子码：{{code.electronicCode}}</text>
-							<text class="popupCodeAccount">订单号码：{{code.orderId}}</text>
-							<view class="dottedLineThree"></view>
-							<image class="qrCode" :src="qr"></image>
-							<text class="codeShopName">{{code.commodityTitle}}</text>
-						</view>
-						<view class="circle" @click="close()">
-							<image src="../../static/popup/closePopUp.png" class="close"></image>
-						</view>
-					</uni-popup> -->
+				<view class="electronicCode">
+					<view class="subElectronicCode">
+						<image class="codePhoto" src="../../static/code/scan.png"></image>
+						<text class="codeName" :style="{display:code.commodityType == 2 ? 'block' : 'none' }">电子码：{{code.electronicCode}}</text>
+						<text class="codeAccount" :style="{display:code.commodityType == 2 ? 'block' : 'none' }">订单状态：{{this.getorderState()}}</text>
+						<text class="codeName" :style="{display:code.commodityType == 1 ? 'block' : 'none' }" >
+							快递单号：<text selectable="true" >{{code.deliveryNum}}</text>
+							</text>
+						<button class="copy" :style="{display:code.commodityType == 1 ? 'block' : 'none' }" @click="copyBtu(code.deliveryNum)">复制</button>
+						<text class="codeAccount" :style="{display:code.commodityType == 1 ? 'block' : 'none' }">邮寄状态：{{this.getdeliveryState()}}</text>
+					</view>
+					<view class="introduction">
+						<view class="dottedLineOne"></view>
+						<text class="codeInfo">{{code.commodityInfo}}</text>
+						<view class="dottedLineTwo"></view>
+					</view>
+					<view class="bottom">
+						<text class="shopName" :style="{width:code.commodityType == 2 ? '250rpx' : '400rpx'}">{{code.commodityTitle}}</text>
+						<button class="QR-Code" :style="{display:code.commodityType == 2 ? 'block' : 'none'}" @click="lookQRCode()"><text class="fontTwo">查看二维码</text></button>
+						<button class="lookDetails" :style="{marginRight:code.commodityType == 2 ? '25rpx' : '0rpx'}" @click="lookDetails()"><text class="fontOne">查看详情</text></button>
+						<!-- <uni-popup ref="popup" type="center" maskClick="true">
+							<view class="popUp">
+								<text class="popupCodeName" >电子码：{{code.electronicCode}}</text>
+								<text class="popupCodeAccount">订单号码：{{code.orderId}}</text>
+								<view class="dottedLineThree"></view>
+								<image class="qrCode" :src="qr"></image>
+								<text class="codeShopName">{{code.commodityTitle}}</text>
+							</view>
+							<view class="circle" @click="close()">
+								<image src="../../static/popup/closePopUp.png" class="close"></image>
+							</view>
+						</uni-popup> -->
 
+					</view>
 				</view>
 			</view>
-		</view>
-		<view class="popUpShow" :style="{display:popShow == true ? 'block' :'none'}">
-			<view class="popUp">
-				<text class="popupCodeName" >电子码：{{code.electronicCode}}</text>
-				<text class="popupCodeAccount">订单号码：{{code.orderId}}</text>
-				<view class="dottedLineThree"></view>
-				<image class="qrCode" :src="qr"></image>
-				<text class="codeShopName">{{code.commodityTitle}}</text>
-			</view>
-			<view class="circle" @click="close()">
-				<image src="../../static/popup/closePopUp.png" class="close"></image>
-			</view>
-		</view>
-		<view class="noCode" :style="{display:code == null ? 'block' :'none' }">
-			<image class="noCodePicture" src="../../static/code/noCode.png"></image>
-			<text class="noCodeText">暂无电子码</text>
-		</view>
-		<!-- <uni-popup ref='order' type="center" maskClick="true">
-			<view class="orderPopUp">
-				<image class="orderPicture" :src="order.commodityImgList[1]"></image>
-				<view class="dottedLineThree"></view>
-				<view>
-					<text class="orderInfo">商品：{{orderInfo.commodityTitle}}</text>
-					<text class="orderInfo">商品信息：{{orderInfo.commodityInfo}}</text>
-					<text class="orderInfo">地址：{{orderInfo.addressDetail}}</text>
-					<text class="orderInfo">收货人：{{orderInfo.receiver}}</text>
-					<text class="orderInfo">联系电话：{{orderInfo.contactNumber}}</text>
+			<view class="popUpShow" :style="{display:popShow == true ? 'block' :'none'}">
+				<view class="popUp">
+					<text class="popupCodeName" >电子码：{{code.electronicCode}}</text>
+					<text class="popupCodeAccount">订单号码：{{code.orderId}}</text>
+					<view class="dottedLineThree"></view>
+					<image class="qrCode" :src="qr"></image>
+					<text class="codeShopName">{{code.commodityTitle}}</text>
 				</view>
-				<button class="cancle" @click="closeOrder()">取消</button>
-				<button class="update" @click="comfirmOrder(order)">确认提交</button>
-			</view>
-		</uni-popup> -->
-		<view class="popUpShow" :style="{display:scanPopShow == true ? 'block' :'none'}">
-			<view class="orderPopUp">
-				<image class="orderPicture" :src="order.commodityImgList[1]"></image>
-				<view class="dottedLineThree"></view>
-				<view class="orderMenu">
-					<text class="orderInfo">商品：{{orderInfo.commodityTitle}}</text>
-					<text class="orderInfo">商品信息：{{orderInfo.commodityInfo}}</text>
-					<text class="orderInfo">地址：{{orderInfo.addressDetail}}</text>
-					<text class="orderInfo">收货人：{{orderInfo.receiver}}</text>
-					<text class="orderInfo">联系电话：{{orderInfo.contactNumber}}</text>
+				<view class="circle" @click="close()">
+					<image src="../../static/popup/closePopUp.png" class="close"></image>
 				</view>
-				<view class="orderBut">
+			</view>
+			<view class="noCode" :style="{display:code == null ? 'block' :'none' }">
+				<image class="noCodePicture" src="../../static/code/noCode.png"></image>
+				<text class="noCodeText">暂无电子码</text>
+			</view>
+			<!-- <uni-popup ref='order' type="center" maskClick="true">
+				<view class="orderPopUp">
+					<image class="orderPicture" :src="order.commodityImgList[1]"></image>
+					<view class="dottedLineThree"></view>
+					<view>
+						<text class="orderInfo">商品：{{orderInfo.commodityTitle}}</text>
+						<text class="orderInfo">商品信息：{{orderInfo.commodityInfo}}</text>
+						<text class="orderInfo">地址：{{orderInfo.addressDetail}}</text>
+						<text class="orderInfo">收货人：{{orderInfo.receiver}}</text>
+						<text class="orderInfo">联系电话：{{orderInfo.contactNumber}}</text>
+					</view>
 					<button class="cancle" @click="closeOrder()">取消</button>
 					<button class="update" @click="comfirmOrder(order)">确认提交</button>
 				</view>
+			</uni-popup> -->
+			<view class="popUpShow" :style="{display:scanPopShow == true ? 'block' :'none'}">
+				<view class="orderPopUp">
+					<image class="orderPicture" :src="order.commodityImgList[1]"></image>
+					<view class="dottedLineThree"></view>
+					<view class="orderMenu">
+						<text class="orderInfo">商品：{{orderInfo.commodityTitle}}</text>
+						<text class="orderInfo">商品信息：{{orderInfo.commodityInfo}}</text>
+						<text class="orderInfo">地址：{{orderInfo.addressDetail}}</text>
+						<text class="orderInfo">收货人：{{orderInfo.receiver}}</text>
+						<text class="orderInfo">联系电话：{{orderInfo.contactNumber}}</text>
+					</view>
+					<view class="orderBut">
+						<button class="cancle" @click="closeOrder()">取消</button>
+						<button class="update" @click="comfirmOrder(order)">确认提交</button>
+					</view>
+				</view>
 			</view>
+			<tabBar :currentPage="currentPage"></tabBar>
 		</view>
-		<tabBar :currentPage="currentPage"></tabBar>
-	</view>
 </template>
 
 <script>
@@ -137,15 +141,28 @@
 					isShop:0,
 					popShow:false,
 					scanPopShow:false,
-					currentPage:'main'
+					currentPage:'main',
+					flag: true, // 标识当前页面是否显示
 	            };
 	        },
 			onShow() {
-				this.wxGetUserInfo();
-				this.getData();
-				this.getCode();
-				this.judgeVip();
-				this.judgeScan()
+				let payOrder = getApp().globalData.payOrder;
+				if (payOrder) {
+					this.flag = false;
+					getApp().globalData.payOrder = false;
+
+					uni.navigateTo({
+						url: '/pages/myOrder/myOrder'
+					});
+
+				} else {
+					this.flag = true;
+					this.wxGetUserInfo();
+					this.getData();
+					this.getCode();
+					this.judgeVip();
+					this.judgeScan();
+				}
 			},
 			//下拉刷新
 			onPullDownRefresh(){
@@ -239,6 +256,7 @@
 				getCode(){
 					api.getCodeInfo().then(res=>{
 						this.code = res.data.data
+						console.log(res.data.data)
 						if(res.data.data != null){
 							if(res.data.data.electronicCode == null || res.data.data.electronicCode == ''){
 								this.code.electronicCode = '暂无'
@@ -357,6 +375,19 @@
 					// 拼接
 					return year+"-"+month+"-"+day+" "+hours+":"+minutes+":"+seconds;
 				},
+				//获取订单状态
+				getorderState(){
+					if(this.code != null){
+						let index = this.code.orderState
+						if(index == 1){
+							return '未完成'
+						}
+						else
+							return '未知'
+					}else{
+							return '未知'
+					}
+				},
 				//获取邮寄状态
 				getdeliveryState(){
 					if(this.code != null){
@@ -372,7 +403,9 @@
 						}
 						else
 							return '未知'
-					}	
+					}else{
+							return '未知'
+					}
 				},
 				//一键复制
 				copyBtu(data){
@@ -417,7 +450,7 @@
 	.head{
 		width: 750rpx;
 		height: 263rpx;
-		background-color: #313134;
+		background-image: url('../../static/user/userBackground.png');
 	}
 	.subHead{
 		position: relative;
@@ -428,19 +461,20 @@
 	.photo{
 		width: 112rpx;
 		height: 112rpx;	
+		border-radius: 100rpx;
 	}
 	.name{
 		display: inline-block;
 		color: #FFFFFF;
 		position: absolute;
-		top:17.6rpx;
+		top:30rpx;
 		left: 148.6rpx;
 		font-size: 32rpx;
 	}
 	.scan{
 		position: absolute;
 		right: 0rpx;
-		top: 17.6rpx;
+		top: 30rpx;
 		width: 40rpx;
 		height: 40rpx;
 	}
@@ -448,7 +482,7 @@
 		width: 690rpx;
 		height: 108rpx;
 		margin: auto;
-		background-color: #FFF2DA;
+		background-image: url('../../static/vip/vipBackground.png');
 		border-radius: 10rpx;
 		position:relative ;
 		bottom: 65rpx;
@@ -521,27 +555,31 @@
 		color:#333333;
 		text-align: center;
 	}
-	.myElectronicCode{
+	.codeTitle{
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
 		position: relative;
-		top: 20rpx;
-		left: 35rpx;
+		top: 15rpx;
+		width: 683rpx;
+		margin: auto;
+	}
+	.myElectronicCode{
+
 		font-weight: bold;
 		color: #333333;
 		font-size: 32rpx;
 
 	}
 	.lookMore{
-		position: relative;
-		top: 20rpx;
-		left: 445rpx;
+		margin-right: 20rpx;
 		font-weight: normal;
+
 		color: #999999;
 		font-size: 28rpx;
 	}
 	.moreCode{
-		position: relative;
-		top: 20rpx;
-		left: 460rpx;
+
 		width: 11rpx;
 		height: 22rpx;
 	}
@@ -584,11 +622,10 @@
 		position: absolute;
 		border:1rpx solid #06C1AE;
 		color: #06C1AE;
-		/* border-radius:10rpx; */
 		width: 60rpx;
 		height: 40rpx;
 		font-size: 20rpx;
-		right: 40rpx;
+		right: 30rpx;
 		top: 6rpx;
 		line-height: 40rpx;
 		padding: 0;
@@ -637,10 +674,12 @@
 	.shopName{
 		display: inline-block;
 		position: absolute;
-		width: 250rpx;
-		/* margin-top: 15rpx; */
+		margin-top: 15rpx;
 		font-size: 28rpx;
 		font-weight:545;
+		text-overflow: ellipsis;
+		overflow: hidden;
+		white-space: nowrap;
 	}
 	.lookDetails{
 		display: inline-block;

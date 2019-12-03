@@ -1,7 +1,7 @@
 <template>
 	<view>
 		
-		<view class="recomendView">
+		<view  v-if="recomend.userName != null" class="recomendView">
 			<view style="display: flex;align-items: center;">
 			<image :src="recomend.avatarUrl" style="margin-left: 60rpx;width: 90rpx;height: 90rpx;border-radius: 10rpx;" ></image>
 			<view class="name">{{recomend.userName}}</view>

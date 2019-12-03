@@ -228,7 +228,7 @@
 					}
 				}
 
-				// 测试支付
+				// 支付参数
 				let params = {
 					commodityId: this.commodityId,
 					commodityNum: this.commodityNum,
@@ -260,13 +260,17 @@
 									icon: 'success',
 								});
 								setTimeout(() => {
+									// 设置全局变量标识支付成功
+									getApp().globalData.payOrder = true;
 									// 购买成功去往个人中心
 									uni.switchTab({
 										url: '/pages/mine/mine'
 									});
-									// uni.reLaunch({
-									// 	url: '/pages/myOrder/myOrder'
-									// });
+									
+									uni.showToast({
+										title: '请稍后',
+										icon: 'loading'
+									});
 								}, 2000);
 							},
 							'fail': function(res) {
