@@ -61,22 +61,26 @@
 				</scroll-view>
 			</swiper-item>
 		</swiper>
+		<tabBar :currentPage="currentPage"></tabBar>
 	</view>
 </template>
 
 <script>
 	import QSTabs from '../../components/QS-tabs/QS-tabs.vue';
 	import {api} from './api.js';
+	import tabBar from '../components/zwy-tabBar/tabBar.vue';
 	const Sys = uni.getSystemInfoSync();
 	const wH = Sys.windowHeight;
 	let n = 1;
 	const tabs = Array(10).fill('').map(()=> 'tab' + Array(n).fill('s').join('') + n++);
 	export default {
 		components: {
-			QSTabs
+			QSTabs,
+			tabBar
 		},
 		data() {
 			return {
+				currentPage:'shopOrder',
 				orderState:[],
 				state:[],
 				total:0,
