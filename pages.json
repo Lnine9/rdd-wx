@@ -48,7 +48,7 @@
 					"fontSize": "30px"
 				}
 			}
-		},{
+		}, {
 			"path": "pages/payOrder/payOrder",
 			"style": {
 				"navigationBarTitleText": "支付订单",
@@ -105,6 +105,11 @@
 		    "path" : "pages/shopOrder/shopOrder",
 		    "style" : {
 				"navigationBarTitleText":"订单详情"
+			}
+		},{
+		    "path" : "pages/myTeam/myTeam",
+		    "style" : {
+				"navigationBarTitleText":"我的团队"
 			}
 		}
 	],
@@ -170,10 +175,6 @@
 			{
 				"name": "收益",
 				"path": "pages/income/income"
-			},
-			{
-				"name": "我的",
-				"path": "pages/mine/mine"
 			}
 		]
 	}
