@@ -5,4 +5,7 @@ export class api{
   static getList(data){
 	  return minRequest.get('/api/userManagement/selectTeam',data)
   }
+  static getRecomend(){
+	  return minRequest.get('/api/userManagement/selectRecommender')
+  }
 }

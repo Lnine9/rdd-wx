@@ -366,6 +366,7 @@
 	}
 
 	.button {
+		background-color: #FFFFFF;
 		height: 60rpx;
 		width: 160rpx;
 		border: 1rpx solid rgba(204, 204, 204, 1);
