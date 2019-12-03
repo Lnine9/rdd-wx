@@ -98,12 +98,12 @@
 					<text class="order-value">{{order.createAt}}</text>
 				</view>
 
-				<view v-if="order.takeWay === 2">
+				<view v-if="takeWay === 2">
 					<text class="order-text">电子码<text style="color: #FFFFFF;">白</text></text>
 					<text class="order-value">{{order.electronicCode}}</text>
 				</view>
 
-				<view v-else class="qr-code-container">
+				<view v-if="takeWay === 2" class="qr-code-container">
 					<text class="order-text">二维码</text>
 					<image :src="qrImageUrl" mode="" class="qr-code-img"></image>
 				</view>
@@ -121,7 +121,7 @@
 		</view>
 
 		<!-- 底部操作栏 -->
-		<view v-if="order.commodityType === '1'" class="bottom-btn-container">
+		<view v-if="takeWay === 1" class="bottom-btn-container">
 			<button v-if="hasLogistics" class="bottom-btn-look-logistics" @click="lookLogistics">
 				<text class="bottom-btn-look-logistics-text">查看物流</text>
 			</button>
@@ -188,37 +188,45 @@
 
 					this.order = res.data.data;
 					this.takeWay = Number(this.order.commodityType);
-					// 显示二维码
-					this.getQRCodeImage();
-					switch (Number(this.order.deliveryState)) {
-						case 0:
-							this.order.deliveryStateShow = '未寄送';
-							break;
-						case 1:
-							this.order.deliveryStateShow = '未寄送';
-							break;
-						case 2:
-							this.order.deliveryStateShow = '已收货';
-							break;
-						default:
-							this.order.deliveryStateShow = '--';
-							break;
+					if (this.takeWay === 2) {
+						// 按钮文字显示
+						this.sureBtnText = '确认收货';
+						// 核销类型的商品生成二维码
+						this.getQRCodeImage();
+						// 订单状态(核销类型的订单显示)
+						switch (Number(this.order.orderState)) {
+							case 0:
+								this.order.orderStateShow = '待支付';
+								break;
+							case 1:
+								this.order.orderStateShow = '待处理';
+								break;
+							case 2:
+								this.order.orderStateShow = '已完成';
+								break;
+							default:
+								this.order.orderStateShow = '--';
+								break;
+						}
+					} else {
+						// 按钮文字显示
+						this.sureBtnText = '确认完成';
+						switch (Number(this.order.deliveryState)) {
+							case 0:
+								this.order.deliveryStateShow = '未寄送';
+								break;
+							case 1:
+								this.order.deliveryStateShow = '未寄送';
+								break;
+							case 2:
+								this.order.deliveryStateShow = '已收货';
+								break;
+							default:
+								this.order.deliveryStateShow = '--';
+								break;
+						}
 					}
-					// 订单状态(核销类型的订单显示)
-					switch (Number(this.order.orderState)) {
-						case 0:
-							this.order.orderStateShow = '待支付';
-							break;
-						case 1:
-							this.order.orderStateShow = '待处理';
-							break;
-						case 2:
-							this.order.orderStateShow = '已完成';
-							break;
-						default:
-							this.order.orderStateShow = '--';
-							break;
-					}
+
 					// 总价格
 					this.totalPrice = Number(this.order.actualPrice) * Number(this.order.commodityNum);
 					// 图片地址
@@ -227,12 +235,6 @@
 					}
 					// 格式化下单时间
 					this.order.createAt = this.getFormatDate(this.order.createAt);
-					// 按钮文字显示问题
-					if (this.order.commodityType === '1') {
-						this.sureBtnText = '确认收货';
-					} else {
-						this.sureBtnText = '确认完成';
-					}
 					uni.stopPullDownRefresh();
 				}).catch(err => {
 					uni.showToast({
@@ -245,10 +247,10 @@
 			lookLogistics: function() {
 				// todo 查看物流
 
-				uni.navigateTo({
-					url: '/pages/orderDetail/deliver'
-				});
-				
+				// uni.navigateTo({
+				// 	url: '/pages/orderDetail/deliver'
+				// });
+
 				// uni.navigateTo({
 				// 	url: '/pages/orderDetail/deliver.html?a=1000'
 				// });
@@ -308,6 +310,8 @@
 
 <style>
 	.main-container {
+		width: 100%;
+		height: 100vh;
 		background: #F8F9FB;
 	}
 
@@ -446,7 +450,7 @@
 	.commodity-container {
 		display: flex;
 		flex-direction: column;
-		margin-top: 20rpx;
+		margin: auto 0 auto 0;
 		background: #FFFFFF;
 	}
 
@@ -481,12 +485,12 @@
 		display: flex;
 		flex-direction: row;
 		width: 100%;
-		height: 200rpx;
+		height: 220rpx;
 		background: #FFFFFF;
 	}
 
 	.commodity-img-container {
-		margin: 30rpx;
+		margin: auto 30rpx auto 30rpx;
 		border: #E3E3E3 1px solid;
 		border-radius: 10rpx;
 		width: 170rpx;
@@ -500,24 +504,30 @@
 	}
 
 	.commodity-content-container {
-		margin-top: 60rpx;
-		margin-bottom: 60rpx;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		margin: auto 0 auto 0;
 		width: 520rpx;
+		height: 170rpx;
 	}
 
 	.commodity-title {
-		margin-top: 20rpx;
-		margin-bottom: 20rpx;
+		margin: auto 20rpx auto 0;
 		color: #303038;
 		font-size: 34rpx;
 		font-weight: bold;
+		display: -webkit-box;
+		text-overflow: ellipsis;
+		overflow: hidden;
+		-webkit-box-orient: vertical;
+		-webkit-line-clamp: 2;
 	}
 
 	.commodity-price-container {
 		display: flex;
 		justify-content: flex-end;
-		margin-top: 20rpx;
-		margin-bottom: 20rpx;
+		margin: auto 0 auto 0;
 	}
 
 	.commodity-actual-price {
@@ -558,13 +568,13 @@
 	.order-text {
 		color: #303038;
 		width: 100rpx;
-		font-size: 24rpx;
+		font-size: 26rpx;
 		margin: 10rpx 0 10rpx 30rpx;
 	}
 
 	.order-value {
 		color: #999999;
-		font-size: 24rpx;
+		font-size: 26rpx;
 		margin: 10rpx 0 10rpx 93rpx;
 	}
 
@@ -617,6 +627,7 @@
 	}
 
 	.bottom-btn-look-logistics {
+		background: 'rgba(0,0,0,0)';
 		display: flex;
 		justify-content: center;
 		border-radius: 50rpx;
@@ -633,6 +644,7 @@
 	}
 
 	.bottom-btn-sure-receive {
+		background: 'rgba(0,0,0,0)';
 		display: flex;
 		justify-content: center;
 		border-radius: 50rpx;

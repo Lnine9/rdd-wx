@@ -156,6 +156,7 @@
 				//判断是否为商家
 				judgeScan(){
 					let value = uni.getStorageSync('roleNameList');
+					console.log(value)
 					if(value != null){
 						for (var i = 0; i < value.length; i++) {
 							if(value[i].roleName === "微信商家"){
@@ -400,7 +401,7 @@
 		position: absolute;
 		left: 113rpx;
 		color: #7E5611;
-		font-size: 28rpx;
+		font-size: 32rpx;
 		font-weight: bold;
 		line-height: 108rpx;
 	}
@@ -433,7 +434,7 @@
 		margin-top: 40rpx;
 		font-weight: bold;
 		color: #333333;
-		font-size: 28rpx;
+		font-size: 32rpx;
 	}
 	.serciceList{
 		display: inline-block;
@@ -447,12 +448,12 @@
 		display: inline-block;
 		width: 60rpx;
 		height: 60rpx;
-		padding: 0 19rpx;
+		padding: 0 30rpx;
 	}
 	.serciceFont{
 		display: inline-block;
-		width:100rpx;
-		font-size:24rpx;
+		width:120rpx;
+		font-size:26rpx;
 		font-family:PingFang SC;
 		font-weight:500;
 		color:#333333;
@@ -464,7 +465,7 @@
 		left: 35rpx;
 		font-weight: bold;
 		color: #333333;
-		font-size: 28rpx;
+		font-size: 32rpx;
 		
 	}
 	.lookMore{
@@ -473,7 +474,7 @@
 		left: 445rpx;
 		font-weight: normal;
 		color: #999999;
-		font-size: 24rpx;
+		font-size: 28rpx;
 	}
 	.moreCode{
 		position: relative;
@@ -506,7 +507,7 @@
 		position: absolute;
 		top:6rpx;
 		left: 114rpx;
-		font-size: 30rpx;
+		font-size: 28rpx;
 	}
 	.codeAccount{
 		display: inline-block;
@@ -514,7 +515,7 @@
 		font-weight: normal;
 		top:56rpx;
 		left: 114rpx;
-		font-size: 24rpx;
+		font-size: 28rpx;
 	}
 	.copy{
 		display: inline-block;
@@ -552,6 +553,7 @@
 		display: inline-block;
 		text-decoration:underline;
 		margin: 30rpx 0;
+		font-size: 28rpx;
 	}
 	.dottedLineTwo{
 		display: inline-block;
@@ -576,10 +578,9 @@
 		position: absolute;
 		width: 250rpx;
 		margin-top: 15rpx;
-		font-size:24rpx;
+		font-size: 28rpx;
 		font-family:PingFang SC;
-		font-weight:500;
-		color:#CCCCCC;
+		font-weight:545;
 	}
 	.lookDetails{
 		display: inline-block;
@@ -724,7 +725,7 @@
 		display: inline-block;
 		width: 482rpx;
 		text-align: left;
-		font-size: 28rpx;
+		font-size: 32rpx;
 		margin: 10rpx 49rpx;
 	}
 	.cancle{
