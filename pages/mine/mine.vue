@@ -59,10 +59,10 @@
 							<image src="../../static/popup/closePopUp.png" class="close"></image>
 						</view>
 					</uni-popup> -->
-					
+
 				</view>
 			</view>
-		</view>	
+		</view>
 		<view class="popUpShow" :style="{display:popShow == true ? 'block' :'none'}">
 			<view class="popUp">
 				<text class="popupCodeName" >电子码：{{code.electronicCode}}</text>
@@ -109,7 +109,7 @@
 					<button class="cancle" @click="closeOrder()">取消</button>
 					<button class="update" @click="comfirmOrder(order)">确认提交</button>
 				</view>
-				
+
 			</view>
 		</view>
 	</view>
@@ -220,7 +220,7 @@
 						url: `${path}`
 						})
 					}
-					
+
 				},
 				//获取电子码信息
 				getCode(){
@@ -284,7 +284,7 @@
 				},
 				//确认订单弹窗
 				comfirmOrderPopUp(){
-					this.scanPopShow = true					
+					this.scanPopShow = true
 				},
 				//确认订单
 				comfirmOrder(data){
@@ -497,7 +497,6 @@
 		display: inline-block;
 		width:120rpx;
 		font-size:26rpx;
-		font-family:PingFang SC;
 		font-weight:500;
 		color:#333333;
 		text-align: center;
@@ -509,7 +508,7 @@
 		font-weight: bold;
 		color: #333333;
 		font-size: 32rpx;
-		
+
 	}
 	.lookMore{
 		position: relative;
@@ -580,7 +579,6 @@
 		left: 41rpx;
 		width:601rpx;
 		font-size:24rpx;
-		font-family:PingFang SC;
 		font-weight:500;
 		color:rgba(153,153,153,1);
 	}
@@ -614,7 +612,7 @@
 		left: 43rpx;
 		top:15rpx;
 		margin-bottom: 50rpx;
-		
+
 	}
 	.shopName{
 		display: inline-block;
@@ -622,7 +620,6 @@
 		width: 250rpx;
 		/* margin-top: 15rpx; */
 		font-size: 28rpx;
-		font-family:PingFang SC;
 		font-weight:545;
 	}
 	.lookDetails{
@@ -647,7 +644,6 @@
 		width:100rpx;
 		height:23rpx;
 		font-size:24rpx;
-		font-family:PingFang SC;
 		font-weight:500;
 		color:#999999;
 	}
@@ -657,7 +653,6 @@
 		width:130rpx;
 		height:23rpx;
 		font-size:24rpx;
-		font-family:PingFang SC;
 		font-weight:500;
 		color:#06C1AE;
 	}
@@ -683,7 +678,6 @@
 		display: inline-block;
 		height:28rpx;
 		font-size:30rpx;
-		font-family:PingFang SC;
 		font-weight:bold;
 		color:#333333;
 		margin-left: 53rpx;
@@ -693,17 +687,24 @@
 		display: inline-block;
 		height:23rpx;
 		font-size:24rpx;
-		font-family:PingFang SC;
 		font-weight:500;
 		color:#999999;
 		line-height:38rpx;
 		margin-left: 53rpx;
 		margin-top: 30rpx;
 	}
+	/* .halfCircle{
+		position: absolute;
+		width: 15rpx;
+		height: 15rpx;
+		background:rgba(255,255,255,1);
+		box-shadow:0px 6px 10px 0px rgba(153,153,153,0.05);
+	} */
 	.dottedLineThree{
 		display: inline-block;
 		margin: 41rpx 49rpx;
 		width:482rpx;
+		/* height:1rpx; */
 		border:1rpx dotted rgba(227,227,227,1);
 	}
 	.circle{
@@ -764,7 +765,7 @@
 	.orderMenu{
 		display: inline-block;
 		width: 580rpx;
-		
+
 	}
 	.orderPicture{
 		display: inline-block;

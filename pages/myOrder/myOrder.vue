@@ -238,7 +238,7 @@
 	}
 
 	.shopContainer {
-		font-family: PingFang SC;
+		font-family:  ;
 		position: relative;
 		width: 100%;
 		height: 520rpx;

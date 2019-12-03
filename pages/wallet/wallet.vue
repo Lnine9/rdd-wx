@@ -225,7 +225,7 @@
 		margin-right: 30rpx;
 		line-height: 130rpx;
 		font-size: 30rpx;
-		font-family: PingFang SC;
+		font-family:  ;
 		font-weight: 500;
 		color: rgba(102, 102, 102, 1);
 	}
