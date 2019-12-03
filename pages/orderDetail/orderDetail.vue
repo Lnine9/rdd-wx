@@ -198,7 +198,6 @@
 			}
 		},
 		onLoad: function(params) {
-			console.log(params);
 			this.orderId = params.orderid;
 
 			this.getOrderInfo();
@@ -211,8 +210,6 @@
 				OrderDetailAPI.getOrderDetail({
 					orderId: this.orderId
 				}).then(res => {
-					console.log(res);
-
 					this.order = res.data.data;
 					this.takeWay = Number(this.order.commodityType);
 					if (this.takeWay === 2) {
@@ -283,10 +280,10 @@
 			},
 			lookLogistics: function() {
 
-				uni.navigateTo({
-					url: '/pages/orderDetail/deliver?deliveryNum=' + this.order.deliveryNum + 
-						'&deliveryCompany=' + this.order.deliveryCompany
-				});
+				// uni.navigateTo({
+				// 	url: '/pages/orderDetail/deliver?deliveryNum=' + this.order.deliveryNum + 
+				// 		'&deliveryCompany=' + this.order.deliveryCompany
+				// });
 			},
 			confirmDelivery: function() {
 				if (this.order.commodityType === '1') {
@@ -333,7 +330,6 @@
 				params.deliveryCompany = '中通快递';
 				// 获取最近一次的物流数据
 				OrderDetailAPI.getDeliverInfo(params).then(res => {
-					console.log(res);
 					// 要显示的文字
 					if (res.data.data) {
 						let data = res.data.data.Traces;
@@ -342,7 +338,6 @@
 						this.deliveryInfoShow = '暂时没有物流信息';
 					}
 				}).catch(err => {
-					console.log(err);
 					this.deliveryInfoShow = '暂时没有物流信息';
 				});
 			},

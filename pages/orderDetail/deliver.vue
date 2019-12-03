@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<time-line ref="timeline" location="center" title="轨迹信息"></time-line>
+		<time-line ref="timeline" location="center" title="轨迹信息" :time_line_list="time_line_list"></time-line>
 	</view>
 </template>
 
@@ -15,7 +15,8 @@
 				requestParams: { // 请求物流信息的参数
 					deliveryNum: '',
 					deliveryCompany: ''
-				}
+				},
+				time_line_list: [], // 时间轴数据
 			}
 		},
 		components: {
@@ -44,8 +45,15 @@
 			getTraces: function() {
 				DeliverAPI.getDeliverInfo(this.requestParams).then(res => {
 					console.log(res);
+					if (res.data.data) {
+						let data = res.data.data.Traces;
+						this.time_line_list = data;
+					} else {
+						// todo 没有数据的情况
+					}
 				}).catch(err => {
 					console.log(err);
+					// todo 没有数据的情况
 				});
 			},
 		},
