@@ -75,7 +75,7 @@ padding-right: 30rpx;
 		</view>
 		<!-- 选择购买数量 -->
 
-					<view v-show="isBuy" style="background-color: rgba(0,0,0,0.5); z-index: 3;position: fixed;bottom: 0rpx;right: 0rpx;width: 100vw;height: 100vh;"></view>
+					<view v-show="isBuy" class="buyBox"></view>
 					<view  v-show="isBuy" class="cart-item" >
 						<view class="image-wrapper">
 							<image :src="titleImg[0]"
@@ -496,6 +496,14 @@ padding-right: 30rpx;
 		margin-left: 100rpx;
 	}
 
+	.buyBox{
+		background-color: rgba(0,0,0,0.5);
+		 z-index: 3;
+		position: fixed;
+		bottom: 0rpx;
+		right: 0rpx;
+		width: 100vw;height: 100vh;
+	}
 	/*  详情 */
 	.detail-desc{
 		background: #fff;
