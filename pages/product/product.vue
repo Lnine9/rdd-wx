@@ -49,7 +49,9 @@
 		
 		<view class="c-list">		
 			<view class="c-row b-b">
-				<view class="con-list"  style="font-size:24rpx;font-family:PingFang SC;font-weight:400;color:rgba(153,153,153,1);">
+				<view class="con-list"  style="font-size:24rpx;font-family:PingFang SC;font-weight:400;color:rgba(153,153,153,1);padding-left: 30rpx;
+padding-right: 30rpx;
+">
 					<template>{{dataDic.commodityInfo}}</template>
 				</view>
 			</view>
@@ -82,7 +84,7 @@
 						</view>
 						<view class="item-right">
 							<view style="display: flex;justify-content: space-between;align-items: center;">
-							<text class=" title">{{dataDic.commodityTitle}}</text>
+							<text class=" title" style="font-weight: 500;">{{dataDic.commodityTitle}}</text>
 							<text class="del-btn" @click="cancel">取消</text>
 							</view>
 							<text class="price">¥{{buyNum * dataDic.salePrice}}</text>
@@ -445,6 +447,10 @@
 				line-height: 50upx;
 			}
 			.price{
+				font-size:32rpx;
+
+				font-weight:500;
+				color:rgba(255,126,48,1);
 				height: 50upx;
 				line-height:50upx;
 			}
@@ -454,7 +460,7 @@
 			width: 100rpx;
 			right: 20rpx;
 			font-size:28rpx; 
-			height: 50rpx;
+			
 			color: $font-color-light;
 		}
 	}
