@@ -4,16 +4,16 @@
 				<view class="subHead">
 					<image class="photo" :src="user.photo"></image>
 					<text class="name">{{user.name}}</text>
-					<image class="scan" src="../../static/code/scan.png" @click="scanCode()" :style="{display:isShop == 1 ? 'block' : 'none' }"></image>
+					<image class="scan" src="../../static/code/scanBut.png" @click="scanCode()" :style="{display:isShop == 1 ? 'block' : 'none' }"></image>
 				</view>
-			</view>	
+			</view>
 			<view class="vip">
 				<image class="vipPhoto" src="../../static/vip/icVipPrice.png"></image>
 				<text class="applyVip" @click="getVip()" :style="{display: isVip == false ? 'block' :'none' }">申请会员</text>
 				<text class="applyVip"  :style="{display:isVip == true ? 'block' :'none' }">囧途宝盒会员</text>
 				<text class="freeVip"  @click="getVip()" :style="{display: isVip == false ? 'block' :'none' }">囧途宝盒会员免费申请啦！</text>
 				<image class="more" src="../../static/vip/icVipMore.png" @click="getVip()" :style="{display: isVip == false ? 'block' :'none' }"></image>
-			</view>	
+			</view>
 			<view class="service">
 				<text class="myService">我的服务</text>
 				<view style="width: 700rpx;margin-left: 50rpx;">
@@ -21,19 +21,21 @@
 						<image class="servicePicture"  :src="item.savePath" @click="getRouter(item.androidPath)"></image>
 						<text class="serciceFont" @click="getRouter(item.androidPath)">{{item.menuName}}</text>
 					</view>
-				</view>	
+				</view>
 			</view>
 			<view :style="{display:code == null ? 'none' :'block' }">
 				<view class="codeTitle">
 					<text class="myElectronicCode">我的电子码</text>
+					<view>
 					<text class="lookMore" @click="codeLook()">查看更多</text>
 					<image class="moreCode" src="../../static/code/moreCode.png" @click="codeLook()"></image>
+					</view>
 				</view>
 				<view class="electronicCode">
 					<view class="subElectronicCode">
-						<image class="codePhoto" :src="code.commodityImgList[0]"></image>
+						<image class="codePhoto" src="../../static/code/scan.png"></image>
 						<text class="codeName" :style="{display:code.commodityType == 2 ? 'block' : 'none' }">电子码：{{code.electronicCode}}</text>
-						<text class="codeAccount" :style="{display:code.commodityType == 2 ? 'block' : 'none' }">订单号码：{{code.orderId}}</text>
+						<text class="codeAccount" :style="{display:code.commodityType == 2 ? 'block' : 'none' }">订单状态：{{this.getorderState()}}</text>
 						<text class="codeName" :style="{display:code.commodityType == 1 ? 'block' : 'none' }" >
 							快递单号：<text selectable="true" >{{code.deliveryNum}}</text>
 							</text>
@@ -61,7 +63,7 @@
 								<image src="../../static/popup/closePopUp.png" class="close"></image>
 							</view>
 						</uni-popup> -->
-		
+
 					</view>
 				</view>
 			</view>
@@ -140,7 +142,6 @@
 					popShow:false,
 					scanPopShow:false,
 					currentPage:'main',
-					
 					flag: true, // 标识当前页面是否显示
 	            };
 	        },
@@ -149,11 +150,11 @@
 				if (payOrder) {
 					this.flag = false;
 					getApp().globalData.payOrder = false;
-					
+
 					uni.navigateTo({
 						url: '/pages/myOrder/myOrder'
 					});
-					
+
 				} else {
 					this.flag = true;
 					this.wxGetUserInfo();
@@ -255,6 +256,7 @@
 				getCode(){
 					api.getCodeInfo().then(res=>{
 						this.code = res.data.data
+						console.log(res.data.data)
 						if(res.data.data != null){
 							if(res.data.data.electronicCode == null || res.data.data.electronicCode == ''){
 								this.code.electronicCode = '暂无'
@@ -373,6 +375,19 @@
 					// 拼接
 					return year+"-"+month+"-"+day+" "+hours+":"+minutes+":"+seconds;
 				},
+				//获取订单状态
+				getorderState(){
+					if(this.code != null){
+						let index = this.code.orderState
+						if(index == 1){
+							return '未完成'
+						}
+						else
+							return '未知'
+					}else{
+							return '未知'
+					}
+				},
 				//获取邮寄状态
 				getdeliveryState(){
 					if(this.code != null){
@@ -388,7 +403,9 @@
 						}
 						else
 							return '未知'
-					}	
+					}else{
+							return '未知'
+					}
 				},
 				//一键复制
 				copyBtu(data){
@@ -433,7 +450,7 @@
 	.head{
 		width: 750rpx;
 		height: 263rpx;
-		background-color: #313134;
+		background-image: url('../../static/user/userBackground.png');
 	}
 	.subHead{
 		position: relative;
@@ -450,14 +467,14 @@
 		display: inline-block;
 		color: #FFFFFF;
 		position: absolute;
-		top:17.6rpx;
+		top:30rpx;
 		left: 148.6rpx;
 		font-size: 32rpx;
 	}
 	.scan{
 		position: absolute;
 		right: 0rpx;
-		top: 17.6rpx;
+		top: 30rpx;
 		width: 40rpx;
 		height: 40rpx;
 	}
@@ -465,7 +482,7 @@
 		width: 690rpx;
 		height: 108rpx;
 		margin: auto;
-		background-color: #FFF2DA;
+		background-image: url('../../static/vip/vipBackground.png');
 		border-radius: 10rpx;
 		position:relative ;
 		bottom: 65rpx;
@@ -539,29 +556,30 @@
 		text-align: center;
 	}
 	.codeTitle{
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
 		position: relative;
 		top: 15rpx;
 		width: 683rpx;
 		margin: auto;
 	}
 	.myElectronicCode{
-		position: relative;
+
 		font-weight: bold;
 		color: #333333;
 		font-size: 32rpx;
 
 	}
 	.lookMore{
-		position: absolute;
+		margin-right: 20rpx;
 		font-weight: normal;
-		right: 30rpx;
+
 		color: #999999;
 		font-size: 28rpx;
 	}
 	.moreCode{
-		position: absolute;
-		top: 8rpx;
-		right: 0;
+
 		width: 11rpx;
 		height: 22rpx;
 	}
