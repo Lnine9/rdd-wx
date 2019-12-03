@@ -502,7 +502,9 @@ padding-right: 30rpx;
 		position: fixed;
 		bottom: 0rpx;
 		right: 0rpx;
-		width: 100vw;height: 100vh;
+		width: 100vw;
+		height: 100vh;
+		box-shadow:0px -6px 10px 0px rgba(116,116,116,0.06)
 	}
 	/*  详情 */
 	.detail-desc{
