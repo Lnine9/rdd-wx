@@ -124,7 +124,7 @@
 				totalPrice: 0,
 			}
 		},
-		
+
 		onLoad: function(params) {
 			this.commodityId = params.commodityId;
 			this.commodityNum = params.commodityNum;
@@ -260,10 +260,13 @@
 									icon: 'success',
 								});
 								setTimeout(() => {
-									// 购买成功去往首页
+									// 购买成功去往个人中心
 									uni.switchTab({
-										url: '/pages/homePage/homePage'
+										url: '/pages/mine/mine'
 									});
+									// uni.reLaunch({
+									// 	url: '/pages/myOrder/myOrder'
+									// });
 								}, 2000);
 							},
 							'fail': function(res) {
@@ -272,8 +275,7 @@
 									icon: 'none'
 								});
 							},
-							'complete': function(res) {
-							}
+							'complete': function(res) {}
 						});
 					}
 				}).catch(err => {
@@ -302,27 +304,28 @@
 					showCancel: false
 				});
 			},
-			imgStorage: function() {
-			}
+			imgStorage: function() {}
 		}
 	}
 </script>
 
 <style>
 	.main-container {
-		height: 100%;
+		width: 100%;
+		height: 100vh;
 		background: #F8F9FB;
 	}
 
 	.commodity-container {
 		display: flex;
+		flex-direction: row;
 		width: 100%;
 		height: 230rpx;
 		background: #FFFFFF;
 	}
 
 	.commodity-img-container {
-		margin: 30rpx;
+		margin: auto 30rpx auto 30rpx;
 		border: #E3E3E3 1px solid;
 		border-radius: 10rpx;
 		width: 170rpx;
@@ -336,24 +339,30 @@
 	}
 
 	.commodity-content-container {
-		margin-top: 60rpx;
-		margin-bottom: 60rpx;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		margin: auto 0 auto 0;
 		width: 520rpx;
+		height: 170rpx;
 	}
 
 	.commodity-title {
-		margin-top: 20rpx;
-		margin-bottom: 20rpx;
+		margin: auto 20rpx auto 0;
 		color: #303038;
 		font-size: 34rpx;
 		font-weight: bold;
+		display: -webkit-box;
+		text-overflow: ellipsis;
+		overflow: hidden;
+		-webkit-box-orient: vertical;
+		-webkit-line-clamp: 2;
 	}
 
 	.commodity-price-container {
 		display: flex;
 		justify-content: flex-end;
-		margin-top: 20rpx;
-		margin-bottom: 20rpx;
+		margin: auto 0 auto 0;
 	}
 
 	.commodity-actual-price {
@@ -416,26 +425,29 @@
 
 	.address-user-info-container {
 		margin-top: 10rpx;
+		margin-bottom: 20rpx;
 		display: flex;
 		flex-direction: row;
 	}
 
 	.address-user-name {
+		font-weight: 500;
 		color: #303038;
 		font-size: 30rpx;
 	}
 
 	.address-user-account {
-		margin-left: 15rpx;
+		font-weight: 500;
+		margin: auto 0 auto 15rpx;
 		color: #999999;
 		font-size: 30rpx;
 	}
 
 	.address-user-address-detail {
-		margin-top: 10rpx;
-		margin-bottom: 10rpx;
+		font-weight: 500;
+		margin: auto 0 auto 0;
 		color: #333333;
-		font-size: 26rpx;
+		font-size: 24rpx;
 		display: -webkit-box;
 		text-overflow: ellipsis;
 		overflow: hidden;
@@ -492,6 +504,7 @@
 
 	.remark-text {
 		flex: 20%;
+		font-weight: 500;
 		margin: auto 10rpx auto 30rpx;
 		color: #303038;
 	}
@@ -544,5 +557,23 @@
 	.pay-btn-text {
 		margin: auto;
 		color: #FFFFFF;
+	}
+
+	::-webkit-input-placeholder {
+		color: #CCCCCC;
+	}
+
+	:-moz-placeholder {
+		/* Firefox 18- */
+		color: #CCCCCC;
+	}
+
+	::-moz-placeholder {
+		/* Firefox 19+ */
+		color: #CCCCCC;
+	}
+
+	:-ms-input-placeholder {
+		color: #CCCCCC;
 	}
 </style>

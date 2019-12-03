@@ -11,7 +11,7 @@
 				<view class="shopTitle boldFontWeight">
 					<view style="display: flex;align-items: center;margin-left: 5vw;">
 					<image class="shopPic" src="../../static/myOrder/shop.png"></image>
-					<text class="shopName normalFontDark bigFontSize">{{item.shopName}}</text>
+					<text class="shopName normalFontDark boldFontWeight bigFontSize">{{item.shopName}}</text>
 					</view>
 					<text class="status smallFontSize" v-bind:style="statusStyle[index]">{{judgeOrderState(index)}}</text>
 				</view>
@@ -23,7 +23,7 @@
 					<!-- 商品信息 -->
 					<view class="goodsMessage">
 											
-						<text class="goodsName normalFontDark bigFontSize">{{item.commodityTitle}}</text>
+						<text class="goodsName normalFontDark  boldFontWeight largeFontSize">{{item.commodityTitle}}</text>
 						<view style="display: flex;flex-direction: row;margin-top: 40rpx;align-items: center;width: 67.5vw;">
 							<text class="actualPrice boldFontWeight largeFontSize">{{"￥"+item.actualPrice}}</text>
 							<text class="originPrice normalGray midalFontSize">{{"￥"+item.originalPrice}}</text>
@@ -125,7 +125,7 @@
 						return "未发货"
 					} else if (item.deliveryState == 1) {
 						this.statusStyle[index] = "color:#06C1AE;"
-						return "卖家已发货"
+						return "已发货"
 					} else if (item.deliveryState == 2) {
 						this.statusStyle = "color:#CCCCCC"
 						return "已签收"
@@ -229,18 +229,19 @@
 	}
 
 	.orderList {
+		height: 100vh;
 		padding-top: 20rpx;
 		background-color: #F8F9FB;
-		height: 500rpx;
+		
 		width: 100%;
 
 	}
 
 	.shopContainer {
-		font-family: PingFang SC;
+		font-family:  ;
 		position: relative;
 		width: 100%;
-		height: 500rpx;
+		height: 520rpx;
 		background-color: #FFFFFF;
 	}
 
@@ -332,13 +333,15 @@
 	}
 
 	.orderMessage {
+		padding-top: 10rpx;
+		padding-bottom: 10rpx;
 		display: flex;
 		justify-content: space-around;
 		flex-direction: column;
-		height: 90rpx;
+		height: 110rpx;
 		border-width: 1px 0 1px 0;
 		border-style: solid;
-		border-color: rgba(243, 243, 243, 1);
+		border-color: rgba(243, 243, 243, 0.5);
 
 	}
 

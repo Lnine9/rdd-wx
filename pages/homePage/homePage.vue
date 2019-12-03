@@ -1,5 +1,5 @@
 <template>
-	<view class="container">	
+	<view class="container">
 		<!-- 小程序头部兼容 -->
 		<!-- #ifdef MP -->
 		<!-- #endif -->
@@ -27,19 +27,19 @@
 				<text class="num">{{swiperLength}}</text>
 			</view>
 		</view>
-		
+
 		<!-- 精选商品 -->
 		<view class="f-header m-t">
 			<view class="tit-box">
 				<text class="tit">精选商品</text>
 			</view>
 		</view>
-		<view class="cate-section">			
-			<view class="seckill-section m-t">			
+		<view class="cate-section">
+			<view class="seckill-section m-t">
 				<text class="yticon icon-you"></text>
 				<scroll-view class="floor-list" scroll-x>
 					<view class="scoll-wrapper">
-						<view 
+						<view
 							v-for="(item, index) in goodsList" :key="index"
 							class="floor-item"
 							@click="navToDetailPage(item)">
@@ -54,16 +54,16 @@
 				</scroll-view>
 			</view>
 		</view>
-		
+
 		<!-- 猜你喜欢 -->
-		<view class="f-header m-t">	
+		<view class="f-header m-t r-m-t">
 			<view class="tit-box">
 				<text class="tit">猜你喜欢</text>
 			</view>
 			<text class="yticon icon-you"></text>
-		</view>		
-		<view class="guess-section">
-			<view 
+		</view>
+		<view class="guess-section r-m-t">
+			<view
 				v-for="(item, index) in goodsList" :key="index"
 				class="guess-item"
 				@click="navToDetailPage(item)">
@@ -77,13 +77,14 @@
 				</view>
 			</view>
 		</view>
+		<tabBar :currentPage="currentPage"></tabBar>
 	</view>
 </template>
 
 <script>
 	import {api} from "./api.js"
 	// 高德地图 api
-	import amap from '../../libs/amap-wx.js';  
+	import amap from '../../libs/amap-wx.js';
 	import tabBar from '../components/zwy-tabBar/tabBar.vue';
 	export default {
 		data() {
@@ -104,7 +105,7 @@
 			};
 		},
 		components:{
-					tabBar
+			tabBar
 		},
 		methods: {
 			//轮播图切换
@@ -123,7 +124,7 @@
 				if(item.announcementType == '0') {
 					// 公告页面跳转
 					let resulturl = item.announcementContent
-					getApp().globalData.desc = resulturl 
+					getApp().globalData.desc = resulturl
 					uni.navigateTo({
 						url: `/pages/webView/webView`
 					})
@@ -138,7 +139,7 @@
 					uni.navigateTo({
 						url: `${resulturl}`
 					})
-				}							
+				}
 			},
 			//详情页
 			navToDetailPage(item) {
@@ -146,8 +147,8 @@
 				let id = item.commodityId;
 				uni.navigateTo({
 					url: `/pages/product/product?id=${id}`,
-				})				
-			},	
+				})
+			},
 			bindPickerChange(val) {
 				this.addressName=this.areas[val.detail.value]
 				uni.setStorageSync('location',this.areas[val.detail.value]);
@@ -158,7 +159,7 @@
 				this.getGuess(),
 				this.getAreas()
 			},
-			
+
 			/**
 			 * 获取用户信息
 			 */
@@ -170,7 +171,7 @@
 				};
 				api.getUserInfo(user).then(res =>{
 					this.service = res.data.data,
-				
+
 					// userType 说明
 					// 0: app
 					// 1: 企业
@@ -179,20 +180,20 @@
 					// 默认重庆（debug）
 					uni.setStorageSync('location', "重庆"),
 					// 存储角色信息
-					uni.setStorageSync('roleName', this.service.roleName),
+					uni.setStorageSync('roleNameList', this.service.roleNameList),
 					// 当前用户是否为VIP
 					uni.setStorageSync('isVip', this.service.isVip==0?false:true)
 					// 当前地区是否有VIP业务
-					uni.setStorageSync('haveVip', this.service.haveVip==0?false:true)				
+					uni.setStorageSync('haveVip', this.service.haveVip==0?false:true)
 				}).catch(err => {
 					console.log(err)
-				});		
+				});
 			},
-			
+
 			/**
 			 * 获取轮播图信息
 			 */
-			getBanner() {				
+			getBanner() {
 				let location = {
 					locationCode:'WCPHomePage'
 				};
@@ -201,21 +202,21 @@
 					this.swiperLength = this.carouselList.length;
 				}).catch(err => {
 					console.log(err)
-				})		
+				})
 			},
-			
+
 			/**
 			 * 获取地区列表信息
 			 */
-			getAreas() {				
+			getAreas() {
 				api.getAreas().then(res =>{
 					var array = res.data.data
 					this.areas = array.split(",")
 				}).catch(err => {
 					console.log(err)
-				})		
+				})
 			},
-			
+
 			/**
 			 * 获取精选商品
 			 */
@@ -231,9 +232,9 @@
 					this.goodsList = res.data.data
 				}).catch(err => {
 					console.log(err)
-				})	
+				})
 			},
-			
+
 			/**
 			 * 猜你喜欢
 			 */
@@ -247,15 +248,15 @@
 					this.guessList = res.data.data
 				}).catch(err => {
 					console.log(err)
-				})			
+				})
 			}
-														
+
 		},
-							
+
 		/**
 		 * 猜你喜欢列表
 		 */
-		mounted() {		
+		mounted() {
 			/**
 			 * 获取设备定位
 			 */
@@ -263,24 +264,24 @@
 			console.info(!uni.getStorageSync('location'))
 			if(!uni.getStorageSync('location')){
 				this.amapPlugin = new amap.AMapWX({
-					    key: this.key  
-					});  
-					
-					uni.showLoading({  
-						title: '获取信息中'  
-					});  
-					this.amapPlugin.getPoiAround({  
-						success: (data) => {  
-							uni.hideLoading();  
-							this.addressName = data.poisData[0].cityname;  
+					    key: this.key
+					});
+
+					uni.showLoading({
+						title: '获取信息中'
+					});
+					this.amapPlugin.getPoiAround({
+						success: (data) => {
+							uni.hideLoading();
+							this.addressName = data.poisData[0].cityname;
 							uni.setStorageSync('location', this.addressName)
 							this.defaultRegion = uni.getStorageSync('location')||'';
 						},
 						fail: (res) => {
-							console.log(res)  
+							console.log(res)
 						}
-					}); 
-				}	
+					});
+				}
 				this.defaultRegion = uni.getStorageSync('location')||'';
 				this.getBanner(),
 				this.getUserMes(),
@@ -303,11 +304,18 @@
 	}
 	.head-text {
 		float: left;
+		font-size: 36rpx;
+		font-weight: bold;
 	}
 	.head-region{
 		float: right;
+		font-size: 34rpx;
 	}
-	
+
+	.r-m-t {
+		margin-top: -15rpx;
+	}
+
 	/* #ifdef MP */
 	.mp-search-box{
 		position:absolute;
@@ -354,8 +362,8 @@
 		}
 	}
 	/* #endif */
-	
-	
+
+
 	page {
 		background: #ffffff;
 	}
@@ -434,6 +442,7 @@
 	.seckill-section{
 		padding: 4upx 30upx 24upx;
 		background: #fff;
+		margin-top: 30rpx;
 		.s-header{
 			display:flex;
 			align-items:center;
@@ -479,16 +488,16 @@
 			flex-direction: column;
 			align-items: center;
 			width: 240rpx;
-			margin-right: 50upx;
+			margin-right: 40upx;
 			font-size: 32rpx;
 			font-weight: 800;
 			color: $font-color-dark;
-			font-family:PingFang SC;
 			line-height: 1.8;
 			image{
 				width: 240rpx;
 				height: 240rpx;
 				border-radius: 20upx;
+				border: 2upx solid #E3E3E3
 			}
 			.PriceArea{
 				display:flex;
@@ -496,30 +505,37 @@
 				align-items: center;
 			}
 			.clamp{
-				display: -webkit-box;
+				justify-content: center;
+				align-items: center;
+				text-align:center;
 				-webkit-box-orient: vertical;
 				-webkit-line-clamp:2;
-				overflow: hidden;
 				word-break: break-all;
-				text-overflow: ellipsis;
-				font-size: 30rpx;
+				margin-top: 10rpx;
+				font-size: 28rpx;
+				font-weight: 500;
 				color:rgba(51,51,51,1);
+				max-width: 220rpx;
+				white-space: nowrap;
+				text-overflow:ellipsis;
+				overflow:hidden;
 			}
 			.priceOrigin{
 				font-size: 32rpx;
-				font-family:PingFang SC;
-				font-weight: 500;
+                font-weight: 700;
 				color:rgba(255,126,48,1);
 			}
 			.priceCurrent{
 				margin-left: 10rpx;
-				font-size: 28rpx;
-				font-family:PingFang SC;
+				font-size: 26rpx;
 				font-weight: 500;
 				color:rgba(153,153,153,1);
 				text-decoration: line-through;
 			}
 		}
+	}
+	.uni-input {
+		font-weight: 545;
 	}
 	.PriceArea{
 		margin-top: 10rpx;
@@ -527,42 +543,42 @@
 		justify-content: center;
 		align-items: center;
 	}
+
 	.clamp{
-		margin-top: 10rpx;
-		display:flex;
+		margin-bottom: 5rpx;
 		justify-content: center;
 		align-items: center;
-		display: -webkit-box;
+		text-align:center;
 		-webkit-box-orient: vertical;
 		-webkit-line-clamp:2;
-		overflow: hidden;
 		word-break: break-all;
-		text-overflow: ellipsis;
-		font-size: 37rpx;
-		font-family:PingFang SC;
-		font-weight: 650;
+		margin-top: 16rpx;
+		font-size: 28rpx;
+		font-weight: 500;
 		color:rgba(51,51,51,1);
+		max-width: 290rpx;
+		white-space: nowrap;
+		text-overflow:ellipsis;
+		overflow:hidden;
 	}
-	
+
 	.priceOrigin{
-		font-size: 35rpx;
-		font-family:PingFang SC;
-		font-weight: 600;
+		font-size: 32rpx;
+		font-weight: 700;
 		color:rgba(255,126,48,1);
 	}
-	
+
 	.priceCurrent{
 		margin-left: 10rpx;
-		font-size: 30rpx;
-		font-family:PingFang SC;
-		font-weight: 700;
+		font-size: 26rpx;
+		font-weight: 500;
 		color:rgba(153,153,153,1);
 		text-decoration: line-through;
 	}
-	
+
 	.f-header{
 		// display:flex;
-		
+
 		align-items:center;
 		height: 90upx;
 		padding: 20upx 30upx 8upx;
@@ -580,8 +596,7 @@
 		}
 		.tit{
 			font-size:32rpx;
-			font-family:PingFang SC;
-			font-weight:bold;
+			font-weight: 570;
 			color:rgba(51,51,51,1);
 		}
 		.tit2{
@@ -600,6 +615,7 @@
 		flex-wrap:wrap;
 		padding: 0 30upx;
 		background: #fff;
+		margin-top: -15rpx;
 		.guess-item{
 			display:flex;
 			flex-direction: column;
@@ -614,10 +630,14 @@
 			height: 330upx;
 			border-radius: 10px;
 			overflow: hidden;
+			border-color: #E3E3E3;
+			border-width: 1px;
+
 			image{
 				width: 100%;
 				height: 100%;
 				opacity: 1;
+				border: 2upx solid #E3E3E3
 			}
 		}
 		.title{
@@ -631,6 +651,9 @@
 			line-height: 1;
 		}
 	}
-	
-
+	::-webkit-scrollbar {
+		width: 0;
+		height: 0;
+		background-color: transparent;
+	}
 </style>

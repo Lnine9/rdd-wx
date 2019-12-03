@@ -6,14 +6,14 @@
 				<text class="name">{{user.name}}</text>
 				<image class="scan" src="../../static/code/scan.png" @click="scanCode()" :style="{display:isShop == 1 ? 'block' : 'none' }"></image>
 			</view>
-		</view>	
+		</view>
 		<view class="vip">
 			<image class="vipPhoto" src="../../static/vip/icVipPrice.png"></image>
 			<text class="applyVip" @click="getVip()" :style="{display: isVip == false ? 'block' :'none' }">申请会员</text>
 			<text class="applyVip"  :style="{display:isVip == true ? 'block' :'none' }">囧途宝盒会员</text>
 			<text class="freeVip"  @click="getVip()" :style="{display: isVip == false ? 'block' :'none' }">囧途宝盒会员免费申请啦！</text>
 			<image class="more" src="../../static/vip/icVipMore.png" @click="getVip()" :style="{display: isVip == false ? 'block' :'none' }"></image>
-		</view>	
+		</view>
 		<view class="service">
 			<text class="myService">我的服务</text>
 			<view style="width: 700rpx;margin-left: 50rpx;">
@@ -21,7 +21,7 @@
 					<image class="servicePicture"  :src="item.savePath" @click="getRouter(item.androidPath)"></image>
 					<text class="serciceFont" @click="getRouter(item.androidPath)">{{item.menuName}}</text>
 				</view>
-			</view>	
+			</view>
 		</view>
 		<view :style="{display:code == null ? 'none' :'block' }">
 			<text class="myElectronicCode">我的电子码</text>
@@ -61,7 +61,7 @@
 					</uni-popup>
 				</view>
 			</view>
-		</view>	
+		</view>
 		<view class="noCode" :style="{display:code == null ? 'block' :'none' }">
 			<image class="noCodePicture" src="../../static/code/noCode.png"></image>
 			<text class="noCodeText">暂无电子码</text>
@@ -82,7 +82,7 @@
 			</view>
 		</uni-popup>
 	</view>
-	
+
 </template>
 
 <script>
@@ -156,6 +156,7 @@
 				//判断是否为商家
 				judgeScan(){
 					let value = uni.getStorageSync('roleNameList');
+					console.log(value)
 					if(value != null){
 						for (var i = 0; i < value.length; i++) {
 							if(value[i].roleName === "微信商家"){
@@ -241,7 +242,7 @@
 				},
 				//确认订单弹窗
 				comfirmOrderPopUp(){
-					this.$refs.order.open();					
+					this.$refs.order.open();
 				},
 				//确认订单
 				comfirmOrder(data){
@@ -289,16 +290,16 @@
 						let index = this.code.deliveryState
 						if(index == 0){
 							return '未邮寄'
-						}	
+						}
 						else if(index == 1){
 							return '邮寄中'
-						}	
+						}
 						else if(index == 2){
 							return '已发送'
 						}
 						else
 							return '未知'
-					}	
+					}
 				},
 				//一键复制
 				copyBtu(data){
@@ -310,7 +311,7 @@
 						  console.log('复制成功')
 					  }
 					});
-					
+
 				},
 				//查看二维码
 				lookQRCode(){
@@ -339,7 +340,7 @@
 					},2000);
 				}
 			}
-	           
+
 	    }
 </script>
 
@@ -359,11 +360,11 @@
 		position: relative;
 		width: 640rpx;
 		left: 45.4rpx;
-		top: 59.4rpx;	
+		top: 59.4rpx;
 	}
 	.photo{
 		width: 112rpx;
-		height: 112rpx;	
+		height: 112rpx;
 	}
 	.name{
 		display: inline-block;
@@ -400,7 +401,7 @@
 		position: absolute;
 		left: 113rpx;
 		color: #7E5611;
-		font-size: 28rpx;
+		font-size: 32rpx;
 		font-weight: bold;
 		line-height: 108rpx;
 	}
@@ -433,7 +434,7 @@
 		margin-top: 40rpx;
 		font-weight: bold;
 		color: #333333;
-		font-size: 28rpx;
+		font-size: 32rpx;
 	}
 	.serciceList{
 		display: inline-block;
@@ -447,13 +448,12 @@
 		display: inline-block;
 		width: 60rpx;
 		height: 60rpx;
-		padding: 0 19rpx;
+		padding: 0 30rpx;
 	}
 	.serciceFont{
 		display: inline-block;
-		width:100rpx;
-		font-size:24rpx;
-		font-family:PingFang SC;
+		width:120rpx;
+		font-size:26rpx;
 		font-weight:500;
 		color:#333333;
 		text-align: center;
@@ -464,8 +464,8 @@
 		left: 35rpx;
 		font-weight: bold;
 		color: #333333;
-		font-size: 28rpx;
-		
+		font-size: 32rpx;
+
 	}
 	.lookMore{
 		position: relative;
@@ -473,7 +473,7 @@
 		left: 445rpx;
 		font-weight: normal;
 		color: #999999;
-		font-size: 24rpx;
+		font-size: 28rpx;
 	}
 	.moreCode{
 		position: relative;
@@ -499,14 +499,14 @@
 	}
 	.codePhoto{
 		width: 80rpx;
-		height: 80rpx;	
+		height: 80rpx;
 	}
 	.codeName{
 		display: inline-block;
 		position: absolute;
 		top:6rpx;
 		left: 114rpx;
-		font-size: 30rpx;
+		font-size: 28rpx;
 	}
 	.codeAccount{
 		display: inline-block;
@@ -514,7 +514,7 @@
 		font-weight: normal;
 		top:56rpx;
 		left: 114rpx;
-		font-size: 24rpx;
+		font-size: 28rpx;
 	}
 	.copy{
 		display: inline-block;
@@ -536,7 +536,6 @@
 		left: 41rpx;
 		width:601rpx;
 		font-size:24rpx;
-		font-family:PingFang SC;
 		font-weight:500;
 		color:rgba(153,153,153,1);
 	}
@@ -552,6 +551,7 @@
 		display: inline-block;
 		text-decoration:underline;
 		margin: 30rpx 0;
+		font-size: 28rpx;
 	}
 	.dottedLineTwo{
 		display: inline-block;
@@ -569,17 +569,15 @@
 		left: 43rpx;
 		top:15rpx;
 		margin-bottom: 50rpx;
-		
+
 	}
 	.shopName{
 		display: inline-block;
 		position: absolute;
 		width: 250rpx;
 		margin-top: 15rpx;
-		font-size:24rpx;
-		font-family:PingFang SC;
-		font-weight:500;
-		color:#CCCCCC;
+		font-size: 28rpx;
+		font-weight:545;
 	}
 	.lookDetails{
 		display: inline-block;
@@ -603,7 +601,6 @@
 		width:100rpx;
 		height:23rpx;
 		font-size:24rpx;
-		font-family:PingFang SC;
 		font-weight:500;
 		color:#999999;
 	}
@@ -613,7 +610,6 @@
 		width:130rpx;
 		height:23rpx;
 		font-size:24rpx;
-		font-family:PingFang SC;
 		font-weight:500;
 		color:#06C1AE;
 	}
@@ -630,7 +626,6 @@
 		display: inline-block;
 		height:28rpx;
 		font-size:30rpx;
-		font-family:PingFang SC;
 		font-weight:bold;
 		color:#333333;
 		margin-left: 53rpx;
@@ -640,7 +635,6 @@
 		display: inline-block;
 		height:23rpx;
 		font-size:24rpx;
-		font-family:PingFang SC;
 		font-weight:500;
 		color:#999999;
 		line-height:38rpx;
@@ -724,7 +718,7 @@
 		display: inline-block;
 		width: 482rpx;
 		text-align: left;
-		font-size: 28rpx;
+		font-size: 32rpx;
 		margin: 10rpx 49rpx;
 	}
 	.cancle{
