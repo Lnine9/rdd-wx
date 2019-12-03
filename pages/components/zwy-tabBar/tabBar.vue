@@ -2,14 +2,15 @@
 	<view class="tabBar">
 		<view
 		 v-for="(item, index) in tabBar" 
-		 :key="item.url" 
+		 :key="index" 
 		 class="tabbar_item" 
 		 :class="{'active':item.url == currentPage}"
 		 @click="navTo(item)"
-		 >
+		 >	<view style="display: flex;flex-direction: column;align-items: center;">
 			<image v-if="item.url == currentPage" :src="item.imgNormal"></image>
 			<image v-else :src="item.imgClick"></image>
 			<view class="text">{{item.text}}</view>
+			</view>
 		</view>
 	</view>
 </template>
@@ -27,6 +28,7 @@
 			uni.hideTabBar({})
 			api.getTabBarInfo().then(res=>{
 				this.tabBar=res.data.data;
+				console.log(this.tabBar)
 			}).catch(err=>{
 				console.log(err)
 			})
@@ -64,6 +66,7 @@
 	//未选中设置
 		$normalTextColor:#999; //未选中颜色
 	.tabBar{
+		box-shadow:0px -6px 10px 0px rgba(116,116,116,0.06);
 		width: $isWidth;
 		height: 100upx;
 		position: fixed;
@@ -98,9 +101,9 @@
 			}
 		}
 		image{
-			width: 48upx;
-			height:48upx;
-			margin-left: 5upx;
+			width: 40upx;
+			height:40upx;
+			
 		}
 	}
 </style>

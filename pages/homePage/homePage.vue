@@ -346,6 +346,7 @@
 	}
 	page{
 		.cate-section{
+			
 			position:relative;
 			z-index:5;
 			border-radius:25upx 25upx 0 0;
@@ -354,14 +355,17 @@
 		.carousel-section{
 			margin: 0 auto;
 			width: 90%;
+			
 			padding: 0;
 			.titleNview-placing {
 				padding-top: 0;
 				height: 0;
 			}
 			.carousel{
+				height: 280rpx;
 				.carousel-item{
 					padding: 0;
+					
 				}
 			}
 			.swiper-dots{
