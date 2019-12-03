@@ -35,7 +35,7 @@
 					<view class="subElectronicCode">
 						<image class="codePhoto" src="../../static/code/scan.png"></image>
 						<text class="codeName" :style="{display:code.commodityType == 2 ? 'block' : 'none' }">电子码：{{code.electronicCode}}</text>
-						<text class="codeAccount" :style="{display:code.commodityType == 2 ? 'block' : 'none' }">订单号码：{{code.orderId}}</text>
+						<text class="codeAccount" :style="{display:code.commodityType == 2 ? 'block' : 'none' }">订单状态：{{this.getorderState()}}</text>
 						<text class="codeName" :style="{display:code.commodityType == 1 ? 'block' : 'none' }" >
 							快递单号：<text selectable="true" >{{code.deliveryNum}}</text>
 							</text>
@@ -256,6 +256,7 @@
 				getCode(){
 					api.getCodeInfo().then(res=>{
 						this.code = res.data.data
+						console.log(res.data.data)
 						if(res.data.data != null){
 							if(res.data.data.electronicCode == null || res.data.data.electronicCode == ''){
 								this.code.electronicCode = '暂无'
