@@ -1,14 +1,14 @@
 <template>
 	<view class="main-container">
 		<!-- 订单状态 -->
-		<view v-if="takeWay === 1" class="order-state-container">
+		<view class="order-state-container">
 			<view class="order-state-text-container">
 				<text class="order-state">{{order.deliveryStateShow}}</text>
-				<text class="order-state-notice">{{order.deliveryState|getDeliverNoticeText}}</text>
+				<text class="order-state-notice">{{getDeliverNoticeText()}}</text>
 			</view>
 
 			<view class="order-state-img-container">
-				<image :src="order.deliveryState|getDeliveryStateImg" mode="" class="order-state-img"></image>
+				<image :src="getDeliveryStateImg()" mode="" class="order-state-img"></image>
 			</view>
 		</view>
 
@@ -178,24 +178,7 @@
 			}
 		},
 		filters: {
-			getDeliverNoticeText: function(deliveryState) {
-				if (deliveryState ===1) {
-					return '您的快递正在路上，请耐心等候发货';
-				} else if (deliveryState === 2) {
-					return '您的快递已签收，感谢您的使用';
-				} else {
-					return '您的快递正在打包，请耐心等候发货';
-				}
-			},
-			getDeliveryStateImg: function(deliveryState) {
-				if (deliveryState ===1) {
-					return '/static/orderDetail/ic-shipped.png';
-				} else if (deliveryState === 2) {
-					return '/static/orderDetail/ic-received.png';
-				} else {
-					return '/static/orderDetail/ic-no-shipped.png';
-				}
-			}
+			
 		},
 		onLoad: function(params) {
 			this.orderId = params.orderid;
@@ -340,6 +323,40 @@
 				}).catch(err => {
 					this.deliveryInfoShow = '暂时没有物流信息';
 				});
+			},
+			getDeliverNoticeText: function() {
+				if (this.takeWay === 1) {
+					if (this.order.deliveryState ===1) {
+						return '您的快递正在路上，请耐心等候发货';
+					} else if (this.order.deliveryState === 2) {
+						return '您的快递已签收，感谢您的使用';
+					} else {
+						return '您的快递正在打包，请耐心等候发货';
+					}
+				} else {
+					if (this.order.orderState === 1) {
+						return '您的订单待处理，感谢您的使用';
+					} else { // 完成
+						return '您的订单已完成，感谢您的使用';
+					}
+				}
+			},
+			getDeliveryStateImg: function() {
+				if (this.takeWay === 1) {
+					if (this.order.deliveryState === 1) {
+						return '/static/orderDetail/ic-shipped.png';
+					} else if (this.order.deliveryState === 2) {
+						return '/static/orderDetail/ic-received.png';
+					} else {
+						return '/static/orderDetail/ic-no-shipped.png';
+					}
+				} else {
+					if (this.order.orderState === 1) {
+						return '/static/orderDetail/ic-el-pending.png';
+					} else { // 完成
+						return '/static/orderDetail/ic-el-complete.png';
+					}
+				}
 			},
 			getFormatDate: function(str) {
 				let oDate = new Date(str);
