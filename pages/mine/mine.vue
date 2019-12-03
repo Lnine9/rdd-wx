@@ -428,6 +428,7 @@
 	.photo{
 		width: 112rpx;
 		height: 112rpx;	
+		border-radius: 100rpx;
 	}
 	.name{
 		display: inline-block;
@@ -638,9 +639,12 @@
 		display: inline-block;
 		position: absolute;
 		width: 250rpx;
-		/* margin-top: 15rpx; */
+		margin-top: 15rpx;
 		font-size: 28rpx;
 		font-weight:545;
+		text-overflow: ellipsis;
+		overflow: hidden;
+		white-space: nowrap;
 	}
 	.lookDetails{
 		display: inline-block;
