@@ -137,7 +137,9 @@
 						this.statusStyle[index] = "color:#CCCCCC"
 					return "--"
 				} else {
+					console.log(item.orderState)
 					if (item.orderState == 1) {
+						
 						this.statusStyle[index] = "color:#06C1AE;"
 						return "待处理"
 

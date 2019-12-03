@@ -1,5 +1,5 @@
 <template>
-	<view class="container">
+	<view style="padding-bottom: 100upx;" class="container">
 		<!-- 小程序头部兼容 -->
 		<!-- #ifdef MP -->
 		<!-- #endif -->
@@ -64,7 +64,7 @@
 		</view>
 		<view class="guess-section r-m-t">
 			<view
-				v-for="(item, index) in goodsList" :key="index"
+				v-for="(item, index) in guessList" :key="index"
 				class="guess-item"
 				@click="navToDetailPage(item)">
 				<view class="image-wrapper">
@@ -246,12 +246,21 @@
 				};
 				api.getProducts(userAndLocalMes_1).then(res =>{
 					this.guessList = res.data.data
+					uni.stopPullDownRefresh();
 				}).catch(err => {
+					uni.stopPullDownRefresh();
 					console.log(err)
 				})
 			}
 
 		},
+
+		onPullDownRefresh() {
+			this.getBanner(),
+			this.getUserMes(),
+			this.getRecommend(),
+			this.getGuess(),
+			this.getAreas()},
 
 		/**
 		 * 猜你喜欢列表
