@@ -47,7 +47,7 @@
 					<text class="shopName">{{code.commodityTitle}}</text>
 					<button class="QR-Code" :style="{display:code.commodityType == 2 ? 'block' : 'none'}" @click="lookQRCode()"><text class="fontTwo">查看二维码</text></button>
 					<button class="lookDetails" :style="{marginRight:code.commodityType == 2 ? '25rpx' : '0rpx'}" @click="lookDetails()"><text class="fontOne">查看详情</text></button>
-					<uni-popup ref="popup" type="center" maskClick="true">
+					<!-- <uni-popup ref="popup" type="center" maskClick="true">
 						<view class="popUp">
 							<text class="popupCodeName" >电子码：{{code.electronicCode}}</text>
 							<text class="popupCodeAccount">订单号码：{{code.orderId}}</text>
@@ -58,15 +58,28 @@
 						<view class="circle" @click="close()">
 							<image src="../../static/popup/closePopUp.png" class="close"></image>
 						</view>
-					</uni-popup>
+					</uni-popup> -->
+
 				</view>
 			</view>
-		</view>	
+		</view>
+		<view class="popUpShow" :style="{display:popShow == true ? 'block' :'none'}">
+			<view class="popUp">
+				<text class="popupCodeName" >电子码：{{code.electronicCode}}</text>
+				<text class="popupCodeAccount">订单号码：{{code.orderId}}</text>
+				<view class="dottedLineThree"></view>
+				<image class="qrCode" :src="qr"></image>
+				<text class="codeShopName">{{code.commodityTitle}}</text>
+			</view>
+			<view class="circle" @click="close()">
+				<image src="../../static/popup/closePopUp.png" class="close"></image>
+			</view>
+		</view>
 		<view class="noCode" :style="{display:code == null ? 'block' :'none' }">
 			<image class="noCodePicture" src="../../static/code/noCode.png"></image>
 			<text class="noCodeText">暂无电子码</text>
 		</view>
-		<uni-popup ref='order' type="center" maskClick="true">
+		<!-- <uni-popup ref='order' type="center" maskClick="true">
 			<view class="orderPopUp">
 				<image class="orderPicture" :src="order.commodityImgList[1]"></image>
 				<view class="dottedLineThree"></view>
@@ -80,14 +93,32 @@
 				<button class="cancle" @click="closeOrder()">取消</button>
 				<button class="update" @click="comfirmOrder(order)">确认提交</button>
 			</view>
-		</uni-popup>
+		</uni-popup> -->
+		<view class="popUpShow" :style="{display:scanPopShow == true ? 'block' :'none'}">
+			<view class="orderPopUp">
+				<image class="orderPicture" :src="order.commodityImgList[1]"></image>
+				<view class="dottedLineThree"></view>
+				<view class="orderMenu">
+					<text class="orderInfo">商品：{{orderInfo.commodityTitle}}</text>
+					<text class="orderInfo">商品信息：{{orderInfo.commodityInfo}}</text>
+					<text class="orderInfo">地址：{{orderInfo.addressDetail}}</text>
+					<text class="orderInfo">收货人：{{orderInfo.receiver}}</text>
+					<text class="orderInfo">联系电话：{{orderInfo.contactNumber}}</text>
+				</view>
+				<view class="orderBut">
+					<button class="cancle" @click="closeOrder()">取消</button>
+					<button class="update" @click="comfirmOrder(order)">确认提交</button>
+				</view>
+			</view>
+		</view>
+		<tabBar :currentPage="currentPage"></tabBar>
 	</view>
-	
 </template>
 
 <script>
 	import {api} from './api.js'
 	import uniPopup from "../components/uni-popup/uni-popup.vue"
+	import tabBar from '../components/zwy-tabBar/tabBar.vue';
 	import Qr from "../utils/wxqrcode.js"
 	    export default {
 	        data() {
@@ -104,6 +135,9 @@
 					qr:'',
 					isVip:false,
 					isShop:0,
+					popShow:false,
+					scanPopShow:false,
+					currentPage:'main'
 	            };
 	        },
 			onShow() {
@@ -113,8 +147,20 @@
 				this.judgeVip();
 				this.judgeScan()
 			},
+			//下拉刷新
+			onPullDownRefresh(){
+				this.wxGetUserInfo();
+				this.getData();
+				this.getCode();
+				this.judgeVip();
+				this.judgeScan();
+				setTimeout(function(){
+					uni.stopPullDownRefresh();
+				},2000);
+			},
 			components:{
 				uniPopup,
+				tabBar
 			},
 	        methods: {
 				// 获取登录信息
@@ -177,20 +223,29 @@
 				},
 				//跳转菜单路由
 				getRouter(path){
-					console.log(path),
-					uni.navigateTo({
+					console.log(path)
+					// if(this.isVip == false && path === '/pages/inviteFriends/inviteFriends'){
+					// 	uni.navigateTo({
+					// 		url:`/pages/vipApply/vipApply`
+					// 	})
+					// }else{
+						uni.navigateTo({
 						url: `${path}`
-					})
+						})
+					// }
+
 				},
 				//获取电子码信息
 				getCode(){
 					api.getCodeInfo().then(res=>{
 						this.code = res.data.data
-						if(res.data.data.electronicCode == null || res.data.data.electronicCode == ''){
-							this.code.electronicCode = '暂无'
-						}
-						if(res.data.data.deliveryNum == null || res.data.data.deliveryNum == ''){
-							this.code.deliveryNum = '暂无'
+						if(res.data.data != null){
+							if(res.data.data.electronicCode == null || res.data.data.electronicCode == ''){
+								this.code.electronicCode = '暂无'
+							}
+							if(res.data.data.deliveryNum == null || res.data.data.deliveryNum == ''){
+								this.code.deliveryNum = '暂无'
+							}
 						}
 						console.log(this.code)
 					})
@@ -207,49 +262,67 @@
 					uni.scanCode({
 					    success: function (res) {
 							//截取二维码信息
-							let str = res.result.slice(3);
-							let subStr  = str.split('&&')
-							let shopId = subStr[0].slice(7);
-							let orderId = subStr[1].slice(8);
-							let date = _this.getDate();
-							let p = {
-								orderId:orderId
-							}
-							let param = {
-								shopId:shopId,
-								orderId:orderId,
-								time:date,
-							}
-							api.getOrderByShop(p).then(res=>{
-								if(res.data.data !=null){
-									console.log(res.data.data);
-									_this.orderInfo = res.data.data;
-									_this.order = param;
-									_this.comfirmOrderPopUp();
-								}else {
-									console.log(123);
-									uni.showToast({
-									    title: '无订单',
-									    duration: 2000,
-										icon:'none'
-									});
+							console.log(res.result.slice(0,10))
+							if(res.result != null && res.result.slice(0,10) === 'wx:shopId='){
+								let str = res.result.slice(3);
+								let subStr  = str.split('&&')
+								let shopId = subStr[0].slice(7);
+								let orderId = subStr[1].slice(8);
+								let date = _this.getDate();
+								let p = {
+									orderId:orderId
 								}
-							}).catch(err => {
-								console.log(err)
-							})
-					    }
+								let param = {
+									shopId:shopId,
+									orderId:orderId,
+									time:date,
+								}
+								api.getOrderByShop(p).then(res=>{
+									if(res.data.data !=null){
+										console.log(res.data.data);
+										_this.orderInfo = res.data.data;
+										_this.order = param;
+										_this.comfirmOrderPopUp();
+									}else {
+										console.log(123);
+										uni.showToast({
+											title: '无订单',
+											duration: 2000,
+											icon:'none'
+										});
+									}
+								}).catch(err => {
+									console.log(err)
+								})
+							}else{
+								console.log(res.result)
+								uni.showToast({
+									title: '二维码错误',
+									duration: 2000,
+									icon:'none'
+								});
+							}	
+						},
+						fail: function (res) {
+							console.log(res.result)
+							uni.showToast({
+								title: '二维码错误',
+								duration: 2000,
+								icon:'none'
+							});
+						}
 					});
 				},
 				//确认订单弹窗
 				comfirmOrderPopUp(){
-					this.$refs.order.open();					
+					this.scanPopShow = true
 				},
 				//确认订单
 				comfirmOrder(data){
 					console.log(data)
 					api.comfirmOrder(data).then(res=>{
 						console.log(res);
-						this.$refs.order.close();
+						this.scanPopShow = false;
 						if(res.data.data == true){
 							uni.showToast({
 							    title: '提交成功',
@@ -267,7 +340,7 @@
 				},
 				//取消订单
 				closeOrder(){
-					this.$refs.order.close();
+					this.scanPopShow = false
 				},
 				//获取当前时间
 				getDate(){
@@ -315,30 +388,20 @@
 				},
 				//查看二维码
 				lookQRCode(){
-					this.$refs.popup.open()
+					this.popShow = true
 					this.qr = Qr.createQrCodeImg(this.code.qrcode)
 				},
 				//查看详情
 				lookDetails(){
+					let _this = this
 					uni.navigateTo({
-						url: `/pages/orderDetail/orderDetail`
+						url: `/pages/orderDetail/orderDetail?orderid=`+ _this.code.orderId
 					})
 				},
 				//关闭弹窗
 				close(){
-					this.$refs.popup.close()
+					this.popShow = false
 				},
-				//下拉刷新
-				onPullDownRefresh(){
-					this.wxGetUserInfo();
-					this.getData();
-					this.getCode();
-					this.judgeVip();
-					this.judgeScan();
-					setTimeout(function(){
-						uni.stopPullDownRefresh();
-					},2000);
-				}
 			}
 	           
 	    }
@@ -348,7 +411,7 @@
 	.main{
 		overflow-x: hidden;
 		width: 750rpx;
-		height: 1479rpx;
+		height: 1600rpx;
 		background-color: #F8F9FB;
 	}
 	.head{
@@ -454,7 +517,6 @@
 		display: inline-block;
 		width:120rpx;
 		font-size:26rpx;
-		font-family:PingFang SC;
 		font-weight:500;
 		color:#333333;
 		text-align: center;
@@ -466,7 +528,7 @@
 		font-weight: bold;
 		color: #333333;
 		font-size: 32rpx;
-		
+
 	}
 	.lookMore{
 		position: relative;
@@ -537,7 +599,6 @@
 		left: 41rpx;
 		width:601rpx;
 		font-size:24rpx;
-		font-family:PingFang SC;
 		font-weight:500;
 		color:rgba(153,153,153,1);
 	}
@@ -567,19 +628,18 @@
 		display: inline-block;
 		position: relative;
 		width: 600rpx;
-		height: 60rpx;
+		/* height: 60rpx; */
 		left: 43rpx;
 		top:15rpx;
 		margin-bottom: 50rpx;
-		
+
 	}
 	.shopName{
 		display: inline-block;
 		position: absolute;
 		width: 250rpx;
-		margin-top: 15rpx;
+		/* margin-top: 15rpx; */
 		font-size: 28rpx;
-		font-family:PingFang SC;
 		font-weight:545;
 	}
 	.lookDetails{
@@ -604,7 +664,6 @@
 		width:100rpx;
 		height:23rpx;
 		font-size:24rpx;
-		font-family:PingFang SC;
 		font-weight:500;
 		color:#999999;
 	}
@@ -614,15 +673,23 @@
 		width:130rpx;
 		height:23rpx;
 		font-size:24rpx;
-		font-family:PingFang SC;
 		font-weight:500;
 		color:#06C1AE;
+	}
+	.popUpShow{
+		position: absolute;
+		background-color: rgba(0, 0, 0, 0.4);
+		top: 0;
+		width: 750rpx;
+		height: 1600rpx;
 	}
 	.popUp{
 		position: relative;
 		width: 580rpx;
 		height: 629rpx;
 		background-color: #FFFFFF;
+		left: 85rpx;
+		top: 300rpx;
 		border-radius: 15rpx;
 		border-style: dashed;
 		border-width: 1rpx;
@@ -631,7 +698,6 @@
 		display: inline-block;
 		height:28rpx;
 		font-size:30rpx;
-		font-family:PingFang SC;
 		font-weight:bold;
 		color:#333333;
 		margin-left: 53rpx;
@@ -641,7 +707,6 @@
 		display: inline-block;
 		height:23rpx;
 		font-size:24rpx;
-		font-family:PingFang SC;
 		font-weight:500;
 		color:#999999;
 		line-height:38rpx;
@@ -664,8 +729,8 @@
 	}
 	.circle{
 		position: relative;
-		left: 255rpx;
-		top: 30rpx;
+		left: 340rpx;
+		top: 330rpx;
 		width: 80rpx;
 		height: 80rpx;
 		background-color: #FFFFFF;
@@ -710,10 +775,17 @@
 	.orderPopUp{
 		position: relative;
 		width: 580rpx;
-		height: 720rpx;
+		left: 85rpx;
+		top: 150rpx;
+		/* height: 720rpx; */
 		background-color: #FFFFFF;
 		border-radius: 15rpx;
 		border-width: 1rpx;
+	}
+	.orderMenu{
+		display: inline-block;
+		width: 580rpx;
+
 	}
 	.orderPicture{
 		display: inline-block;
@@ -727,6 +799,14 @@
 		text-align: left;
 		font-size: 32rpx;
 		margin: 10rpx 49rpx;
+	}
+	.orderBut{
+		position: flex;
+		display: inline-block;
+		left: 0;
+		bottom: 0;
+		width: 580rpx;
+		height: 100rpx;
 	}
 	.cancle{
 		position: absolute;

@@ -311,7 +311,6 @@
 
 <style>
 	.main-container {
-		font-family: PingFang SC;
 		width: 100%;
 		height: 100vh;
 		background: #F8F9FB;
