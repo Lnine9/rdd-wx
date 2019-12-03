@@ -26,8 +26,10 @@
 			<view :style="{display:code == null ? 'none' :'block' }">
 				<view class="codeTitle">
 					<text class="myElectronicCode">我的电子码</text>
+					<view>
 					<text class="lookMore" @click="codeLook()">查看更多</text>
 					<image class="moreCode" src="../../static/code/moreCode.png" @click="codeLook()"></image>
+					</view>
 				</view>
 				<view class="electronicCode">
 					<view class="subElectronicCode">
@@ -539,29 +541,30 @@
 		text-align: center;
 	}
 	.codeTitle{
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
 		position: relative;
 		top: 15rpx;
 		width: 683rpx;
 		margin: auto;
 	}
 	.myElectronicCode{
-		position: relative;
+		
 		font-weight: bold;
 		color: #333333;
 		font-size: 32rpx;
 
 	}
 	.lookMore{
-		position: absolute;
+		margin-right: 20rpx;
 		font-weight: normal;
-		right: 30rpx;
+		
 		color: #999999;
 		font-size: 28rpx;
 	}
 	.moreCode{
-		position: absolute;
-		top: 8rpx;
-		right: 0;
+		
 		width: 11rpx;
 		height: 22rpx;
 	}
