@@ -456,6 +456,7 @@
 	.main{
 		overflow-x: hidden;
 		width: 750rpx;
+		padding-bottom: 200upx;
 		/* height: 1600rpx; */
 		background-color: #F8F9FB;
 	}
@@ -660,8 +661,9 @@
 	.codeInfo{
 		display: inline-block;
 		text-decoration:underline;
+		font-weight: 400;
 		margin: 30rpx 0;
-		font-size: 28rpx;
+		font-size: 24rpx;
 	}
 	.dottedLineTwo{
 		display: inline-block;
