@@ -7,7 +7,8 @@
 		<text class="nodataText smallFontSize" >暂无订单</text>
 
 		</view>
-		<view v-if="!isNodata" class="orderList" v-for="(item,index) in shopList" :key="index">
+		<view v-if="!isNodata" style="height: 100vh;">
+		<view  class="orderList" v-for="(item,index) in shopList" :key="index">
 			<view class="shopContainer normalFontWeight">
 				<view class="shopTitle boldFontWeight">
 					<view style="display: flex;align-items: center;margin-left: 5vw;">
@@ -57,6 +58,7 @@
 				</view>
 			</view>
 		</view>
+	</view>
 	</view>
 </template>
 
@@ -234,7 +236,7 @@
 	}
 
 	.orderList {
-		height: 100vh;
+		
 		padding-top: 20rpx;
 		background-color: #F8F9FB;
 
