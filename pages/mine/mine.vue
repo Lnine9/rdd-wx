@@ -24,9 +24,11 @@
 			</view>	
 		</view>
 		<view :style="{display:code == null ? 'none' :'block' }">
-			<text class="myElectronicCode">我的电子码</text>
-			<text class="lookMore" @click="codeLook()">查看更多</text>
-			<image class="moreCode" src="../../static/code/moreCode.png" @click="codeLook()"></image>
+			<view class="codeTitle">
+				<text class="myElectronicCode">我的电子码</text>
+				<text class="lookMore" @click="codeLook()">查看更多</text>
+				<image class="moreCode" src="../../static/code/moreCode.png" @click="codeLook()"></image>
+			</view>
 			<view class="electronicCode">
 				<view class="subElectronicCode">
 					<image class="codePhoto" :src="code.commodityImgList[0]"></image>
@@ -522,27 +524,30 @@
 		color:#333333;
 		text-align: center;
 	}
+	.codeTitle{
+		position: relative;
+		top: 15rpx;
+		width: 683rpx;
+		margin: auto;
+	}
 	.myElectronicCode{
 		position: relative;
-		top: 20rpx;
-		left: 35rpx;
 		font-weight: bold;
 		color: #333333;
 		font-size: 32rpx;
 
 	}
 	.lookMore{
-		position: relative;
-		top: 20rpx;
-		left: 445rpx;
+		position: absolute;
 		font-weight: normal;
+		right: 30rpx;
 		color: #999999;
 		font-size: 28rpx;
 	}
 	.moreCode{
-		position: relative;
-		top: 20rpx;
-		left: 460rpx;
+		position: absolute;
+		top: 8rpx;
+		right: 0;
 		width: 11rpx;
 		height: 22rpx;
 	}
@@ -585,11 +590,10 @@
 		position: absolute;
 		border:1rpx solid #06C1AE;
 		color: #06C1AE;
-		/* border-radius:10rpx; */
 		width: 60rpx;
 		height: 40rpx;
 		font-size: 20rpx;
-		right: 40rpx;
+		right: 30rpx;
 		top: 6rpx;
 		line-height: 40rpx;
 		padding: 0;
