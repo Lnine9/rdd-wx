@@ -109,16 +109,16 @@
 					<button class="cancle" @click="closeOrder()">取消</button>
 					<button class="update" @click="comfirmOrder(order)">确认提交</button>
 				</view>
-
 			</view>
 		</view>
+		<tabBar :currentPage="currentPage"></tabBar>
 	</view>
-	
 </template>
 
 <script>
 	import {api} from './api.js'
 	import uniPopup from "../components/uni-popup/uni-popup.vue"
+	import tabBar from '../components/zwy-tabBar/tabBar.vue';
 	import Qr from "../utils/wxqrcode.js"
 	    export default {
 	        data() {
@@ -137,6 +137,7 @@
 					isShop:0,
 					popShow:false,
 					scanPopShow:false,
+					currentPage:'main'
 	            };
 	        },
 			onShow() {
@@ -146,8 +147,20 @@
 				this.judgeVip();
 				this.judgeScan()
 			},
+			//下拉刷新
+			onPullDownRefresh(){
+				this.wxGetUserInfo();
+				this.getData();
+				this.getCode();
+				this.judgeVip();
+				this.judgeScan();
+				setTimeout(function(){
+					uni.stopPullDownRefresh();
+				},2000);
+			},
 			components:{
 				uniPopup,
+				tabBar
 			},
 	        methods: {
 				// 获取登录信息
@@ -211,15 +224,15 @@
 				//跳转菜单路由
 				getRouter(path){
 					console.log(path)
-					if(this.isVip == false && path === '/pages/inviteFriends/inviteFriends'){
-						uni.navigateTo({
-							url:`/pages/vipApply/vipApply`
-						})
-					}else{
+					// if(this.isVip == false && path === '/pages/inviteFriends/inviteFriends'){
+					// 	uni.navigateTo({
+					// 		url:`/pages/vipApply/vipApply`
+					// 	})
+					// }else{
 						uni.navigateTo({
 						url: `${path}`
 						})
-					}
+					// }
 
 				},
 				//获取电子码信息
@@ -249,37 +262,55 @@
 					uni.scanCode({
 					    success: function (res) {
 							//截取二维码信息
-							let str = res.result.slice(3);
-							let subStr  = str.split('&&')
-							let shopId = subStr[0].slice(7);
-							let orderId = subStr[1].slice(8);
-							let date = _this.getDate();
-							let p = {
-								orderId:orderId
-							}
-							let param = {
-								shopId:shopId,
-								orderId:orderId,
-								time:date,
-							}
-							api.getOrderByShop(p).then(res=>{
-								if(res.data.data !=null){
-									console.log(res.data.data);
-									_this.orderInfo = res.data.data;
-									_this.order = param;
-									_this.comfirmOrderPopUp();
-								}else {
-									console.log(123);
-									uni.showToast({
-									    title: '无订单',
-									    duration: 2000,
-										icon:'none'
-									});
+							console.log(res.result.slice(0,10))
+							if(res.result != null && res.result.slice(0,10) === 'wx:shopId='){
+								let str = res.result.slice(3);
+								let subStr  = str.split('&&')
+								let shopId = subStr[0].slice(7);
+								let orderId = subStr[1].slice(8);
+								let date = _this.getDate();
+								let p = {
+									orderId:orderId
 								}
-							}).catch(err => {
-								console.log(err)
-							})
-					    }
+								let param = {
+									shopId:shopId,
+									orderId:orderId,
+									time:date,
+								}
+								api.getOrderByShop(p).then(res=>{
+									if(res.data.data !=null){
+										console.log(res.data.data);
+										_this.orderInfo = res.data.data;
+										_this.order = param;
+										_this.comfirmOrderPopUp();
+									}else {
+										console.log(123);
+										uni.showToast({
+											title: '无订单',
+											duration: 2000,
+											icon:'none'
+										});
+									}
+								}).catch(err => {
+									console.log(err)
+								})
+							}else{
+								console.log(res.result)
+								uni.showToast({
+									title: '二维码错误',
+									duration: 2000,
+									icon:'none'
+								});
+							}	
+						},
+						fail: function (res) {
+							console.log(res.result)
+							uni.showToast({
+								title: '二维码错误',
+								duration: 2000,
+								icon:'none'
+							});
+						}
 					});
 				},
 				//确认订单弹窗
@@ -371,17 +402,6 @@
 				close(){
 					this.popShow = false
 				},
-				//下拉刷新
-				onPullDownRefresh(){
-					this.wxGetUserInfo();
-					this.getData();
-					this.getCode();
-					this.judgeVip();
-					this.judgeScan();
-					setTimeout(function(){
-						uni.stopPullDownRefresh();
-					},2000);
-				}
 			}
 	           
 	    }
@@ -391,7 +411,7 @@
 	.main{
 		overflow-x: hidden;
 		width: 750rpx;
-		height: 1400rpx;
+		height: 1600rpx;
 		background-color: #F8F9FB;
 	}
 	.head{
@@ -661,7 +681,7 @@
 		background-color: rgba(0, 0, 0, 0.4);
 		top: 0;
 		width: 750rpx;
-		height: 1400rpx;
+		height: 1600rpx;
 	}
 	.popUp{
 		position: relative;
