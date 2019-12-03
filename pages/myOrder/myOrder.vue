@@ -12,9 +12,9 @@
 				<view class="shopTitle boldFontWeight">
 					<view style="display: flex;align-items: center;margin-left: 5vw;">
 					<image class="shopPic" src="../../static/myOrder/shop.png"></image>
-					<text class="shopName normalFontDark boldFontWeight bigFontSize">{{item.shopName}}</text>
+					<text class="shopName normalFontDark boldFontWeight largeFontSize">{{item.shopName}}</text>
 					</view>
-					<text class="status smallFontSize" v-bind:style="statusStyle[index]">{{judgeOrderState(index)}}</text>
+					<text class="status midalFontSize" v-bind:style="statusStyle[index]">{{judgeOrderState(index)}}</text>
 				</view>
 				<view class="goodsMessageContainer">
 					<view class="goodsPicContainer">
@@ -24,11 +24,11 @@
 					<!-- 商品信息 -->
 					<view class="goodsMessage">
 
-						<text class="goodsName normalFontDark  boldFontWeight largeFontSize">{{item.commodityTitle}}</text>
+						<text class="goodsName normalFontDark  normalFontWeight largeFontSize">{{item.commodityTitle}}</text>
 						<view style="display: flex;flex-direction: row;margin-top: 40rpx;align-items: center;width: 67.5vw;">
 							<text class="actualPrice boldFontWeight largeFontSize">{{"￥"+item.actualPrice}}</text>
 							<text class="originPrice normalGray midalFontSize">{{"￥"+item.originalPrice}}</text>
-							<text class="number normalGray midalFontSize">{{"x"+item.commodityNum}}</text>
+							<text class="number normalGray midalFontSize">{{"×"+item.commodityNum}}</text>
 						</view>
 
 					</view>
@@ -42,7 +42,7 @@
 					</view>
 					<view class="item">
 						<text class="title normalFontDark smallFontSize">下单时间</text>
-						<text class="value normalGray smallFontSize">{{item.createAt|formatDate}}</text>
+						<text class="value normalGray smallFontSize">{{item.createAt}}</text>
 					</view>
 				</view>
 				<!-- 底部 -->
@@ -78,6 +78,7 @@
 		// 时间转换
 		filters: {
 			formatDate: function(value) {
+				console.log(value)
 				let date = new Date(value);
 				let y = date.getFullYear();
 				let MM = date.getMonth() + 1;
