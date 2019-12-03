@@ -1,16 +1,17 @@
 <template>
 	<view>
-		<view v-show="showType">
-			<image src="../../static/income/noIncome.png" class="noImg"></image>
-			<text class="noIncome">暂无团队</text>
-		</view>
-		<view style="width: 500rpx;height: 186rpx;position: relative">
-			<image src="../../static/income/fanIncome.png" class="img"></image>
+		
+		<view style="width: 500rpx;height: 150rpx; position: relative">
+			<image :src="user.photo" class="img"></image>
 			<view class="name">{{user.userName}}</view>
+		</view>
+		<view v-show="showType">
+			<image src="../../static/teamNo.png" class="noImg"></image>
+			<text class="noIncome">暂无下级</text>
 		</view>
 		<view class="list" v-if="item.amount!=0" v-for="(item, index) in team" :key="index" v-show="!showType">
 			<view style="width: 500rpx;height: 186rpx;position: relative">
-				<image src="../../static/income/fanIncome.png" class="img"></image>
+				<image :src="item.photo" class="img"></image>
 				<view class="userName">{{item.userName}}</view>
 				<view class="createAt">{{item.createAt}}</view>
 			</view>
@@ -26,38 +27,51 @@
 		data() {
 			return {
 				user:{
-					userName:'马杰'
+					userName:'马杰',
+					photo:''
 				},
 				showType:false,
-				team:[ {
-						userName:'李焱焱',
-						createAt:'2019-05-12 23:40:32',
-						amount:'500'
-					},{
-						userName:'王亚亚',
-						createAt:'2019-05-02 23:40:32',
-						amount:'50'
-					},{
-						userName:'肖阳阳',
-						createAt:'2019-11-11 11:11:11',
-						amount:'111'
-					}
-				],
+				team:[],
 				}
 			},
 			onLoad() {
+				this.wxGetUserInfo();
 				this.getTeam();
+				if(this.team.length==0){
+					this.showType=true;
+				}else{
+					this.showType=false;
+				}
+				
 			},
 			methods:{
 				getTeam(){
 					api.getList({
-						userId:'700973191457043576'
+						userId:this.user.userId
 					}).then(res =>{
-						console.log(res)
+						this.team=res.data.data;
 					}).catch(err => {
 						console.log(err)
 					})
-				}
+				},
+				// 获取登录信息
+				wxGetUserInfo() {
+					console.log('...授权...')
+				    let _this = this;
+				    uni.getUserInfo({
+				        provider: 'weixin',
+				        success: function(infoRes) {
+				           _this.user.userName = infoRes.userInfo.nickName; //昵称
+				           _this.user.photo = infoRes.userInfo.avatarUrl; //头像
+				        },
+				        fail(res) {
+							uni.showModal({
+								content: '失败了',
+								showCancel: true
+							});
+						}
+				    });
+				},
 			}
 		}
 </script>
@@ -84,8 +98,8 @@
 		position: absolute;
 		top: 45rpx;
 		left: 40rpx;
-		width: 70rpx;
-		height: 70rpx;
+		width: 90rpx;
+		height: 90rpx;
 	}
 	.name{
 		width: 320rpx;
@@ -93,17 +107,17 @@
 		font-size: 30rpx;
 		color: #333333;
 		position: absolute;
-		top: 60rpx;
-		left: 140rpx;
+		top: 80rpx;
+		left: 180rpx;
 	}
 	.remark{
 		float: right;
-		margin: -120rpx 110rpx 0 0;
-		font-size: 32rpx;
+		margin: -110rpx 150rpx 0 0;
+		font-size: 24rpx;
 	}
 	.amount {
 		float: right;
-		margin: -120rpx 50rpx 0 0;
+		margin: -113rpx 40rpx 0 0;
 		font-size: 32rpx;
 		color: red;
 		font-weight: bold;
