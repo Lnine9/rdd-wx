@@ -23,7 +23,7 @@
 					</view>
 				</view>
 			</view>
-			<view :style="{display:code == null ? 'none' :'block' }">
+			<view :style="{display:code == null ? 'none' :'block' }" style="margin-bottom: 250rpx;">
 				<view class="codeTitle">
 					<text class="myElectronicCode">我的电子码</text>
 					<view>
@@ -67,7 +67,7 @@
 					</view>
 				</view>
 			</view>
-			<view class="popUpShow" :style="{display:popShow == true ? 'block' :'none'}">
+			<view class="popUpShow" :style="{display:popShow == true ? 'block' :'none',height:screenHeight + 'px'}">
 				<view class="popUp">
 					<text class="popupCodeName" >电子码：{{code.electronicCode}}</text>
 					<text class="popupCodeAccount">订单号码：{{code.orderId}}</text>
@@ -98,7 +98,7 @@
 					<button class="update" @click="comfirmOrder(order)">确认提交</button>
 				</view>
 			</uni-popup> -->
-			<view class="popUpShow" :style="{display:scanPopShow == true ? 'block' :'none'}">
+			<view class="popUpShow" :style="{display:scanPopShow == true ? 'block' :'none',height:screenHeight + 'px'}">
 				<view class="orderPopUp">
 					<image class="orderPicture" :src="order.commodityImgList[1]"></image>
 					<view class="dottedLineThree"></view>
@@ -142,6 +142,7 @@
 					popShow:false,
 					scanPopShow:false,
 					currentPage:'main',
+					screenHeight: 600,
 					flag: true, // 标识当前页面是否显示
 	            };
 	        },
@@ -197,6 +198,15 @@
 							});
 						}
 				    });
+				},
+				//获取屏幕高度
+				getHeight(){
+					var _this = this
+					let info = uni.createSelectorQuery().select(".main");
+			　　　   info.boundingClientRect(function(data) { //data - 各种参数
+				　　　  　console.log('高度' + data.height)  // 获取元素宽度
+						_this.screenHeight = data.height
+			　　    }).exec()
 				},
 				//获取菜单信息
 				getData(){
@@ -276,6 +286,7 @@
 				},
 				//扫码二维码
 				scanCode(){
+					this.getHeight()
 					let _this = this;
 					uni.scanCode({
 					    success: function (res) {
@@ -421,6 +432,7 @@
 				},
 				//查看二维码
 				lookQRCode(){
+					this.getHeight()
 					this.popShow = true
 					this.qr = Qr.createQrCodeImg(this.code.qrcode)
 				},
