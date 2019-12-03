@@ -15,7 +15,8 @@
 		{
 			"path": "pages/mine/mine",
 			"style": {
-				"navigationBarTitleText": "我的"
+				"navigationBarTitleText": "我的",
+				"enablePullDownRefresh": true
 			}
 		},
 		{
@@ -48,7 +49,7 @@
 					"fontSize": "30px"
 				}
 			}
-		}, {
+		},{
 			"path": "pages/payOrder/payOrder",
 			"style": {
 				"navigationBarTitleText": "支付订单",
@@ -171,6 +172,15 @@
 			{
 				"name": "我的订单",
 				"path": "pages/myOrder/myOrder"
+			},
+			{
+
+				"name": "收益",
+				"path": "pages/income/income"
+			},
+			{
+				"name": "我的",
+				"path": "pages/mine/mine"
 			},
 			{
 				"name": "我的团队",
