@@ -24,7 +24,7 @@
 		</view>
 
 		<!-- 地址信息 -->
-		<view v-if="takeWay === 1 && order.address" class="address-container">
+		<view v-if="takeWay === 1" class="address-container">
 			<image src="/static/orderDetail/ic-address.png" mode="" class="addres-img"></image>
 
 			<view class="address-content-container">
@@ -52,7 +52,7 @@
 
 				<text class="shop-name">{{order.shopName}}</text>
 
-				<text class="shop-receive-text">{{takeWay === 1? order.deliveryStateShow : order.orderStateShow}}</text>
+				<text class="shop-receive-text" :style="statusStyle">{{takeWay === 1? order.deliveryStateShow : order.orderStateShow}}</text>
 			</view>
 
 			<!-- 商品展示 -->
@@ -168,6 +168,7 @@
 				totalPrice: '',
 				sureBtnText: '确认收货',
 				qrImageUrl: '', // 二维码图片
+				statusStyle: '', // 订单or发货状态样式
 			}
 		},
 		onLoad: function(params) {
@@ -190,13 +191,14 @@
 					this.takeWay = Number(this.order.commodityType);
 					if (this.takeWay === 2) {
 						// 按钮文字显示
-						this.sureBtnText = '确认收货';
+						this.sureBtnText = '确认完成';
 						// 核销类型的商品生成二维码
 						this.getQRCodeImage();
 						// 订单状态(核销类型的订单显示)
 						switch (Number(this.order.orderState)) {
 							case 1:
 								this.order.orderStateShow = '待处理';
+								this.statusStyle = "color: #06C1AE";
 								break;
 							case 2:
 								this.order.orderStateShow = '已完成';
@@ -207,16 +209,19 @@
 						}
 					} else {
 						// 按钮文字显示
-						this.sureBtnText = '确认完成';
+						this.sureBtnText = '确认收货';
 						switch (Number(this.order.deliveryState)) {
 							case 0:
 								this.order.deliveryStateShow = '未发货';
+								this.statusStyle = "color: #06C1AE";
 								break;
 							case 1:
 								this.order.deliveryStateShow = '已发货';
+								this.statusStyle = "color: #06C1AE";
 								break;
 							case 2:
 								this.order.deliveryStateShow = '已收货';
+								this.statusStyle = '';
 								break;
 							default:
 								this.order.deliveryStateShow = '--';

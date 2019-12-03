@@ -170,6 +170,10 @@
 			{
 				"name": "收益",
 				"path": "pages/income/income"
+			},
+			{
+				"name": "物流信息",
+				"path": "pages/orderDetail/deliver"
 			}
 		]
 	}
