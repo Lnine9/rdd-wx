@@ -510,7 +510,7 @@
 		position: absolute;
 		left: 113rpx;
 		color: #7E5611;
-		font-size: 32rpx;
+		font-size: 28rpx;
 		font-weight: bold;
 		line-height: 108rpx;
 	}
@@ -543,7 +543,7 @@
 		margin-top: 40rpx;
 		font-weight: bold;
 		color: #333333;
-		font-size: 32rpx;
+		font-size: 28rpx;
 	}
 	.serciceList{
 		display: inline-block;
@@ -577,11 +577,9 @@
 		margin: auto;
 	}
 	.myElectronicCode{
-
 		font-weight: bold;
 		color: #333333;
-		font-size: 32rpx;
-
+		font-size: 28rpx;
 	}
 	.lookMore{
 		margin-right: 20rpx;
