@@ -318,7 +318,7 @@
 	}
 	.head-region{
 		float: right;
-		font-size: 34rpx;
+		font-size: 28rpx;
 	}
 
 	.r-m-t {
@@ -495,6 +495,8 @@
 		.scoll-wrapper{
 			display:flex;
 			align-items: flex-start;
+			padding-left: 2rpx;
+			padding-right: 2rpx;
 		}
 		.floor-item{
 			display:flex;
@@ -525,8 +527,8 @@
 				-webkit-line-clamp:2;
 				word-break: break-all;
 				margin-top: 10rpx;
-				font-size: 28rpx;
-				font-weight: 500;
+				font-size: 27rpx;
+				font-weight: 400;
 				color:rgba(51,51,51,1);
 				max-width: 220rpx;
 				white-space: nowrap;
@@ -534,7 +536,7 @@
 				overflow:hidden;
 			}
 			.priceOrigin{
-				font-size: 32rpx;
+				font-size: 30rpx;
                 font-weight: 700;
 				color:rgba(255,126,48,1);
 			}
@@ -548,7 +550,7 @@
 		}
 	}
 	.uni-input {
-		font-weight: 545;
+		font-weight: 500;
 	}
 	.PriceArea{
 		margin-top: 10rpx;
@@ -566,7 +568,7 @@
 		-webkit-line-clamp:2;
 		word-break: break-all;
 		margin-top: 16rpx;
-		font-size: 28rpx;
+		font-size: 27rpx;
 		font-weight: 500;
 		color:rgba(51,51,51,1);
 		max-width: 290rpx;
@@ -576,7 +578,7 @@
 	}
 
 	.priceOrigin{
-		font-size: 32rpx;
+		font-size: 30rpx;
 		font-weight: 700;
 		color:rgba(255,126,48,1);
 	}
@@ -624,16 +626,22 @@
 
 	/* 猜你喜欢 */
 	.guess-section{
-		display:flex;
+		display: flex;
+		justify-content: center;
 		flex-wrap:wrap;
 		padding: 0 30upx;
+		margin-left: 30rpx;
+		padding-left: 5rpx;
+		padding-right: 5rpx;
 		background: #fff;
 		margin-top: -15rpx;
+		width: 90%;
 		.guess-item{
 			display:flex;
 			flex-direction: column;
 			width: 48%;
 			padding-bottom: 40upx;
+		
 			&:nth-child(2n+1){
 				margin-right: 4%;
 			}
