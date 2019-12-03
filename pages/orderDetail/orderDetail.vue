@@ -301,6 +301,11 @@
 			},
 			getLastDeliveryInfo: function() {
 				
+				if (this.order.deliveryCompany === null || this.order.deliveryNum === null) {
+					this.deliveryInfoShow = '暂时没有物流信息';
+					return;
+				}
+				
 				let params = {
 					deliveryNum: this.order.deliveryNum,
 					deliveryCompany: this.order.deliveryCompany
@@ -332,10 +337,10 @@
 						return '您的快递正在打包，请耐心等候发货';
 					}
 				} else {
-					if (this.order.orderState === 1) {
-						return '您的订单待处理，感谢您的使用';
-					} else { // 完成
+					if (this.order.orderState === 2) {
 						return '您的订单已完成，感谢您的使用';
+					} else { // 完成
+						return '您的订单待处理，感谢您的使用';
 					}
 				}
 			},
@@ -420,7 +425,7 @@
 
 	.order-state-img {
 		width: 154rpx;
-		height: 154rpx;
+		height: 145rpx;
 		margin-right: 85rpx;
 		margin-top: 43rpx;
 	}
