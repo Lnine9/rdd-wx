@@ -1,17 +1,20 @@
 <template>
 	<view>
 		
-		<view style="width: 500rpx;height: 150rpx; position: relative">
-			<image :src="user.photo" class="img"></image>
-			<view class="name">{{user.userName}}</view>
+		<view class="recomendView">
+			<view style="display: flex;align-items: center;">
+			<image :src="recomend.avatarUrl" style="margin-left: 60rpx;width: 90rpx;height: 90rpx;border-radius: 10rpx;" ></image>
+			<view class="name">{{recomend.userName}}</view>
+			</view>
+			<view class="recomendTag">我的推荐人</view>
 		</view>
 		<view v-show="showType">
 			<image src="../../static/teamNo.png" class="noImg"></image>
 			<text class="noIncome">暂无下级</text>
 		</view>
-		<view class="list" v-if="item.amount!=0" v-for="(item, index) in team" :key="index" v-show="!showType">
-			<view style="width: 500rpx;height: 186rpx;position: relative">
-				<image :src="item.photo" class="img"></image>
+		<view class="list"  v-for="(item, index) in team" :key="index" v-show="!showType">
+			<view style="width: 500rpx;height: 186rpx;position: relative; margin-left: 20rpx;">
+				<image :src="item.avatarUrl" class="img"></image>
 				<view class="userName">{{item.userName}}</view>
 				<view class="createAt">{{item.createAt}}</view>
 			</view>
@@ -26,8 +29,11 @@
 	export default {
 		data() {
 			return {
+				recomend:{
+					
+				},
 				user:{
-					userName:'马杰',
+					userName:'',
 					photo:''
 				},
 				showType:false,
@@ -36,23 +42,40 @@
 			},
 			onLoad() {
 				this.wxGetUserInfo();
+				this.getRecomend()
 				this.getTeam();
-				if(this.team.length==0){
-					this.showType=true;
-				}else{
-					this.showType=false;
-				}
+				
 				
 			},
 			methods:{
 				getTeam(){
-					api.getList({
-						userId:this.user.userId
-					}).then(res =>{
+					api.getList().then(res =>{
 						this.team=res.data.data;
+							this.team.forEach(item=>{
+								if (item.amount == null){
+									item.amount = '0.00'
+								}
+							})
+						
+						if(this.team.length==0){
+							this.showType=true;
+						}else{
+							this.showType=false;
+						}
+						console.log(this.team)
 					}).catch(err => {
 						console.log(err)
 					})
+				},
+				getRecomend(){
+					api.getRecomend().then(res=>{
+						if (res.data.code == 200){
+							this.recomend = res.data.data
+							console.log(this.recomend)
+						}
+						}).catch(err =>{
+							console.log(err)
+						})
 				},
 				// 获取登录信息
 				wxGetUserInfo() {
@@ -95,6 +118,7 @@
 	}
 	
 	.img {
+		border-radius: 10rpx;
 		position: absolute;
 		top: 45rpx;
 		left: 40rpx;
@@ -102,15 +126,15 @@
 		height: 90rpx;
 	}
 	.name{
+		margin-left: 10rpx;
 		width: 320rpx;
 		letter-spacing: 3rpx;
 		font-size: 30rpx;
 		color: #333333;
-		position: absolute;
-		top: 80rpx;
-		left: 180rpx;
 	}
+	
 	.remark{
+		
 		float: right;
 		margin: -110rpx 150rpx 0 0;
 		font-size: 24rpx;
@@ -119,7 +143,7 @@
 		float: right;
 		margin: -113rpx 40rpx 0 0;
 		font-size: 32rpx;
-		color: red;
+		color: rgba(6,193,174,1);
 		font-weight: bold;
 	}
 	
@@ -146,5 +170,21 @@
 		align-items: center;
 		justify-content: center;
 		color: #CCCCCC;
+	}
+	.recomendTag{
+		margin-right: 30rpx;
+		color: #FDBE3D;
+		border: 1rpx solid #FDBE3D;
+		width: 200rpx;
+		border-radius: 15rpx;font-size: 28rpx;
+		text-align: center;
+	}
+	.recomendView{
+		
+		width: 100vw;
+		height: 150rpx;
+		 display: flex;
+		 align-items: center;
+		 justify-content: space-between;
 	}
 </style>

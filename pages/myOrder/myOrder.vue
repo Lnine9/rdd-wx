@@ -1,19 +1,20 @@
 <template>
 	<view v-bind:style="noDataCenter">
 		<view v-if="isNodata" class="nodataText">
-		
+
+
 		<image src="../../static/myOrder/myOrderNoData.png" class="noDataPic"></image>
 		<text class="nodataText smallFontSize" >暂无订单</text>
-		
+
 		</view>
 		<view v-if="!isNodata" class="orderList" v-for="(item,index) in shopList" :key="index">
 			<view class="shopContainer normalFontWeight">
 				<view class="shopTitle boldFontWeight">
 					<view style="display: flex;align-items: center;margin-left: 5vw;">
 					<image class="shopPic" src="../../static/myOrder/shop.png"></image>
-					<text class="shopName normalFontDark boldFontWeight bigFontSize">{{item.shopName}}</text>
+					<text class="shopName normalFontDark boldFontWeight largeFontSize">{{item.shopName}}</text>
 					</view>
-					<text class="status smallFontSize" v-bind:style="statusStyle[index]">{{judgeOrderState(index)}}</text>
+					<text class="status midalFontSize" v-bind:style="statusStyle[index]">{{judgeOrderState(index)}}</text>
 				</view>
 				<view class="goodsMessageContainer">
 					<view class="goodsPicContainer">
@@ -22,12 +23,12 @@
 					</view>
 					<!-- 商品信息 -->
 					<view class="goodsMessage">
-											
-						<text class="goodsName normalFontDark  boldFontWeight largeFontSize">{{item.commodityTitle}}</text>
+
+						<text class="goodsName normalFontDark  normalFontWeight largeFontSize">{{item.commodityTitle}}</text>
 						<view style="display: flex;flex-direction: row;margin-top: 40rpx;align-items: center;width: 67.5vw;">
 							<text class="actualPrice boldFontWeight largeFontSize">{{"￥"+item.actualPrice}}</text>
 							<text class="originPrice normalGray midalFontSize">{{"￥"+item.originalPrice}}</text>
-							<text class="number normalGray midalFontSize">{{"x"+item.commodityNum}}</text>
+							<text class="number normalGray midalFontSize">{{"×"+item.commodityNum}}</text>
 						</view>
 
 					</view>
@@ -41,14 +42,14 @@
 					</view>
 					<view class="item">
 						<text class="title normalFontDark smallFontSize">下单时间</text>
-						<text class="value normalGray smallFontSize">{{item.createAt|formatDate}}</text>
+						<text class="value normalGray smallFontSize">{{item.createAt}}</text>
 					</view>
 				</view>
 				<!-- 底部 -->
 				<view class="bottom">
 					<view class="totalText bigFontSize">
 						<text>合计：</text>
-						<text class="totalPrice boldFontWeight">{{"￥"+item.actualPrice * item.commodityNum}}</text>
+						<text class="totalPrice largeFontSize boldFontWeight">{{"￥"+item.actualPrice * item.commodityNum}}</text>
 					</view>
 
 					<button class="button  normalGray smallFontSize" @click="toDetail(item.orderId)"> 查看详情</button>
@@ -66,7 +67,7 @@
 	export default {
 		data() {
 			return {
-				
+
 				isNodata: false,
 				statusStyle: [],
 
@@ -77,6 +78,7 @@
 		// 时间转换
 		filters: {
 			formatDate: function(value) {
+				console.log(value)
 				let date = new Date(value);
 				let y = date.getFullYear();
 				let MM = date.getMonth() + 1;
@@ -106,7 +108,7 @@
 			// 跳转到详情
 			toDetail: function(orderID) {
 				console.log(orderID);
-				
+
 				uni.navigateTo({
 					url: '/pages/orderDetail/orderDetail?orderid=' + orderID
 				})
@@ -130,17 +132,20 @@
 						this.statusStyle = "color:#CCCCCC"
 						return "已签收"
 					} else
-						this.statusStyle[index] = "#CCCCCC"
-					return "暂无信息"
-				} else {
-					if (item.orderState == 0) {
 						this.statusStyle[index] = "color:#CCCCCC"
-						
-						return "订单已完成"
-
-					} else {
+					return "--"
+				} else {
+					if (item.orderState == 1) {
 						this.statusStyle[index] = "color:#06C1AE;"
-						return "订单未完成"
+						return "待处理"
+
+					}else if(item.orderState == 2 ||item.orderState == 3){
+						this.statusStyle[index] = "color:#CCCCCC"
+						return "已完成"
+					}
+					else {
+						this.statusStyle[index] = "color:#CCCCCC"
+						return "--"
 					}
 				}
 
@@ -157,7 +162,7 @@
 					} else {
 						this.isNodata = true
 						uni.stopPullDownRefresh()
-						
+
 					}
 				}).catch(() => {
 					uni.showModal({
@@ -232,7 +237,7 @@
 		height: 100vh;
 		padding-top: 20rpx;
 		background-color: #F8F9FB;
-		
+
 		width: 100%;
 
 	}
@@ -252,7 +257,7 @@
 
 	}
 
-	
+
 
 	.status {
 		margin-right: 5vw;
@@ -355,12 +360,13 @@
 		justify-content: space-around;
 		position: relative;
 		left: 5vw;
-		
+
 		height: 100rpx;
 		width: 90vw;
 	}
 
 	.button {
+		background-color: #FFFFFF;
 		height: 60rpx;
 		width: 160rpx;
 		border: 1rpx solid rgba(204, 204, 204, 1);
@@ -377,13 +383,13 @@
 	}
 
 	.noDataPic {
-		width: 200rpx;	
-		height: 200rpx;	
+		width: 200rpx;
+		height: 200rpx;
 		padding-top: 20vh;
 	}
 	.nodataText{
 		margin-top: 20rpx;
-		display: flex;	
+		display: flex;
 		align-items: center;
 		flex-direction: column;
 		justify-content: center;

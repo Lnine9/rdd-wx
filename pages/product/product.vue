@@ -3,6 +3,7 @@
 	<view v-bind:style="noDataCenter" v-if="showPage" class="container">
 		<view v-if="!showPage" class="nodataText">
 
+
 		<image src="../../static/myOrder/myOrderNoData.png" class="noDataPic"></image>
 		<text class="nodataText" >暂无数据</text>
 
@@ -29,7 +30,7 @@
 				<text class="m-price">{{"￥" + dataDic.originalPrice}}</text>
 				</view>
 				<view style="color: #999999;">
-				<text style="margin-right: 20rpx;">销量: {{dataDic.salesVolume}}</text>
+				<text style="margin-right: 40rpx;">销量: {{dataDic.salesVolume}}</text>
 				<text style="display: inline-block;">库存: {{dataDic.commodityNum}}</text>
 				</view>
 			</view>
@@ -40,16 +41,16 @@
 				<view class="con-list">
 					<view style="display: flex;align-items: center;">
 					<image style="width: 24rpx;height: 28rpx;margin-right: 10rpx;" src="../../static/product/location.png"></image>
-					<text style="font-size:28rpx; font-weight:500;color:rgba(51,51,51,1);">{{dataDic.shopName}}</text>
+					<text style="font-size:28rpx;font-weight:500;color:rgba(51,51,51,1);">{{dataDic.shopName}}</text>
 					</view>
-					<text style="font-size:24rpx; font-weight:400;color:rgba(204,204,204,1);margin-left: 34rpx;">{{dataDic.shopAddress}}</text>
+					<text style="font-size:24rpx;font-family:PingFang SC;font-weight:400;color:rgba(204,204,204,1);margin-left: 34rpx;">{{dataDic.shopAddress}}</text>
 				</view>
 			</view>
 		</view>
 
 		<view class="c-list">
 			<view class="c-row b-b">
-				<view class="con-list"  style="font-size:24rpx;font-weight:400;color:rgba(153,153,153,1);padding-left: 30rpx;
+				<view class="con-list"  style="font-size:24rpx;font-family:PingFang SC;font-weight:400;color:rgba(153,153,153,1);padding-left: 30rpx;
 padding-right: 30rpx;
 ">
 					<template>{{dataDic.commodityInfo}}</template>
@@ -74,8 +75,8 @@ padding-right: 30rpx;
 		</view>
 		<!-- 选择购买数量 -->
 
-					<view v-if="isBuy" style="background-color: rgba(0,0,0,0.5); z-index: 3;position: fixed;bottom: 0rpx;right: 0rpx;width: 100vw;height: 100vh;"></view>
-					<view  v-if="isBuy" class="cart-item" >
+					<view v-show="isBuy" style="background-color: rgba(0,0,0,0.5); z-index: 3;position: fixed;bottom: 0rpx;right: 0rpx;width: 100vw;height: 100vh;"></view>
+					<view  v-show="isBuy" class="cart-item" >
 						<view class="image-wrapper">
 							<image :src="titleImg[0]"
 								style="width: 200rpx;height: 200rpx;"
@@ -286,6 +287,7 @@ padding-right: 30rpx;
 
 		.title{
 			font-size: 32rpx;
+			font-family:PingFang SC;
 			font-weight:bold;
 			color:rgba(48,48,56,1);
 			color: $font-color-dark;
@@ -299,14 +301,17 @@ padding-right: 30rpx;
 			align-items:baseline;
 			height: 64upx;
 			padding: 10rpx 0;
-			font-size: 26upx;
+			font-size: 26rpx;
+			font-weight: 400;
 			color:$uni-color-primary;
 		}
 		.price{
-			font-size: $font-lg + 2upx;
+			font-size: 32rpx;
+			font-weight: 800;
 			color: #FF7E30;
 		}
 		.m-price{
+
 			margin:0 12upx;
 			color: #999999;
 			text-decoration: line-through;
@@ -334,9 +339,9 @@ padding-right: 30rpx;
 	}
 
 	.c-list{
-		border-width: 1px 0 1px 0;
+		border-width: 1rpx 0 1rpx 0;
 		border-style: solid;
-		border-color: rgba(243, 243, 243, 1);
+		border-color: rgba(243, 243, 243, 0.7);
 		font-size: $font-sm + 2upx;
 		color: $font-color-base;
 		background: #fff;
@@ -395,6 +400,7 @@ padding-right: 30rpx;
 		left: 0rpx;
 		display: flex;
 		font-size:28rpx;
+		font-family:PingFang SC;
 		font-weight:400;
 		color:#FFFFFF;
 		background-color: #06C1AE;
@@ -445,7 +451,8 @@ padding-right: 30rpx;
 				line-height: 50upx;
 			}
 			.price{
-				font-size:32rpx;
+				font-size:28rpx;
+
 				font-weight:500;
 				color:rgba(255,126,48,1);
 				height: 50upx;
@@ -457,6 +464,7 @@ padding-right: 30rpx;
 			width: 100rpx;
 			right: 20rpx;
 			font-size:28rpx;
+
 			color: $font-color-light;
 		}
 	}
@@ -484,6 +492,7 @@ padding-right: 30rpx;
 		height: 63rpx;
 		width: 180rpx;
 		border: 1rpx solid rgba(6,193,174,1);
+
 		margin-left: 100rpx;
 	}
 
