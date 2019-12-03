@@ -6,8 +6,7 @@
 		</view>
 		<view class="list" v-for="(item, index) in addressList" :key="index" v-show="!showtype">
 			<view class="wrapper">
-				<view class="address-box">
-					
+				<view class="address-box">					
 					<text class="receiver">{{item.receiver}}</text>
 					<text class="mobile">{{item.contactNumber}}</text>
 				</view>
@@ -15,11 +14,9 @@
 					<text v-if="item.isDefault==1" class="tag">默认</text>
 					<text class="address">{{item.province}} {{item.city}} {{item.area}} {{item.detail}}</text>
 				</view>
-			</view>
+			</view>		
 			<text class="edit" @click="addAddress('edit', item)">编辑</text>
-		</view>
-		
-		
+		</view>	
 		<button class="add-btn" @click="addAddress('add')">新增地址</button>
 	</view>
 </template>
@@ -52,6 +49,10 @@
 			})
 		},
 		methods: {
+			// 更改默认地址项
+			switch1Change: function (e) {
+				console.log('switch1 发生 change 事件，携带值为', e.target.value)
+			},
 			//跳转页面
 			addAddress(type, item){
 				uni.navigateTo({
@@ -85,6 +86,11 @@ page{
 	.content{
 		position: relative;
 	}
+	/* .switch-address {
+		height: 80rpx;
+		width: 150rpx;
+		color: #42B983;
+	} */
 	.list{
 		display: flex;
 		align-items: center;
