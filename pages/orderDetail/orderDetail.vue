@@ -1,23 +1,23 @@
 <template>
 	<view class="main-container">
 		<!-- 订单状态 -->
-		<view v-if="order.deliveryState === 2" class="order-state-container">
+		<view v-if="takeWay === 1" class="order-state-container">
 			<view class="order-state-text-container">
-				<text class="order-state">已签收</text>
-				<text class="order-state-notice">您的订单已签收，感谢您的使用</text>
+				<text class="order-state">{{order.deliveryStateShow}}</text>
+				<text class="order-state-notice">{{order.deliveryState|getDeliverNoticeText}}</text>
 			</view>
 
 			<view class="order-state-img-container">
-				<image src="/static/orderDetail/ic-received.png" mode="" class="order-state-img"></image>
+				<image :src="order.deliveryState|getDeliveryStateImg" mode="" class="order-state-img"></image>
 			</view>
 		</view>
 
 		<!-- 物流信息 -->
-		<view v-if="takeWay === 1 && hasLogistics" class="commodity-logistics-container">
+		<view v-if="takeWay === 1 && hasLogistics" class="commodity-logistics-container" @tap="lookLogistics">
 			<image src="/static/orderDetail/ic-logistics.png" mode="" class="commodity-logistics-img"></image>
 
 			<view class="commodity-logistics-text-container">
-				<text class="commodity-logistics-text">快件从【江苏昆山公司】发往【上海航空】</text>
+				<text class="commodity-logistics-text">{{deliveryInfoShow}}</text>
 			</view>
 
 			<image src="/static/orderDetail/ic-more-el-code.png" mode="" class="commodity-logistics-more-img"></image>
@@ -122,7 +122,8 @@
 
 		<!-- 底部操作栏 -->
 		<view v-if="takeWay === 1" class="bottom-btn-container">
-			<button v-if="hasLogistics" class="bottom-btn-look-logistics" @click="lookLogistics">
+			<!-- 暂时不显示 -->
+			<button v-if="false" class="bottom-btn-look-logistics" @click="lookLogistics">
 				<text class="bottom-btn-look-logistics-text">查看物流</text>
 			</button>
 
@@ -156,6 +157,7 @@
 					deliveryState: '',
 					deliveryStateShow: '',
 					actualPrice: '',
+					originalPrice: '',
 					shopName: '',
 					deliveryCompany: '',
 					deliveryNum: '',
@@ -163,16 +165,39 @@
 					orderState: '',
 					orderStateShow: '',
 					electronicCode: '', // 电子码
+					receiver: '',
+					contactNumber: '',
+					addressDetail: ''
 				},
 				imageUrl: '',
 				totalPrice: '',
 				sureBtnText: '确认收货',
 				qrImageUrl: '', // 二维码图片
 				statusStyle: '', // 订单or发货状态样式
+				deliveryInfoShow: '', // 显示在物流信息的文字
+			}
+		},
+		filters: {
+			getDeliverNoticeText: function(deliveryState) {
+				if (deliveryState ===1) {
+					return '您的快递正在路上，请耐心等候发货';
+				} else if (deliveryState === 2) {
+					return '您的快递已签收，感谢您的使用';
+				} else {
+					return '您的快递正在打包，请耐心等候发货';
+				}
+			},
+			getDeliveryStateImg: function(deliveryState) {
+				if (deliveryState ===1) {
+					return '/static/orderDetail/ic-shipped.png';
+				} else if (deliveryState === 2) {
+					return '/static/orderDetail/ic-received.png';
+				} else {
+					return '/static/orderDetail/ic-no-shipped.png';
+				}
 			}
 		},
 		onLoad: function(params) {
-			console.log(params);
 			this.orderId = params.orderid;
 
 			this.getOrderInfo();
@@ -185,11 +210,11 @@
 				OrderDetailAPI.getOrderDetail({
 					orderId: this.orderId
 				}).then(res => {
-					console.log(res);
-
 					this.order = res.data.data;
 					this.takeWay = Number(this.order.commodityType);
 					if (this.takeWay === 2) {
+						// 核销类型显示物流信息
+						this.hasLogistics = false;
 						// 按钮文字显示
 						this.sureBtnText = '确认完成';
 						// 核销类型的商品生成二维码
@@ -210,23 +235,30 @@
 					} else {
 						// 按钮文字显示
 						this.sureBtnText = '确认收货';
+								this.hasLogistics = true;
 						switch (Number(this.order.deliveryState)) {
 							case 0:
 								this.order.deliveryStateShow = '未发货';
 								this.statusStyle = "color: #06C1AE";
+								this.getLastDeliveryInfo();
 								break;
 							case 1:
 								this.order.deliveryStateShow = '已发货';
 								this.statusStyle = "color: #06C1AE";
+								this.getLastDeliveryInfo();
 								break;
 							case 2:
 								this.order.deliveryStateShow = '已收货';
 								this.statusStyle = '';
+								this.hasLogistics = false;
 								break;
 							default:
 								this.order.deliveryStateShow = '--';
+								this.statusStyle = '';
+								this.hasLogistics = false;
 								break;
 						}
+						
 					}
 
 					// 总价格
@@ -247,14 +279,10 @@
 				});
 			},
 			lookLogistics: function() {
-				// todo 查看物流
 
 				// uni.navigateTo({
-				// 	url: '/pages/orderDetail/deliver'
-				// });
-
-				// uni.navigateTo({
-				// 	url: '/pages/orderDetail/deliver.html?a=1000'
+				// 	url: '/pages/orderDetail/deliver?deliveryNum=' + this.order.deliveryNum + 
+				// 		'&deliveryCompany=' + this.order.deliveryCompany
 				// });
 			},
 			confirmDelivery: function() {
@@ -283,12 +311,42 @@
 					});
 				}
 			},
+			getQRCodeImage: function() {
+				// 二维码内容
+				let content = 'wx:shopId=' + this.order.shopId +
+					'&orderId=' + this.order.shopId +
+					'&time=' + this.order.createAt;
+				this.qrImageUrl = qr.createQrCodeImg(content);
+			},
+			getLastDeliveryInfo: function() {
+				
+				let params = {
+					deliveryNum: this.order.deliveryNum,
+					deliveryCompany: this.order.deliveryCompany
+				};
+				
+				// 测试
+				params.deliveryNum = '75311669293386';
+				params.deliveryCompany = '中通快递';
+				// 获取最近一次的物流数据
+				OrderDetailAPI.getDeliverInfo(params).then(res => {
+					// 要显示的文字
+					if (res.data.data) {
+						let data = res.data.data.Traces;
+						this.deliveryInfoShow = data[data.length - 1].AcceptStation;
+					} else {
+						this.deliveryInfoShow = '暂时没有物流信息';
+					}
+				}).catch(err => {
+					this.deliveryInfoShow = '暂时没有物流信息';
+				});
+			},
 			getFormatDate: function(str) {
 				let oDate = new Date(str);
 				let oYear = oDate.getFullYear();
 				let oMonth = oDate.getMonth() + 1;
 				let oDay = oDate.getDate();
-
+			
 				let oHour = oDate.getHours();
 				let oMin = oDate.getMinutes();
 				let oSec = oDate.getSeconds();
@@ -299,13 +357,6 @@
 					':' + (oMin.toString().length === 1 ? '0' + oMin : oMin) +
 					':' + (oSec.toString().length === 1 ? '0' + oSec : oSec);
 			},
-			getQRCodeImage: function() {
-				// 二维码内容
-				let content = 'wx:shopId=' + this.order.shopId +
-					'&orderId=' + this.order.shopId +
-					'&time=' + this.order.createAt;
-				this.qrImageUrl = qr.createQrCodeImg(content);
-			}
 		}
 	}
 </script>
@@ -322,7 +373,7 @@
 		justify-content: space-between;
 		background: #06C1AE;
 		width: 100%;
-		height: 200rpx;
+		height: 220rpx;
 	}
 
 	.order-state-text-container {
@@ -336,7 +387,7 @@
 	.order-state {
 		margin-top: 10rpx;
 		margin-bottom: 10rpx;
-		font-size: 30rpx;
+		font-size: 32rpx;
 		font-weight: bold;
 	}
 
@@ -382,6 +433,7 @@
 
 	.commodity-logistics-text {
 		font-size: 28rpx;
+		padding-right: 20rpx;
 		color: #333333;
 		display: -webkit-box;
 		text-overflow: ellipsis;
@@ -397,7 +449,7 @@
 	}
 
 	.address-container {
-		margin-top: 15rpx;
+		margin-top: 20rpx;
 		display: flex;
 		flex-direction: row;
 		width: 100%;
@@ -450,9 +502,9 @@
 	}
 
 	.commodity-container {
+		margin-top: 20rpx;
 		display: flex;
 		flex-direction: column;
-		margin: auto 0 auto 0;
 		background: #FFFFFF;
 	}
 
