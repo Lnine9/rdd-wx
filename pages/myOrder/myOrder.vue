@@ -48,7 +48,7 @@
 				<view class="bottom">
 					<view class="totalText bigFontSize">
 						<text>合计：</text>
-						<text class="totalPrice boldFontWeight">{{"￥"+item.actualPrice * item.commodityNum}}</text>
+						<text class="totalPrice largeFontSize boldFontWeight">{{"￥"+item.actualPrice * item.commodityNum}}</text>
 					</view>
 
 					<button class="button  normalGray smallFontSize" @click="toDetail(item.orderId)"> 查看详情</button>
@@ -130,17 +130,20 @@
 						this.statusStyle = "color:#CCCCCC"
 						return "已签收"
 					} else
-						this.statusStyle[index] = "#CCCCCC"
-					return "暂无信息"
-				} else {
-					if (item.orderState == 0) {
 						this.statusStyle[index] = "color:#CCCCCC"
-						
-						return "订单已完成"
-
-					} else {
+					return "--"
+				} else {
+					if (item.orderState == 1) {
 						this.statusStyle[index] = "color:#06C1AE;"
-						return "订单未完成"
+						return "待处理"
+
+					}else if(item.orderState == 2 ||item.orderState == 3){
+						this.statusStyle[index] = "color:#CCCCCC"
+						return "已完成"
+					}
+					else {
+						this.statusStyle[index] = "color:#CCCCCC"
+						return "--"
 					}
 				}
 

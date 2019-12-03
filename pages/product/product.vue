@@ -29,7 +29,7 @@
 				<text class="m-price">{{"￥" + dataDic.originalPrice}}</text>
 				</view>
 				<view style="color: #999999;">
-				<text style="margin-right: 20rpx;">销量: {{dataDic.salesVolume}}</text>
+				<text style="margin-right: 40rpx;">销量: {{dataDic.salesVolume}}</text>
 				<text style="display: inline-block;">库存: {{dataDic.commodityNum}}</text>
 				</view>
 			</view>
@@ -40,7 +40,7 @@
 				<view class="con-list">
 					<view style="display: flex;align-items: center;">
 					<image style="width: 24rpx;height: 28rpx;margin-right: 10rpx;" src="../../static/product/location.png"></image>
-					<text style="font-size:28rpx;font-family:PingFang SC;font-weight:500;color:rgba(51,51,51,1);">{{dataDic.shopName}}</text>
+					<text style="font-size:28rpx;font-weight:500;color:rgba(51,51,51,1);">{{dataDic.shopName}}</text>
 					</view>
 					<text style="font-size:24rpx;font-family:PingFang SC;font-weight:400;color:rgba(204,204,204,1);margin-left: 34rpx;">{{dataDic.shopAddress}}</text>
 				</view>
@@ -300,14 +300,17 @@ padding-right: 30rpx;
 			align-items:baseline;
 			height: 64upx;
 			padding: 10rpx 0;
-			font-size: 26upx;
+			font-size: 26rpx;
+			font-weight: 400;
 			color:$uni-color-primary;
 		}
 		.price{
-			font-size: $font-lg + 2upx;
+			font-size: 32rpx;
+			font-weight: 800;
 			color: #FF7E30;
 		}
 		.m-price{
+			
 			margin:0 12upx;
 			color: #999999;
 			text-decoration: line-through;
@@ -335,9 +338,9 @@ padding-right: 30rpx;
 	}
 
 	.c-list{
-		border-width: 1px 0 1px 0;
+		border-width: 1rpx 0 1rpx 0;
 		border-style: solid;
-		border-color: rgba(243, 243, 243, 1);
+		border-color: rgba(243, 243, 243, 0.7);
 		font-size: $font-sm + 2upx;
 		color: $font-color-base;
 		background: #fff;
@@ -447,7 +450,7 @@ padding-right: 30rpx;
 				line-height: 50upx;
 			}
 			.price{
-				font-size:32rpx;
+				font-size:28rpx;
 
 				font-weight:500;
 				color:rgba(255,126,48,1);
