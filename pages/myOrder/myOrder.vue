@@ -1,10 +1,11 @@
 <template>
 	<view v-bind:style="noDataCenter">
 		<view v-if="isNodata" class="nodataText">
-		
+
+
 		<image src="../../static/myOrder/myOrderNoData.png" class="noDataPic"></image>
 		<text class="nodataText smallFontSize" >暂无订单</text>
-		
+
 		</view>
 		<view v-if="!isNodata" class="orderList" v-for="(item,index) in shopList" :key="index">
 			<view class="shopContainer normalFontWeight">
@@ -22,7 +23,7 @@
 					</view>
 					<!-- 商品信息 -->
 					<view class="goodsMessage">
-											
+
 						<text class="goodsName normalFontDark  boldFontWeight largeFontSize">{{item.commodityTitle}}</text>
 						<view style="display: flex;flex-direction: row;margin-top: 40rpx;align-items: center;width: 67.5vw;">
 							<text class="actualPrice boldFontWeight largeFontSize">{{"￥"+item.actualPrice}}</text>
@@ -66,7 +67,7 @@
 	export default {
 		data() {
 			return {
-				
+
 				isNodata: false,
 				statusStyle: [],
 
@@ -106,7 +107,7 @@
 			// 跳转到详情
 			toDetail: function(orderID) {
 				console.log(orderID);
-				
+
 				uni.navigateTo({
 					url: '/pages/orderDetail/orderDetail?orderid=' + orderID
 				})
@@ -160,7 +161,7 @@
 					} else {
 						this.isNodata = true
 						uni.stopPullDownRefresh()
-						
+
 					}
 				}).catch(() => {
 					uni.showModal({
@@ -235,7 +236,7 @@
 		height: 100vh;
 		padding-top: 20rpx;
 		background-color: #F8F9FB;
-		
+
 		width: 100%;
 
 	}
@@ -255,7 +256,7 @@
 
 	}
 
-	
+
 
 	.status {
 		margin-right: 5vw;
@@ -358,7 +359,7 @@
 		justify-content: space-around;
 		position: relative;
 		left: 5vw;
-		
+
 		height: 100rpx;
 		width: 90vw;
 	}
@@ -380,13 +381,13 @@
 	}
 
 	.noDataPic {
-		width: 200rpx;	
-		height: 200rpx;	
+		width: 200rpx;
+		height: 200rpx;
 		padding-top: 20vh;
 	}
 	.nodataText{
 		margin-top: 20rpx;
-		display: flex;	
+		display: flex;
 		align-items: center;
 		flex-direction: column;
 		justify-content: center;
