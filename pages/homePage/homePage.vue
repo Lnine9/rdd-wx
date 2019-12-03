@@ -483,7 +483,7 @@
 			font-size: 32rpx;
 			font-weight: 800;
 			color: $font-color-dark;
-			font-family:PingFang SC;
+			 
 			line-height: 1.8;
 			image{
 				width: 240rpx;
@@ -507,14 +507,14 @@
 			}
 			.priceOrigin{
 				font-size: 32rpx;
-				font-family:PingFang SC;
+				 
 				font-weight: 500;
 				color:rgba(255,126,48,1);
 			}
 			.priceCurrent{
 				margin-left: 10rpx;
 				font-size: 28rpx;
-				font-family:PingFang SC;
+				 
 				font-weight: 500;
 				color:rgba(153,153,153,1);
 				text-decoration: line-through;
@@ -539,14 +539,14 @@
 		word-break: break-all;
 		text-overflow: ellipsis;
 		font-size: 37rpx;
-		font-family:PingFang SC;
+		 
 		font-weight: 650;
 		color:rgba(51,51,51,1);
 	}
 	
 	.priceOrigin{
 		font-size: 35rpx;
-		font-family:PingFang SC;
+		 
 		font-weight: 600;
 		color:rgba(255,126,48,1);
 	}
@@ -554,7 +554,7 @@
 	.priceCurrent{
 		margin-left: 10rpx;
 		font-size: 30rpx;
-		font-family:PingFang SC;
+		 
 		font-weight: 700;
 		color:rgba(153,153,153,1);
 		text-decoration: line-through;
@@ -580,7 +580,7 @@
 		}
 		.tit{
 			font-size:32rpx;
-			font-family:PingFang SC;
+			 
 			font-weight:bold;
 			color:rgba(51,51,51,1);
 		}

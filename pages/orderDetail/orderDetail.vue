@@ -195,9 +195,6 @@
 						this.getQRCodeImage();
 						// 订单状态(核销类型的订单显示)
 						switch (Number(this.order.orderState)) {
-							case 0:
-								this.order.orderStateShow = '待支付';
-								break;
 							case 1:
 								this.order.orderStateShow = '待处理';
 								break;
@@ -213,10 +210,10 @@
 						this.sureBtnText = '确认完成';
 						switch (Number(this.order.deliveryState)) {
 							case 0:
-								this.order.deliveryStateShow = '未寄送';
+								this.order.deliveryStateShow = '未发货';
 								break;
 							case 1:
-								this.order.deliveryStateShow = '未寄送';
+								this.order.deliveryStateShow = '已发货';
 								break;
 							case 2:
 								this.order.deliveryStateShow = '已收货';

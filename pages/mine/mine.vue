@@ -453,7 +453,7 @@
 		display: inline-block;
 		width:100rpx;
 		font-size:24rpx;
-		font-family:PingFang SC;
+		 
 		font-weight:500;
 		color:#333333;
 		text-align: center;
@@ -536,7 +536,7 @@
 		left: 41rpx;
 		width:601rpx;
 		font-size:24rpx;
-		font-family:PingFang SC;
+		 
 		font-weight:500;
 		color:rgba(153,153,153,1);
 	}
@@ -577,7 +577,7 @@
 		width: 250rpx;
 		margin-top: 15rpx;
 		font-size:24rpx;
-		font-family:PingFang SC;
+		 
 		font-weight:500;
 		color:#CCCCCC;
 	}
@@ -603,7 +603,7 @@
 		width:100rpx;
 		height:23rpx;
 		font-size:24rpx;
-		font-family:PingFang SC;
+		 
 		font-weight:500;
 		color:#999999;
 	}
@@ -613,7 +613,7 @@
 		width:130rpx;
 		height:23rpx;
 		font-size:24rpx;
-		font-family:PingFang SC;
+		 
 		font-weight:500;
 		color:#06C1AE;
 	}
@@ -630,7 +630,7 @@
 		display: inline-block;
 		height:28rpx;
 		font-size:30rpx;
-		font-family:PingFang SC;
+		 
 		font-weight:bold;
 		color:#333333;
 		margin-left: 53rpx;
@@ -640,7 +640,7 @@
 		display: inline-block;
 		height:23rpx;
 		font-size:24rpx;
-		font-family:PingFang SC;
+		 
 		font-weight:500;
 		color:#999999;
 		line-height:38rpx;
