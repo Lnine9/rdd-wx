@@ -24,9 +24,11 @@
 			</view>	
 		</view>
 		<view :style="{display:code == null ? 'none' :'block' }">
-			<text class="myElectronicCode">我的电子码</text>
-			<text class="lookMore" @click="codeLook()">查看更多</text>
-			<image class="moreCode" src="../../static/code/moreCode.png" @click="codeLook()"></image>
+			<view class="codeTitle">
+				<text class="myElectronicCode">我的电子码</text>
+				<text class="lookMore" @click="codeLook()">查看更多</text>
+				<image class="moreCode" src="../../static/code/moreCode.png" @click="codeLook()"></image>
+			</view>
 			<view class="electronicCode">
 				<view class="subElectronicCode">
 					<image class="codePhoto" :src="code.commodityImgList[0]"></image>
@@ -44,7 +46,7 @@
 					<view class="dottedLineTwo"></view>
 				</view>
 				<view class="bottom">
-					<text class="shopName">{{code.commodityTitle}}</text>
+					<text class="shopName" :style="{width:code.commodityType == 2 ? '250rpx' : '400rpx'}">{{code.commodityTitle}}</text>
 					<button class="QR-Code" :style="{display:code.commodityType == 2 ? 'block' : 'none'}" @click="lookQRCode()"><text class="fontTwo">查看二维码</text></button>
 					<button class="lookDetails" :style="{marginRight:code.commodityType == 2 ? '25rpx' : '0rpx'}" @click="lookDetails()"><text class="fontOne">查看详情</text></button>
 					<!-- <uni-popup ref="popup" type="center" maskClick="true">
@@ -428,6 +430,7 @@
 	.photo{
 		width: 112rpx;
 		height: 112rpx;	
+		border-radius: 100rpx;
 	}
 	.name{
 		display: inline-block;
@@ -521,27 +524,30 @@
 		color:#333333;
 		text-align: center;
 	}
+	.codeTitle{
+		position: relative;
+		top: 15rpx;
+		width: 683rpx;
+		margin: auto;
+	}
 	.myElectronicCode{
 		position: relative;
-		top: 20rpx;
-		left: 35rpx;
 		font-weight: bold;
 		color: #333333;
 		font-size: 32rpx;
 
 	}
 	.lookMore{
-		position: relative;
-		top: 20rpx;
-		left: 445rpx;
+		position: absolute;
 		font-weight: normal;
+		right: 30rpx;
 		color: #999999;
 		font-size: 28rpx;
 	}
 	.moreCode{
-		position: relative;
-		top: 20rpx;
-		left: 460rpx;
+		position: absolute;
+		top: 8rpx;
+		right: 0;
 		width: 11rpx;
 		height: 22rpx;
 	}
@@ -584,11 +590,10 @@
 		position: absolute;
 		border:1rpx solid #06C1AE;
 		color: #06C1AE;
-		/* border-radius:10rpx; */
 		width: 60rpx;
 		height: 40rpx;
 		font-size: 20rpx;
-		right: 40rpx;
+		right: 30rpx;
 		top: 6rpx;
 		line-height: 40rpx;
 		padding: 0;
@@ -637,10 +642,12 @@
 	.shopName{
 		display: inline-block;
 		position: absolute;
-		width: 250rpx;
-		/* margin-top: 15rpx; */
+		margin-top: 15rpx;
 		font-size: 28rpx;
 		font-weight:545;
+		text-overflow: ellipsis;
+		overflow: hidden;
+		white-space: nowrap;
 	}
 	.lookDetails{
 		display: inline-block;
