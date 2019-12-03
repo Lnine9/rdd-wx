@@ -228,7 +228,7 @@
 					}
 				}
 
-				// 测试支付
+				// 支付参数
 				let params = {
 					commodityId: this.commodityId,
 					commodityNum: this.commodityNum,
@@ -264,9 +264,6 @@
 									uni.switchTab({
 										url: '/pages/mine/mine'
 									});
-									// uni.reLaunch({
-									// 	url: '/pages/myOrder/myOrder'
-									// });
 								}, 2000);
 							},
 							'fail': function(res) {
