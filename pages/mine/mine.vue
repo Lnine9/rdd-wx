@@ -4,7 +4,7 @@
 			<view class="subHead">
 				<image class="photo" :src="user.photo"></image>
 				<text class="name">{{user.name}}</text>
-				<image class="scan" src="../../static/code/scan.png" @click="scanCode()" :style="{display:isShop == 1 ? 'block' : 'none' }"></image>
+				<image class="scan" src="../../static/code/scanBut.png" @click="scanCode()" :style="{display:isShop == 1 ? 'block' : 'none' }"></image>
 			</view>
 		</view>	
 		<view class="vip">
@@ -31,9 +31,9 @@
 			</view>
 			<view class="electronicCode">
 				<view class="subElectronicCode">
-					<image class="codePhoto" :src="code.commodityImgList[0]"></image>
+					<image class="codePhoto" src="../../static/code/scan.png"></image>
 					<text class="codeName" :style="{display:code.commodityType == 2 ? 'block' : 'none' }">电子码：{{code.electronicCode}}</text>
-					<text class="codeAccount" :style="{display:code.commodityType == 2 ? 'block' : 'none' }">订单号码：{{code.orderId}}</text>
+					<text class="codeAccount" :style="{display:code.commodityType == 2 ? 'block' : 'none' }">订单状态：{{this.getorderState()}}</text>
 					<text class="codeName" :style="{display:code.commodityType == 1 ? 'block' : 'none' }" >
 						快递单号：<text selectable="true" >{{code.deliveryNum}}</text>
 						</text>
@@ -360,6 +360,19 @@
 					return year+"-"+month+"-"+day+" "+hours+":"+minutes+":"+seconds;
 				},
 				//获取邮寄状态
+				getorderState(){
+					if(this.code != null){
+						let index = this.code.orderState
+						if(index == 1){
+							return '未完成'
+						}	
+						else
+							return '未知'
+					}else{
+							return '未知'
+					}
+				},
+				//获取邮寄状态
 				getdeliveryState(){
 					if(this.code != null){
 						let index = this.code.deliveryState
@@ -374,7 +387,9 @@
 						}
 						else
 							return '未知'
-					}	
+					}else{
+							return '未知'
+					}
 				},
 				//一键复制
 				copyBtu(data){
@@ -419,7 +434,7 @@
 	.head{
 		width: 750rpx;
 		height: 263rpx;
-		background-color: #313134;
+		background-image: url('../../static/user/userBackground.png');
 	}
 	.subHead{
 		position: relative;
@@ -436,14 +451,14 @@
 		display: inline-block;
 		color: #FFFFFF;
 		position: absolute;
-		top:17.6rpx;
+		top:30rpx;
 		left: 148.6rpx;
 		font-size: 32rpx;
 	}
 	.scan{
 		position: absolute;
 		right: 0rpx;
-		top: 17.6rpx;
+		top: 30rpx;
 		width: 40rpx;
 		height: 40rpx;
 	}
@@ -451,7 +466,7 @@
 		width: 690rpx;
 		height: 108rpx;
 		margin: auto;
-		background-color: #FFF2DA;
+		background-image: url('../../static/vip/vipBackground.png');
 		border-radius: 10rpx;
 		position:relative ;
 		bottom: 65rpx;
