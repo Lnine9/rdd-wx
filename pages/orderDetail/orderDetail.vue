@@ -3,7 +3,7 @@
 		<!-- 订单状态 -->
 		<view class="order-state-container">
 			<view class="order-state-text-container">
-				<text class="order-state">{{order.deliveryStateShow}}</text>
+				<text class="order-state">{{takeWay === 1? order.deliveryStateShow : order.orderStateShow}}</text>
 				<text class="order-state-notice">{{getDeliverNoticeText()}}</text>
 			</view>
 
@@ -177,9 +177,6 @@
 				deliveryInfoShow: '', // 显示在物流信息的文字
 			}
 		},
-		filters: {
-			
-		},
 		onLoad: function(params) {
 			this.orderId = params.orderid;
 
@@ -212,7 +209,8 @@
 								this.order.orderStateShow = '已完成';
 								break;
 							default:
-								this.order.orderStateShow = '--';
+								this.order.orderStateShow = '待处理';
+								this.statusStyle = "color: #06C1AE";
 								break;
 						}
 					} else {
@@ -303,14 +301,19 @@
 			},
 			getLastDeliveryInfo: function() {
 				
+				if (this.order.deliveryCompany === null || this.order.deliveryNum === null) {
+					this.deliveryInfoShow = '暂时没有物流信息';
+					return;
+				}
+				
 				let params = {
 					deliveryNum: this.order.deliveryNum,
 					deliveryCompany: this.order.deliveryCompany
 				};
 				
 				// 测试
-				params.deliveryNum = '75311669293386';
-				params.deliveryCompany = '中通快递';
+				// params.deliveryNum = '75311669293386';
+				// params.deliveryCompany = '中通快递';
 				// 获取最近一次的物流数据
 				OrderDetailAPI.getDeliverInfo(params).then(res => {
 					// 要显示的文字
@@ -334,10 +337,10 @@
 						return '您的快递正在打包，请耐心等候发货';
 					}
 				} else {
-					if (this.order.orderState === 1) {
-						return '您的订单待处理，感谢您的使用';
-					} else { // 完成
+					if (this.order.orderState === 2) {
 						return '您的订单已完成，感谢您的使用';
+					} else { // 完成
+						return '您的订单待处理，感谢您的使用';
 					}
 				}
 			},
@@ -351,10 +354,10 @@
 						return '/static/orderDetail/ic-no-shipped.png';
 					}
 				} else {
-					if (this.order.orderState === 1) {
-						return '/static/orderDetail/ic-el-pending.png';
-					} else { // 完成
+					if (this.order.orderState === 2) {
 						return '/static/orderDetail/ic-el-complete.png';
+					} else { // 完成
+						return '/static/orderDetail/ic-el-pending.png';
 					}
 				}
 			},
@@ -422,7 +425,7 @@
 
 	.order-state-img {
 		width: 154rpx;
-		height: 126rpx;
+		height: 145rpx;
 		margin-right: 85rpx;
 		margin-top: 43rpx;
 	}
