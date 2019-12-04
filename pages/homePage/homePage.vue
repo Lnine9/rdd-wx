@@ -2,6 +2,7 @@
 	<view style="padding-bottom: 100upx;" class="container">
 		<!-- 小程序头部兼容 -->
 		<!-- #ifdef MP -->
+
 		<!-- #endif -->
 		<view class="header"><label class="head-text">首页</label>
 			<picker class="head-region" @change="bindPickerChange" :value="regionIndex" :range="areas">
