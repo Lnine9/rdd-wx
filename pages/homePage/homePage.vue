@@ -553,7 +553,7 @@
 	}
 	.uni-input {
 		font-weight: 500;
-		margin-right: 30rpx;
+		margin-right: 37rpx;
 		display: inline-block;
 	}
 	.PriceArea{
