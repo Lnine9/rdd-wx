@@ -5,8 +5,9 @@
 		<!-- #endif -->
 		<view class="header"><label class="head-text">首页</label>
 			<picker class="head-region" @change="bindPickerChange" :value="regionIndex" :range="areas">
-				<view class="uni-input" v-if="this.defaultRegion==''">{{areas[regionIndex]}}</view><image src="../../static/drop_down.png" class="drop-down"></image>
 				<view class="uni-input" v-if="this.defaultRegion!=''">{{defaultRegion}}</view>
+				<view class="uni-input" v-if="this.defaultRegion==''">{{areas[regionIndex]}}</view>
+				<image src="../../static/homepage/drop_down.png" class="drop-down"></image>
 			</picker>
 		</view>
 		<!-- 头部轮播 -->
@@ -315,18 +316,17 @@
 		float: left;
 		font-size: 40rpx;
 		font-weight: bold;
+		color: #333333;
 	}
 	.head-region{
 		float: right;
 		font-size: 28rpx;
 	}
 	.drop-down{
-		width: 23px;
-		height: 23px;
-		position: relative;
-		top: 12rpx;
-		right: 	-130rpx;
-		
+		width: 7px;
+		height: 7px;
+		top: 12rpx;	
+		margin-left: -30rpx;
 	}
 	.r-m-t {
 		margin-top: -15rpx;
@@ -508,9 +508,8 @@
 		.floor-item{
 			display:flex;
 			flex-direction: column;
-			align-items: center;
 			width: 240rpx;
-			margin-right: 40upx;
+			margin-right: 50upx;
 			font-size: 32rpx;
 			font-weight: 800;
 			color: $font-color-dark;
@@ -522,14 +521,10 @@
 				border: 2upx solid #E3E3E3
 			}
 			.PriceArea{
-				display:flex;
-				justify-content: center;
-				align-items: center;
+				margin-left: 15rpx;
 			}
 			.clamp{
-				justify-content: center;
-				align-items: center;
-				text-align:center;
+				margin-left: 15rpx;
 				-webkit-box-orient: vertical;
 				-webkit-line-clamp:2;
 				word-break: break-all;
@@ -543,13 +538,13 @@
 				overflow:hidden;
 			}
 			.priceOrigin{
-				font-size: 30rpx;
+				font-size: 27rpx;
                 font-weight: 700;
 				color:rgba(255,126,48,1);
 			}
 			.priceCurrent{
-				margin-left: 10rpx;
-				font-size: 26rpx;
+				margin-left: 17rpx;
+				font-size: 24rpx;
 				font-weight: 500;
 				color:rgba(153,153,153,1);
 				text-decoration: line-through;
@@ -558,21 +553,17 @@
 	}
 	.uni-input {
 		font-weight: 500;
-		margin-right: 40rpx;
+		margin-right: 30rpx;
 		display: inline-block;
 	}
 	.PriceArea{
 		margin-top: 10rpx;
-		display:flex;
-		justify-content: center;
-		align-items: center;
+		margin-left: 15rpx;
 	}
 
 	.clamp{
 		margin-bottom: 5rpx;
-		justify-content: center;
-		align-items: center;
-		text-align:center;
+		margin-left: 15rpx;
 		-webkit-box-orient: vertical;
 		-webkit-line-clamp:2;
 		word-break: break-all;
@@ -587,22 +578,20 @@
 	}
 
 	.priceOrigin{
-		font-size: 30rpx;
+		font-size: 27rpx;
 		font-weight: 700;
 		color:rgba(255,126,48,1);
 	}
 
 	.priceCurrent{
-		margin-left: 10rpx;
-		font-size: 26rpx;
+		margin-left: 17rpx;
+		font-size: 24rpx;
 		font-weight: 500;
 		color:rgba(153,153,153,1);
 		text-decoration: line-through;
 	}
 
 	.f-header{
-		// display:flex;
-
 		align-items:center;
 		height: 90upx;
 		padding: 20upx 30upx 8upx;
@@ -619,7 +608,7 @@
 			flex-direction: column;
 		}
 		.tit{
-			font-size:32rpx;
+			font-size:27rpx;
 			font-weight: 700;
 			color:#333;
 		}

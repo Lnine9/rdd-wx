@@ -82,6 +82,7 @@
 			formatDate: function(value) {
 				console.log(value)
 				let date = new Date(value);
+				console.log(date)
 				let y = date.getFullYear();
 				let MM = date.getMonth() + 1;
 				MM = MM < 10 ? ('0' + MM) : MM;
@@ -93,6 +94,7 @@
 				m = m < 10 ? ('0' + m) : m;
 				let s = date.getSeconds();
 				s = s < 10 ? ('0' + s) : s;
+				console.log("adsfasdfas" + date)
 				return y + '-' + MM + '-' + d + " " + h + ':' + m + ":" + s ;
 			}
 		},
@@ -102,7 +104,6 @@
 				if (this.isNodata) {
 					return "text-align:center"
 				}
-
 			}
 		},
 
