@@ -186,14 +186,16 @@
 		width: 520rpx;
 	}
 	.recording {
-		font-size: 20rpx;
+		line-height: 60rpx;
+		color: #FFFFFF;
+		font-size: 24rpx;
 		position: relative;
-		top: 20rpx;
-		left: 280rpx;
-		width: 150rpx;
-		height: 50rpx;
+		top: 10rpx;
+		left: 260rpx;
+		width: 160rpx;
+		height: 60rpx;
 		background:rgba(6,193,174,1);
-		border-radius:44rpx;
+		border-radius:60rpx;
 	}
 	
 </style>
