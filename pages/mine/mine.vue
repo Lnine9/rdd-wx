@@ -141,7 +141,7 @@
 					isShop:0,
 					popShow:false,
 					scanPopShow:false,
-					currentPage:'main',
+					currentPage:'mine',
 					screenHeight: 600,
 					flag: true, // 标识当前页面是否显示
 	            };

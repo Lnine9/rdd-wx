@@ -10,7 +10,7 @@
 		</view>
 		<view v-show="showType">
 			<image src="../../static/teamNo.png" class="noImg"></image>
-			<text class="noIncome">暂无下级</text>
+			<text class="noIncome">暂无好友</text>
 		</view>
 		<view class="list"  v-for="(item, index) in team" :key="index" v-show="!showType">
 			<view style="width: 500rpx;height: 186rpx;position: relative; margin-left: 20rpx;">
