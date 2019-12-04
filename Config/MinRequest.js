@@ -55,7 +55,6 @@ class MinRequest {
     options.method = options.method || this[config].method
 
     options = {...options, ...MinRequest[requestBefore](options)}
-	console.log(options.header)
     return new Promise((resolve, reject) => {
       options.success = function (res) {
         resolve(MinRequest[requestAfter](res))
@@ -76,8 +75,6 @@ class MinRequest {
 	  'content-type': 'application/json;charset=UTF-8',
 	  'Authorization': token || ''
 	}
-	console.info('头部')
-	console.info(options.header)
     return this.request(options)
   }
 

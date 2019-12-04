@@ -8,7 +8,7 @@
 		}, {
 			"path": "pages/homePage/homePage",
 			"style": {
-				"navigationBarTitleText": "首页",
+				"navigationBarTitleText": "囧途宝盒",
 				"enablePullDownRefresh": true
 			}
 		},
@@ -55,12 +55,6 @@
 				"navigationBarTitleText": "支付订单",
 				"enablePullDownRefresh": true
 			}
-		},
-		{
-			"path": "pages/payOrder/imageTest/imageTest",
-			"style": {
-				"navigationBarTitleText": "测试图片"
-			}
 		}, {
 			"path": "pages/myOrder/myOrder",
 			"style": {
@@ -102,29 +96,24 @@
 			"style": {
 				"navigationBarTitleText": ""
 			}
-		},{
-		    "path" : "pages/shopOrder/shopOrder",
-		    "style" : {
-				"navigationBarTitleText":"订单详情"
+		}, {
+			"path": "pages/shopOrder/shopOrder",
+			"style": {
+				"navigationBarTitleText": "订单详情"
 			}
-		},{
-		    "path" : "pages/myTeam/myTeam",
-		    "style" : {
-				"navigationBarTitleText":"我的团队"
+		}, {
+			"path": "pages/myTeam/myTeam",
+			"style": {
+				"navigationBarTitleText": "我的团队"
 			}
 		}
-		// {
-		//     "path" : "pages/buyVip/buyVip",
-		//     "style" : {
-		// 		"navigationBarTitleText":"充值VIP"
-		// 	}
-		// }
 	],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
-		"navigationBarTitleText": "首页",
-		"navigationBarBackgroundColor": "#F8F8F8",
-		"backgroundColor": "#F8F8F8"
+		// "navigationStyle":"custom",
+		"navigationBarTitleText": "囧途宝盒",
+		"navigationBarBackgroundColor": "#EAEAEA",
+		"backgroundColor": "#EAEAEA"
 	},
 	"tabBar": {
 		"color": "#C0C4CC",
@@ -169,7 +158,8 @@
 			},
 			{
 				"name": "产品详情",
-				"path": "pages/product/product"
+				"path": "pages/product/product",
+				"query": "id=16129286320176582"
 			},
 			{
 				"name": "登录",
