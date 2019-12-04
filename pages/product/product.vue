@@ -349,7 +349,7 @@ padding-right: 30rpx;
 						const d = await getSharePoster({
 							type: 'testShareType',
 							posterCanvasId: this.canvasId,
-							backgroundImage: this.commodityImg[0], // todo 获取专门的海报图片路径	
+							backgroundImage: this.commodityImg[0], // todo 获取专门的海报图片路径
 							qrCodeArray: ({
 								bgObj,
 								type,
@@ -520,7 +520,7 @@ padding-right: 30rpx;
 
 				// #ifndef APP-PLUS
 				_app.showToast('分享了');
-				// #endif				
+				// #endif
 			},
 			hideQr: function() {
 				this.qrShow = false;

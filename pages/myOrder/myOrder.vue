@@ -7,15 +7,15 @@
 		<text class="nodataText smallFontSize" >暂无订单</text>
 
 		</view>
-		<view v-if="!isNodata" style="height: 100vh;">
+		<view v-if="!isNodata" style="height: 100vh;background-color: #F8F9FB;">
 		<view  class="orderList" v-for="(item,index) in shopList" :key="index">
 			<view class="shopContainer normalFontWeight">
 				<view class="shopTitle boldFontWeight">
 					<view style="display: flex;align-items: center;margin-left: 5vw;">
 					<image class="shopPic" src="../../static/myOrder/shop.png"></image>
-					<text class="shopName normalFontDark boldFontWeight largeFontSize">{{item.shopName}}</text>
+					<text class="shopName normalFontDark boldFontWeight bigFontSize">{{item.shopName}}</text>
 					</view>
-					<text class="status midalFontSize" v-bind:style="statusStyle[index]">{{judgeOrderState(index)}}</text>
+					<text class="status midalFontSize normalFontWeight" v-bind:style="statusStyle[index]">{{judgeOrderState(index)}}</text>
 				</view>
 				<view class="goodsMessageContainer">
 					<view class="goodsPicContainer">
@@ -25,7 +25,7 @@
 					<!-- 商品信息 -->
 					<view class="goodsMessage">
 
-						<text class="goodsName normalFontDark  normalFontWeight largeFontSize">{{item.commodityTitle}}</text>
+						<text class="goodsName normalFontDark  normalFontWeight bigFontSize">{{item.commodityTitle}}</text>
 						<view style="display: flex;flex-direction: row;margin-top: 40rpx;align-items: center;width: 67.5vw;">
 							<text class="actualPrice boldFontWeight largeFontSize">{{"￥"+item.actualPrice}}</text>
 							<text class="originPrice normalGray midalFontSize">{{"￥"+item.originalPrice}}</text>
@@ -82,6 +82,7 @@
 			formatDate: function(value) {
 				console.log(value)
 				let date = new Date(value);
+				console.log(date)
 				let y = date.getFullYear();
 				let MM = date.getMonth() + 1;
 				MM = MM < 10 ? ('0' + MM) : MM;
@@ -93,6 +94,7 @@
 				m = m < 10 ? ('0' + m) : m;
 				let s = date.getSeconds();
 				s = s < 10 ? ('0' + s) : s;
+				console.log("adsfasdfas" + date)
 				return y + '-' + MM + '-' + d + " " + h + ':' + m + ":" + s ;
 			}
 		},
@@ -102,7 +104,6 @@
 				if (this.isNodata) {
 					return "text-align:center"
 				}
-
 			}
 		},
 
@@ -240,7 +241,7 @@
 	.orderList {
 		
 		padding-top: 20rpx;
-		background-color: #F8F9FB;
+		
 
 		width: 100%;
 

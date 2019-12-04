@@ -3,10 +3,11 @@
 		<!-- 小程序头部兼容 -->
 		<!-- #ifdef MP -->
 		<!-- #endif -->
-		<view class="header"><label class="head-text">囧途宝盒</label>
+		<view class="header"><label class="head-text">首页</label>
 			<picker class="head-region" @change="bindPickerChange" :value="regionIndex" :range="areas">
-				<view class="uni-input" v-if="this.defaultRegion==''">{{areas[regionIndex]}}</view>
 				<view class="uni-input" v-if="this.defaultRegion!=''">{{defaultRegion}}</view>
+				<view class="uni-input" v-if="this.defaultRegion==''">{{areas[regionIndex]}}</view>
+				<image src="../../static/homepage/drop_down.png" class="drop-down"></image>
 			</picker>
 		</view>
 		<!-- 头部轮播 -->
@@ -313,14 +314,20 @@
 	}
 	.head-text {
 		float: left;
-		font-size: 36rpx;
+		font-size: 40rpx;
 		font-weight: bold;
+		color: #333333;
 	}
 	.head-region{
 		float: right;
-		font-size: 34rpx;
+		font-size: 28rpx;
 	}
-
+	.drop-down{
+		width: 7px;
+		height: 7px;
+		top: 12rpx;	
+		margin-left: -30rpx;
+	}
 	.r-m-t {
 		margin-top: -15rpx;
 	}
@@ -346,6 +353,7 @@
 	}
 	page{
 		.cate-section{
+			
 			position:relative;
 			z-index:5;
 			border-radius:25upx 25upx 0 0;
@@ -354,14 +362,17 @@
 		.carousel-section{
 			margin: 0 auto;
 			width: 90%;
+			
 			padding: 0;
 			.titleNview-placing {
 				padding-top: 0;
 				height: 0;
 			}
 			.carousel{
+				height: 280rpx;
 				.carousel-item{
 					padding: 0;
+					
 				}
 			}
 			.swiper-dots{
@@ -491,13 +502,14 @@
 		.scoll-wrapper{
 			display:flex;
 			align-items: flex-start;
+			padding-left: 2rpx;
+			padding-right: 2rpx;
 		}
 		.floor-item{
 			display:flex;
 			flex-direction: column;
-			align-items: center;
 			width: 240rpx;
-			margin-right: 40upx;
+			margin-right: 50upx;
 			font-size: 32rpx;
 			font-weight: 800;
 			color: $font-color-dark;
@@ -509,20 +521,16 @@
 				border: 2upx solid #E3E3E3
 			}
 			.PriceArea{
-				display:flex;
-				justify-content: center;
-				align-items: center;
+				margin-left: 15rpx;
 			}
 			.clamp{
-				justify-content: center;
-				align-items: center;
-				text-align:center;
+				margin-left: 15rpx;
 				-webkit-box-orient: vertical;
 				-webkit-line-clamp:2;
 				word-break: break-all;
 				margin-top: 10rpx;
-				font-size: 28rpx;
-				font-weight: 500;
+				font-size: 27rpx;
+				font-weight: 400;
 				color:rgba(51,51,51,1);
 				max-width: 220rpx;
 				white-space: nowrap;
@@ -530,13 +538,13 @@
 				overflow:hidden;
 			}
 			.priceOrigin{
-				font-size: 32rpx;
+				font-size: 27rpx;
                 font-weight: 700;
 				color:rgba(255,126,48,1);
 			}
 			.priceCurrent{
-				margin-left: 10rpx;
-				font-size: 26rpx;
+				margin-left: 17rpx;
+				font-size: 24rpx;
 				font-weight: 500;
 				color:rgba(153,153,153,1);
 				text-decoration: line-through;
@@ -544,25 +552,23 @@
 		}
 	}
 	.uni-input {
-		font-weight: 545;
+		font-weight: 500;
+		margin-right: 37rpx;
+		display: inline-block;
 	}
 	.PriceArea{
 		margin-top: 10rpx;
-		display:flex;
-		justify-content: center;
-		align-items: center;
+		margin-left: 15rpx;
 	}
 
 	.clamp{
 		margin-bottom: 5rpx;
-		justify-content: center;
-		align-items: center;
-		text-align:center;
+		margin-left: 15rpx;
 		-webkit-box-orient: vertical;
 		-webkit-line-clamp:2;
 		word-break: break-all;
 		margin-top: 16rpx;
-		font-size: 28rpx;
+		font-size: 27rpx;
 		font-weight: 500;
 		color:rgba(51,51,51,1);
 		max-width: 290rpx;
@@ -572,22 +578,20 @@
 	}
 
 	.priceOrigin{
-		font-size: 32rpx;
+		font-size: 27rpx;
 		font-weight: 700;
 		color:rgba(255,126,48,1);
 	}
 
 	.priceCurrent{
-		margin-left: 10rpx;
-		font-size: 26rpx;
+		margin-left: 17rpx;
+		font-size: 24rpx;
 		font-weight: 500;
 		color:rgba(153,153,153,1);
 		text-decoration: line-through;
 	}
 
 	.f-header{
-		// display:flex;
-
 		align-items:center;
 		height: 90upx;
 		padding: 20upx 30upx 8upx;
@@ -604,9 +608,9 @@
 			flex-direction: column;
 		}
 		.tit{
-			font-size:32rpx;
-			font-weight: 570;
-			color:rgba(51,51,51,1);
+			font-size:27rpx;
+			font-weight: 700;
+			color:#333;
 		}
 		.tit2{
 			font-size: $font-sm;
@@ -620,16 +624,22 @@
 
 	/* 猜你喜欢 */
 	.guess-section{
-		display:flex;
+		display: flex;
+		justify-content: center;
 		flex-wrap:wrap;
 		padding: 0 30upx;
+		margin-left: 30rpx;
+		padding-left: 5rpx;
+		padding-right: 5rpx;
 		background: #fff;
 		margin-top: -15rpx;
+		width: 90%;
 		.guess-item{
 			display:flex;
 			flex-direction: column;
 			width: 48%;
 			padding-bottom: 40upx;
+		
 			&:nth-child(2n+1){
 				margin-right: 4%;
 			}
