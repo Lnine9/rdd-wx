@@ -1,7 +1,7 @@
 <template>
 	<view>
 		
-		<view  v-if="recomend.userName != null" class="recomendView">
+		<view class="recomendView" v-show="recomend.userName">
 			<view style="display: flex;align-items: center;">
 			<image :src="recomend.avatarUrl" style="margin-left: 60rpx;width: 90rpx;height: 90rpx;border-radius: 10rpx;" ></image>
 			<view class="name">{{recomend.userName}}</view>
@@ -70,8 +70,7 @@
 				getRecomend(){
 					api.getRecomend().then(res=>{
 						if (res.data.code == 200){
-							this.recomend = res.data.data
-							console.log(this.recomend)
+							this.recomend = res.data.data;
 						}
 						}).catch(err =>{
 							console.log(err)
