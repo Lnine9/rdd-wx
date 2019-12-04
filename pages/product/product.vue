@@ -23,7 +23,7 @@
 					<text class="price">{{"￥" + dataDic.salePrice}}</text>
 					<text class="m-price">{{"￥" + dataDic.originalPrice}}</text>
 				</view>
-				<view style="color: #999999;font-weight: 400;">
+				<view style="color: #999999;font-weight: 300;font-size: 26rpx;">
 					<text style="margin-right: 40rpx;">销量: {{dataDic.salesVolume}}</text>
 					<text style="display: inline-block;">库存: {{dataDic.commodityNum}}</text>
 				</view>
@@ -78,7 +78,7 @@ padding-right: 30rpx;
 				<view style="display: flex;justify-content: space-between;align-items: center;">
 					<text class=" title" style="font-weight: 500;overflow: hidden;
 			text-overflow:ellipsis;
-			white-space: nowrap;width: 300rpx;
+			white-space: nowrap;width: 320rpx;
 			">{{dataDic.commodityTitle}}</text>
 					<text class="del-btn" @click="cancel">取消</text>
 				</view>
@@ -643,7 +643,7 @@ padding-right: 30rpx;
 		}
 
 		.m-price {
-			font-weight: 400;
+			font-weight: 300;
 			margin: 0 12upx;
 			color: #999999;
 			text-decoration: line-through;
