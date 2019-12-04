@@ -93,7 +93,7 @@
 				currentPage:'homePage',
 				areas: [],
 				amapPlugin: null,
-				key: '8aa790ec80dd04abdf75736893a84613',
+				key: '4226617a8bb2e82f8a0a6e42958a5d43',
 				titleNViewBackground: '',
 				swiperCurrent: 0,
 				swiperLength: 0,
