@@ -3,9 +3,9 @@
 		<!-- 小程序头部兼容 -->
 		<!-- #ifdef MP -->
 		<!-- #endif -->
-		<view class="header"><label class="head-text">囧途宝盒</label>
+		<view class="header"><label class="head-text">首页</label>
 			<picker class="head-region" @change="bindPickerChange" :value="regionIndex" :range="areas">
-				<view class="uni-input" v-if="this.defaultRegion==''">{{areas[regionIndex]}}</view>
+				<view class="uni-input" v-if="this.defaultRegion==''">{{areas[regionIndex]}}</view><image src="../../static/drop_down.png" class="drop-down"></image>
 				<view class="uni-input" v-if="this.defaultRegion!=''">{{defaultRegion}}</view>
 			</picker>
 		</view>
@@ -313,14 +313,21 @@
 	}
 	.head-text {
 		float: left;
-		font-size: 36rpx;
+		font-size: 40rpx;
 		font-weight: bold;
 	}
 	.head-region{
 		float: right;
 		font-size: 28rpx;
 	}
-
+	.drop-down{
+		width: 23px;
+		height: 23px;
+		position: relative;
+		top: 12rpx;
+		right: 	-130rpx;
+		
+	}
 	.r-m-t {
 		margin-top: -15rpx;
 	}
@@ -551,6 +558,8 @@
 	}
 	.uni-input {
 		font-weight: 500;
+		margin-right: 40rpx;
+		display: inline-block;
 	}
 	.PriceArea{
 		margin-top: 10rpx;
@@ -611,8 +620,8 @@
 		}
 		.tit{
 			font-size:32rpx;
-			font-weight: 570;
-			color:rgba(51,51,51,1);
+			font-weight: 700;
+			color:#333;
 		}
 		.tit2{
 			font-size: $font-sm;
