@@ -42,9 +42,11 @@
 			}
 		},
 		onLoad:function(){
-			wx.showLoading({ title: '加载中', }) 
+			uni.showLoading({
+				title: '加载中'
+			});
 			api.getQR().then(res=>{
-				wx.hideLoading()
+				uni.hideLoading()
 				var QR="data:image/jpeg|png|gif;base64,"+res.data.data
 				var QR1=res.data.data
 				uni.setStorageSync('QR',QR)
@@ -156,13 +158,17 @@
 		width: 440rpx;
 		height: 95rpx;
 		padding: 5rpx;
-		background-color: #ffbd19;
+		background-color: #ffb600;
 		border-radius: 62rpx;
 		color: #a1450c;
 		font-size: 35rpx;
 		position: absolute;
-		left: 20%;
-		bottom: 2%;
+		left: 21.3%;
+		bottom: 4%;
+	}
+	
+	.btnimage::after{
+	    border:none; //黑色边框去掉了
 	}
 	
 	.circle{
