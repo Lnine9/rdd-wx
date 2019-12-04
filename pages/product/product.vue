@@ -7,7 +7,7 @@
 
 		</view>
 		<view class="carousel">
-			<swiper indicator-dots circular=true duration="400">
+			<swiper interval="2000" autoplay indicator-dots indicator-color="rgba(255,255,255,0.3))" indicator-active-color="rgba(255,255,255,1)"  circular=true duration="400">
 				<swiper-item class="swiper-item" v-for="(item,index) in titleImg" :key="index">
 					<view @click="checkPicture(titleImg ,index)" class="image-wrapper">
 						<image :src="item" class="loaded" mode="aspectFill"></image>
@@ -23,7 +23,7 @@
 					<text class="price">{{"￥" + dataDic.salePrice}}</text>
 					<text class="m-price">{{"￥" + dataDic.originalPrice}}</text>
 				</view>
-				<view style="color: #999999;">
+				<view style="color: #999999;font-weight: 400;">
 					<text style="margin-right: 40rpx;">销量: {{dataDic.salesVolume}}</text>
 					<text style="display: inline-block;">库存: {{dataDic.commodityNum}}</text>
 				</view>
@@ -35,16 +35,16 @@
 				<view class="con-list">
 					<view style="display: flex;align-items: center;">
 						<image style="width: 24rpx;height: 28rpx;margin-right: 10rpx;" src="../../static/product/location.png"></image>
-						<text style="font-size:28rpx;font-weight:500;color:rgba(51,51,51,1);">{{dataDic.shopName}}</text>
+						<text style="font-size:28rpx;font-weight:400;color:rgba(51,51,51,1);">{{dataDic.shopName}}</text>
 					</view>
-					<text style="font-size:24rpx;font-family:PingFang SC;font-weight:400;color:rgba(204,204,204,1);margin-left: 34rpx;">{{dataDic.shopAddress}}</text>
+					<text style="font-size:24rpx;font-family:PingFang SC;font-weight:300;color:rgba(204,204,204,1);margin-left: 34rpx;">{{dataDic.shopAddress}}</text>
 				</view>
 			</view>
 		</view>
 
 		<view class="c-list">
 			<view class="c-row b-b">
-				<view class="con-list" style="font-size:24rpx;font-family:PingFang SC;font-weight:400;color:rgba(153,153,153,1);padding-left: 30rpx;
+				<view class="con-list" style="font-size:24rpx;font-family:PingFang SC;font-weight:300;color:rgba(153,153,153,1);padding-left: 30rpx;
 padding-right: 30rpx;
 ">
 					<template>{{dataDic.commodityInfo}}</template>
@@ -76,7 +76,10 @@ padding-right: 30rpx;
 			</view>
 			<view class="item-right">
 				<view style="display: flex;justify-content: space-between;align-items: center;">
-					<text class=" title" style="font-weight: 500;">{{dataDic.commodityTitle}}</text>
+					<text class=" title" style="font-weight: 500;overflow: hidden;
+			text-overflow:ellipsis;
+			white-space: nowrap;width: 300rpx;
+			">{{dataDic.commodityTitle}}</text>
 					<text class="del-btn" @click="cancel">取消</text>
 				</view>
 				<text class="price">¥{{buyNum * dataDic.salePrice}}</text>
@@ -611,6 +614,7 @@ padding-right: 30rpx;
 		padding: 20upx 30upx;
 
 		.title {
+			
 			font-size: 32rpx;
 			font-family: PingFang SC;
 			font-weight: bold;
@@ -639,7 +643,7 @@ padding-right: 30rpx;
 		}
 
 		.m-price {
-
+			font-weight: 400;
 			margin: 0 12upx;
 			color: #999999;
 			text-decoration: line-through;
