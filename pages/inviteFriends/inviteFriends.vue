@@ -38,7 +38,7 @@
 			}
 			return{
 				title:'快来跟我一起开宝盒哇',
-				path: '/pages/index/index'
+				path: '/pages/index/index?scene=' + uni.getStorageSync('userId') || ''
 			}
 		},
 		onLoad:function(){

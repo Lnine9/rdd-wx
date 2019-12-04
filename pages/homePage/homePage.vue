@@ -171,11 +171,11 @@
 				};
 				api.getUserInfo(user).then(res =>{
 					this.service = res.data.data,
-
 					// userType 说明
 					// 0: app
 					// 1: 企业
 					// 2: 小程序
+					uni.setStorageSync('userId', this.service.userId),
 					uni.setStorageSync('userType', this.service.userType),
 					// 默认重庆（debug）
 					uni.setStorageSync('location', "重庆市"),

@@ -261,16 +261,16 @@
 								});
 								setTimeout(() => {
 									// 设置全局变量标识支付成功
-									getApp().globalData.payOrder = true;
+									// getApp().globalData.payOrder = true;
 									// 购买成功去往个人中心
 									uni.switchTab({
 										url: '/pages/mine/mine'
 									});
-									
-									uni.showToast({
-										title: '请稍后',
-										icon: 'loading'
-									});
+
+									// uni.showToast({
+									// 	title: '请稍后',
+										// 	icon: 'loading'
+									// });
 								}, 2000);
 							},
 							'fail': function(res) {
