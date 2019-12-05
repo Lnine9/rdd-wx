@@ -195,9 +195,10 @@
 				// this.canvasFlag=false;
 				// this.deliveryFlag = false;//关闭分享的弹窗
 				console.log("海报生成中")
-				wx.showLoading({
-					title: '海报生成中...'
-				})
+				// 将提示性的loading放在外部
+				// wx.showLoading({
+				// 	title: '海报生成中...'
+				// })
 				let _this = this;
 				let phoneData = wx.getSystemInfoSync();
 				this.phoneH = phoneData.windowHeight;
@@ -313,7 +314,7 @@
 				ctx.beginPath(); //开始一个新的路径
 				ctx.setFontSize(10) //设置字体大小，默认10
 				ctx.setFillStyle('#999999') //文字颜色：默认黑色
-				let orignPriceW = ctx.measureText(orignPrice).width //去掉市场价
+				let orignPriceW = ctx.measureText(orignPrice).width + 2 //去掉市场价
 				// ctx.fillText(`￥${orignPrice}`, 120 + zpPriceW + 5, 395 * scaleH, orignPriceW); //5价格间距
 				ctx.fillText(`￥${orignPrice}`, 75 + zpPriceW + 5, 395 * scaleH, orignPriceW); //5价格间距
 				// ctx.moveTo(120 + zpPriceW + 5, 392 * scaleH); //设置线条的起始路径坐标
@@ -349,14 +350,14 @@
 				ctx.setFontSize(14)
 				ctx.setFillStyle('#2f1709') //文字颜色：默认黑色
 				ctx.font = 'normal bold 14px sans-serif';
-				ctx.fillText('  商品二维码', (_this.phoneW - 90) / 2, 530 * scaleH, 90);
+				ctx.fillText('    囧途宝盒', (_this.phoneW - 90) / 2, 530 * scaleH, 90);
 				// 小程序的名称end
 				// 长按/扫描识别查看商品
 
-				// ctx.setFontSize(14)
-				// ctx.setFillStyle('#ff5f33')//文字颜色：默认黑色
-				// ctx.font = 'normal 14px sans-serif';
-				// ctx.fillText('长按/扫描识别查看商品', (_this.phoneW-140)/2, 550*scaleH,140);
+				ctx.setFontSize(14)
+				ctx.setFillStyle('#ff5f33')//文字颜色：默认黑色
+				ctx.font = 'normal 14px sans-serif';
+				ctx.fillText('长按/扫描识别查看商品', (_this.phoneW-140)/2, 550*scaleH,140);
 
 				// 长按/扫描识别查看商品end
 				//绘制保存按钮
@@ -482,7 +483,7 @@
 		.canvas_close_btn {
 			position: fixed;
 			top: 20rpx;
-			right: 0;
+			// right: 0;
 			z-index: 12;
 
 			right: 40rpx;

@@ -190,6 +190,9 @@ padding-right: 30rpx;
 
 		methods: {
 			createCanvasImageEvn() {
+				wx.showLoading({
+					title: '正在生成海报'
+				});
 				// 这个是固定写死的小程序码
 				// Object.assign(this.posterData, {
 				// 	// url: 'https://img0.zuipin.cn/mp_zuipin/poster/hch-pro.jpg', //商品主图
@@ -279,17 +282,17 @@ padding-right: 30rpx;
 					this.dataDic.commodityNum = Number.parseInt(this.dataDic.commodityNum);
 					this.dataDic.salePrice = Number.parseFloat(this.dataDic.salePrice);
 
-					this.titleImg = this.dataDic.recommendImgs;
-					let bottomPicture = this.dataDic.guessImgs;
-					this.bottomImg += `<div style="width:100%">`
-					bottomPicture.forEach((item, index, arr) => { // item为arr的元素，index为下标，arr原数组
-						// if (index >= 3) {
-							this.bottomImg += `<img style="width:100%;display:block;" src="${item}"/>`
-						// }
-					});
-					this.bottomImg += `</div>`
+					this.titleImg = this.dataDic.commodityImg;
+					// let bottomPicture = this.dataDic.guessImgs;
+					// this.bottomImg += `<div style="width:100%">`
+					// bottomPicture.forEach((item, index, arr) => { // item为arr的元素，index为下标，arr原数组
+					// 	if (index >= 3) {
+					// 		this.bottomImg += `<img style="width:100%;display:block;" src="${item}"/>`
+					// 	}
+					// });
+					// this.bottomImg += `</div>`
 
-					// this.commodityImg = this.dataDic.commodityImg
+					this.commodityImg = this.dataDic.commodityImg
 					uni.hideLoading()
 					this.showPage = true;
 
@@ -628,10 +631,6 @@ padding-right: 30rpx;
 		z-index: 10;
 	}
 	
-	
-	
-	
-	
 	page {
 		background: $page-color-base;
 		padding-bottom: 98rpx;
@@ -916,7 +915,7 @@ padding-right: 30rpx;
 		.d-header {
 			display: flex;
 			justify-content: center;
-			flex-direction: row;
+			/* flex-direction: row; */
 			align-items: center;
 			height: 80upx;
 			font-size: $font-base + 2upx;
@@ -927,7 +926,7 @@ padding-right: 30rpx;
 				position: absolute;
 				padding: 0 20upx;
 				background: #fff;
-				position: relative;
+				/* position: relative; */
 				/* z-index: 1; */
 			}
 
