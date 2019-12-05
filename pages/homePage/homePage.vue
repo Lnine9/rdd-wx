@@ -2,6 +2,7 @@
 	<view style="padding-bottom: 100upx;" class="container">
 		<!-- 小程序头部兼容 -->
 		<!-- #ifdef MP -->
+
 		<!-- #endif -->
 		<view class="header"><label class="head-text">首页</label>
 			<picker class="head-region" @change="bindPickerChange" :value="regionIndex" :range="areas">
@@ -93,7 +94,7 @@
 				currentPage:'homePage',
 				areas: [],
 				amapPlugin: null,
-				key: '8aa790ec80dd04abdf75736893a84613',
+				key: '4226617a8bb2e82f8a0a6e42958a5d43',
 				titleNViewBackground: '',
 				swiperCurrent: 0,
 				swiperLength: 0,

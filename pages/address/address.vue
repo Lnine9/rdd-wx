@@ -109,36 +109,38 @@ page{
 		display: flex;
 		align-items: center;
 	}
-	.name{
-		margin-right: 30rpx;
-		font-size: 32rpx;
+	.receiver{
+		color: #333333;
+		margin-left: 5rpx;
+		font-size: 30rpx;
 	}
 	.mobile{
 		margin-left: 20rpx;
-		font-size: 32rpx;
-		color: #C0C0C0;
+		font-size: 30rpx;
+		color: #999999;
 	}
 	.u-box{
 		font-size: 28rpx;
 		margin-top: 16rpx;
 	}
 	.tag{
-		font-size: 26rpx;
+		font-size: 20rpx;
 		color: #06C1AE;
 		margin-right: 10rpx;
 		background: #e6f9f7;
-		border-radius: 24rpx;
-		padding: 10rpx 12rpx;
+		border-radius: 20rpx;
+		padding: 10rpx 16rpx 10rpx 16rpx;
 	}
 	.address{
-		font-size: 32rpx;
+		color: #333333;
+		font-size: 24rpx;
 		line-height: 60rpx;
 	}
 	.edit{
 		display: flex;
 		height: 40rpx;
 		line-height: 40rpx;
-		font-size: 32rpx;
+		font-size: 24rpx;
 		color: #CCCCCC;
 		padding-left: 30rpx;
 		border-left: 1rpx solid #F3F3F3;
