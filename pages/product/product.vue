@@ -7,7 +7,8 @@
 
 		</view>
 		<view class="carousel">
-			<swiper interval="2000" autoplay indicator-dots indicator-color="rgba(255,255,255,0.3))" indicator-active-color="rgba(255,255,255,1)"  circular=true duration="400">
+			<swiper interval="2000" autoplay indicator-dots indicator-color="rgba(255,255,255,0.3))" indicator-active-color="rgba(255,255,255,1)"
+			 circular=true duration="400">
 				<swiper-item class="swiper-item" v-for="(item,index) in titleImg" :key="index">
 					<view @click="checkPicture(titleImg ,index)" class="image-wrapper">
 						<image :src="item" class="loaded" mode="aspectFill"></image>
@@ -213,9 +214,11 @@
 				// }, 500)
 				// 这个是固定写死的小程序码 end
 				// 以下是根据后端接口动态生成小程序码
-				let code="";
+				let code = "";
 
-				api.getQRCodeImg({commodityId: 1}).then((res)=>{
+				api.getQRCodeImg({
+					commodityId: 1
+				}).then((res) => {
 					code = res.data.data;
 					console.log('二维码图片');
 					console.log(code);
@@ -227,14 +230,14 @@
 						title: this.dataDic.commodityTitle + ' ' + this.dataDic.commodityInfo.split(" ").join(""), //标题
 						discountPrice: this.dataDic.salePrice, //折后价格
 						orignPrice: this.dataDic.originalPrice, //原价
-						code:code,//商品二维码
+						code: code, //商品二维码
 					});
-					this.$forceUpdate();//强制渲染数据
-					setTimeout(()=>{
-						this.canvasFlag=false;//显示canvas海报
-						this.deliveryFlag = false;//关闭分享弹窗
-						this.$refs.hchPoster.createCanvasImage();//调用子组件的方法
-					},500)
+					this.$forceUpdate(); //强制渲染数据
+					setTimeout(() => {
+						this.canvasFlag = false; //显示canvas海报
+						this.deliveryFlag = false; //关闭分享弹窗
+						this.$refs.hchPoster.createCanvasImage(); //调用子组件的方法
+					}, 500)
 				}).catch(err => {
 					console.log(err);
 				})
@@ -442,18 +445,50 @@
 		},
 		onLoad: function(params) {
 			console.log(params);
-			this.commodityId = params.id;
-			if (params.s === undefined) {
-				this.superiorUser = null;
-				this.getData(this.commodityId);
-			} else {
-				this.superiorUser = params.s;
+			if (params.scene) {
+				// 获取scene中的数据
+				console.log("has scene");
+				let scene = decodeURIComponent(params.scene);
+				console.log("scene is ", scene);
+				let arrPara = scene.split("&");
+				let arr = [];
+				for (let i in arrPara) {
+					arr = arrPara[i].split("=");
+					if (arr[0] === "id") { // 商品id
+						this.commodityId = arr[1];
+					} else if (arr[0] === "s") { // 分享码中的推荐人id
+						this.superiorUser = arr[1];
+					}
+					// arr = arrPara[i].split("=");
+					// wx.setStorageSync(arr[0], arr[1]);
+					// console.log("setStorageSync:", arr[0], "=", arr[1]);
+				}
+
 				uni.showToast({
 					title: '正在加载中',
 					icon: 'loading'
 				})
 				this.wxGetUserInfo();
+			} else {
+				console.log("no scene");
+				this.superiorUser = null;
+				this.commodityId = params.id;
+				this.getData(this.commodityId);
 			}
+
+
+			// this.commodityId = params.id;
+			// if (params.s === undefined) {
+			// 	this.superiorUser = null;
+			// 	this.getData(this.commodityId);
+			// } else {
+			// 	this.superiorUser = params.s;
+			// 	uni.showToast({
+			// 		title: '正在加载中',
+			// 		icon: 'loading'
+			// 	})
+			// 	this.wxGetUserInfo();
+			// }
 		},
 		onShareAppMessage: function(res) {
 			// todo path通过拼接商品id与superiorUser(需要进行多次测试)
@@ -647,7 +682,8 @@
 		swiper {
 			height: 100%;
 		}
-		indicator{
+
+		indicator {
 			height: 10rpx;
 			width: 10rpx;
 		}
@@ -932,7 +968,7 @@
 				/* z-index: 1; */
 			}
 
-		/* 	&:after {
+			/* 	&:after {
 				left: 50%;
 				top: 50%;
 				transform: translateX(-50%);
@@ -995,5 +1031,4 @@
 		margin-bottom: 45rpx;
 		text-align: center;
 	}
-
 </style>
