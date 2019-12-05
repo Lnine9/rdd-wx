@@ -443,11 +443,11 @@
 		onLoad: function(params) {
 			console.log(params);
 			this.commodityId = params.id;
-			if (params.superiorUser === undefined) {
+			if (params.s === undefined) {
 				this.superiorUser = null;
 				this.getData(this.commodityId);
 			} else {
-				this.superiorUser = params.superiorUser;
+				this.superiorUser = params.s;
 				uni.showToast({
 					title: '正在加载中',
 					icon: 'loading'
@@ -457,7 +457,7 @@
 		},
 		onShareAppMessage: function(res) {
 			// todo path通过拼接商品id与superiorUser(需要进行多次测试)
-			let path = '/pages/product/product?superiorUser=' + uni.getStorageSync('userId') + '&id=' + this.commodityId;
+			let path = '/pages/product/product?s=' + uni.getStorageSync('userId') + '&id=' + this.commodityId;
 			if (res.from === 'button') { // 如果通过点击按钮进行分享
 				console.log('通过点击按钮进行分享');
 				console.log(res.target)
