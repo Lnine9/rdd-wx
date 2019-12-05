@@ -23,7 +23,7 @@
 					<text class="price">{{"￥" + dataDic.salePrice}}</text>
 					<text class="m-price">{{"￥" + dataDic.originalPrice}}</text>
 				</view>
-				<view style="color: #999999;font-weight: 300;font-size: 26rpx;">
+				<view style="color: #999999;font-weight: 400;font-size: 26rpx;">
 					<text style="margin-right: 40rpx;">销量: {{dataDic.salesVolume}}</text>
 					<text style="display: inline-block;">库存: {{dataDic.commodityNum}}</text>
 				</view>
@@ -35,17 +35,16 @@
 				<view class="con-list">
 					<view style="display: flex;align-items: center;">
 						<image style="width: 24rpx;height: 28rpx;margin-right: 10rpx;" src="../../static/product/location.png"></image>
-						<text style="font-size:28rpx;font-weight:400;color:rgba(51,51,51,1);">{{dataDic.shopName}}</text>
+						<text style="font-size:28rpx;font-weight:500;color:rgba(51,51,51,1);">{{dataDic.shopName}}</text>
 					</view>
-					<text style="font-size:24rpx;font-family:PingFang SC;font-weight:300;color:rgba(204,204,204,1);margin-left: 34rpx;">{{dataDic.shopAddress}}</text>
+					<text style="font-size:24rpx;font-family:PingFang SC;font-weight:400;color:rgba(204,204,204,1);margin-left: 34rpx;">{{dataDic.shopAddress}}</text>
 				</view>
 			</view>
 		</view>
 
 		<view class="c-list">
 			<view class="c-row b-b">
-				<view class="con-list" style="font-size:24rpx;font-family:PingFang SC;font-weight:300;color:rgba(153,153,153,1);padding-left: 30rpx;
-padding-right: 30rpx;
+				<view class="con-list" style="font-size:24rpx;font-family:PingFang SC;font-weight:400;color:rgba(153,153,153,1);
 ">
 					<template>{{dataDic.commodityInfo}}</template>
 				</view>
@@ -92,7 +91,7 @@ padding-right: 30rpx;
 				</view>
 			</view>
 		</view>
-		
+
 		<view class="rebate-container" v-show="rebateShow">
 			<view class="rebate-img-container" @tap="shareEvn">
 				<image src="/static/product/ic-rebate-red-wallet.png" mode="" class="rebate-img"></image>
@@ -102,7 +101,7 @@ padding-right: 30rpx;
 
 			<image src="/static/product/ic-close.png" mode="" class="rebate-close" @tap="closeRebate()"></image>
 		</view>
-		
+
 		<!-- 分享弹窗-->
 		<view class="share-pro">
 			<view class="share-pro-mask" v-if="deliveryFlag"></view>
@@ -123,7 +122,7 @@ padding-right: 30rpx;
 						<view>生成分享图片</view>
 					</view>
 				</view>
-		
+
 			</view>
 		</view>
 		<hchPoster ref="hchPoster" :canvasFlag.sync="canvasFlag" @cancel="canvasCancel" :posterObj.sync="posterData" />
@@ -139,7 +138,7 @@ padding-right: 30rpx;
 
 	// 海报
 	import hchPoster from '../components/hch-poster/hch-poster.vue'
-	
+
 	import {
 		api
 	} from "./api.js"
@@ -215,7 +214,7 @@ padding-right: 30rpx;
 				// 这个是固定写死的小程序码 end
 				// 以下是根据后端接口动态生成小程序码
 				let code="";
-				
+
 				api.getQRCodeImg({commodityId: 1}).then((res)=>{
 					code = res.data.data;
 					console.log('二维码图片');
@@ -253,9 +252,9 @@ padding-right: 30rpx;
 			canvasCancel(val) {
 				this.canvasFlag = val;
 			},
-			
-			
-			
+
+
+
 			// -------
 			/**
 			 * 获取商品详细信息
@@ -489,7 +488,7 @@ padding-right: 30rpx;
 			url('//at.alicdn.com/t/font_1065286_3bsye5aijur.ttf') format('truetype'),
 			url('//at.alicdn.com/t/font_1065286_3bsye5aijur.svg#font_family') format('svg');
 	}
-	
+
 	.font_family {
 		font-family: "font_family" !important;
 		font-size: 16px;
@@ -498,12 +497,12 @@ padding-right: 30rpx;
 		-webkit-text-stroke-width: 0.2px;
 		-moz-osx-font-smoothing: grayscale;
 	}
-	
+
 	/* 按钮去掉边框 */
 	.share-btn-common::after {
 		border: none;
 	}
-	
+
 	.share-btn-common {
 		margin-left: 0;
 		margin-right: 0;
@@ -514,24 +513,24 @@ padding-right: 30rpx;
 		font-size: 28rpx;
 		background: none;
 	}
-	
+
 	.button-hover {
 		color: #1c1c1c;
 		background: none;
 	}
-	
+
 	/*每个页面公共css */
 	.content {
 		text-align: center;
 		height: 100%;
 	}
-	
+
 	/* .share-btn {
 		padding: 30upx 60upx;
 		background-color: $uni-btn-color;
 		color: $uni-text-color-inverse;
 	} */
-	
+
 	.share-pro {
 		display: flex;
 		align-items: center;
@@ -540,7 +539,7 @@ padding-right: 30rpx;
 		z-index: 5;
 		line-height: 1;
 		box-sizing: border-box;
-	
+
 		.share-pro-mask {
 			width: 100%;
 			height: 100%;
@@ -551,7 +550,7 @@ padding-right: 30rpx;
 			left: 0;
 			background: rgba(0, 0, 0, 0.5);
 		}
-	
+
 		.share-pro-dialog {
 			width: 750rpx;
 			height: 310rpx;
@@ -562,34 +561,34 @@ padding-right: 30rpx;
 			box-sizing: border-box;
 			position: fixed;
 			bottom: 0;
-	
+
 			.close-btn {
 				padding: 20rpx 15rpx;
 				position: absolute;
 				top: 0rpx;
 				right: 29rpx;
 			}
-	
+
 			.share-pro-title {
 				font-size: 28rpx;
 				color: #1c1c1c;
 				padding: 28rpx 41rpx;
 				background-color: #f7f7f7;
 			}
-	
+
 			.share-pro-body {
 				display: flex;
 				flex-direction: row;
 				justify-content: space-around;
 				font-size: 28rpx;
 				color: #1c1c1c;
-	
+
 				.share-item {
 					display: flex;
 					flex-direction: column;
 					justify-content: center;
 					justify-content: space-around;
-	
+
 					.share-icon {
 						text-align: center;
 						font-size: 70rpx;
@@ -597,7 +596,7 @@ padding-right: 30rpx;
 						margin-bottom: 16rpx;
 						color: #42ae3c;
 					}
-	
+
 					&:nth-child(2) {
 						.share-icon {
 							color: #ff5f33;
@@ -606,21 +605,21 @@ padding-right: 30rpx;
 				}
 			}
 		}
-	
+
 		/* 显示或关闭内容时动画 */
-	
+
 		.open {
 			transition: all 0.3s ease-out;
 			transform: translateY(0);
 		}
-	
+
 		.close {
 			transition: all 0.3s ease-out;
 			transform: translateY(310rpx);
 		}
-	
+
 	}
-	
+
 	.canvas {
 		position: fixed !important;
 		top: 0 !important;
@@ -630,7 +629,7 @@ padding-right: 30rpx;
 		height: 100% !important;
 		z-index: 10;
 	}
-	
+
 	page {
 		background: $page-color-base;
 		padding-bottom: 98rpx;
@@ -642,11 +641,15 @@ padding-right: 30rpx;
 	}
 
 	.carousel {
-		height: 400upx;
+		height: 400rpx;
 		position: relative;
 
 		swiper {
 			height: 100%;
+		}
+		indicator{
+			height: 10rpx;
+			width: 10rpx;
 		}
 
 		.image-wrapper {
@@ -675,7 +678,7 @@ padding-right: 30rpx;
 		padding: 20upx 30upx;
 
 		.title {
-			
+
 			font-size: 32rpx;
 			font-family: PingFang SC;
 			font-weight: bold;
@@ -704,7 +707,7 @@ padding-right: 30rpx;
 		}
 
 		.m-price {
-			font-weight: 300;
+			font-weight: 400;
 			margin: 0 12upx;
 			color: #999999;
 			text-decoration: line-through;
@@ -915,18 +918,17 @@ padding-right: 30rpx;
 		.d-header {
 			display: flex;
 			justify-content: center;
-			/* flex-direction: row; */
 			align-items: center;
 			height: 80upx;
+			font-weight: 500;
 			font-size: $font-base + 2upx;
 			color: $font-color-dark;
 			position: relative;
 
 			text {
-				position: absolute;
 				padding: 0 20upx;
 				background: #fff;
-				/* position: relative; */
+				position: relative;
 				/* z-index: 1; */
 			}
 
@@ -939,7 +941,7 @@ padding-right: 30rpx;
 				content: '';
 				border-bottom: 1px solid #ccc;
 			} */
-			
+
 			.line {
 				position: absolute;
 				height: 1rpx;
@@ -948,7 +950,7 @@ padding-right: 30rpx;
 			}
 		}
 	}
-	
+
 
 
 	/* 分享返佣样式 */
