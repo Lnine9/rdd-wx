@@ -23,7 +23,7 @@
 					<text class="price">{{"￥" + dataDic.salePrice}}</text>
 					<text class="m-price">{{"￥" + dataDic.originalPrice}}</text>
 				</view>
-				<view style="color: #999999;font-weight: 300;font-size: 26rpx;">
+				<view style="color: #999999;font-weight: 400;font-size: 26rpx;">
 					<text style="margin-right: 40rpx;">销量: {{dataDic.salesVolume}}</text>
 					<text style="display: inline-block;">库存: {{dataDic.commodityNum}}</text>
 				</view>
@@ -35,17 +35,16 @@
 				<view class="con-list">
 					<view style="display: flex;align-items: center;">
 						<image style="width: 24rpx;height: 28rpx;margin-right: 10rpx;" src="../../static/product/location.png"></image>
-						<text style="font-size:28rpx;font-weight:400;color:rgba(51,51,51,1);">{{dataDic.shopName}}</text>
+						<text style="font-size:28rpx;font-weight:500;color:rgba(51,51,51,1);">{{dataDic.shopName}}</text>
 					</view>
-					<text style="font-size:24rpx;font-family:PingFang SC;font-weight:300;color:rgba(204,204,204,1);margin-left: 34rpx;">{{dataDic.shopAddress}}</text>
+					<text style="font-size:24rpx;font-family:PingFang SC;font-weight:400;color:rgba(204,204,204,1);margin-left: 34rpx;">{{dataDic.shopAddress}}</text>
 				</view>
 			</view>
 		</view>
 
 		<view class="c-list">
 			<view class="c-row b-b">
-				<view class="con-list" style="font-size:24rpx;font-family:PingFang SC;font-weight:300;color:rgba(153,153,153,1);padding-left: 30rpx;
-padding-right: 30rpx;
+				<view class="con-list" style="font-size:24rpx;font-family:PingFang SC;font-weight:400;color:rgba(153,153,153,1);
 ">
 					<template>{{dataDic.commodityInfo}}</template>
 				</view>
@@ -195,33 +194,26 @@ padding-right: 30rpx;
 					commodityId: commodityId
 				}).then(res => {
 
-					this.dataDic = res.data.data,
-						this.dataDic.commodityNum = Number.parseInt(this.dataDic.commodityNum)
-					this.dataDic.salePrice = Number.parseFloat(this.dataDic.salePrice)
-
-
-					this.titleImg = this.dataDic.commodityImg.filter((item, index, arr) => { // item为数组中的元素，index为下标，arr为目标数组
-						return index < 3
-					})
-					let bottomPicture = this.dataDic.commodityImg.filter((item, index, arr) => { // item为数组中的元素，index为下标，arr为目标数组
-						return index >= 3
-					})
-					this.bottomImg = `<div style="width:100%">`
-					this.dataDic.commodityImg.forEach((item, index, arr) => { // item为arr的元素，index为下标，arr原数组
-						if (index >= 3) {
-							this.bottomImg += `<img style="width:100%;display:block;" src="${item}"/>`
-						}
-					});
-					this.bottomImg += `</div>`
-
-					this.commodityImg = this.dataDic.commodityImg
+					this.dataDic = res.data.data;	
+					this.dataDic.commodityNum = Number.parseInt(this.dataDic.commodityNum);
+					this.dataDic.salePrice = Number.parseFloat(this.dataDic.salePrice);	
+					this.titleImg = this.dataDic.recommendImgs;					
+					let bottomPicture = this.dataDic.guessImgs;
+					this.bottomImg += `<div style="width:100%">`;
+					bottomPicture.forEach((item, index, arr) => {
+						// item为arr的元素，index为下标，arr原数组
+					// if (index >= 3) {							
+					this.bottomImg += `<img style="width:100%;display:block;" src="${item}"/>`						// }
+										});					
+					this.bottomImg += `</div>`					// this.commodityImg = this.dataDic.commodityImg					
 					uni.hideLoading()
 					this.showPage = true
 				}).catch(err => {
 
 					uni.hideLoading()
+					console.log(err)
 					uni.showToast({
-						title: "网络错误，请稍后重试"
+						title: "网络错误"
 					})
 				})
 			},
@@ -581,11 +573,15 @@ padding-right: 30rpx;
 	}
 
 	.carousel {
-		height: 400upx;
+		height: 400rpx;
 		position: relative;
 
 		swiper {
 			height: 100%;
+		}
+		indicator{
+			height: 10rpx;
+			width: 10rpx;
 		}
 
 		.image-wrapper {
@@ -643,7 +639,7 @@ padding-right: 30rpx;
 		}
 
 		.m-price {
-			font-weight: 300;
+			font-weight: 400;
 			margin: 0 12upx;
 			color: #999999;
 			text-decoration: line-through;
@@ -856,6 +852,7 @@ padding-right: 30rpx;
 			justify-content: center;
 			align-items: center;
 			height: 80upx;
+			font-weight: 500;
 			font-size: $font-base + 2upx;
 			color: $font-color-dark;
 			position: relative;
