@@ -5,6 +5,7 @@
 	</view>
 </template>
 
+
 <script>
 	// #ifdef APP-NVUE
 	const animation = uni.requireNativePlugin('animation');

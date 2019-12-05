@@ -1,5 +1,6 @@
 /* pages/wxqrcode/demo1.wxss */
 page{
+
 	height:100%
 }
 text {
@@ -9,7 +10,7 @@ text {
   width: 278rpx;
   height: 278rpx;
   display: block;
-  margin: 0 auto;  
+  margin: 0 auto;
 }
 
 hr{ clear: both; height: 0; display: block; border-top:1rpx solid #eee; margin: 20rpx 0;}

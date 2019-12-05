@@ -53,6 +53,7 @@
 	}
 </script>
 
+
 <style lang="scss" scoped>
 	//导航栏设置
 		$isRadius:20upx; //左上右上圆角

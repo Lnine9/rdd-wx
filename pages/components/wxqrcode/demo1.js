@@ -5,6 +5,7 @@ const QR = require('./wxqrcode.js');
 
 Page({
 
+
   data: {
     // qrcode
     text: 'http://www.lrxin.com',
