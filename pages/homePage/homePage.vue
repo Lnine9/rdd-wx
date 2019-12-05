@@ -293,6 +293,7 @@
 							this.defaultRegion = uni.getStorageSync('location')||'';
 						},
 						fail: (res) => {
+							uni.hideLoading();
 							console.log(res)
 						}
 					});

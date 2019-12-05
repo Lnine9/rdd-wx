@@ -211,7 +211,8 @@
 				let url = this.posterObj.url; //商品主图
 				let zpPriceIcon = this.posterObj.icon //图标
 				let code = this.posterObj.code
-				let closeBtn = 'https://imgzuipin.oss-cn-hangzhou.aliyuncs.com/mp_zuipin/poster/close_btn.png'
+				// let closeBtn = 'https://imgzuipin.oss-cn-hangzhou.aliyuncs.com/mp_zuipin/poster/close_btn.png'
+				let closeBtn = 'https://czb-file.oss-cn-zhangjiakou.aliyuncs.com/close_btn.png';
 				console.log(ctx)
 				console.log(this)
 
@@ -236,9 +237,12 @@
 						ctx.drawImage(res.path, (_this.phoneW - ((_this.phoneW - 130))) / 2, 55, (_this.phoneW - 130), 250 * scaleH, 10); //绘制图
 						ctx.restore(); //恢复之前保存的绘图上下文 恢复之前保存的绘图上下午即状态 可以继续绘制
 						ctx.draw(true)
+
+						wx.hideLoading();
 					},
 					fail() {
 						_this.canvasFlag = true;
+						wx.hideLoading();
 						uni.showToast({
 							title: '海报生成失败',
 							duration: 2000,
@@ -252,9 +256,12 @@
 					success(res) {
 						ctx.drawImage(res.path, 50 + (_this.phoneW - 100) + 5, 40, 24, 24)
 						ctx.draw(true)
+
+						wx.hideLoading();
 					},
 					fail() {
 						_this.canvasFlag = true;
+						wx.hideLoading();
 						uni.showToast({
 							title: '海报生成失败',
 							duration: 2000,
@@ -333,9 +340,12 @@
 					success(res) {
 						ctx.drawImage(res.path, (_this.phoneW - 70) / 2, 430 * scaleH, 70, 70)
 						ctx.draw(true)
+
+						wx.hideLoading();
 					},
 					fail() {
 						_this.canvasFlag = true;
+						wx.hideLoading();
 						uni.showToast({
 							title: '海报生成失败',
 							duration: 2000,
@@ -371,7 +381,7 @@
 				ctx.font = 'normal bold 14px sans-serif';
 				ctx.fillText('保存图片', (_this.phoneW - 58) / 2, (this.phoneH - 33), 58);
 				//绘制保存按钮 end
-				wx.hideLoading();
+				// wx.hideLoading();
 			},
 
 			// 保存到系统相册
@@ -444,7 +454,7 @@
 			position: fixed;
 			top: 0;
 			right: 0;
-			bottom: 0;
+			// bottom: 0;
 			left: 0;
 			background: rgba(0, 0, 0, 0.5);
 			z-index: 9;
