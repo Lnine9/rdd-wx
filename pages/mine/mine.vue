@@ -4,7 +4,10 @@
 				<view class="subHead">
 					<image class="photo" :src="user.photo"></image>
 					<text class="name">{{user.name}}</text>
-					<image class="scan" src="../../static/code/scanBut.png" @click="scanCode()" :style="{display:isShop == 1 ? 'block' : 'none' }"></image>
+					<view class="scan" :style="{display:isShop == 1 ? 'block' : 'none' }">
+						<image class="scanBut" src="../../static/code/scanBut.png" @click="scanCode()" ></image>
+						<text class="scanOrder">确认订单</text>
+					</view>
 				</view>
 			</view>
 			<view class="vip">
@@ -100,7 +103,7 @@
 			</uni-popup> -->
 			<view class="popUpShow" :style="{display:scanPopShow == true ? 'block' :'none',height:screenHeight + 'px'}">
 				<view class="orderPopUp">
-					<image class="orderPicture" :src="order.commodityImgList[1]"></image>
+					<image class="orderPicture" :src="orderInfo.commodityImgList[0]"></image>
 					<view class="dottedLineThree"></view>
 					<view class="orderMenu">
 						<text class="orderInfo">商品：{{orderInfo.commodityTitle}}</text>
@@ -310,6 +313,7 @@
 									if(res.data.data !=null){
 										console.log(res.data.data);
 										_this.orderInfo = res.data.data;
+										_this.judgeOrderInfo(_this.orderInfo)
 										_this.order = param;
 										_this.comfirmOrderPopUp();
 									}else {
@@ -341,6 +345,24 @@
 							});
 						}
 					});
+				},
+				//判断信息是否为空
+				judgeOrderInfo(data){
+					if(data.commodityTitle == null || data.commodityTitle == ""){
+						this.orderInfo.commodityTitle = '无'
+					}
+					if(data.commodityInfo == null || data.commodityInfo == ""){
+						this.orderInfo.commodityInfo = '无'
+					}
+					if(data.addressDetail == null || data.addressDetail == ""){
+						this.orderInfo.addressDetail = '无'
+					}
+					if(data.receiver == null || data.receiver == ""){
+						this.orderInfo.receiver = '无'
+					}
+					if(data.contactNumber == null || data.contactNumber == ""){
+						this.orderInfo.contactNumber = '无'
+					}
 				},
 				//确认订单弹窗
 				comfirmOrderPopUp(){
@@ -486,16 +508,29 @@
 	}
 	.scan{
 		position: absolute;
+		font-size: 0;
+		width: 60rpx;
+		height: 80rpx;
 		right: 0rpx;
-		top: 30rpx;
-		width: 40rpx;
-		height: 40rpx;
+		top: 20rpx;
+	}
+	.scanBut{
+		display: inline-block;
+		width: 60rpx;
+		height: 60rpx;
+	}
+	.scanOrder{
+		display: inline-block;
+		font-size: 16rpx;
+		color: #FFFFFF;
+	
 	}
 	.vip{
 		width: 690rpx;
 		height: 108rpx;
 		margin: auto;
 		background-image: url('../../static/vip/vipBackground.png');
+		background-position: 50%  0;
 		border-radius: 10rpx;
 		position:relative ;
 		bottom: 65rpx;
@@ -504,7 +539,7 @@
 		position: absolute;
 		left: 42rpx;
 		top: 32rpx;
-		width: 44rpx;
+		width: 48rpx;
 		height: 44rpx;
 	}
 	.applyVip{
@@ -677,7 +712,7 @@
 		display: inline-block;
 		position: relative;
 		width: 600rpx;
-		/* height: 60rpx; */
+		height: 66rpx;
 		left: 43rpx;
 		top:15rpx;
 		margin-bottom: 50rpx;
@@ -686,7 +721,7 @@
 	.shopName{
 		display: inline-block;
 		position: absolute;
-		margin-top: 15rpx;
+		line-height: 66rpx;
 		font-size: 28rpx;
 		font-weight:545;
 		text-overflow: ellipsis;
@@ -732,7 +767,7 @@
 		background-color: rgba(0, 0, 0, 0.4);
 		top: 0;
 		width: 750rpx;
-		height: 1600rpx;
+		padding-bottom: 100rpx;
 	}
 	.popUp{
 		position: relative;
@@ -811,9 +846,9 @@
 		margin-top: 120rpx;
 	}
 	.noCodePicture{
-		width: 300rpx;
-		height: 300rpx;
-		margin: 0  225rpx;
+		width: 200rpx;
+		height: 200rpx;
+		margin: 0  275rpx;
 	}
 	.noCodeText{
 		display: inline-block;

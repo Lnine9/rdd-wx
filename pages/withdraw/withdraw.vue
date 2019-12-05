@@ -106,11 +106,17 @@
 					keyWord: "000000",
 					paymentAmount: this.paymentAmount
 				}).then(res => {
+					console.log(typeof res.data.data);
 					wx.showToast({
 					  title: res.data.data,
 					  icon: 'none',
 					  duration: 1500
 					})
+					if (res.data.data.equals("提现成功")) {
+						wx.navigateBack({
+							delta:1
+						})
+					}
 				}).catch(_ => {
 					wx.showToast({
 						title: '网络繁忙！',
