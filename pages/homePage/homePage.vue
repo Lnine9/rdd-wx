@@ -17,17 +17,16 @@
 			<view class="titleNview-placing"></view>
 			<!-- 背景色区域 -->
 			<view class="titleNview-background" :style="{backgroundColor:titleNViewBackground}"></view>
-			<swiper class="carousel" circular @change="swiperChange">
+			<swiper class="carousel" circular @change="swiperChange" autoplay="true" :current="swiperCurrent">
 				<swiper-item v-for="(item, index) in carouselList" :key="index" class="carousel-item" @click="navToWebView(item)">
 					<image :src="item.savePath" />
 				</swiper-item>
 			</swiper>
-			<!-- 自定义swiper指示器 -->
-			<view class="swiper-dots">
-				<text class="num">{{swiperCurrent+1}}</text>
-				<text class="sign">/</text>
-				<text class="num">{{swiperLength}}</text>
-			</view>
+			<view class="dots">
+			    <block v-for="(item, index) in carouselList.length" :key="item">
+				    <view class="dot" :class="index==swiperCurrent ? ' active' : ''"></view>
+			 </block>
+		  </view>
 		</view>
 
 		<!-- 精选商品 -->
@@ -91,12 +90,13 @@
 	export default {
 		data() {
 			return {
+				current: 0,
+				swiperCurrent: 0,
 				currentPage:'homePage',
 				areas: [],
 				amapPlugin: null,
 				key: '4226617a8bb2e82f8a0a6e42958a5d43',
 				titleNViewBackground: '',
-				swiperCurrent: 0,
 				swiperLength: 0,
 				carouselList: [],
 				defaultRegion: '',
@@ -114,6 +114,10 @@
 			swiperChange(e) {
 				const index = e.detail.current;
 				this.swiperCurrent = index;
+			},
+			
+			changeSwiper(e) {
+			    this.swiperCurrent = e.detail.current;
 			},
 			/**
 			 * web页面跳转
@@ -650,14 +654,14 @@
 			height: 330upx;
 			border-radius: 10px;
 			overflow: hidden;
-			border-color: #E3E3E3;
-			border-width: 1px;
-
+			// border-color: #E3E3E3;
+			// border-width: 1px;
+			border: 2upx solid #E3E3E3;
 			image{
 				width: 100%;
 				height: 100%;
 				opacity: 1;
-				border: 2upx solid #E3E3E3
+				// border: 2upx solid #E3E3E3
 			}
 		}
 		.title{
@@ -671,6 +675,36 @@
 			line-height: 1;
 		}
 	}
+	
+	 .dots {
+	          position: absolute;
+	          bottom: 20rpx;
+	          left: 50%;
+	          // 这里一定要注意兼容不然很可能踩坑          
+	          transform: translate(-50%, 0);
+	          -webkit-transform: translate(-50%, 0);        
+	          z-index: 99;
+	          display: flex;
+	          flex-direction: row;
+	          justify-content: center;
+	
+	          .dot {
+	              // width: 24rpx;
+				  width: 8rpx;
+	              height: 8rpx;
+	              transition: all .6s;
+	              background: rgba(0, 0, 0, .3);
+	              margin-right: 10rpx;
+	          }
+	
+	          .active {
+	              width: 8rpx;
+	              height: 8rpx;
+	              background: rgba(255, 255, 255, .8);
+	          }
+	      }
+
+	
 	::-webkit-scrollbar {
 		width: 0;
 		height: 0;
