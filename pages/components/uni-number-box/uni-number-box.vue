@@ -10,6 +10,7 @@
 	</view>
 </template>
 <script>
+
 	export default {
 		name: "UniNumberBox",
 		props: {
@@ -44,7 +45,7 @@
 				this.inputValue = +val;
 			},
 			inputValue(newVal, oldVal) {
-				
+
 				if (+newVal !== +oldVal) {
 					this.$emit("change", newVal);
 				}

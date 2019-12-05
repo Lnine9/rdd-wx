@@ -6,6 +6,7 @@
 		<view class="button-wrapper"><!-- 保存海报按钮 -->
 			<cover-view class="save_btn" @tap="saveCanvasImage"></cover-view>
 		</view>
+
 	</view>
 </template>
 
@@ -13,7 +14,7 @@
 	export default{
 		data(){
 			return{
-				
+
 			}
 		},
 		props:{
@@ -48,13 +49,13 @@
 				// 绘制border-right
 				ctx.lineTo(x + w, y + h - r)
 				// 绘制右下角圆弧
-				
+
 				ctx.arc(x + w - r, y + h - r, r, 0, Math.PI * 0.5)
-			
+
 				// 绘制左下角圆弧
-				
+
 				ctx.arc(x + r, y + h - r, r, Math.PI * 0.5, Math.PI)
-				
+
 				// 绘制border-left
 				ctx.lineTo(x, y + r)
 				if(btn=='btn'){
@@ -66,7 +67,7 @@
 					// 对绘画区域填充
 					ctx.fill()
 				}else{
-			
+
 					if (fillColor) {
 					// 因为边缘描边存在锯齿，最好指定使用 transparent 填充
 					ctx.setFillStyle(fillColor)
@@ -85,7 +86,7 @@
 				// 剪切，剪切之后的绘画绘制剪切区域内进行，需要save与restore 这个很重要 不然没办法保存
 				ctx.clip()
 			},
-			
+
 			// 获取海报的小程序码
 			codeImg(){
 				return new Promise((resolve,reject)=>{
@@ -115,8 +116,8 @@
 					})
 				})
 			},
-			
-			
+
+
 			// 生成海报
 			createCanvasImage() {
 				console.log(this.posterObj,'posterObj')
@@ -148,7 +149,7 @@
 				ctx.save();
 				this.roundRect(ctx,50,40,(this.phoneW-100), (370)*scaleH,10,'#f7f7f7','#f7f7f7');//绘制海报圆角背景 上半截灰色的
 				ctx.restore();
-				//将网络图片转成本地路径 
+				//将网络图片转成本地路径
 				console.log(url)
 			    uni.getImageInfo({
 			       src: '/static/code/moreCode.png',
@@ -184,7 +185,7 @@
 				})
 				// 关闭按钮 end
 				console.log(code)
-		
+
 				// 小程序码
 				wx.getImageInfo({
 			       src: code,
@@ -198,7 +199,7 @@
 						console.log("二维码生成失败")
 					}
 				}, this)
-				
+
 				// 小程序码end
 				// 小程序的名称
 				ctx.setFontSize(14)
@@ -213,9 +214,9 @@
 				ctx.fillText('长按/扫描识别查看商品', (_this.phoneW-140)/2, 550*scaleH,140);
 				// 长按/扫描识别查看商品end
 				//绘制保存按钮
-				ctx.save(); 
+				ctx.save();
 				this.roundRect(ctx,(this.phoneW-160)/2,(this.phoneH-55),160, 36,18,'#ff3600','#ff6a00','btn')
-				ctx.restore(); 
+				ctx.restore();
 				ctx.setFontSize(14)
 				ctx.setFillStyle('#fff')//文字颜色：默认黑色
 				ctx.font = 'normal bold 14px sans-serif';
@@ -223,7 +224,7 @@
 				//绘制保存按钮 end
 				wx.hideLoading();
 			},
-			
+
 			// 保存到系统相册
 			saveCanvasImage(){
 				console.log('点击了保存')
@@ -304,7 +305,7 @@
 	        left:  215rpx;
 			z-index: 16;
 	    }
-	    
+
 	    .save_btn{
 	        font-size: 30rpx;
 	        line-height: 72rpx;
@@ -321,7 +322,7 @@
 	        top:30rpx;
 	        right:0;
 	        z-index:12;
-	
+
 	    }
 	}
 </style>

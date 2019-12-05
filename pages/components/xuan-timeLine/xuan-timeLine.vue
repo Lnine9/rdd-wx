@@ -14,6 +14,7 @@
 					<view class="time-line-info" :key="index" :class="[layoutClass(index)]" :id="'timeline'+index" v-for="(item,index) of time_line_list">
 
 
+
 						<!-- 内容块内容 -->
 						<view class="line-info-content">
 

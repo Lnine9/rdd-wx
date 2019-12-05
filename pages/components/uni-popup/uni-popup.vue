@@ -10,6 +10,7 @@
 </template>
 
 <script>
+
 	import uniTransition from '../uni-transition/uni-transition.vue'
 	export default {
 		name: 'UniPopup',

@@ -3,6 +3,7 @@ const forMatNum=(num)=>{
 }
 const initPicker={
 	//日期
+
 	date:{
 		init(start,end,mode="date",step,value,flag,disabled){
 			let aToday=new Date();
@@ -51,7 +52,7 @@ const initPicker={
 								days.push(forMatNum(d));
 							}
 						}
-						
+
 					}else{
 						for(let s=startYear;s<=endYear;s++){
 							years.push(s+'');
@@ -143,7 +144,7 @@ const initPicker={
 						];
 						return {years,months,days,areas,defaultVal}
 					}
-					break;	
+					break;
 				case "yearMonth":
 					if(flag){
 						defaultVal=[returnArr[0],returnArr[1]];
@@ -182,7 +183,7 @@ const initPicker={
 						];
 					}
 					return {hours,minutes,seconds,defaultVal}
-					break;			
+					break;
 			}
 		},
 		initMonths:(year,disabled)=>{
@@ -196,11 +197,11 @@ const initPicker={
 				if(flag){
 					for(let m=1;m<=dMonth;m++){
 						months.push(forMatNum(m));
-					};	
+					};
 				}else{
 					for(let m=1;m<=12;m++){
 						months.push(forMatNum(m));
-					};	
+					};
 				}
 			}else{
 				for(let m=1;m<=12;m++){
@@ -220,7 +221,7 @@ const initPicker={
 			if(flag&&disabled){
 				for(let d=1;d<=dDate;d++){
 					dates.push(forMatNum(d));
-				};			
+				};
 			}else{
 				for(let d=1;d<=totalDays;d++){
 					dates.push(forMatNum(d));
@@ -357,7 +358,7 @@ const initPicker={
 						})
 					};
 				}
-				
+
 			}else{
 				for(let k=1;k<=12;k++){
 					hours.push({
@@ -468,7 +469,7 @@ const initPicker={
 						value:forMatNum(k),
 						flag:k==hour?true:false
 					})
-				};			
+				};
 			}else{
 				for(let k=startHour*1;k<=endHour*1;k++){
 					hours.push({
@@ -476,7 +477,7 @@ const initPicker={
 						value:forMatNum(k),
 						flag:false
 					})
-				}			
+				}
 			};
 			return hours;
 		},
@@ -498,7 +499,7 @@ const initPicker={
 							label:forMatNum(j),
 							value:forMatNum(j)
 						});
-					}	
+					}
 				}else{
 					for(let j=0;j<60;j+=minuteStep*1){
 						minutes.push({
@@ -507,14 +508,14 @@ const initPicker={
 						})
 					}
 				}
-						
+
 			}else{
 				for(let j=0;j<60;j+=minuteStep*1){
 					minutes.push({
 						label:forMatNum(j),
 						value:forMatNum(j)
 					})
-				}			
+				}
 			}
 			return minutes;
 		}
