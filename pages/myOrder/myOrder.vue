@@ -1,12 +1,12 @@
 <template>
 	<view v-bind:style="noDataCenter">
+		<!-- 缺省图 -->
 		<view v-if="isNodata" class="nodataText">
-
-
 		<image src="../../static/myOrder/myOrderNoData.png" class="noDataPic"></image>
 		<text class="nodataText smallFontSize" >暂无订单</text>
 
 		</view>
+		<!-- 店铺title -->
 		<view v-if="!isNodata" style="height: 100vh;background-color: #F8F9FB;">
 		<view  class="orderList" v-for="(item,index) in shopList" :key="index">
 			<view class="shopContainer normalFontWeight">

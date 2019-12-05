@@ -8,7 +8,7 @@
 		 @click="navTo(item)"
 		 >	<view style="display: flex;flex-direction: column;align-items: center;">
 			<image v-if="item.url == currentPage" :src="item.imgNormal"></image>
-			<image v-else :src="item.imgClick"></image>
+			<image v-if="item.url != currentPage" :src="item.imgClick"></image>
 			<view class="text">{{item.text}}</view>
 			</view>
 		</view>
@@ -61,13 +61,12 @@
 		$isBg:#ffffff; //背景
 
 	// 选中设置
-		$chooseTextColor:#50B7EA; //选中时字体颜色
+		$chooseTextColor:#333333; //选中时字体颜色
 		$chooseBgColor:white; //选中时背景颜色 transparent为透明
 
 	//未选中设置
 		$normalTextColor:#999; //未选中颜色
 	.tabBar{
-		box-shadow:0px -6px 10px 0px rgba(116,116,116,0.06);
 		width: $isWidth;
 		height: 100upx;
 		position: fixed;
@@ -88,23 +87,20 @@
 		box-sizing: border-box;
 		overflow: hidden;
 		.tabbar_item{
-			width: 25%;
+			width: 20%;
 			font-size: 12px;
 			display: flex;
 			flex-direction: column;
 			justify-content: center;
 			align-items: center;
 			&.active{
-				border-left: $isBorder;
-				border-top: $isBorder;
 				background: $chooseBgColor;
 				color: $chooseTextColor;
 			}
 		}
 		image{
-			width: 40upx;
-			height:40upx;
-
+			width: 40rpx;
+			height:43rpx;
 		}
 	}
 </style>
