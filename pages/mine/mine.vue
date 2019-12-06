@@ -517,19 +517,22 @@
 	.scan{
 		position: absolute;
 		font-size: 0;
-		width: 60rpx;
+		width: 100rpx;
 		height: 80rpx;
 		right: 0rpx;
 		top: 20rpx;
 	}
 	.scanBut{
 		display: inline-block;
+		float: right;
 		width: 60rpx;
 		height: 60rpx;
 	}
 	.scanOrder{
 		display: inline-block;
 		font-size: 16rpx;
+		width: 100rpx;
+		text-align: right;
 		color: #FFFFFF;
 	
 	}
