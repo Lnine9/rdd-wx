@@ -10,11 +10,11 @@
 				>{{item}}</view>
 			</scroll-view>
 		</view>
-		<swiper 
+		<view 
 		:style="{'height': '1200rpx'}" 
 		:current="swiperCurrent">
-			<swiper-item class="swiper-item" v-for="(item, index) in tabs" :key="index">
-				<scroll-view scroll-y style="height: 100%;width: 100%;" >
+<!-- 			<view class="swiper-item" v-for="(item, index) in tabs" :key="index"> -->
+				<view scroll-y style="height: 100%;width: 100%;" >
 					<view class="scroll-items">
 						<view style="position: relative">
 							<view style="background-color: #FFFFFF;height: 250rpx;">
@@ -30,33 +30,33 @@
 								<image class="noAddress" src="../../static/myOrder/myOrderNoData.png"></image>
 								<text class="warning">暂无订单</text>
 							</view>
-							<view style="width: 750rpx;background: #FFFFFF;" v-show="!showType">
-								<view style="border-left: rgb(39, 134, 217) 5rpx solid;margin: 30rpx 0 0 20rpx;padding: 10rpx 0 0 20rpx ;">订单信息</view>
+							<view style="width: 750rpx;background: #FFFFFF;margin-top: 20rpx;padding-top: 5rpx;padding-bottom: 90rpx;" v-show="!showType">
+								<view style="border-left: rgb(39, 134, 217) 5rpx solid;margin: 30rpx 0 20rpx 20rpx;padding: 0 0 0 20rpx ;">订单信息</view>
 								<view v-for="(commodity, index) in commodityList" :key="index" class="commodity">
 									<view class="theType" v-show="commodity.commodityType==2">
 										<view class="detail1">订单号:
-										<text class="text"> {{commodity.orderId}}</text>
-										<text class="orderState" :class="{'active':commodity.orderState==2}">{{orderState[index]}}</text>
+										<text class="text1"> {{commodity.orderId}}</text>
+										<text class="orderState" :class="{'active':commodity.orderState==1}">{{orderState[index]}}</text>
 										</view>
-										<view class="detail1">电子码:<text class="text"> {{commodity.electronicCode}}</text></view>
+										<view class="detail1">电子码:<text class="text1"> {{commodity.electronicCode}}</text></view>
 									</view>
 									<view class="theType" v-show="commodity.commodityType==1">
-										<view class="detail1">快递单号:<text class="text"> {{commodity.orderId}}</text></view>
-										<view class="detail1">快递状态:<text class="text"> {{state[index]}}</text></view>
+										<view class="detail1">快递单号:<text class="text1"> {{commodity.orderId}}</text></view>
+										<view class="detail1">快递状态:<text class="text1"> {{state[index]}}</text></view>
 									</view>
 									<view class="details">
-										<view class="detail3">商品名:<text class="text"> {{commodity.commodityTitle}}</text></view>
-										<view class="detail">支付金额 (元):<text class="text"> {{commodity.actualPrice*commodity.commodityNum}}</text></view>
-										<view class="detail">数量 (个):<text class="text"> {{commodity.commodityNum}}</text></view>
-										<view class="detail2">时间:<text class="text"> {{commodity.createAt}}</text></view>
+										<view class="detail3">商品名:<text class="text1"> {{commodity.commodityTitle}}</text></view>
+										<view class="detail">支付金额 (元):<text class="text1"> {{commodity.actualPrice*commodity.commodityNum}}</text></view>
+										<view class="detail">数量 (个):<text class="text1"> {{commodity.commodityNum}}</text></view>
+										<view class="detail2">时间:<text class="text1"> {{commodity.createAt}}</text></view>
 									</view>
 								</view>
 							</view>
 						</view>
 					</view>
-				</scroll-view>
-			</swiper-item>
-		</swiper>
+				</view>
+			<!-- </view> -->
+		</view>
 		<tabBar :currentPage="currentPage"></tabBar>
 	</view>
 </template>
@@ -81,41 +81,45 @@
 				showType:true,
 				tabs:["全部","未确认","已确认"],
 				swiperCurrent: 0,
-				tabsHeight: 0,
-				dx: 0,
 				commodityList:[]
 			}
 		},
 		onLoad() {
-			this.getAllCommodityOrderByLeader(this.swiperCurrent);
+			this.change(0);
 		},
 		methods: {
+			onPullDownRefresh: function() {
+				wx.showNavigationBarLoading() //在标题栏中显示加载
+				this.change(this.swiperCurrent); //重新加载数据
+				//模拟加载  1秒
+				setTimeout(function() {
+					// complete
+					wx.hideNavigationBarLoading() //完成停止加载
+					wx.stopPullDownRefresh() //停止下拉刷新
+				}, 1000);
+			},
 			change(index) {
 				this.swiperCurrent = index;
 				this.getAllCommodityOrderByLeader(index);
-				
-				
 			},
 			getAllCommodityOrderByLeader(index){
-				this.total=0;
 				this.state=[];
 				this.orderState=[];
 				if(index==0){
 					index='';
 				}
-				else{
-					index=index-1;
-				}
+				console.log(typeof index)
 				api.getAllCommodityOrderByLeader({
 					orderState: index
 				}).then(res=>{
 					this.commodityList=[];
-					if(res.data.data.length!=0)
+					this.total=0;
+					console.log(res.data.data)
+					if(res.data.data!=null)
 					{
 						this.commodityList=res.data.data;
 						this.showType=false;
 						for(let i=0;i<res.data.data.length;i++){
-							this.total=this.total+this.commodityList[i].actualPrice*this.commodityList[i].commodityNum;
 							if(this.commodityList[i].deliveryState==0){
 								this.state[i]='未寄送';
 							}else if(this.commodityList[i].deliveryState==1){
@@ -135,6 +139,9 @@
 								this.orderState[i]='--';
 							}
 						}
+						for(let i=0;i<this.commodityList.length;i++){
+						this.total=this.total+this.commodityList[i].actualPrice*this.commodityList[i].commodityNum;
+						}	
 					}
 					else{
 						this.showType=true;
@@ -153,7 +160,7 @@
 		background: #F8F9FB;
 	}
 	.select{
-		background-color: #007AFF;
+		background-color: #06C1AE;
 	}
 	.nav-item{
 		display: inline-block;
@@ -273,41 +280,42 @@
 		color: #CCCCCC;
 		margin-top: 20rpx;
 		width: 350rpx;
-		font-size: 35rpx;
+		font-size: 30rpx;
 	}
 	.detail1 {
 		color: #CCCCCC;
 		margin-top: 20rpx;
 		width: 900rpx;
-		font-size: 35rpx;
+		font-size: 30rpx;
 	}
 	.detail2 {
 		color: #CCCCCC;
 		width: 400rpx;
-		font-size: 35rpx;
+		font-size: 30rpx;
 		margin: 20rpx 295rpx 0 0;
 	}
 	.detail3 {
 		color: #CCCCCC;
 		width: 450rpx;
-		font-size: 35rpx;
+		font-size: 30rpx;
 		margin:20rpx 245rpx 0 0;
 	}
 	.detail4{
 		color: #CCCCCC;
 		width: 500rpx;
-		font-size: 35rpx;
+		font-size: 30rpx;
 		margin-top: 15rpx;
 	}
 	.orderState{
 		color: #06C1AE;
-		margin-left: 120rpx;
+		float: right;
+		margin-right: 220rpx;
 		font-size: 30rpx;
 	}
 	.active{
 		color: red;
 	}
-	.text {
+	.text1 {
 		color: black;
 		margin-left: 15rpx;
 		font-size: 30rpx;
@@ -328,7 +336,7 @@
 		height: 200rpx;
 	}
 	.commodity{
-		margin-top: 40rpx;
+		padding-bottom: 40rpx;
 		border-top: 1rpx solid #CCCCCC;
 	}
 </style>
