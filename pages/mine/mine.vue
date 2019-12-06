@@ -304,7 +304,7 @@
 							console.log(res.result.slice(0,10))
 							if(res.result != null && res.result.slice(0,10) === 'wx:shopId='){
 								let str = res.result.slice(3);
-								let subStr  = str.split('&&')
+								let subStr  = str.split('&')
 								let shopId = subStr[0].slice(7);
 								let orderId = subStr[1].slice(8);
 								let date = _this.getDate();
