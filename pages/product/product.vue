@@ -222,11 +222,16 @@
 					code = res.data.data;
 					
 					if (code != null && this.dataDic.posterImg != null){
-						let codes = code.split(":")
-						code = codes[0] + "s:" + codes[1]
-						
+						if (code.indexOf("https") == -1){
+							let codes = code.split(":")
+							code = codes[0] + "s:" + codes[1]
+						}
+						if (this.dataDic.posterImg.indexOf("https") == -1){
+							
 						let imgs = this.dataDic.posterImg.split(":")
 						this.dataDic.posterImg = imgs[0] + "s:" + imgs[1]
+						}
+						
 					}
 					else{
 						uni.showToast({
