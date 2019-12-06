@@ -33,14 +33,14 @@
 							<view style="width: 750rpx;background: #FFFFFF;" v-show="!showType">
 								<view style="border-left: rgb(39, 134, 217) 5rpx solid;margin: 30rpx 0 0 20rpx;padding: 10rpx 0 0 20rpx ;">订单信息</view>
 								<view v-for="(commodity, index) in commodityList" :key="index" class="commodity">
-									<view class="theType" v-show="commodity.commodityType==1">
+									<view class="theType" v-show="commodity.commodityType==2">
 										<view class="detail1">订单号:
 										<text class="text"> {{commodity.orderId}}</text>
 										<text class="orderState" :class="{'active':commodity.orderState==2}">{{orderState[index]}}</text>
 										</view>
 										<view class="detail1">电子码:<text class="text"> {{commodity.electronicCode}}</text></view>
 									</view>
-									<view class="theType" v-show="commodity.commodityType==2">
+									<view class="theType" v-show="commodity.commodityType==1">
 										<view class="detail1">快递单号:<text class="text"> {{commodity.orderId}}</text></view>
 										<view class="detail1">快递状态:<text class="text"> {{state[index]}}</text></view>
 									</view>

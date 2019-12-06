@@ -220,10 +220,23 @@
 					commodityId: 1
 				}).then((res) => {
 					code = res.data.data;
-					console.log('二维码图片');
-					console.log(code);
-					console.log('海报');
-					console.log(this.dataDic.posterImg);
+					
+					if (code != null && this.dataDic.posterImg != null){
+						let codes = code.split(":")
+						code = codes[0] + "s:" + codes[1]
+						
+						let imgs = this.dataDic.posterImg.split(":")
+						this.dataDic.posterImg = imgs[0] + "s:" + imgs[1]
+					}
+					else{
+						uni.showToast({
+							title:"该商品不能分享"
+						})
+						return
+					}
+					
+					
+					
 					Object.assign(this.posterData, {
 						url: this.dataDic.posterImg, //商品海报图片
 						icon: 'none', //优惠价图标
@@ -445,7 +458,7 @@
 			},
 		},
 		onLoad: function(params) {
-			console.log(params);
+			console.log(params.s);
 			if (params.scene) {
 				// 获取scene中的数据
 				console.log("has scene");
@@ -470,7 +483,12 @@
 					icon: 'loading'
 				})
 				this.wxGetUserInfo();
-			} else {
+			} else if (params.s != null && params.s != ""){
+				console.log("FENXIANG");
+				this.superiorUser = params.s;
+				this.commodityId = params.id;
+				this.wxGetUserInfo();
+			}else{
 				console.log("no scene");
 				this.superiorUser = null;
 				this.commodityId = params.id;
@@ -495,6 +513,7 @@
 			// todo path通过拼接商品id与superiorUser(需要进行多次测试)
 			let path = '/pages/product/product?s=' + uni.getStorageSync('userId') + '&id=' + this.commodityId;
 			if (res.from === 'button') { // 如果通过点击按钮进行分享
+			console.log(uni.getStorageSync('userId'))
 				console.log('通过点击按钮进行分享');
 				console.log(res.target)
 				return {
