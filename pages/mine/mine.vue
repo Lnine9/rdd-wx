@@ -101,7 +101,7 @@
 					<button class="update" @click="comfirmOrder(order)">确认提交</button>
 				</view>
 			</uni-popup> -->
-			<view class="popUpShow" :style="{display:scanPopShow == true ? 'block' :'none',height:screenHeight + 'px'}">
+			<view class="popUpShow" :style="{display:scanPopShow == true ? 'block' :'none',height:subScreenHeight + 'px'}">
 				<view class="orderPopUp">
 					<image class="orderPicture" :src="orderInfo.commodityImgList[0]"></image>
 					<view class="dottedLineThree"></view>
@@ -145,7 +145,8 @@
 					popShow:false,
 					scanPopShow:false,
 					currentPage:'mine',
-					screenHeight: 600,
+					screenHeight: 951,
+					subScreenHeight: 1200,
 					flag: true, // 标识当前页面是否显示
 	            };
 	        },
@@ -202,13 +203,18 @@
 						}
 				    });
 				},
-				//获取屏幕高度
+				//获取主屏幕高度
 				getHeight(){
 					var _this = this
 					let info = uni.createSelectorQuery().select(".main");
 			　　　   info.boundingClientRect(function(data) { //data - 各种参数
 				　　　  　console.log('高度' + data.height)  // 获取元素宽度
 						_this.screenHeight = data.height
+						if(data.height <= 1200){
+							_this.subScreenHeight = 1200
+						}else{
+							_this.subScreenHeight = data.height
+						}
 			　　    }).exec()
 				},
 				//获取菜单信息
@@ -290,6 +296,7 @@
 				//扫码二维码
 				scanCode(){
 					this.getHeight()
+					// this.getOrderHeight()
 					let _this = this;
 					uni.scanCode({
 					    success: function (res) {
@@ -345,6 +352,7 @@
 							});
 						}
 					});
+					
 				},
 				//判断信息是否为空
 				judgeOrderInfo(data){
