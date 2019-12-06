@@ -517,10 +517,10 @@
 	.scan{
 		position: absolute;
 		font-size: 0;
-		width: 100rpx;
+		width: 120rpx;
 		height: 80rpx;
 		right: 0rpx;
-		top: 20rpx;
+		top: 0rpx;
 	}
 	.scanBut{
 		display: inline-block;
@@ -530,9 +530,12 @@
 	}
 	.scanOrder{
 		display: inline-block;
-		font-size: 16rpx;
-		width: 100rpx;
-		text-align: right;
+		position: absolute;
+		top: 80rpx;
+		left: 30rpx;
+		font-size: 26rpx;
+		width: 120rpx;
+		text-align: center;
 		color: #FFFFFF;
 	
 	}
