@@ -136,8 +136,9 @@
 				console.log('父级' + options)
 				console.log(options)
 				if (options.scene) {
+					let id = decodeURIComponent(options.scene);
 					console.log("has scene");
-					uni.setStorageSync('superiorUser', options.scene);
+					uni.setStorageSync('superiorUser', id);
 				}
 			},
 		},
