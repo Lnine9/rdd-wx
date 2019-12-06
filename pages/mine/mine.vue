@@ -6,7 +6,7 @@
 					<text class="name">{{user.name}}</text>
 					<view class="scan" :style="{display:isShop == 1 ? 'block' : 'none' }">
 						<image class="scanBut" src="../../static/code/scanBut.png" @click="scanCode()" ></image>
-						<text class="scanOrder">确认订单</text>
+						<text class="scanOrder">扫一扫</text>
 					</view>
 				</view>
 			</view>

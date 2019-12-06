@@ -109,13 +109,6 @@
 				imageUrl: '',
 				addressId: '', // 外部传递过来的id（暂时未使用）
 				address: {
-					addressId: '',
-					receiver: '',
-					contactNumber: '',
-					province: '',
-					city: '',
-					area: '',
-					detail: '',
 				},
 				wholeAddress: '', // 完整路径(上方字符串的拼接)
 				hasDefaultAddress: false,
@@ -128,17 +121,33 @@
 		onLoad: function(params) {
 			this.commodityId = params.commodityId;
 			this.commodityNum = params.commodityNum;
+			
+			
+},
 
+		onShow:function(){
+			this.address = uni.getStorageSync("chooseAddress")
+			uni.removeStorageSync('chooseAddress');
+			console.log(this.address)
+			this.getCommodityInfo();
+		},
 			// uni.startPullDownRefresh();
-			this.getCommodityInfo();
-		},
-		onShow: function() {
-			this.getCommodityInfo();
-		},
-		onPullDownRefresh: function() {
-			this.getCommodityInfo();
-		},
+			
+		
+		// onPullDownRefresh: function() {
+		// 	this.getCommodityInfo();
+			
+		// },
 		methods: {
+			
+			// 判断对象是不是空的
+		 isEmptyObject(obj) {
+			  for (var key in obj) {
+			    return false;
+			  }
+			  return true;
+			},
+
 			getCommodityInfo: function() {
 				// 获取商品信息
 				if (this.commodityId != null && this.commodityId != undefined) {
@@ -157,16 +166,21 @@
 
 						// 寄送，请求默认地址
 						if (this.commodity.takeWay === 1) {
-							this.getDefaultAddress();
+							
+							if (this.isEmptyObject(this.address)){
+								console.log("地址是空的")
+								this.getDefaultAddress();
+							}
+							
 						}
 
-						uni.stopPullDownRefresh();
+						
 					}).catch(err => {
 						uni.showToast({
 							title: '商品信息获取失败，刷新试试',
 							icon: 'none'
 						});
-						uni.stopPullDownRefresh();
+						
 					})
 				} else {
 					uni.navigateBack();
@@ -195,7 +209,7 @@
 			chooseAddress: function() {
 				// 跳转到选择地址页面，并且标明是从支付订单页面跳转
 				uni.navigateTo({
-					url: '/pages/address/address'
+					url: '/pages/address/address?choose=true'
 				})
 			},
 			addAddress: function() {
