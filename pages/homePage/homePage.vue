@@ -182,6 +182,8 @@
 					// 1: 企业
 					// 2: 小程序
 					uni.setStorageSync('userId', this.service.userId),
+					console.log("id")
+					console.log(this.service.userId)
 					uni.setStorageSync('userType', this.service.userType),
 					// 默认重庆（debug）
 					uni.setStorageSync('location', "重庆市"),
