@@ -6,7 +6,7 @@
 					<text class="name">{{user.name}}</text>
 					<view class="scan" :style="{display:isShop == 1 ? 'block' : 'none' }">
 						<image class="scanBut" src="../../static/code/scanBut.png" @click="scanCode()" ></image>
-						<text class="scanOrder">确认订单</text>
+						<text class="scanOrder">扫一扫</text>
 					</view>
 				</view>
 			</view>
@@ -66,14 +66,12 @@
 								<image src="../../static/popup/closePopUp.png" class="close"></image>
 							</view>
 						</uni-popup> -->
-
 					</view>
 				</view>
 			</view>
 			<view class="popUpShow" :style="{display:popShow == true ? 'block' :'none',height:screenHeight + 'px'}">
 				<view class="popUp">
 					<text class="popupCodeName" >电子码：{{code.electronicCode}}</text>
-					<text class="popupCodeAccount">订单号码：{{code.orderId}}</text>
 					<view class="dottedLineThree"></view>
 					<image class="qrCode" :src="qr"></image>
 					<text class="codeShopName">{{code.commodityTitle}}</text>
@@ -107,10 +105,9 @@
 					<view class="dottedLineThree"></view>
 					<view class="orderMenu">
 						<text class="orderInfo">商品：{{orderInfo.commodityTitle}}</text>
-						<text class="orderInfo">商品信息：{{orderInfo.commodityInfo}}</text>
-						<text class="orderInfo">地址：{{orderInfo.addressDetail}}</text>
-						<text class="orderInfo">收货人：{{orderInfo.receiver}}</text>
-						<text class="orderInfo">联系电话：{{orderInfo.contactNumber}}</text>
+						<text class="orderInfo">电子码：{{orderInfo.qrcode}}</text>
+						<text class="orderInfo">支付价格(元)：{{orderInfo.actualPrice}}</text>
+						<text class="orderInfo">联系电话：{{orderInfo.phone}}</text>
 					</view>
 					<view class="orderBut">
 						<button class="cancle" @click="closeOrder()">取消</button>
@@ -388,6 +385,19 @@
 							    duration: 2000,
 								icon:'success'
 							});
+							setTimeout(() => {
+								// 设置全局变量标识支付成功
+								// getApp().globalData.payOrder = true;
+								// 购买成功去往个人中心
+								uni.switchTab({
+									url: '/pages/shopOrder/shopOrder'
+								});
+							
+								// uni.showToast({
+								// 	title: '请稍后',
+									// 	icon: 'loading'
+								// });
+							}, 2000);
 						}else{
 							uni.showToast({
 							    title: '提交失败',
@@ -722,6 +732,9 @@
 		/* height:1rpx; */
 		border:1rpx dotted rgba(227,227,227,1);
 	}
+	.maxWidth{
+		max-height: 30%;
+	}
 	.bottom{
 		display: inline-block;
 		position: relative;
@@ -784,12 +797,16 @@
 		padding-bottom: 100rpx;
 	}
 	.popUp{
-		position: relative;
+		display: fixed;
+		margin: auto;
+		position: fixed;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
 		width: 580rpx;
 		height: 629rpx;
 		background-color: #FFFFFF;
-		left: 85rpx;
-		top: 300rpx;
 		border-radius: 15rpx;
 		border-style: dashed;
 		border-width: 1rpx;
@@ -828,9 +845,13 @@
 		border:1rpx dotted rgba(227,227,227,1);
 	}
 	.circle{
-		position: relative;
-		left: 340rpx;
-		top: 330rpx;
+		display: fixed;
+		margin: auto;
+		position: fixed;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: -720rpx;
 		width: 80rpx;
 		height: 80rpx;
 		background-color: #FFFFFF;

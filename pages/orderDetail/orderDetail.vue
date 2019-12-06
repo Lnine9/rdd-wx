@@ -294,9 +294,7 @@
 			},
 			getQRCodeImage: function() {
 				// 二维码内容
-				let content = 'wx:shopId=' + this.order.shopId +
-					'&orderId=' + this.order.shopId +
-					'&time=' + this.order.createAt;
+				let content = this.order.qrcode;
 				this.qrImageUrl = qr.createQrCodeImg(content);
 			},
 			getLastDeliveryInfo: function() {
