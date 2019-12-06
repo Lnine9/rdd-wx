@@ -1,22 +1,18 @@
 <template>
 	<view style="margin-bottom: 40rpx;">
 		<view class="QS-tabs-box">
-			<QSTabs 
-			ref="tabs" 
-			:tabs="tabs" 
-			animationMode="line3" 
-			:current="current" 
-			@change="change"
-			activeColor="#adadad"
-			lineColor="#f1505c"
-			swiperWidth="750">
-			</QSTabs>
+			<scroll-view scroll-x scroll-with-animation :scroll-left="scrollLeft">
+				<view 
+					v-for="(item,index) in tabs" :key="index"
+					class="nav-item"
+					:class="{select: index === swiperCurrent}"
+					@click="change(index)"
+				>{{item}}</view>
+			</scroll-view>
 		</view>
 		<swiper 
 		:style="{'height': '1200rpx'}" 
-		:current="swiperCurrent" 
-		@transition="transition"
-		@animationfinish="animationfinish">
+		:current="swiperCurrent">
 			<swiper-item class="swiper-item" v-for="(item, index) in tabs" :key="index">
 				<scroll-view scroll-y style="height: 100%;width: 100%;" >
 					<view class="scroll-items">
@@ -31,7 +27,7 @@
 								</view>
 							</view >
 							<view v-show="showType">
-								<image class="noAddress" src="../../static/myOrder/我的订单缺省图_icon.png"></image>
+								<image class="noAddress" src="../../static/myOrder/myOrderNoData.png"></image>
 								<text class="warning">暂无订单</text>
 							</view>
 							<view style="width: 750rpx;background: #FFFFFF;" v-show="!showType">
@@ -66,7 +62,6 @@
 </template>
 
 <script>
-	import QSTabs from '../../components/QS-tabs/QS-tabs.vue';
 	import {api} from './api.js';
 	import tabBar from '../components/zwy-tabBar/tabBar.vue';
 	const Sys = uni.getSystemInfoSync();
@@ -75,7 +70,6 @@
 	const tabs = Array(10).fill('').map(()=> 'tab' + Array(n).fill('s').join('') + n++);
 	export default {
 		components: {
-			QSTabs,
 			tabBar
 		},
 		data() {
@@ -86,7 +80,6 @@
 				total:0,
 				showType:true,
 				tabs:["全部","未确认","已确认"],
-				current: 0,
 				swiperCurrent: 0,
 				tabsHeight: 0,
 				dx: 0,
@@ -98,18 +91,9 @@
 		},
 		methods: {
 			change(index) {
-				this.getAllCommodityOrderByLeader(index);
 				this.swiperCurrent = index;
+				this.getAllCommodityOrderByLeader(index);
 				
-			},
-			transition({ detail: { dx } }) {
-				this.$refs.tabs.setDx(dx);
-			},
-			animationfinish({detail: { current }}) {
-				this.$refs.tabs.setFinishCurrent(current);
-				this.getAllCommodityOrderByLeader(current);
-				this.swiperCurrent = current;
-				this.current = current;
 				
 			},
 			getAllCommodityOrderByLeader(index){
@@ -126,9 +110,8 @@
 					orderState: index
 				}).then(res=>{
 					this.commodityList=[];
-					if(res.data.data!=null)
+					if(res.data.data.length!=0)
 					{
-						console.log(res)
 						this.commodityList=res.data.data;
 						this.showType=false;
 						for(let i=0;i<res.data.data.length;i++){
@@ -140,16 +123,16 @@
 							}else if(this.commodityList[i].deliveryState==2){
 								this.state[i]='已签收';
 							}else{
-								this.state[i]='';
+								this.state[i]='--';
 							};
 							
 							
-							if(this.commodityList[i].orderState==0){
+							if(this.commodityList[i].orderState==1){
 								this.orderState[i]='已确认付款';
-							}else if(this.commodityList[i].orderState==1){
+							}else if(this.commodityList[i].orderState==2){
 								this.orderState[i]='未确认付款';
 							}else{
-								this.orderState[i]='';
+								this.orderState[i]='--';
 							}
 						}
 					}
@@ -164,10 +147,23 @@
 	}
 </script>
 
-<style scoped>
+<style>
 	page {
 		padding-bottom: 50rpx;
 		background: #F8F9FB;
+	}
+	.select{
+		background-color: #007AFF;
+	}
+	.nav-item{
+		display: inline-block;
+		width: 250upx;
+		height: 90upx;
+		text-align: center;
+		line-height: 90upx;
+		font-size: 30upx;
+		color: #303133;
+		position: relative;
 	}
 	.pic {
 		position: relative;
@@ -215,9 +211,6 @@
 		border-radius: 4rpx;
 		width: 180rpx;
 		height: 150rpx;
-	}
-	page {
-		background:rgba(248,249,251,1);
 	}
 	.select_box{
 	  position: relative;
