@@ -2,7 +2,7 @@
 	<!-- 海报(想让海报显示隐藏要用hidden，v-if关闭后没办法在完整的出来海报) 保存海报按钮和关闭按钮 在html代码中写出来 绑定点击方法然后透明 再用canvas 覆盖 -->
 	<view class="canvas_box" :hidden="canvasFlag">
 		<view class="canvas_box_mask"></view><!-- 遮罩 -->
-		<icon type="cancel" class="canvas_close_btn" size="60" @tap="canvasCancelEvn" color="transparent" /><!-- 关闭 -->
+		<cover-image class="canvas_close_btn" src="../../../static/product/ic-close.png" @tap="canvasCancelEvn"  /></cover-image><!-- 关闭 -->
 		<view class="button-wrapper">
 			<!-- 保存海报按钮 -->
 			<cover-view class="save_btn" @tap="saveCanvasImage"></cover-view>
@@ -251,24 +251,24 @@
 					}
 				})
 				// 关闭按钮
-				wx.getImageInfo({
-					src: closeBtn,
-					success(res) {
-						ctx.drawImage(res.path, 50 + (_this.phoneW - 100) + 5, 40, 24, 24)
-						ctx.draw(true)
+				// wx.getImageInfo({
+				// 	src: closeBtn,
+				// 	success(res) {
+				// 		ctx.drawImage(res.path - 5,40 +  (_this.phoneW - 100) + 5, 40, 24, 24)
+				// 		ctx.draw(true)
 
-						wx.hideLoading();
-					},
-					fail() {
-						_this.canvasFlag = true;
-						wx.hideLoading();
-						uni.showToast({
-							title: '海报生成失败',
-							duration: 2000,
-							icon: 'none'
-						});
-					}
-				})
+				// 		wx.hideLoading();
+				// 	},
+				// 	fail() {
+				// 		_this.canvasFlag = true;
+				// 		wx.hideLoading();
+				// 		uni.showToast({
+				// 			title: '海报生成失败',
+				// 			duration: 2000,
+				// 			icon: 'none'
+				// 		});
+				// 	}
+				// })
 				// 关闭按钮 end
 				// 海报商品title
 				setTimeout(() => {
@@ -492,8 +492,10 @@
 		}
 
 		.canvas_close_btn {
+			height: 50rpx;
+			width: 50rpx;
 			position: fixed;
-			top: 20rpx;
+			top: 40rpx;
 			// right: 0;
 			z-index: 12;
 
