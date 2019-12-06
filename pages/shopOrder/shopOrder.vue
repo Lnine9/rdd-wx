@@ -36,7 +36,7 @@
 									<view class="theType" v-show="commodity.commodityType==2">
 										<view class="detail1">订单号:
 										<text class="text"> {{commodity.orderId}}</text>
-										<text class="orderState" :class="{'active':commodity.orderState==1}">{{orderState[index]}}</text>
+										<text class="orderState" :class="{'active':commodity.orderState==2}">{{orderState[index]}}</text>
 										</view>
 										<view class="detail1">电子码:<text class="text"> {{commodity.electronicCode}}</text></view>
 									</view>
@@ -128,9 +128,9 @@
 							
 							
 							if(this.commodityList[i].orderState==1){
-								this.orderState[i]='已确认付款';
+								this.orderState[i]='未确认';
 							}else if(this.commodityList[i].orderState==2){
-								this.orderState[i]='未确认付款';
+								this.orderState[i]='已确认';
 							}else{
 								this.orderState[i]='--';
 							}
