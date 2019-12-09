@@ -2,8 +2,10 @@
 		<view v-show="flag" class="main">
 			<view class="head">
 				<view class="subHead">
-					<image class="photo" :src="user.photo"></image>
-					<text class="name">{{user.name}}</text>
+					<image :style="{display:loginState == true ? 'block' :'none' }" class="photo" :src="user.photo"></image>
+					<text :style="{display:loginState == true ? 'block' :'none' }" class="name">{{user.name}}</text>
+					<image :style="{display:loginState == true ? 'none' :'block' }" class="photo" :src="logn.photo" @click="getLogin()"></image>
+					<text :style="{display:loginState == true ? 'none' :'block' }" class="name" @click="getLogin()">{{logn.name}}</text>
 					<view class="scan" :style="{display:isShop == 1 ? 'block' : 'none' }">
 						<image class="scanBut" src="../../static/code/scanBut.png" @click="scanCode()" ></image>
 						<text class="scanOrder">扫一扫</text>
@@ -127,6 +129,10 @@
 	    export default {
 	        data() {
 	            return {
+					logn:{
+						name:'点击登录',
+						photo:'../../static/user/logo.png'
+					},
 					user:{
 						name:'',
 						photo:'',
@@ -144,6 +150,7 @@
 					currentPage:'mine',
 					screenHeight: 951,
 					subScreenHeight: 1200,
+					loginState:false,
 					flag: true, // 标识当前页面是否显示
 	            };
 	        },
@@ -156,10 +163,9 @@
 					uni.navigateTo({
 						url: '/pages/myOrder/myOrder'
 					});
-
 				} else {
 					this.flag = true;
-					this.wxGetUserInfo();
+					this.wxGetLogin();
 					this.getData();
 					this.getCode();
 					this.judgeVip();
@@ -168,7 +174,7 @@
 			},
 			//下拉刷新
 			onPullDownRefresh(){
-				this.wxGetUserInfo();
+				this.wxGetLogin();
 				this.getData();
 				this.getCode();
 				this.judgeVip();
@@ -182,6 +188,34 @@
 				tabBar
 			},
 	        methods: {
+				//判断是否登录
+				wxGetLogin(){
+					this.loginState = uni.getStorageSync('loginState');
+					let _this = this
+					if(this.loginState == true){
+						_this.wxGetUserInfo();
+					}
+					
+					// uni.checkSession({
+					// 	  success: function () {
+					// 		  _this.loginState = true;
+					// 		  _this.wxGetUserInfo();
+					// 		  console.log(11)
+					// 	  },
+					// 	  fail: function () {
+					// 		  _this.loginState = false;
+					// 		  console.log(11)
+					// 	  }
+					// 	})
+				},
+				//跳转登录
+				getLogin(){
+					uni.navigateTo({
+						url: `/pages/index/index`
+					})
+					// this.loginState = true;
+					// this.wxGetLogin()
+				},
 				// 获取登录信息
 				wxGetUserInfo() {
 					console.log('...授权...')
@@ -236,7 +270,7 @@
 				judgeScan(){
 					let value = uni.getStorageSync('roleNameList');
 					console.log(value)
-					if(value != null){
+					if(value != null ){
 						for (var i = 0; i < value.length; i++) {
 							if(value[i].roleName === "微信商家"){
 								this.isShop = 1;
@@ -247,26 +281,37 @@
 					}else{
 						this.isShop = 0
 					}
+					console.log('商家'+this.isShop)
 				},
 				//跳转申请vip
 				getVip(){
-					uni.navigateTo({
-						url: `/pages/vipApply/vipApply`
-					})
+					if(this.loginState == false){
+						uni.showToast({
+							title: '请先登录',
+							duration: 2000,
+							icon:'none'
+						});
+					}else{
+						uni.navigateTo({
+							url: `/pages/vipApply/vipApply`
+						})
+					}
 				},
 				//跳转菜单路由
 				getRouter(path){
 					console.log(path)
-					// if(this.isVip == false && path === '/pages/inviteFriends/inviteFriends'){
-					// 	uni.navigateTo({
-					// 		url:`/pages/vipApply/vipApply`
-					// 	})
-					// }else{
+					if(this.loginState == false){
+						uni.showToast({
+							title: '请先登录',
+							duration: 2000,
+							icon:'none'
+						});
+					}else{
 						uni.navigateTo({
-						url: `${path}`
+							url: `${path}`
 						})
-					// }
-
+					}
+					
 				},
 				//获取电子码信息
 				getCode(){

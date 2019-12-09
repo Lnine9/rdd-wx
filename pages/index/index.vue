@@ -127,9 +127,9 @@
 			loginSuccess(data) {
 				console.info(data)
 				this.login(data);
-
+				uni.setStorageSync('loginState',true);
 				uni.reLaunch({
-					url: '/pages/homePage/homePage'
+					url: '/pages/mine/mine'
 				})
 			},
 			onLoad(options) {

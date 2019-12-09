@@ -103,11 +103,14 @@
 				regionIndex: 1,
 				guessList:[],
 				goodsList: [],
-				addressName: ''
+				addressName: '',
 			};
 		},
 		components:{
 			tabBar
+		},
+		onShow(){
+			this.wxGetLogin();
 		},
 		methods: {
 			//轮播图切换
@@ -160,12 +163,26 @@
 				uni.setStorageSync('location',this.areas[val.detail.value]);
 				this.defaultRegion = this.areas[val.detail.value]
 				this.getBanner(),
-				this.getUserMes(),
+				// this.getUserMes(),
 				this.getRecommend(),
 				this.getGuess(),
 				this.getAreas()
 			},
-
+			//判断是否登录
+			wxGetLogin(){
+				let _this = this
+				uni.checkSession({
+					  success: function () {
+						  _this.getUserMes();
+						  uni.setStorageSync('loginState',true);
+						  console.log(uni.getStorageSync('loginState'))
+					  },
+					  fail: function () {
+						uni.setStorageSync('loginState',false);
+						console.log(uni.getStorageSync('loginState'))
+					  }
+					})
+			},
 			/**
 			 * 获取用户信息
 			 */
@@ -265,10 +282,12 @@
 
 		onPullDownRefresh() {
 			this.getBanner(),
-			this.getUserMes(),
+			// this.wxGetLogin(),
+			// this.getUserMes(),
 			this.getRecommend(),
 			this.getGuess(),
-			this.getAreas()},
+			this.getAreas()
+		},
 
 		/**
 		 * 猜你喜欢列表
@@ -302,7 +321,8 @@
 				}
 				this.defaultRegion = uni.getStorageSync('location')||'';
 				this.getBanner(),
-				this.getUserMes(),
+				// this.wxGetLogin(),
+				// this.getUserMes(),
 				this.getRecommend(),
 				this.getGuess(),
 				this.getAreas()
