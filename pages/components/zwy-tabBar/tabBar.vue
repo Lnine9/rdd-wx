@@ -21,22 +21,77 @@
 		props:['currentPage'],
 		data() {
 			return {
-				tabBar:[]
+				tabBar:[{
+					imgClick:"/static/homePageNo.png",
+					imgNormal: "/static/homePage.png",
+					text: "首页",
+					url: "homePage"
+				},
+				{
+					imgClick: "/static/mine.png",
+					imgNormal: "/static/mine_cilck.png",
+					text: "我的",
+					url: "mine"
+				}],
+				loginState:'',
+				isShop:''
 			};
 		},
-		created() {
+		mounted() {
+			this.judgeScan();
+			let token = uni.getStorageSync('token');
+			this.loginState = uni.getStorageSync('loginState');
 			uni.hideTabBar({})
-			api.getTabBarInfo().then(res=>{
-				this.tabBar=res.data.data;
-				console.log(this.tabBar)
-			}).catch(err=>{
-				console.log(err)
-			})
+			if(this.loginState==true){
+				api.getTabBarInfo().then(res => {
+					this.tabBar=res.data.data;
+					console.log(res)
+				}).catch(err => {
+					console.log(err)
+				})
+			}
+			// if(this.loginState==true&&this.isShop==1){
+			// 	this.tabBar=[{
+			// 		imgClick:"/static/homePageNo.png",
+			// 		imgNormal: "/static/homePage.png",
+			// 		text: "首页",
+			// 		url: "homePage"
+			// 	},
+			// 	{
+			// 		imgClick: "/static/mine.png",
+			// 		imgNormal: "/static/mine_cilck.png",
+			// 		text: "我的",
+			// 		url: "mine"
+			// 	},
+			// 	{
+			// 		imgClick: "/static/order_noclick.png",
+			// 		imgNormal: "/static/order_click.png",
+			// 		text: "订单中心",
+			// 		url: "shopOrder"
+			// 	}]
+			// }
 		},
 		computed:{
 
 		},
 		methods:{
+			//判断是否为商家
+			judgeScan(){
+				let value = uni.getStorageSync('roleNameList');
+				console.log(value)
+				if(value != null ){
+					for (var i = 0; i < value.length; i++) {
+						if(value[i].roleName === "微信商家"){
+							this.isShop = 1;
+						}else{
+							this.isShop = 0
+						}
+					}
+				}else{
+					this.isShop = 0
+				}
+				console.log('商家'+this.isShop)
+			},
 			navTo(item){
 				if(item.url !== this.currentPage){
 					var isUrl = `/pages/${item.url}/${item.url}`
