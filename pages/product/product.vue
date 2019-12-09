@@ -126,6 +126,15 @@
 
 			</view>
 		</view>
+		<view class="loginPopUpShow" :style="{display:loginPopShow == true ? 'block' :'none'}">
+			<view class="loginPopUp">
+				<text class="loginText">检测到您目前未登录，是否立即登录？</text>
+				<view class="loginBut">
+					<button class="loginCancle" @click="loginCancle()">取消</button>
+					<button class="loginUpdate" @click="loginUpdate()">确认</button>
+				</view>
+			</view>
+		</view>
 		<hchPoster ref="hchPoster" :canvasFlag.sync="canvasFlag" @cancel="canvasCancel" :posterObj.sync="posterData" />
 		<view :hidden="canvasFlag">
 			<!-- 海报 要放外面放组件里面 会找不到 canvas-->
@@ -169,6 +178,7 @@
 				rebateShow: true,
 				// 分享海报的使用的变量
 				deliveryFlag: false,
+				loginPopShow : false,
 				canvasFlag: true,
 				posterData: {},
 			};
@@ -268,11 +278,7 @@
 				if(loginState == true){
 					this.deliveryFlag = true;
 				}else{
-					uni.showToast({
-						title: '请先登录',
-						duration: 2000,
-						icon:'none'
-					});
+					this.loginPopShow = true;
 				}	
 			},
 			// 关闭分享弹窗
@@ -299,7 +305,16 @@
 			cancel: function() {
 				this.isBuy = false
 			},
-
+			//取消登录
+			loginCancle(){
+				this.loginPopShow = false
+			},
+			//确认登录
+			loginUpdate(){
+				uni.navigateTo({
+					url: `/pages/index/index`
+				})
+			},
 			getData: function(commodityId) {
 				uni.showLoading({
 					title: "正在加载"
@@ -381,11 +396,7 @@
 				if(loginState == true){
 					this.isBuy = true
 				}else{
-					uni.showToast({
-						title: '请先登录',
-						duration: 2000,
-						icon:'none'
-					});
+					this.loginPopShow = true
 				}	
 			},
 
@@ -1075,5 +1086,52 @@
 		color: #FFF3DB;
 		margin-bottom: 45rpx;
 		text-align: center;
+	}
+	.loginPopUpShow{
+		position: absolute;
+		background-color: rgba(0, 0, 0, 0.4);
+		top: 0;
+		width: 100%;
+		height: 100%;
+	}
+	.loginPopUp{
+		position: relative;
+		width: 580rpx;
+		left: 85rpx;
+		top: 400rpx;
+		background-color: #FFFFFF;
+		border-radius: 15rpx;
+		border-width: 1rpx;
+	}
+	.loginText{
+		display: inline-block;
+		width: 580rpx;
+		text-align: center;
+		font-size: 60rpx;
+		height: 200rpx;
+		margin-top: 50rpx;
+	}
+	.loginBut{
+		position: flex;
+		display: inline-block;
+		left: 0;
+		bottom: 0;
+		width: 580rpx;
+		height: 100rpx;
+	}
+	.loginCancle{
+		position: absolute;
+		display: inline-block;
+		bottom: 0;
+		width: 290rpx;
+	}
+	.loginUpdate{
+		position: absolute;
+		display: inline-block;
+		background-color: #06C1AE;
+		bottom: 0;
+		width: 290rpx;
+		left: 290rpx;
+		color: #FFFFFF;
 	}
 </style>

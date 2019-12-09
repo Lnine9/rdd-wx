@@ -117,6 +117,15 @@
 					</view>
 				</view>
 			</view>
+			<view class="loginPopUpShow" :style="{display:loginPopShow == true ? 'block' :'none',height:screenHeight + 'px'}">
+				<view class="loginPopUp">
+					<text class="loginText">检测到您目前未登录，是否立即登录？</text>
+					<view class="loginBut">
+						<button class="loginCancle" @click="loginCancle()">取消</button>
+						<button class="loginUpdate" @click="getLogin()">确认</button>
+					</view>
+				</view>
+			</view>
 			<tabBar :currentPage="currentPage"></tabBar>
 		</view>
 </template>
@@ -147,6 +156,7 @@
 					isShop:0,
 					popShow:false,
 					scanPopShow:false,
+					loginPopShow:false,
 					currentPage:'mine',
 					screenHeight: 951,
 					subScreenHeight: 1200,
@@ -279,11 +289,7 @@
 				//跳转申请vip
 				getVip(){
 					if(this.loginState == false){
-						uni.showToast({
-							title: '请先登录',
-							duration: 2000,
-							icon:'none'
-						});
+						this.loginPopShow = true
 					}else{
 						uni.navigateTo({
 							url: `/pages/vipApply/vipApply`
@@ -294,17 +300,12 @@
 				getRouter(path){
 					console.log(path)
 					if(this.loginState == false){
-						uni.showToast({
-							title: '请先登录',
-							duration: 2000,
-							icon:'none'
-						});
+						this.loginPopShow = true
 					}else{
 						uni.navigateTo({
 							url: `${path}`
 						})
 					}
-					
 				},
 				//获取电子码信息
 				getCode(){
@@ -325,7 +326,6 @@
 					}else{
 						this.code = null
 					}
-					
 				},
 				//电子码查看更多
 				codeLook(){
@@ -451,6 +451,14 @@
 				//取消订单
 				closeOrder(){
 					this.scanPopShow = false
+				},
+				//取消登录
+				loginCancle(){
+					this.loginPopShow = false
+				},
+				//确认登录
+				loginUpdate(){
+					this.getLogin();
 				},
 				//获取当前时间
 				getDate(){
@@ -986,6 +994,53 @@
 		left: 290rpx;
 		color: #FFFFFF;
 		/* border-radius: 0; */
+	}
+	.loginPopUpShow{
+		position: absolute;
+		background-color: rgba(0, 0, 0, 0.4);
+		top: 0;
+		width: 750rpx;
+		padding-bottom: 100rpx;
+	}
+	.loginPopUp{
+		position: relative;
+		width: 580rpx;
+		left: 85rpx;
+		top: 400rpx;
+		background-color: #FFFFFF;
+		border-radius: 15rpx;
+		border-width: 1rpx;
+	}
+	.loginText{
+		display: inline-block;
+		width: 580rpx;
+		text-align: center;
+		font-size: 60rpx;
+		height: 200rpx;
+		margin-top: 50rpx;
+	}
+	.loginBut{
+		position: flex;
+		display: inline-block;
+		left: 0;
+		bottom: 0;
+		width: 580rpx;
+		height: 100rpx;
+	}
+	.loginCancle{
+		position: absolute;
+		display: inline-block;
+		bottom: 0;
+		width: 290rpx;
+	}
+	.loginUpdate{
+		position: absolute;
+		display: inline-block;
+		background-color: #06C1AE;
+		bottom: 0;
+		width: 290rpx;
+		left: 290rpx;
+		color: #FFFFFF;
 	}
 </style>
 
