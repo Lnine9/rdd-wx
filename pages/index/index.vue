@@ -129,7 +129,7 @@
 				this.login(data);
 				uni.setStorageSync('loginState',true);
 				uni.reLaunch({
-					url: '/pages/mine/mine'
+					url: '/pages/homePage/homePage'
 				})
 			},
 			onLoad(options) {

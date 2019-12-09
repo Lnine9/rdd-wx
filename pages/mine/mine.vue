@@ -159,7 +159,6 @@
 				if (payOrder) {
 					this.flag = false;
 					getApp().globalData.payOrder = false;
-
 					uni.navigateTo({
 						url: '/pages/myOrder/myOrder'
 					});
@@ -195,26 +194,12 @@
 					if(this.loginState == true){
 						_this.wxGetUserInfo();
 					}
-					
-					// uni.checkSession({
-					// 	  success: function () {
-					// 		  _this.loginState = true;
-					// 		  _this.wxGetUserInfo();
-					// 		  console.log(11)
-					// 	  },
-					// 	  fail: function () {
-					// 		  _this.loginState = false;
-					// 		  console.log(11)
-					// 	  }
-					// 	})
 				},
 				//跳转登录
 				getLogin(){
 					uni.navigateTo({
 						url: `/pages/index/index`
 					})
-					// this.loginState = true;
-					// this.wxGetLogin()
 				},
 				// 获取登录信息
 				wxGetUserInfo() {
@@ -263,25 +248,33 @@
 				},
 				//判断是否为vip
 				judgeVip(){
-					let value = uni.getStorageSync('isVip');
-					this.isVip = value;
+					if(this.loginState == true){
+						let value = uni.getStorageSync('isVip');
+						this.isVip = value;
+					}else{
+						this.isVip = 0;
+					}
+					
 				},
 				//判断是否为商家
 				judgeScan(){
-					let value = uni.getStorageSync('roleNameList');
-					console.log(value)
-					if(value != null ){
-						for (var i = 0; i < value.length; i++) {
-							if(value[i].roleName === "微信商家"){
-								this.isShop = 1;
-							}else{
-								this.isShop = 0
+					if(this.loginState == true){
+						let value = uni.getStorageSync('roleNameList');
+						console.log(value)
+						if(value != null ){
+							for (var i = 0; i < value.length; i++) {
+								if(value[i].roleName === "微信商家"){
+									this.isShop = 1;
+								}else{
+									this.isShop = 0
+								}
 							}
+						}else{
+							this.isShop = 0
 						}
 					}else{
 						this.isShop = 0
 					}
-					console.log('商家'+this.isShop)
 				},
 				//跳转申请vip
 				getVip(){
@@ -315,19 +308,24 @@
 				},
 				//获取电子码信息
 				getCode(){
-					api.getCodeInfo().then(res=>{
-						this.code = res.data.data
-						console.log(res.data.data)
-						if(res.data.data != null){
-							if(res.data.data.electronicCode == null || res.data.data.electronicCode == ''){
-								this.code.electronicCode = '暂无'
+					if(this.loginState == true){
+						api.getCodeInfo().then(res=>{
+							this.code = res.data.data
+							console.log(res.data.data)
+							if(res.data.data != null){
+								if(res.data.data.electronicCode == null || res.data.data.electronicCode == ''){
+									this.code.electronicCode = '暂无'
+								}
+								if(res.data.data.deliveryNum == null || res.data.data.deliveryNum == ''){
+									this.code.deliveryNum = '暂无'
+								}
 							}
-							if(res.data.data.deliveryNum == null || res.data.data.deliveryNum == ''){
-								this.code.deliveryNum = '暂无'
-							}
-						}
-						console.log(this.code)
-					})
+							console.log(this.code)
+						})
+					}else{
+						this.code = null
+					}
+					
 				},
 				//电子码查看更多
 				codeLook(){
@@ -366,7 +364,6 @@
 										_this.order = param;
 										_this.comfirmOrderPopUp();
 									}else {
-										console.log(123);
 										uni.showToast({
 											title: '无订单',
 											duration: 2000,
@@ -394,7 +391,6 @@
 							});
 						}
 					});
-					
 				},
 				//判断信息是否为空
 				judgeOrderInfo(data){

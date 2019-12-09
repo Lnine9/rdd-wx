@@ -170,7 +170,7 @@
 				// 分享海报的使用的变量
 				deliveryFlag: false,
 				canvasFlag: true,
-				posterData: {}
+				posterData: {},
 			};
 		},
 		components: {
@@ -263,7 +263,17 @@
 			},
 			// 分享弹窗
 			shareEvn() {
-				this.deliveryFlag = true;
+				let loginState = uni.getStorageSync('loginState');
+				console.log(loginState);
+				if(loginState == true){
+					this.deliveryFlag = true;
+				}else{
+					uni.showToast({
+						title: '请先登录',
+						duration: 2000,
+						icon:'none'
+					});
+				}	
 			},
 			// 关闭分享弹窗
 			closeShareEvn() {
@@ -366,8 +376,17 @@
 				});
 			},
 			reayToBuy: function() {
-
-				this.isBuy = true
+				let loginState = uni.getStorageSync('loginState');
+				console.log(loginState);
+				if(loginState == true){
+					this.isBuy = true
+				}else{
+					uni.showToast({
+						title: '请先登录',
+						duration: 2000,
+						icon:'none'
+					});
+				}	
 			},
 
 			buy: function() {
