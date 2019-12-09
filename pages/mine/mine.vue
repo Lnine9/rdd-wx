@@ -122,7 +122,7 @@
 					<text class="loginText">检测到您目前未登录，是否立即登录？</text>
 					<view class="loginBut">
 						<button class="loginCancle" @click="loginCancle()">取消</button>
-						<button class="loginUpdate" @click="getLogin()">确认</button>
+						<button class="loginUpdate" @click="loginUpdate()">确认</button>
 					</view>
 				</view>
 			</view>
@@ -458,6 +458,7 @@
 				},
 				//确认登录
 				loginUpdate(){
+					this.loginPopShow = false
 					this.getLogin();
 				},
 				//获取当前时间
@@ -996,17 +997,27 @@
 		/* border-radius: 0; */
 	}
 	.loginPopUpShow{
-		position: absolute;
-		background-color: rgba(0, 0, 0, 0.4);
+		display: fixed;
+		margin: auto;
+		position: fixed;
 		top: 0;
-		width: 750rpx;
-		padding-bottom: 100rpx;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		background-color: rgba(0, 0, 0, 0.4);
+		width: 100%;
+		height: 100%;
 	}
 	.loginPopUp{
-		position: relative;
+		display: fixed;
+		margin: auto;
+		position: fixed;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
 		width: 580rpx;
-		left: 85rpx;
-		top: 400rpx;
+		height: 300rpx;
 		background-color: #FFFFFF;
 		border-radius: 15rpx;
 		border-width: 1rpx;
@@ -1015,7 +1026,7 @@
 		display: inline-block;
 		width: 580rpx;
 		text-align: center;
-		font-size: 60rpx;
+		font-size: 36rpx;
 		height: 200rpx;
 		margin-top: 50rpx;
 	}
