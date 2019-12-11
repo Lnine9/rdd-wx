@@ -95,7 +95,7 @@
 
 		<!-- 右侧分享返佣 -->
 		<!-- 拖拽功能 -->
-		<movable-view direction="all" x="544" y="544" animation="{{false}}" class="rebate-container" v-show="rebateShow">
+		<movable-view direction="all" x="544" y="544" :animation="false" class="rebate-container" v-show="rebateShow">
 			<view class="rebate-img-container" @tap="shareEvn">
 				<image src="/static/product/ic-rebate-red-wallet.png" mode="" class="rebate-img"></image>
 		
