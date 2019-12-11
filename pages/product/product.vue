@@ -1045,6 +1045,7 @@
 		left: 0;
 		width: 100%;
 		font-weight: bold;
+		top: 50rpx;
 		line-height: 200rpx;
 		font-size: 28rpx;
 		color: #FFF3DB;
