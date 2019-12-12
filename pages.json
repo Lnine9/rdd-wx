@@ -16,6 +16,11 @@
 			"style": {
 				"navigationBarTitleText": "商家入驻"
 			}
+		},{
+			"path": "pages/userBind/regist",
+			"style": {
+				"navigationBarTitleText": "注册"
+			}
 		},
 		{
 			"path": "pages/mine/mine",
