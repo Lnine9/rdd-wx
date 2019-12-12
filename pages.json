@@ -11,6 +11,16 @@
 			"style": {
 				"navigationBarTitleText": "登录"
 			}
+		},{
+			"path": "pages/applyMerchant/applyMerchant",
+			"style": {
+				"navigationBarTitleText": "商家入驻"
+			}
+		},{
+			"path": "pages/userBind/regist",
+			"style": {
+				"navigationBarTitleText": "注册"
+			}
 		},
 		{
 			"path": "pages/mine/mine",
@@ -157,6 +167,14 @@
 				"name": "订单详情",
 				"path": "pages/orderDetail/orderDetail",
 				"query": "orderid=1575372216410"
+			},
+			{
+				"name": "邀请好友",
+				"path": "pages/inviteFriends/inviteFriends"
+			},
+			{
+				"name": "商家入驻",
+				"path": "pages/applyMerchant/applyMerchant"
 			},
 			{
 				"name": "首页",

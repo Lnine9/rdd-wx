@@ -1,7 +1,7 @@
 <template>
 	<view>
 		
-		<view class="recomendView" v-show="recomend.userName">
+		<view class="recomendView" v-show="showRecomend">
 			<view style="display: flex;align-items: center;">
 			<image :src="recomend.avatarUrl" style="margin-left: 60rpx;width: 90rpx;height: 90rpx;border-radius: 10rpx;" ></image>
 			<view class="name">{{recomend.userName}}</view>
@@ -10,7 +10,7 @@
 		</view>
 		<view v-show="showType">
 			<image src="../../static/teamNo.png" class="noImg"></image>
-			<text class="noIncome">暂无好友</text>
+			<text class="noIncome">{{showTypeText}}</text>
 		</view>
 		<view class="list"  v-for="(item, index) in team" :key="index" v-show="!showType">
 			<view style="width: 500rpx;height: 186rpx;position: relative; margin-left: 20rpx;">
@@ -30,23 +30,32 @@
 		data() {
 			return {
 				recomend:{
-					
+
 				},
 				user:{
 					userName:'',
 					photo:''
 				},
+				showTypeText:"暂无好友",
 				showType:false,
+				showRecomend: false,
 				team:[],
 				}
 			},
-			onLoad() {
+			onLoad(option) {
 				this.wxGetUserInfo();
-				this.getRecomend()
+				if (option.type == 3) {
+					this.showTypeText = "暂无收益";
+					let title = '分享下单收益';
+					uni.setNavigationBarTitle({
+						title
+					})
+				} else {
+					this.getRecomend();
+				}
 				this.getTeam();
-				
-				
 			},
+			
 			methods:{
 				getTeam(){
 					api.getList().then(res =>{
@@ -69,8 +78,9 @@
 				},
 				getRecomend(){
 					api.getRecomend().then(res=>{
-						if (res.data.code == 200){
+						if (res.data.data != null) {
 							this.recomend = res.data.data;
+							this.showRecomend = true;
 						}
 						}).catch(err =>{
 							console.log(err)
