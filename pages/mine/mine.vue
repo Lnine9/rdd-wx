@@ -81,7 +81,7 @@
 						<text class="orderName">{{orderInfo.commodityTitle}}</text>
 						<text class="orderPrice">￥{{orderInfo.actualPrice}}</text>
 					</view>
-					<view class="dottedLineThree"></view>
+					<view class="dottedLineFour"></view>
 					<view class="orderMenu">
 						<text class="orderInfo">电子码：<text style="font-size: 28rpx; color: #666666;">{{orderInfo.qrcode}}</text></text>
 						<text class="orderInfo">联系电话：<text style="font-size: 28rpx; color: #666666;">{{orderInfo.phone}}</text></text>
@@ -844,6 +844,12 @@
 		margin-top: 30rpx;
 	}
 	.dottedLineThree{
+		display: inline-block;
+		margin: 41rpx 49rpx;
+		width:482rpx;
+		border:1rpx dotted rgba(227,227,227,1);
+	}
+	.dottedLineFour{
 		display: inline-block;
 		position: relative;
 		bottom: 50rpx;
