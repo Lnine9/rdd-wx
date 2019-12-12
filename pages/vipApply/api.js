@@ -21,4 +21,12 @@ export class api{
   static sendData(data){
 	  return minRequest.post('/api/VipApply/applyWCPVip', data)
   }
+  /**
+   * 获取用户基本信息
+   * 并存入缓存
+   * @param {Object} location
+   */
+  static getUserInfo(location){
+  	  return minRequest.get('/api/AppPersonalCenter/appGetUserEnterpriseInfo', location)
+  }
 }

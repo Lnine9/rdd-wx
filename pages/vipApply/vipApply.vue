@@ -88,20 +88,53 @@
 					}
 				}
 				api.sendData(parms).then(res=>{
-					wx.showToast({
-					  title: '申请成功,我们客服人员会尽快联系您',
-					  icon: 'none',
+					uni.showToast({
+					  title: '申请成功',
+					  icon: 'success',
 					  duration: 3000
 					})
+					console.log(res.data)
+					this.getUserMes();
 				}).catch(err=>{
-					wx.showToast({
-					  title: '申请失败请重试！',
-					  icon: 'fail',
-					  duration: 3000
-					})
+					// uni.showToast({
+					//   title: '申请失败请重试！',
+					//   icon: 'fail',
+					//   duration: 3000
+					// })
 				})
 				
-			}
+			},
+			/**
+			 * 获取用户信息
+			 */
+			getUserMes(){
+				let user = {
+					// 此处默认传入重庆市
+					// 用户信息和地区无关
+					area:'重庆市'
+				};
+				api.getUserInfo(user).then(res =>{
+					this.service = res.data.data,
+					// userType 说明
+					// 0: app
+					// 1: 企业
+					// 2: 小程序
+					uni.setStorageSync('userId', this.service.userId),
+					console.log("id")
+					console.log(this.service.userId)
+					uni.setStorageSync('userType', this.service.userType),
+					// 默认重庆（debug）
+					uni.setStorageSync('location', "重庆市"),
+					// 存储角色信息
+					uni.setStorageSync('roleNameList', this.service.roleNameList),
+					// 当前用户是否为VIP
+					uni.setStorageSync('isVip', this.service.isVip==0?false:true)
+					// 当前地区是否有VIP业务
+					uni.setStorageSync('haveVip', this.service.haveVip==0?false:true)
+				}).catch(err => {
+					console.log(err)
+				});
+			},
         },
     }
 </script>
