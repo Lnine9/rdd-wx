@@ -57,15 +57,19 @@
 				}
 				else{
 					api.bindingUser(this.user).then(res=>{
-						console.log(res)
-						wx.showToast({
-						  title: '绑定成功',
-						  icon: 'success',
-						  duration: 1500
-						})
-						wx.navigateBack({
-							delta:0
-						})
+						if(res.data.data=="账号绑定成功"){
+							wx.showToast({
+							  title: '绑定成功',
+							  icon: 'success',
+							  duration: 3000
+							})
+							wx.navigateBack({
+								delta:0
+							})
+						}
+						else{
+							this.warning=res.data.data;
+						}
 					}).catch(err=>{
 						console.log(err)
 					})
