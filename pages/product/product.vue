@@ -338,16 +338,22 @@
 				});
 			},
 			makeCall: function() {
-				uni.makePhoneCall({
-					// 手机号
-					phoneNumber: this.dataDic.shopPhone,
-					success: (res) => {
-						console.log('调用成功!')
-					},
-					fail: (res) => {
-						console.log('调用失败!')
-					}
-				});
+				// uni.makePhoneCall({
+				// 	// 手机号
+				// 	phoneNumber: this.dataDic.shopPhone,
+				// 	success: (res) => {
+				// 		console.log('调用成功!')
+				// 	},
+				// 	fail: (res) => {
+				// 		console.log('调用失败!')
+				// 	}
+				// });
+				
+				uni.showModal({
+					title: '提示',
+					content: '请添加囧途宝盒客服微信咨询\n微信号：cqrdd2019',
+					showCancel: false
+				})
 			},
 			reayToBuy: function() {
 
@@ -499,10 +505,16 @@
 			if (res.from === 'button') { // 如果通过点击按钮进行分享
 				console.log('通过点击按钮进行分享');
 				console.log(res.target)
+				// 默认使用海报图片作为分享图片
+				let posterPath = this.dataDic.posterImg;
+				if (posterPath == null || posterPath === '') {
+					// 该商品没有海报图片，则使用第一张商品图片
+					posterPath = this.commodityImg[0];
+				}
 				return {
 					title: this.dataDic.commodityTitle,
 					path: path,
-					imageUrl: this.dataDic.posterImg
+					imageUrl: posterPath
 				}
 			} else { // 通过小程序上方的操作栏进行分享
 				console.log('上方的操作栏进行分享');
@@ -1033,6 +1045,7 @@
 		left: 0;
 		width: 100%;
 		font-weight: bold;
+		top: 50rpx;
 		line-height: 200rpx;
 		font-size: 28rpx;
 		color: #FFF3DB;

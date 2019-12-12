@@ -107,6 +107,11 @@
 			"style": {
 				"navigationBarTitleText": "我的团队"
 			}
+		}, {
+			"path": "pages/userBind/userBind",
+			"style": {
+				"navigationBarTitleText": "绑定账号"
+			}
 		}
 	],
 	"globalStyle": {
@@ -179,8 +184,8 @@
 				"path": "pages/mine/mine"
 			},
 			{
-				"name": "我的团队",
-				"path": "pages/myTeam/myTeam"
+				"name": "绑定账号",
+				"path": "pages/userBind/userBind"
 			},
 			{
 				"name": "物流信息",
