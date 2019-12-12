@@ -117,35 +117,27 @@
 			
 			// 后端数据的返回
 			toWithdraw() {
-				wx.showToast({
-				  title: '快速提现，请添加客服微信  ~  ( cqrdd2019 )',
-				  icon: 'none',
-				  duration: 4000
+			
+				api.postData({
+					paymentAmount: this.paymentAmount
+				}).then(res => {
+					wx.showToast({
+					  title: res.data.message,
+					  icon: 'none',
+					  duration: 1500
+					})
+					// if (res.data.message.equals("提现成功")) {
+					// 	wx.navigateBack({
+					// 		delta:1
+					// 	})
+					// }
+				}).catch(_ => {
+					wx.showToast({
+					  title: '快速提现，请添加客服微信  ~  ( cqrdd2019 )',
+					  icon: 'none',
+					  duration: 4000
+					})
 				})
-				// api.postData({
-				// 	paymentAccount: this.paymentAccount,
-				// 	paymentName: this.paymentName,
-				// 	keyWord: "000000",
-				// 	paymentAmount: this.paymentAmount
-				// }).then(res => {
-				// 	console.log(typeof res.data.data);
-				// 	wx.showToast({
-				// 	  title: res.data.data,
-				// 	  icon: 'none',
-				// 	  duration: 1500
-				// 	})
-				// 	if (res.data.data.equals("提现成功")) {
-				// 		wx.navigateBack({
-				// 			delta:1
-				// 		})
-				// 	}
-				// }).catch(_ => {
-				// 	wx.showToast({
-				// 		title: '网络繁忙！',
-				// 		icon: 'none',
-				// 		duration: 1500
-				// 	})
-				// })
 			}
 		}
 	}
