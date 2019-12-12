@@ -18,7 +18,7 @@ import {minRequest} from '../../Config/MinRequest'
 
 export class api{
   // 这里统一管理api请求
-  static sendData(data){
+  static addShop(data){
 	  return minRequest.post('/api/businessman/addBusinessman', data)
   }
 }

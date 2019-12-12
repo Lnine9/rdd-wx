@@ -85,14 +85,19 @@
 			},
 			save(){
 				let prams={
-					userId:'',
 					shopName:this.applyInformation.shopName,
 					userName:this.applyInformation.name,
 					shopPhone:this.applyInformation.phone,
 					shopType:this.applyInformation.type,// 后面要改为整形
 					shopAddress:this.addressData.province+this.addressData.city+this.addressData.area+this.applyInformation.address
 				}
-				console.log(prams);
+				api.addShop(prams).then(res=>{
+					uni.showToast({
+					  title: '保存成功',
+					  icon: 'success',
+					  duration: 3000
+					})
+				})
 			}
 		}
 	}
