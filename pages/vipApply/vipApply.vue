@@ -88,19 +88,12 @@
 					}
 				}
 				api.sendData(parms).then(res=>{
+					this.getUserMes();
 					uni.showToast({
 					  title: '申请成功',
 					  icon: 'success',
 					  duration: 3000
 					})
-					console.log(res.data)
-					this.getUserMes();
-				}).catch(err=>{
-					// uni.showToast({
-					//   title: '申请失败请重试！',
-					//   icon: 'fail',
-					//   duration: 3000
-					// })
 				})
 				
 			},
@@ -131,6 +124,9 @@
 					uni.setStorageSync('isVip', this.service.isVip==0?false:true)
 					// 当前地区是否有VIP业务
 					uni.setStorageSync('haveVip', this.service.haveVip==0?false:true)
+					uni.navigateBack({
+						delta:1
+					})
 				}).catch(err => {
 					console.log(err)
 				});
