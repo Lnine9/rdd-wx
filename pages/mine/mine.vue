@@ -56,22 +56,10 @@
 						<text class="shopName" :style="{width:code.commodityType == 2 ? '250rpx' : '400rpx'}">{{code.commodityTitle}}</text>
 						<button class="QR-Code" :style="{display:code.commodityType == 2 ? 'block' : 'none'}" @click="lookQRCode()"><text class="fontTwo">查看二维码</text></button>
 						<button class="lookDetails" :style="{marginRight:code.commodityType == 2 ? '25rpx' : '0rpx'}" @click="lookDetails()"><text class="fontOne">查看详情</text></button>
-						<!-- <uni-popup ref="popup" type="center" maskClick="true">
-							<view class="popUp">
-								<text class="popupCodeName" >电子码：{{code.electronicCode}}</text>
-								<text class="popupCodeAccount">订单号码：{{code.orderId}}</text>
-								<view class="dottedLineThree"></view>
-								<image class="qrCode" :src="qr"></image>
-								<text class="codeShopName">{{code.commodityTitle}}</text>
-							</view>
-							<view class="circle" @click="close()">
-								<image src="../../static/popup/closePopUp.png" class="close"></image>
-							</view>
-						</uni-popup> -->
 					</view>
 				</view>
 			</view>
-			<view class="popUpShow" :style="{display:popShow == true ? 'block' :'none',height:screenHeight + 'px'}">
+			<!-- <view class="popUpShow" :style="{display:popShow == true ? 'block' :'none',height:screenHeight + 'px'}">
 				<view class="popUp">
 					<text class="popupCodeName" >电子码：{{code.electronicCode}}</text>
 					<view class="dottedLineThree"></view>
@@ -81,7 +69,18 @@
 				<view class="circle" @click="close()">
 					<image src="../../static/popup/closePopUp.png" class="close"></image>
 				</view>
-			</view>
+			</view> -->
+			<uni-popup ref="popup"  type="center" maskClick="true">
+				<view class="popUp">
+					<text class="popupCodeName" >电子码：{{code.electronicCode}}</text>
+						<view class="dottedLineThree"></view>
+						<image class="qrCode" :src="qr"></image>
+						<text class="codeShopName">{{code.commodityTitle}}</text>
+					</view>
+					<view class="circle" @click="close()">
+						<image src="../../static/popup/closePopUp.png" class="close"></image>
+					</view>
+			</uni-popup>
 			<view class="noCode" :style="{display:code == null ? 'block' :'none' }">
 				<image class="noCodePicture" src="../../static/code/noCode.png"></image>
 				<text class="noCodeText">暂无电子码</text>
@@ -101,7 +100,7 @@
 					<button class="update" @click="comfirmOrder(order)">确认提交</button>
 				</view>
 			</uni-popup> -->
-			<view class="popUpShow" :style="{display:scanPopShow == true ? 'block' :'none',height:subScreenHeight + 'px'}">
+			<uni-popup ref="scanPopup"  type="center" maskClick="true">
 				<view class="orderPopUp">
 					<image class="orderPicture" :src="orderInfo.commodityImgList[0]"></image>
 					<view class="dottedLineThree"></view>
@@ -116,8 +115,8 @@
 						<button class="update" @click="comfirmOrder(order)">确认提交</button>
 					</view>
 				</view>
-			</view>
-			<view class="loginPopUpShow" :style="{display:loginPopShow == true ? 'block' :'none',height:screenHeight + 'px'}">
+			</uni-popup>
+			<!-- <view class="loginPopUpShow" :style="{display:loginPopShow == true ? 'block' :'none',height:screenHeight + 'px'}">
 				<view class="loginPopUp">
 					<text class="loginText">检测到您目前未登录，是否立即登录？</text>
 					<view class="loginBut">
@@ -125,7 +124,8 @@
 						<button class="loginUpdate" @click="loginUpdate()">确认</button>
 					</view>
 				</view>
-			</view>
+			</view> -->
+			<uni-loginPopup ref="loginPopUp"></uni-loginPopUp>
 			<tabBar :currentPage="currentPage"></tabBar>
 		</view>
 </template>
@@ -133,6 +133,7 @@
 <script>
 	import {api} from './api.js'
 	import uniPopup from "../components/uni-popup/uni-popup.vue"
+	import loginPopup from "../components/uni-loginPopUp/uni-loginPopUp.vue"
 	import tabBar from '../components/zwy-tabBar/tabBar.vue';
 	import Qr from "../utils/wxqrcode.js"
 	    export default {
@@ -154,9 +155,6 @@
 					qr:'',
 					isVip:false,
 					isShop:0,
-					popShow:false,
-					scanPopShow:false,
-					loginPopShow:false,
 					currentPage:'mine',
 					screenHeight: 951,
 					subScreenHeight: 1200,
@@ -193,8 +191,9 @@
 				},2000);
 			},
 			components:{
-				uniPopup,
-				tabBar
+				'uni-popup':uniPopup,
+				'tabBar':tabBar,
+				'uni-loginPopup':loginPopup
 			},
 	        methods: {
 				//判断是否登录
@@ -229,20 +228,20 @@
 						}
 				    });
 				},
-				//获取主屏幕高度
-				getHeight(){
-					var _this = this
-					let info = uni.createSelectorQuery().select(".main");
-			　　　   info.boundingClientRect(function(data) { //data - 各种参数
-				　　　  　console.log('高度' + data.height)  // 获取元素宽度
-						_this.screenHeight = data.height
-						if(data.height <= 1200){
-							_this.subScreenHeight = 1200
-						}else{
-							_this.subScreenHeight = data.height
-						}
-			　　    }).exec()
-				},
+			// 	//获取主屏幕高度
+			// 	getHeight(){
+			// 		var _this = this
+			// 		let info = uni.createSelectorQuery().select(".main");
+			// 　　　   info.boundingClientRect(function(data) { //data - 各种参数
+			// 	　　　  　console.log('高度' + data.height)  // 获取元素宽度
+			// 			_this.screenHeight = data.height
+			// 			if(data.height <= 1200){
+			// 				_this.subScreenHeight = 1200
+			// 			}else{
+			// 				_this.subScreenHeight = data.height
+			// 			}
+			// 　　    }).exec()
+			// 	},
 				//获取菜单信息
 				getData(){
 					let p = {
@@ -289,7 +288,7 @@
 				//跳转申请vip
 				getVip(){
 					if(this.loginState == false){
-						this.loginPopShow = true
+						this.$refs.loginPopUp.open();
 					}else{
 						uni.navigateTo({
 							url: `/pages/vipApply/vipApply`
@@ -298,9 +297,9 @@
 				},
 				//跳转菜单路由
 				getRouter(path){
-					console.log(path)
 					if(this.loginState == false){
-						this.loginPopShow = true
+						console.log(path)
+						this.$refs.loginPopUp.open();
 					}else{
 						uni.navigateTo({
 							url: `${path}`
@@ -335,8 +334,6 @@
 				},
 				//扫码二维码
 				scanCode(){
-					this.getHeight()
-					// this.getOrderHeight()
 					let _this = this;
 					uni.scanCode({
 					    success: function (res) {
@@ -412,14 +409,14 @@
 				},
 				//确认订单弹窗
 				comfirmOrderPopUp(){
-					this.scanPopShow = true
+					this.$refs.scanPopup.open();
 				},
 				//确认订单
 				comfirmOrder(data){
 					console.log(data)
 					api.comfirmOrder(data).then(res=>{
 						console.log(res);
-						this.scanPopShow = false;
+						this.$refs.scanPopup.close();
 						if(res.data.data == true){
 							uni.showToast({
 							    title: '提交成功',
@@ -450,15 +447,15 @@
 				},
 				//取消订单
 				closeOrder(){
-					this.scanPopShow = false
+					this.$refs.scanPopup.close();
 				},
 				//取消登录
 				loginCancle(){
-					this.loginPopShow = false
+					this.$refs.loginPopup.close();
 				},
 				//确认登录
 				loginUpdate(){
-					this.loginPopShow = false
+					this.$refs.loginPopup.open();
 					this.getLogin();
 				},
 				//获取当前时间
@@ -522,8 +519,7 @@
 				},
 				//查看二维码
 				lookQRCode(){
-					this.getHeight()
-					this.popShow = true
+					this.$refs.popup.open();
 					this.qr = Qr.createQrCodeImg(this.code.qrcode)
 				},
 				//查看详情
@@ -535,7 +531,7 @@
 				},
 				//关闭弹窗
 				close(){
-					this.popShow = false
+					this.$refs.popup.close();
 				},
 			}
 	           
@@ -944,10 +940,7 @@
 		text-align: center;
 	}
 	.orderPopUp{
-		position: relative;
 		width: 580rpx;
-		left: 85rpx;
-		top: 150rpx;
 		/* height: 720rpx; */
 		background-color: #FFFFFF;
 		border-radius: 15rpx;
@@ -967,6 +960,8 @@
 	.orderInfo{
 		display: inline-block;
 		width: 482rpx;
+		white-space: normal;
+		word-break: break-all;
 		text-align: left;
 		font-size: 32rpx;
 		margin: 10rpx 49rpx;
@@ -995,63 +990,6 @@
 		left: 290rpx;
 		color: #FFFFFF;
 		/* border-radius: 0; */
-	}
-	.loginPopUpShow{
-		display: fixed;
-		margin: auto;
-		position: fixed;
-		top: 0;
-		left: 0;
-		right: 0;
-		bottom: 0;
-		background-color: rgba(0, 0, 0, 0.4);
-		width: 100%;
-		height: 100%;
-	}
-	.loginPopUp{
-		display: fixed;
-		margin: auto;
-		position: fixed;
-		top: 0;
-		left: 0;
-		right: 0;
-		bottom: 0;
-		width: 580rpx;
-		height: 300rpx;
-		background-color: #FFFFFF;
-		border-radius: 15rpx;
-		border-width: 1rpx;
-	}
-	.loginText{
-		display: inline-block;
-		width: 580rpx;
-		text-align: center;
-		font-size: 36rpx;
-		height: 200rpx;
-		margin-top: 50rpx;
-	}
-	.loginBut{
-		position: flex;
-		display: inline-block;
-		left: 0;
-		bottom: 0;
-		width: 580rpx;
-		height: 100rpx;
-	}
-	.loginCancle{
-		position: absolute;
-		display: inline-block;
-		bottom: 0;
-		width: 290rpx;
-	}
-	.loginUpdate{
-		position: absolute;
-		display: inline-block;
-		background-color: #06C1AE;
-		bottom: 0;
-		width: 290rpx;
-		left: 290rpx;
-		color: #FFFFFF;
 	}
 </style>
 

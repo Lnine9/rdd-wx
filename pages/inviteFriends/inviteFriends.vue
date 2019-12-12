@@ -6,11 +6,6 @@
 			立即分享
 			<text style="width: 17rpx;height: 17rpx;background-color: #FFFFFF;position: absolute;top: 15rpx;left: 20rpx;border-radius: 50%;"></text>
 	   </button>
-	   <!-- <text class="save" @click="createCanvasImageEvn">保存图片到相册</text> -->
-	   <!-- <hchPoster ref="hchPoster" :canvasFlag.sync="canvasFlag" @cancel="canvasCancel" :posterObj.sync="posterData"/>
-	   <view :hidden="canvasFlag">
-	   	<canvas class="canvas"  canvas-id="myCanvas" ></canvas>
-	   </view> -->
    </view>
 </template>
 
@@ -41,33 +36,16 @@
 				path: '/pages/index/index?scene=' + uni.getStorageSync('userId') || ''
 			}
 		},
-		onLoad:function(){
+		onReady() {
 			uni.showLoading({
 				title: '加载中'
 			});
 			api.getQR().then(res=>{
 				uni.hideLoading()
-				var QR="data:image/jpeg|png|gif;base64,"+res.data.data
-				var QR1=res.data.data
-				uni.setStorageSync('QR',QR)
+				this.QR="data:image/jpeg|png|gif;base64,"+res.data.data;
 			}).catch(err=>{
 				console.log(err)
 			})
-			
-			uni.getSystemInfo({
-				success(res) {
-					// 获取手机屏幕宽，高
-					var width=res.screenWidth;
-					var height=res.screenHeight
-					uni.setStorageSync('width',width)
-					uni.setStorageSync('height',height)
-				}
-			});
-		},
-		onReady() {
-			this.QR=uni.getStorageSync("QR");
-			this.width=uni.getStorageSync("width");
-			this.height=uni.getStorageSync("height");
 		},
         methods: {
 			createCanvasImageEvn(){

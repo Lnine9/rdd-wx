@@ -31,37 +31,7 @@
 				showTypeImg: true,
 				showTypeIncome: false,
 				type: 1,
-				income: [ {
-					remark:"VIP充值返利",
-					userName:"骂街",
-					createAt:"2019-11-03 20:11:45",
-					amount: 21,
-				},
-				{
-					remark:"VIP充值返利",
-					userName:"骂街",
-					createAt:"2019-11-01 20:11:45",
-					amount: 21122,
-				},
-				{
-					remark:"VIP充值返利打法",
-					userName:"骂街大夫十分",
-					createAt:"2019-10-25 20:11:45",
-					amount: 2122,
-				},
-				{
-					remark:"VIP充值返利 范德萨发",
-					userName:"骂街",
-					createAt:"2019-10-15 20:11:45",
-					amount: 211,
-				},
-				{
-					remark:"VIP充值返利",
-					userName:"骂街",
-					createAt:"2019-09-01 20:11:45",
-					amount: 21
-				}
-				],
+				income: [],
 				incomes: [],
 				date: [],
 				symbol: "+"
@@ -84,7 +54,7 @@
 				title = '其他收益'
 			}
 			if (option.type == 3) {
-				title = '推荐收益'
+				title = '分享下单收益'
 			}
 			uni.setNavigationBarTitle({
 				title
