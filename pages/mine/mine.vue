@@ -59,17 +59,6 @@
 					</view>
 				</view>
 			</view>
-			<!-- <view class="popUpShow" :style="{display:popShow == true ? 'block' :'none',height:screenHeight + 'px'}">
-				<view class="popUp">
-					<text class="popupCodeName" >电子码：{{code.electronicCode}}</text>
-					<view class="dottedLineThree"></view>
-					<image class="qrCode" :src="qr"></image>
-					<text class="codeShopName">{{code.commodityTitle}}</text>
-				</view>
-				<view class="circle" @click="close()">
-					<image src="../../static/popup/closePopUp.png" class="close"></image>
-				</view>
-			</view> -->
 			<uni-popup ref="popup"  type="center" maskClick="true">
 				<view class="popUp">
 					<text class="popupCodeName" >电子码：{{code.electronicCode}}</text>
@@ -85,46 +74,24 @@
 				<image class="noCodePicture" src="../../static/code/noCode.png"></image>
 				<text class="noCodeText">暂无电子码</text>
 			</view>
-			<!-- <uni-popup ref='order' type="center" maskClick="true">
-				<view class="orderPopUp">
-					<image class="orderPicture" :src="order.commodityImgList[1]"></image>
-					<view class="dottedLineThree"></view>
-					<view>
-						<text class="orderInfo">商品：{{orderInfo.commodityTitle}}</text>
-						<text class="orderInfo">商品信息：{{orderInfo.commodityInfo}}</text>
-						<text class="orderInfo">地址：{{orderInfo.addressDetail}}</text>
-						<text class="orderInfo">收货人：{{orderInfo.receiver}}</text>
-						<text class="orderInfo">联系电话：{{orderInfo.contactNumber}}</text>
-					</view>
-					<button class="cancle" @click="closeOrder()">取消</button>
-					<button class="update" @click="comfirmOrder(order)">确认提交</button>
-				</view>
-			</uni-popup> -->
 			<uni-popup ref="scanPopup"  type="center" maskClick="true">
 				<view class="orderPopUp">
-					<image class="orderPicture" :src="orderInfo.commodityImgList[0]"></image>
+					<view class="orderTitle">
+						<image class="orderPicture" :src="orderInfo.commodityImgList[0]"></image>
+						<text class="orderName">{{orderInfo.commodityTitle}}</text>
+						<text class="orderPrice">￥{{orderInfo.actualPrice}}</text>
+					</view>
 					<view class="dottedLineThree"></view>
 					<view class="orderMenu">
-						<text class="orderInfo">商品：{{orderInfo.commodityTitle}}</text>
-						<text class="orderInfo">电子码：{{orderInfo.qrcode}}</text>
-						<text class="orderInfo">支付价格(元)：{{orderInfo.actualPrice}}</text>
-						<text class="orderInfo">联系电话：{{orderInfo.phone}}</text>
+						<text class="orderInfo">电子码：<text style="font-size: 28rpx; color: #666666;">{{orderInfo.qrcode}}</text></text>
+						<text class="orderInfo">联系电话：<text style="font-size: 28rpx; color: #666666;">{{orderInfo.phone}}</text></text>
 					</view>
-					<view class="orderBut">
-						<button class="cancle" @click="closeOrder()">取消</button>
-						<button class="update" @click="comfirmOrder(order)">确认提交</button>
+					<view class="uni-tip-group-button">
+						<text class="uni-tip-button-cancle" @click="closeOrder()">取消</text>
+						<text class="uni-tip-button-update" @click="comfirmOrder(order)">确定提交</text>
 					</view>
-				</view>
+				</view>	
 			</uni-popup>
-			<!-- <view class="loginPopUpShow" :style="{display:loginPopShow == true ? 'block' :'none',height:screenHeight + 'px'}">
-				<view class="loginPopUp">
-					<text class="loginText">检测到您目前未登录，是否立即登录？</text>
-					<view class="loginBut">
-						<button class="loginCancle" @click="loginCancle()">取消</button>
-						<button class="loginUpdate" @click="loginUpdate()">确认</button>
-					</view>
-				</view>
-			</view> -->
 			<uni-loginPopup ref="loginPopUp"></uni-loginPopUp>
 			<tabBar :currentPage="currentPage"></tabBar>
 		</view>
@@ -876,18 +843,12 @@
 		margin-left: 53rpx;
 		margin-top: 30rpx;
 	}
-	/* .halfCircle{
-		position: absolute;
-		width: 15rpx;
-		height: 15rpx;
-		background:rgba(255,255,255,1);
-		box-shadow:0px 6px 10px 0px rgba(153,153,153,0.05);
-	} */
 	.dottedLineThree{
 		display: inline-block;
-		margin: 41rpx 49rpx;
+		position: relative;
+		bottom: 50rpx;
+		left: 50rpx;
 		width:482rpx;
-		/* height:1rpx; */
 		border:1rpx dotted rgba(227,227,227,1);
 	}
 	.circle{
@@ -942,20 +903,40 @@
 	.orderPopUp{
 		width: 580rpx;
 		/* height: 720rpx; */
-		background-color: #FFFFFF;
+		position: relative;
+		background-image: url('../../static/code/popup.png');
+		background-repeat: no-repeat;
+		background-size: 100% 100%;
 		border-radius: 15rpx;
 		border-width: 1rpx;
+	}
+	.orderTitle{
+		position: relative;
+		width: 580rpx;
+		height: 250rpx;
+	}
+	.orderPicture{
+		display: inline-block;
+		margin: 40rpx 40rpx;
+		width: 150rpx;
+		height: 150rpx;
+	}
+	.orderName{
+		position: absolute;
+		top: 70rpx;
+		font-size: 32rpx;
+		font-weight: bold;
+	}
+	.orderPrice{
+		position: absolute;
+		top: 140rpx;
+		font-size: 32rpx;
+		font-weight: bold;
+		color: #FF7E30;
 	}
 	.orderMenu{
 		display: inline-block;
 		width: 580rpx;
-
-	}
-	.orderPicture{
-		display: inline-block;
-		margin: 20rpx  190rpx;
-		width: 200rpx;
-		height: 200rpx;
 	}
 	.orderInfo{
 		display: inline-block;
@@ -966,30 +947,35 @@
 		font-size: 32rpx;
 		margin: 10rpx 49rpx;
 	}
-	.orderBut{
-		position: flex;
+	.uni-tip-group-button {
 		display: inline-block;
-		left: 0;
-		bottom: 0;
 		width: 580rpx;
-		height: 100rpx;
+		height: 80rpx;
+		border-width: 1rpx 0 0 0;
+		border-style: dashed;
+		border-color: #f3f3f3;
+		margin-top: 40rpx;
 	}
-	.cancle{
-		position: absolute;
+	.uni-tip-button-cancle {
 		display: inline-block;
-		bottom: 0;
-		width: 290rpx;
-		/* border-radius: 0; */
+		text-align: center;
+		border-width: 0 1rpx 0 0;
+		border-style: dashed;
+		border-color: #f3f3f3;
+		height: 80rpx;
+		width: 288rpx;
+		line-height: 80rpx;
+		font-size: 28rpx;
+		color: #3b4144;
 	}
-	.update{
-		position: absolute;
+	.uni-tip-button-update {
 		display: inline-block;
-		background-color: #06C1AE;
-		bottom: 0;
+		text-align: center;
 		width: 290rpx;
-		left: 290rpx;
-		color: #FFFFFF;
-		/* border-radius: 0; */
+		height: 80rpx;
+		line-height: 80rpx;
+		font-size: 28rpx;
+		color: #06C1AE;
 	}
 </style>
 
