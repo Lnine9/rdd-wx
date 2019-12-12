@@ -92,7 +92,11 @@
 					shopAddress:this.addressData.province+this.addressData.city+this.addressData.area+this.applyInformation.address
 				}
 				api.addShop(prams).then(res=>{
-					console.log(res.data);
+					uni.showToast({
+					  title: '保存成功',
+					  icon: 'success',
+					  duration: 3000
+					})
 				})
 			}
 		}
