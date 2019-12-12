@@ -18,12 +18,12 @@
 		</view>
 		<view class="incomes" @click="toIncome(3)">
 			<view class="income">
-				<image class="incomePic" src='../../static/wallet/share.png'></image>推荐收益 （元）
+				<image class="incomePic" src='../../static/wallet/share.png'></image>分享下单收益 （元）
 			</view>
 			<text class="text">{{wallet.shareIncome.toFixed(2)}}</text>
 			<image class="arrow" src="../../static/wallet/arrow.png"></image>
 		</view>
-		<view class="incomes" @click="toIncome(0)">
+		<!-- <view class="incomes" @click="toIncome(0)">
 			<view class="income">
 				<image class="incomePic" src='../../static/wallet/fanyong.png'>好友收益 （元）
 			</view>
@@ -36,7 +36,7 @@
 			</view>
 			<text class="text">{{wallet.otherIncome.toFixed(2)}}</text>
 			<image class="arrow" src="../../static/wallet/arrow.png"></image>
-		</view>
+		</view> -->
 
 		<button class="withdraw" @click="toWithdraw(wallet.blance)">去提现</button>
 
@@ -88,7 +88,7 @@
 			},
 			toIncome(type) {
 				uni.navigateTo({
-					url: `/pages/income/income?type=${type}`
+					url: `/pages/myTeam/myTeam?type=${type}`
 				})
 			},
 
