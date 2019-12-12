@@ -12,7 +12,7 @@
 				<view class="legalRight">
 					<view class="recommend">
 						<image src="/static/return.png"></image>
-						<view class="referee">推荐人返佣</view>
+						<view class="referee">分享下单赚钱</view>
 					</view>
 					<!-- <view class="vip">
 						<image src="../../static/ic-会员价购买.png"></image>

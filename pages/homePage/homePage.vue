@@ -17,7 +17,15 @@
 			<view class="titleNview-placing"></view>
 			<!-- 背景色区域 -->
 			<view class="titleNview-background" :style="{backgroundColor:titleNViewBackground}"></view>
-			<swiper class="carousel" circular @change="swiperChange" autoplay="true" :current="swiperCurrent">
+			<swiper 
+				class="carousel" 
+				circular 
+				autoplay
+				indicator-dots
+				indicator-color="rgba(255,255,255,0.3))" 
+				indicator-active-color="rgba(255,255,255,1)"
+				@change="swiperChange" 
+				:current="swiperCurrent">
 				<swiper-item v-for="(item, index) in carouselList" :key="index" class="carousel-item" @click="navToWebView(item)">
 					<image :src="item.savePath" />
 				</swiper-item>
@@ -537,7 +545,7 @@
 			display:flex;
 			flex-direction: column;
 			width: 240rpx;
-			margin-right: 50upx;
+			margin-right: 30rpx;
 			font-size: 32rpx;
 			font-weight: 800;
 			color: $font-color-dark;
@@ -549,7 +557,7 @@
 				border: 2upx solid #E3E3E3
 			}
 			.PriceArea{
-				margin-left: 15rpx;
+				margin-left: 10rpx;
 			}
 			.clamp{
 				margin-left: 15rpx;
@@ -636,7 +644,7 @@
 			flex-direction: column;
 		}
 		.tit{
-			font-size:27rpx;
+			font-size:32rpx;
 			font-weight: 700;
 			color:#333;
 		}
