@@ -133,12 +133,13 @@
 			<!-- 海报 要放外面放组件里面 会找不到 canvas-->
 			<canvas class="canvas" canvas-id="myCanvas"></canvas><!-- 海报 -->
 		</view>
+		<uni-loginPopUp ref="loginPopUp"></uni-loginPopUp>
 	</movable-area>
 </template>
 
 <script>
 	import uniNumberBox from '../components/uni-number-box/uni-number-box.vue'
-
+	import loginPopup from "../components/uni-loginPopUp/uni-loginPopUp.vue"
 	// 海报
 	import hchPoster from '../components/hch-poster/hch-poster.vue'
 
@@ -172,12 +173,13 @@
 				// 分享海报的使用的变量
 				deliveryFlag: false,
 				canvasFlag: true,
-				posterData: {}
+				posterData: {},
 			};
 		},
 		components: {
 			uniNumberBox,
-			hchPoster
+			hchPoster,
+			'uni-loginPopUp':loginPopup
 		},
 		computed: {
 			noDataCenter() {
@@ -247,7 +249,12 @@
 			},
 			// 分享弹窗
 			shareEvn() {
-				this.deliveryFlag = true;
+				let loginState = uni.getStorageSync("loginState");
+				if(loginState == true){
+					this.deliveryFlag = true;
+				}else{
+					this.$refs.loginPopUp.open();
+				}
 			},
 			// 关闭分享弹窗
 			closeShareEvn() {
@@ -356,8 +363,12 @@
 				})
 			},
 			reayToBuy: function() {
-
-				this.isBuy = true
+				let loginState = uni.getStorageSync("loginState");
+				if(loginState == true){
+					this.isBuy = true
+				}else{
+					this.$refs.loginPopUp.open();
+				}
 			},
 
 			buy: function() {
