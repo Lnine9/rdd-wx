@@ -262,15 +262,15 @@
 							for (var i = 0; i < value.length; i++) {
 								if(value[i].roleName === "微信商家"){
 									this.isShop = 1;
-									this.user.account = '微信商家';
+									this.user.account = '微信商家：' + uni.getStorageSync('bindingAccount');;
 								}else{
 									this.isShop = 0;
-									this.user.account = uni.getStorageSync('bindingAccount');
+									this.user.account ='RenDuoDuo：' + uni.getStorageSync('bindingAccount');
 								}
 							}
 						}else{
 							this.isShop = 0
-							this.user.account = uni.getStorageSync('bindingAccount');
+							this.user.account ='RenDuoDuo：' +  uni.getStorageSync('bindingAccount');
 						}
 					}else{
 						this.isShop = 0

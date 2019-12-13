@@ -216,7 +216,7 @@
 					// 默认重庆（debug）
 					uni.setStorageSync('location', "重庆市"),
 					//储存绑定信息
-					uni.setStorageSync('bindingId',this.service.bindingId),
+					uni.setStorageSync('bindingId',this.service.bindingid),
 					// 存储角色信息
 					uni.setStorageSync('roleNameList', this.service.roleNameList),
 					// 当前用户是否为VIP
