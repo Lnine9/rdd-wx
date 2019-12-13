@@ -58,9 +58,9 @@
 				</view>
 				<text>商品介绍</text>
 			</view>
-			<rich-text :nodes="bottomImg"></rich-text>
+			<rich-text style="width: 100%;" :nodes="bottomImg"></rich-text>
 		</view>
-		<view class="bottom" v-show="!deliveryFlag">
+		<view class="bottom" v-if="!deliveryFlag">
 			<view @click="makeCall()" class="buyView" style="background-color: #FFFFFF;">
 				<image style="width: 31rpx;height: 30rpx;margin-right: 10rpx;" src="../../static/product/server.png"></image>
 				<text style="color:rgba(51,51,51,1);font-size: 28rpx;">联系客服</text>
@@ -98,10 +98,10 @@
 		<movable-view direction="all" x="544" y="300" :animation="false" class="rebate-container" v-show="rebateShow">
 			<button class="rebate-img-container" open-type="getUserInfo" lang="zh_CN" @getuserinfo="shareEvn()">
 				<image src="/static/product/ic-rebate-red-wallet.png" mode="" class="rebate-img"></image>
-		
+
 				<text class="rebate-text">赚￥{{rebateValue}}</text>
 			</button>
-		
+
 			<image src="/static/product/ic-close.png" mode="" class="rebate-close" @tap="closeRebate()"></image>
 		</movable-view>
 
@@ -129,7 +129,7 @@
 			</view>
 		</view>
 		<hchPoster ref="hchPoster" :canvasFlag.sync="canvasFlag" @cancel="canvasCancel" :posterObj.sync="posterData" />
-		<view :hidden="canvasFlag">
+		<view :hidden="canvasFlag" catchtouchmove="catchTouch">
 			<!-- 海报 要放外面放组件里面 会找不到 canvas-->
 			<canvas class="canvas" canvas-id="myCanvas"></canvas><!-- 海报 -->
 		</view>
@@ -181,20 +181,23 @@
 		components: {
 			uniNumberBox,
 			hchPoster,
-			'uni-loginPopUp':loginPopup
+			'uni-loginPopUp': loginPopup
 		},
 		computed: {
 			noDataCenter() {
+				let result = '';
 				if (!this.showPage) {
-					return "text-align:center"
-				} else {
-					return ""
+					result += "text-align:center;"
 				}
+				return result;
 			},
 			...mapState(['token'])
 		},
-
 		methods: {
+			catchTouch: function() {
+				console.log('stop touch');
+				return ;
+			},
 			createCanvasImageEvn() {
 				wx.showLoading({
 					title: '正在生成海报'
@@ -223,9 +226,12 @@
 				let code = "";
 
 				api.getQRCodeImg({
-					commodityId: 1
+					commodityId: this.commodityId
 				}).then((res) => {
 					code = res.data.data;
+					// http -> https
+					code = 'https' + code.substring(4, code.length);
+					this.dataDic.posterImg = 'https' + this.dataDic.posterImg.substring(4, this.dataDic.posterImg.length);
 					console.log('二维码图片');
 					console.log(code);
 					console.log('海报');
@@ -254,9 +260,9 @@
 				this.buyLogin = false;
 				this.shareLogin = true;
 				let loginState = uni.getStorageSync("loginState");
-				if(loginState == true){
+				if (loginState == true) {
 					this.deliveryFlag = true;
-				}else{
+				} else {
 					this.wxGetUserInfo();
 					// this.$refs.loginPopUp.open();
 				}
@@ -360,7 +366,7 @@
 				// 		console.log('调用失败!')
 				// 	}
 				// });
-				
+
 				uni.showModal({
 					title: '提示',
 					content: '请添加囧途宝盒客服微信咨询\n微信号：cqrdd2019',
@@ -371,9 +377,9 @@
 				this.buyLogin = true;
 				this.shareLogin = false;
 				let loginState = uni.getStorageSync("loginState");
-				if(loginState == true){
+				if (loginState == true) {
 					this.isBuy = true
-				}else{
+				} else {
 					this.wxGetUserInfo();
 					// this.$refs.loginPopUp.open();
 				}
@@ -461,9 +467,9 @@
 			//登录成功后跳转到首页
 			loginSuccess: function(data) {
 				this.login(data);
-				uni.setStorageSync('loginState',true);
+				uni.setStorageSync('loginState', true);
 				uni.hideLoading();
-				
+
 				// 根据标识，继续之后的操作
 				if (this.buyLogin && !this.shareLogin) {
 					this.isBuy = true
@@ -481,6 +487,7 @@
 			},
 		},
 		onLoad: function(params) {
+			// params =
 			console.log(params);
 			if (params.scene) { // 二维码解析进入
 				// 获取scene中的数据
@@ -506,7 +513,7 @@
 					icon: 'loading'
 				});
 				this.getData(this.commodityId);
-			} else if(params.s && params.id) { // 通过分享卡片进入
+			} else if (params.s && params.id) { // 通过分享卡片进入
 				console.log("分享卡片进入");
 				this.superiorUser = params.s;
 				this.commodityId = params.id;

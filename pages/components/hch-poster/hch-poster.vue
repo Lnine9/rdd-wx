@@ -479,7 +479,7 @@
 		.button-wrapper {
 			width: 320rpx;
 			height: 72rpx;
-			position: absolute;
+			position: fixed;
 			bottom: 20rpx;
 			left: 215rpx;
 			z-index: 16;
