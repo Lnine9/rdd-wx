@@ -158,6 +158,7 @@
 			},
 			//下拉刷新
 			onPullDownRefresh(){
+				let bindingId = uni.getStorageSync('bindingId');
 				this.wxGetLogin();
 				this.getCode();
 				this.judgeVip();
