@@ -3,9 +3,10 @@
 			<view class="head">
 				<view class="subHead">
 					<image :style="{display:loginState == true ? 'block' :'none' }" class="photo" :src="user.photo"></image>
-					<text :style="{display:loginState == true ? 'block' :'none' }" class="name">{{user.name}}</text>
+					<text :style="{display:loginState == true ? 'block' :'none',top:bindingIdState == true ? '10rpx' :'30rpx' }" class="name">{{user.name}}</text>
+					<text :style="{display:bindingIdState == true ? 'block' :'none' }" class="bindAccount">{{user.account}}</text>
 					<image :style="{display:loginState == true ? 'none' :'block' }" class="photo" :src="logn.photo" @click="getLogin()"></image>
-					<text :style="{display:loginState == true ? 'none' :'block' }" class="name" @click="getLogin()">{{logn.name}}</text>
+					<text :style="{display:loginState == true ? 'none' :'block' }" class="loginName" @click="getLogin()">{{logn.name}}</text>
 					<view class="scan" :style="{display:isShop == 1 ? 'block' : 'none' }">
 						<image class="scanBut" src="../../static/code/scanBut.png" @click="scanCode()" ></image>
 						<text class="scanOrder">扫一扫</text>
@@ -28,7 +29,7 @@
 					</view>
 				</view>
 			</view>
-			<view :style="{display:code == null ? 'none' :'block' }" style="margin-bottom: 250rpx;">
+			<view :style="{display:codeState == true ? 'block' :'none' }" style="margin-bottom: 250rpx;">
 				<view class="codeTitle">
 					<text class="myElectronicCode">我的电子码</text>
 					<view>
@@ -59,17 +60,6 @@
 					</view>
 				</view>
 			</view>
-			<!-- <view class="popUpShow" :style="{display:popShow == true ? 'block' :'none',height:screenHeight + 'px'}">
-				<view class="popUp">
-					<text class="popupCodeName" >电子码：{{code.electronicCode}}</text>
-					<view class="dottedLineThree"></view>
-					<image class="qrCode" :src="qr"></image>
-					<text class="codeShopName">{{code.commodityTitle}}</text>
-				</view>
-				<view class="circle" @click="close()">
-					<image src="../../static/popup/closePopUp.png" class="close"></image>
-				</view>
-			</view> -->
 			<uni-popup ref="popup"  type="center" maskClick="true">
 				<view class="popUp">
 					<text class="popupCodeName" >电子码：{{code.electronicCode}}</text>
@@ -85,46 +75,24 @@
 				<image class="noCodePicture" src="../../static/code/noCode.png"></image>
 				<text class="noCodeText">暂无电子码</text>
 			</view>
-			<!-- <uni-popup ref='order' type="center" maskClick="true">
-				<view class="orderPopUp">
-					<image class="orderPicture" :src="order.commodityImgList[1]"></image>
-					<view class="dottedLineThree"></view>
-					<view>
-						<text class="orderInfo">商品：{{orderInfo.commodityTitle}}</text>
-						<text class="orderInfo">商品信息：{{orderInfo.commodityInfo}}</text>
-						<text class="orderInfo">地址：{{orderInfo.addressDetail}}</text>
-						<text class="orderInfo">收货人：{{orderInfo.receiver}}</text>
-						<text class="orderInfo">联系电话：{{orderInfo.contactNumber}}</text>
-					</view>
-					<button class="cancle" @click="closeOrder()">取消</button>
-					<button class="update" @click="comfirmOrder(order)">确认提交</button>
-				</view>
-			</uni-popup> -->
 			<uni-popup ref="scanPopup"  type="center" maskClick="true">
 				<view class="orderPopUp">
-					<image class="orderPicture" :src="orderInfo.commodityImgList[0]"></image>
-					<view class="dottedLineThree"></view>
+					<view class="orderTitle">
+						<image class="orderPicture" :src="orderInfo.commodityImgList[0]"></image>
+						<text class="orderName">{{orderInfo.commodityTitle}}</text>
+						<text class="orderPrice">￥{{orderInfo.actualPrice}}</text>
+					</view>
+					<view class="dottedLineFour"></view>
 					<view class="orderMenu">
-						<text class="orderInfo">商品：{{orderInfo.commodityTitle}}</text>
-						<text class="orderInfo">电子码：{{orderInfo.qrcode}}</text>
-						<text class="orderInfo">支付价格(元)：{{orderInfo.actualPrice}}</text>
-						<text class="orderInfo">联系电话：{{orderInfo.phone}}</text>
+						<text class="orderInfo">电子码：<text style="font-size: 28rpx; color: #666666;">{{orderInfo.qrcode}}</text></text>
+						<text class="orderInfo">联系电话：<text style="font-size: 28rpx; color: #666666;">{{orderInfo.phone}}</text></text>
 					</view>
-					<view class="orderBut">
-						<button class="cancle" @click="closeOrder()">取消</button>
-						<button class="update" @click="comfirmOrder(order)">确认提交</button>
+					<view class="uni-tip-group-button">
+						<text class="uni-tip-button-cancle" @click="closeOrder()">取消</text>
+						<text class="uni-tip-button-update" @click="comfirmOrder(order)">确定提交</text>
 					</view>
-				</view>
+				</view>	
 			</uni-popup>
-			<!-- <view class="loginPopUpShow" :style="{display:loginPopShow == true ? 'block' :'none',height:screenHeight + 'px'}">
-				<view class="loginPopUp">
-					<text class="loginText">检测到您目前未登录，是否立即登录？</text>
-					<view class="loginBut">
-						<button class="loginCancle" @click="loginCancle()">取消</button>
-						<button class="loginUpdate" @click="loginUpdate()">确认</button>
-					</view>
-				</view>
-			</view> -->
 			<uni-loginPopup ref="loginPopUp"></uni-loginPopUp>
 			<tabBar :currentPage="currentPage"></tabBar>
 		</view>
@@ -146,10 +114,12 @@
 					user:{
 						name:'',
 						photo:'',
+						account:'',
 					},
 					service:[
 					],
 					code:[],
+					codeState:false,
 					orderInfo:[],
 					order:[],
 					qr:'',
@@ -159,11 +129,14 @@
 					screenHeight: 951,
 					subScreenHeight: 1200,
 					loginState:false,
+					bindingIdState:false,
 					flag: true, // 标识当前页面是否显示
 	            };
 	        },
 			onShow() {
 				let payOrder = getApp().globalData.payOrder;
+				let bindingId = uni.getStorageSync('bindingId');
+				console.log(bindingId)
 				if (payOrder) {
 					this.flag = false;
 					getApp().globalData.payOrder = false;
@@ -173,19 +146,27 @@
 				} else {
 					this.flag = true;
 					this.wxGetLogin();
-					this.getData();
 					this.getCode();
 					this.judgeVip();
 					this.judgeScan();
+					if(bindingId!=null && bindingId!=''){
+						this.getMenu();
+					}else{
+						this.getSubMenu();
+					}
 				}
 			},
 			//下拉刷新
 			onPullDownRefresh(){
 				this.wxGetLogin();
-				this.getData();
 				this.getCode();
 				this.judgeVip();
 				this.judgeScan();
+				if(bindingId!=null && bindingId!=''){
+					this.getMenu();
+				}else{
+					this.getSubMenu();
+				}
 				setTimeout(function(){
 					uni.stopPullDownRefresh();
 				},2000);
@@ -214,6 +195,13 @@
 				wxGetUserInfo() {
 					console.log('...授权...')
 				    let _this = this;
+					let bindingId = uni.getStorageSync('bindingId');
+					if(bindingId!=null && bindingId!=''){
+					   this.bindingIdState = true;
+					}else{
+					   this.bindingIdState = false;
+					}
+					console.log(this.bindingIdState)
 				    uni.getUserInfo({
 				        provider: 'weixin',
 				        success: function(infoRes) {
@@ -228,25 +216,26 @@
 						}
 				    });
 				},
-			// 	//获取主屏幕高度
-			// 	getHeight(){
-			// 		var _this = this
-			// 		let info = uni.createSelectorQuery().select(".main");
-			// 　　　   info.boundingClientRect(function(data) { //data - 各种参数
-			// 	　　　  　console.log('高度' + data.height)  // 获取元素宽度
-			// 			_this.screenHeight = data.height
-			// 			if(data.height <= 1200){
-			// 				_this.subScreenHeight = 1200
-			// 			}else{
-			// 				_this.subScreenHeight = data.height
-			// 			}
-			// 　　    }).exec()
-			// 	},
-				//获取菜单信息
-				getData(){
+				//获取已绑定菜单信息
+				getMenu(){
 					let p = {
-						userType: 0,
+						userType: 2,
 						menuIdentityCode: 'WCPPersonCenter',
+						bindingType:0,
+					};
+					api.getList(p).then(res =>{
+						this.service = res.data.data,
+						console.log(this.service)
+					}).catch(err => {
+						console.log(err)
+					})
+				},
+				//获取未菜单信息
+				getSubMenu(){
+					let p = {
+						userType: 2,
+						menuIdentityCode: 'WCPPersonCenter',
+						bindingType:1,
 					};
 					api.getList(p).then(res =>{
 						this.service = res.data.data,
@@ -269,17 +258,19 @@
 				judgeScan(){
 					if(this.loginState == true){
 						let value = uni.getStorageSync('roleNameList');
-						console.log(value)
 						if(value != null ){
 							for (var i = 0; i < value.length; i++) {
 								if(value[i].roleName === "微信商家"){
 									this.isShop = 1;
+									this.user.account = '微信商家：' + uni.getStorageSync('bindingAccount');;
 								}else{
-									this.isShop = 0
+									this.isShop = 0;
+									this.user.account ='RenDuoDuo：' + uni.getStorageSync('bindingAccount');
 								}
 							}
 						}else{
 							this.isShop = 0
+							this.user.account ='RenDuoDuo：' +  uni.getStorageSync('bindingAccount');
 						}
 					}else{
 						this.isShop = 0
@@ -313,17 +304,21 @@
 							this.code = res.data.data
 							console.log(res.data.data)
 							if(res.data.data != null){
+								this.codeState = true
+								console.log(this.codeState)
 								if(res.data.data.electronicCode == null || res.data.data.electronicCode == ''){
 									this.code.electronicCode = '暂无'
 								}
 								if(res.data.data.deliveryNum == null || res.data.data.deliveryNum == ''){
 									this.code.deliveryNum = '暂无'
 								}
+							}else{
+								this.codeState = false	
+								console.log(this.codeState)
 							}
-							console.log(this.code)
 						})
 					}else{
-						this.code = null
+						this.codeState = false
 					}
 				},
 				//电子码查看更多
@@ -566,9 +561,25 @@
 		display: inline-block;
 		color: #FFFFFF;
 		position: absolute;
-		top:30rpx;
+		/* top:30rpx; */
 		left: 148.6rpx;
 		font-size: 32rpx;
+	}
+	.loginName{
+		display: inline-block;
+		color: #FFFFFF;
+		position: absolute;
+		top:30rpx; 
+		left: 148.6rpx;
+		font-size: 32rpx;
+	}
+	.bindAccount{
+		display: inline-block;
+		color: #FFFFFF;
+		position: absolute;
+		top:60rpx;
+		left: 148.6rpx;
+		font-size: 28rpx;
 	}
 	.scan{
 		position: absolute;
@@ -876,18 +887,18 @@
 		margin-left: 53rpx;
 		margin-top: 30rpx;
 	}
-	/* .halfCircle{
-		position: absolute;
-		width: 15rpx;
-		height: 15rpx;
-		background:rgba(255,255,255,1);
-		box-shadow:0px 6px 10px 0px rgba(153,153,153,0.05);
-	} */
 	.dottedLineThree{
 		display: inline-block;
 		margin: 41rpx 49rpx;
 		width:482rpx;
-		/* height:1rpx; */
+		border:1rpx dotted rgba(227,227,227,1);
+	}
+	.dottedLineFour{
+		display: inline-block;
+		position: relative;
+		bottom: 50rpx;
+		left: 50rpx;
+		width:482rpx;
 		border:1rpx dotted rgba(227,227,227,1);
 	}
 	.circle{
@@ -942,20 +953,40 @@
 	.orderPopUp{
 		width: 580rpx;
 		/* height: 720rpx; */
-		background-color: #FFFFFF;
+		position: relative;
+		background-image: url('../../static/code/popup.png');
+		background-repeat: no-repeat;
+		background-size: 100% 100%;
 		border-radius: 15rpx;
 		border-width: 1rpx;
+	}
+	.orderTitle{
+		position: relative;
+		width: 580rpx;
+		height: 250rpx;
+	}
+	.orderPicture{
+		display: inline-block;
+		margin: 40rpx 40rpx;
+		width: 150rpx;
+		height: 150rpx;
+	}
+	.orderName{
+		position: absolute;
+		top: 70rpx;
+		font-size: 32rpx;
+		font-weight: bold;
+	}
+	.orderPrice{
+		position: absolute;
+		top: 140rpx;
+		font-size: 32rpx;
+		font-weight: bold;
+		color: #FF7E30;
 	}
 	.orderMenu{
 		display: inline-block;
 		width: 580rpx;
-
-	}
-	.orderPicture{
-		display: inline-block;
-		margin: 20rpx  190rpx;
-		width: 200rpx;
-		height: 200rpx;
 	}
 	.orderInfo{
 		display: inline-block;
@@ -966,30 +997,35 @@
 		font-size: 32rpx;
 		margin: 10rpx 49rpx;
 	}
-	.orderBut{
-		position: flex;
+	.uni-tip-group-button {
 		display: inline-block;
-		left: 0;
-		bottom: 0;
 		width: 580rpx;
-		height: 100rpx;
+		height: 80rpx;
+		border-width: 1rpx 0 0 0;
+		border-style: dashed;
+		border-color: #f3f3f3;
+		margin-top: 40rpx;
 	}
-	.cancle{
-		position: absolute;
+	.uni-tip-button-cancle {
 		display: inline-block;
-		bottom: 0;
-		width: 290rpx;
-		/* border-radius: 0; */
+		text-align: center;
+		border-width: 0 1rpx 0 0;
+		border-style: dashed;
+		border-color: #f3f3f3;
+		height: 80rpx;
+		width: 288rpx;
+		line-height: 80rpx;
+		font-size: 28rpx;
+		color: #3b4144;
 	}
-	.update{
-		position: absolute;
+	.uni-tip-button-update {
 		display: inline-block;
-		background-color: #06C1AE;
-		bottom: 0;
+		text-align: center;
 		width: 290rpx;
-		left: 290rpx;
-		color: #FFFFFF;
-		/* border-radius: 0; */
+		height: 80rpx;
+		line-height: 80rpx;
+		font-size: 28rpx;
+		color: #06C1AE;
 	}
 </style>
 

@@ -202,16 +202,21 @@
 				};
 				api.getUserInfo(user).then(res =>{
 					this.service = res.data.data,
+					console.log(this.service)
 					// userType 说明
 					// 0: app
 					// 1: 企业
 					// 2: 小程序
 					uni.setStorageSync('userId', this.service.userId),
-					console.log("id")
 					console.log(this.service.userId)
 					uni.setStorageSync('userType', this.service.userType),
+					//缓存电话
+					uni.setStorageSync('bindingAccount',this.service.bindingAccount)
+					console.log(this.service.bindingAccount)
 					// 默认重庆（debug）
 					uni.setStorageSync('location', "重庆市"),
+					//储存绑定信息
+					uni.setStorageSync('bindingId',this.service.bindingid),
 					// 存储角色信息
 					uni.setStorageSync('roleNameList', this.service.roleNameList),
 					// 当前用户是否为VIP

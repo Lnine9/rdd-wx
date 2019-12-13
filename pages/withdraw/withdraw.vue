@@ -40,7 +40,6 @@
 				amount: 0,
 				paymentAccount: "",
 				paymentName: "",
-				keyWord:"",
 				paymentAmount: ""
 			}
 		},
@@ -117,7 +116,6 @@
 			
 			// 后端数据的返回
 			toWithdraw() {
-			
 				api.postData({
 					paymentAmount: this.paymentAmount
 				}).then(res => {
@@ -125,15 +123,18 @@
 					  title: res.data.message,
 					  icon: 'none',
 					  duration: 1500
+					});
+					wx.navigateBack({
+						delta:1
 					})
 					// if (res.data.message.equals("提现成功")) {
 					// 	wx.navigateBack({
 					// 		delta:1
-					// 	})
+					// 	})快速提现，请添加客服微信  ~  ( cqrdd2019 )
 					// }
 				}).catch(_ => {
 					wx.showToast({
-					  title: '快速提现，请添加客服微信  ~  ( cqrdd2019 )',
+					  title: '网络错误',
 					  icon: 'none',
 					  duration: 4000
 					})

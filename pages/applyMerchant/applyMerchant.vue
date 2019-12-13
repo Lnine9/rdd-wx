@@ -53,7 +53,6 @@
 					shopName:'',
 					name:'',
 					phone:'',
-					type:'',
 					place:'',
 					address:''
 				},
@@ -85,14 +84,76 @@
 			},
 			save(){
 				let prams={
-					userId:'',
 					shopName:this.applyInformation.shopName,
 					userName:this.applyInformation.name,
 					shopPhone:this.applyInformation.phone,
 					shopType:this.applyInformation.type,// 后面要改为整形
 					shopAddress:this.addressData.province+this.addressData.city+this.addressData.area+this.applyInformation.address
 				}
-				console.log(prams);
+				if(this.applyInformation.shopName==''){
+					wx.showToast({
+					  title: '请输入店铺名称',
+					  icon: 'none',
+					  duration: 3000
+					})
+					return null;
+				}
+				if(this.applyInformation.name==''){
+					wx.showToast({
+					  title: '请输入姓名',
+					  icon: 'none',
+					  duration: 3000
+					})
+					return null;
+				}
+				if(this.applyInformation.phone==''){
+					wx.showToast({
+					  title: '请输入手机号',
+					  icon: 'none',
+					  duration: 3000
+					})
+					return null;
+				}else{
+					 if(!(/^1[34578]\d{9}$/).test(this.applyInformation.phone)){
+						wx.showToast({
+						  title: '请输入正确的电话号码',
+						  icon: 'none',
+						  duration: 3000
+						})	 
+						return null;
+					}
+				}
+				if(this.type.province==''){
+					wx.showToast({
+					  title: '选择类别不能为空',
+					  icon: 'none',
+					  duration: 3000
+					})
+					return null;
+				}
+				if(this.addressData.province=='请选择地区'){
+					wx.showToast({
+					  title: '请选择地区',
+					  icon: 'none',
+					  duration: 3000
+					})
+					return null;
+				}
+				if(this.applyInformation.address==''){
+					wx.showToast({
+					  title: '详细地址不能为空',
+					  icon: 'none',
+					  duration: 3000
+					})
+					return null;
+				}
+				api.addShop(prams).then(res=>{
+					uni.showToast({
+					  title: '保存成功',
+					  icon: 'success',
+					  duration: 3000
+					})
+				})
 			}
 		}
 	}
