@@ -465,7 +465,7 @@
 		},
 		onLoad: function(params) {
 			console.log(params);
-			if (params.scene) {
+			if (params.scene) { // 二维码解析进入
 				// 获取scene中的数据
 				console.log("has scene");
 				let scene = decodeURIComponent(params.scene);
@@ -489,8 +489,13 @@
 					icon: 'loading'
 				})
 				this.wxGetUserInfo();
-			} else {
-				console.log("no scene");
+			} else if(params.s && params.id) { // 通过分享卡片进入
+				console.log("分享卡片进入");
+				this.superiorUser = params.s;
+				this.commodityId = params.id;
+				this.wxGetUserInfo();
+			} else { // 首页商品跳转过来
+				console.log("首页进入");
 				this.superiorUser = null;
 				this.commodityId = params.id;
 				this.getData(this.commodityId);
