@@ -63,11 +63,11 @@
 		<view class="bottom" v-show="!deliveryFlag">
 			<view @click="makeCall()" class="buyView" style="background-color: #FFFFFF;">
 				<image style="width: 31rpx;height: 30rpx;margin-right: 10rpx;" src="../../static/product/server.png"></image>
-				<text style="color:rgba(51,51,51,1);">联系客服</text>
+				<text style="color:rgba(51,51,51,1);font-size: 28rpx;">联系客服</text>
 			</view>
-			<view @click="reayToBuy()" class="buyView">
+			<button open-type="getUserInfo" lang="zh_CN" @getuserinfo="reayToBuy()" class="buyView">
 				<text>立即购买</text>
-			</view>
+			</button>
 		</view>
 		<!-- 选择购买数量 -->
 
@@ -95,12 +95,12 @@
 
 		<!-- 右侧分享返佣 -->
 		<!-- 拖拽功能 -->
-		<movable-view direction="all" x="544" y="400" :animation="false" class="rebate-container" v-show="rebateShow">
-			<view class="rebate-img-container" @tap="shareEvn">
+		<movable-view direction="all" x="544" y="300" :animation="false" class="rebate-container" v-show="rebateShow">
+			<button class="rebate-img-container" open-type="getUserInfo" lang="zh_CN" @getuserinfo="shareEvn()">
 				<image src="/static/product/ic-rebate-red-wallet.png" mode="" class="rebate-img"></image>
 		
 				<text class="rebate-text">赚￥{{rebateValue}}</text>
-			</view>
+			</button>
 		
 			<image src="/static/product/ic-close.png" mode="" class="rebate-close" @tap="closeRebate()"></image>
 		</movable-view>
@@ -174,6 +174,8 @@
 				deliveryFlag: false,
 				canvasFlag: true,
 				posterData: {},
+				shareLogin: false, // 分享登录标识
+				buyLogin: false, // 购买登录标识
 			};
 		},
 		components: {
@@ -249,11 +251,14 @@
 			},
 			// 分享弹窗
 			shareEvn() {
+				this.buyLogin = false;
+				this.shareLogin = true;
 				let loginState = uni.getStorageSync("loginState");
 				if(loginState == true){
 					this.deliveryFlag = true;
 				}else{
-					this.$refs.loginPopUp.open();
+					this.wxGetUserInfo();
+					// this.$refs.loginPopUp.open();
 				}
 			},
 			// 关闭分享弹窗
@@ -363,11 +368,14 @@
 				})
 			},
 			reayToBuy: function() {
+				this.buyLogin = true;
+				this.shareLogin = false;
 				let loginState = uni.getStorageSync("loginState");
 				if(loginState == true){
 					this.isBuy = true
 				}else{
-					this.$refs.loginPopUp.open();
+					this.wxGetUserInfo();
+					// this.$refs.loginPopUp.open();
 				}
 			},
 
@@ -399,7 +407,7 @@
 					},
 					fail(res) {
 						uni.showModal({
-							content: '失败了',
+							content: '获取用户信息失败',
 							showCancel: true
 						});
 					}
@@ -453,8 +461,17 @@
 			//登录成功后跳转到首页
 			loginSuccess: function(data) {
 				this.login(data);
+				uni.setStorageSync('loginState',true);
+				uni.hideLoading();
+				
+				// 根据标识，继续之后的操作
+				if (this.buyLogin && !this.shareLogin) {
+					this.isBuy = true
+				} else if (this.shareLogin = true && !this.buyLogin) {
+					this.deliveryFlag = true;
+				}
 				// 开始获取商品信息
-				this.getData(this.commodityId);
+				// this.getData(this.commodityId);
 			},
 
 
@@ -487,13 +504,13 @@
 				uni.showToast({
 					title: '正在加载中',
 					icon: 'loading'
-				})
-				this.wxGetUserInfo();
+				});
+				this.getData(this.commodityId);
 			} else if(params.s && params.id) { // 通过分享卡片进入
 				console.log("分享卡片进入");
 				this.superiorUser = params.s;
 				this.commodityId = params.id;
-				this.wxGetUserInfo();
+				this.getData(this.commodityId);
 			} else { // 首页商品跳转过来
 				console.log("首页进入");
 				this.superiorUser = null;
@@ -858,6 +875,9 @@
 	}
 
 	.buyView {
+		border: none;
+		font-size: 28rpx;
+		color: #FFFFFF;
 		display: inline-block;
 		background-color: #06C1AE;
 		height: 98rpx;
@@ -1038,12 +1058,12 @@
 	.rebate-img-container {
 		position: absolute;
 		margin: 18rpx 15rpx 0 0;
+		padding: 0;
 		width: 165rpx;
 		height: 235rpx;
 	}
 
 	.rebate-img {
-		position: absolute;
 		width: 100%;
 		height: 100%;
 	}
