@@ -270,6 +270,7 @@
 							}
 						}else{
 							this.isShop = 0
+							this.user.account = uni.getStorageSync('bindingAccount');
 						}
 					}else{
 						this.isShop = 0
