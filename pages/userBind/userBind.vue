@@ -4,7 +4,7 @@
 			<input class="input" 
 			type="text" 
 			v-model="user.userAccount" 
-			placeholder="请输入RenDuoDuo账号" 
+			placeholder="请输入电话" 
 			placeholder-class="placeholder"  />
 		</view>
 		<view class="row">
@@ -13,14 +13,14 @@
 			v-model="user.userName" 
 			type="password"
 			password="true"
-			placeholder="请输入RenDuoDuo密码" 
+			placeholder="请输入验证码" 
 			placeholder-class="placeholder"  />
 			
 			<input class="input"
 			v-show="isShowEye"
 			v-model="user.userName" 
 			type="text"
-			placeholder="请输入RenDuoDuo密码" 
+			placeholder="请输入验证码" 
 			placeholder-class="placeholder"  />
 			<image class="eyes" src="../../static/hidePassword.png" v-show="isShowEye" @click="changeEye"></image>
 			<image class="eyes" src="../../static/showPassword.png" v-show="!isShowEye" @click="changeEye"></image>
