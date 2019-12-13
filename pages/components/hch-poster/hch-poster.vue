@@ -480,7 +480,7 @@
 			width: 320rpx;
 			height: 72rpx;
 			position: fixed;
-			bottom: 30rpx;
+			bottom: 20rpx;
 			left: 215rpx;
 			z-index: 16;
 		}

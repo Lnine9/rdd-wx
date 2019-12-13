@@ -58,9 +58,9 @@
 				</view>
 				<text>商品介绍</text>
 			</view>
-			<rich-text :nodes="bottomImg"></rich-text>
+			<rich-text style="width: 100%;" :nodes="bottomImg"></rich-text>
 		</view>
-		<view class="bottom" v-show="!deliveryFlag">
+		<view class="bottom" v-if="!deliveryFlag">
 			<view @click="makeCall()" class="buyView" style="background-color: #FFFFFF;">
 				<image style="width: 31rpx;height: 30rpx;margin-right: 10rpx;" src="../../static/product/server.png"></image>
 				<text style="color:rgba(51,51,51,1);font-size: 28rpx;">联系客服</text>
@@ -129,7 +129,7 @@
 			</view>
 		</view>
 		<hchPoster ref="hchPoster" :canvasFlag.sync="canvasFlag" @cancel="canvasCancel" :posterObj.sync="posterData" />
-		<view :hidden="canvasFlag">
+		<view :hidden="canvasFlag" catchtouchmove="catchTouch">
 			<!-- 海报 要放外面放组件里面 会找不到 canvas-->
 			<canvas class="canvas" canvas-id="myCanvas"></canvas><!-- 海报 -->
 		</view>
@@ -181,20 +181,23 @@
 		components: {
 			uniNumberBox,
 			hchPoster,
-			'uni-loginPopUp':loginPopup
+			'uni-loginPopUp': loginPopup
 		},
 		computed: {
 			noDataCenter() {
+				let result = '';
 				if (!this.showPage) {
-					return "text-align:center"
-				} else {
-					return ""
+					result += "text-align:center;"
 				}
+				return result;
 			},
 			...mapState(['token'])
 		},
-
 		methods: {
+			catchTouch: function() {
+				console.log('stop touch');
+				return ;
+			},
 			createCanvasImageEvn() {
 				wx.showLoading({
 					title: '正在生成海报'
@@ -257,9 +260,9 @@
 				this.buyLogin = false;
 				this.shareLogin = true;
 				let loginState = uni.getStorageSync("loginState");
-				if(loginState == true){
+				if (loginState == true) {
 					this.deliveryFlag = true;
-				}else{
+				} else {
 					this.wxGetUserInfo();
 					// this.$refs.loginPopUp.open();
 				}
@@ -374,9 +377,9 @@
 				this.buyLogin = true;
 				this.shareLogin = false;
 				let loginState = uni.getStorageSync("loginState");
-				if(loginState == true){
+				if (loginState == true) {
 					this.isBuy = true
-				}else{
+				} else {
 					this.wxGetUserInfo();
 					// this.$refs.loginPopUp.open();
 				}
@@ -464,7 +467,7 @@
 			//登录成功后跳转到首页
 			loginSuccess: function(data) {
 				this.login(data);
-				uni.setStorageSync('loginState',true);
+				uni.setStorageSync('loginState', true);
 				uni.hideLoading();
 
 				// 根据标识，继续之后的操作
@@ -510,7 +513,7 @@
 					icon: 'loading'
 				});
 				this.getData(this.commodityId);
-			} else if(params.s && params.id) { // 通过分享卡片进入
+			} else if (params.s && params.id) { // 通过分享卡片进入
 				console.log("分享卡片进入");
 				this.superiorUser = params.s;
 				this.commodityId = params.id;
