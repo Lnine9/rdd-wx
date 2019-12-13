@@ -57,14 +57,14 @@
 				}
 				else{
 					api.bindingUser(this.user).then(res=>{
-						if(res.data.data=="账号绑定成功"){
+						if(res.data.data=="绑定成功"){
+							uni.switchTab({
+								url: '/pages/homePage/homePage'
+							});
 							wx.showToast({
 							  title: '绑定成功',
 							  icon: 'success',
 							  duration: 3000
-							})
-							wx.navigateBack({
-								delta:0
 							})
 						}
 						else{

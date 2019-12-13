@@ -3,9 +3,10 @@
 			<view class="head">
 				<view class="subHead">
 					<image :style="{display:loginState == true ? 'block' :'none' }" class="photo" :src="user.photo"></image>
-					<text :style="{display:loginState == true ? 'block' :'none' }" class="name">{{user.name}}</text>
+					<text :style="{display:loginState == true ? 'block' :'none',top:bindingIdState == true ? '10rpx' :'30rpx' }" class="name">{{user.name}}</text>
+					<text :style="{display:bindingIdState == true ? 'block' :'none' }" class="bindAccount">{{user.account}}</text>
 					<image :style="{display:loginState == true ? 'none' :'block' }" class="photo" :src="logn.photo" @click="getLogin()"></image>
-					<text :style="{display:loginState == true ? 'none' :'block' }" class="name" @click="getLogin()">{{logn.name}}</text>
+					<text :style="{display:loginState == true ? 'none' :'block' }" class="loginName" @click="getLogin()">{{logn.name}}</text>
 					<view class="scan" :style="{display:isShop == 1 ? 'block' : 'none' }">
 						<image class="scanBut" src="../../static/code/scanBut.png" @click="scanCode()" ></image>
 						<text class="scanOrder">扫一扫</text>
@@ -28,7 +29,7 @@
 					</view>
 				</view>
 			</view>
-			<view :style="{display:code == null ? 'none' :'block' }" style="margin-bottom: 250rpx;">
+			<view :style="{display:codeState == true ? 'block' :'none' }" style="margin-bottom: 250rpx;">
 				<view class="codeTitle">
 					<text class="myElectronicCode">我的电子码</text>
 					<view>
@@ -113,10 +114,12 @@
 					user:{
 						name:'',
 						photo:'',
+						account:'',
 					},
 					service:[
 					],
 					code:[],
+					codeState:false,
 					orderInfo:[],
 					order:[],
 					qr:'',
@@ -126,11 +129,14 @@
 					screenHeight: 951,
 					subScreenHeight: 1200,
 					loginState:false,
+					bindingIdState:false,
 					flag: true, // 标识当前页面是否显示
 	            };
 	        },
 			onShow() {
 				let payOrder = getApp().globalData.payOrder;
+				let bindingId = uni.getStorageSync('bindingId');
+				console.log(bindingId)
 				if (payOrder) {
 					this.flag = false;
 					getApp().globalData.payOrder = false;
@@ -140,19 +146,27 @@
 				} else {
 					this.flag = true;
 					this.wxGetLogin();
-					this.getData();
 					this.getCode();
 					this.judgeVip();
 					this.judgeScan();
+					if(bindingId!=null && bindingId!=''){
+						this.getMenu();
+					}else{
+						this.getSubMenu();
+					}
 				}
 			},
 			//下拉刷新
 			onPullDownRefresh(){
 				this.wxGetLogin();
-				this.getData();
 				this.getCode();
 				this.judgeVip();
 				this.judgeScan();
+				if(bindingId!=null && bindingId!=''){
+					this.getMenu();
+				}else{
+					this.getSubMenu();
+				}
 				setTimeout(function(){
 					uni.stopPullDownRefresh();
 				},2000);
@@ -181,6 +195,13 @@
 				wxGetUserInfo() {
 					console.log('...授权...')
 				    let _this = this;
+					let bindingId = uni.getStorageSync('bindingId');
+					if(bindingId!=null && bindingId!=''){
+					   this.bindingIdState = true;
+					}else{
+					   this.bindingIdState = false;
+					}
+					console.log(this.bindingIdState)
 				    uni.getUserInfo({
 				        provider: 'weixin',
 				        success: function(infoRes) {
@@ -195,25 +216,26 @@
 						}
 				    });
 				},
-			// 	//获取主屏幕高度
-			// 	getHeight(){
-			// 		var _this = this
-			// 		let info = uni.createSelectorQuery().select(".main");
-			// 　　　   info.boundingClientRect(function(data) { //data - 各种参数
-			// 	　　　  　console.log('高度' + data.height)  // 获取元素宽度
-			// 			_this.screenHeight = data.height
-			// 			if(data.height <= 1200){
-			// 				_this.subScreenHeight = 1200
-			// 			}else{
-			// 				_this.subScreenHeight = data.height
-			// 			}
-			// 　　    }).exec()
-			// 	},
-				//获取菜单信息
-				getData(){
+				//获取已绑定菜单信息
+				getMenu(){
 					let p = {
-						userType: 0,
+						userType: 2,
 						menuIdentityCode: 'WCPPersonCenter',
+						bindingType:0,
+					};
+					api.getList(p).then(res =>{
+						this.service = res.data.data,
+						console.log(this.service)
+					}).catch(err => {
+						console.log(err)
+					})
+				},
+				//获取未菜单信息
+				getSubMenu(){
+					let p = {
+						userType: 2,
+						menuIdentityCode: 'WCPPersonCenter',
+						bindingType:1,
 					};
 					api.getList(p).then(res =>{
 						this.service = res.data.data,
@@ -236,13 +258,14 @@
 				judgeScan(){
 					if(this.loginState == true){
 						let value = uni.getStorageSync('roleNameList');
-						console.log(value)
 						if(value != null ){
 							for (var i = 0; i < value.length; i++) {
 								if(value[i].roleName === "微信商家"){
 									this.isShop = 1;
+									this.user.account = '微信商家';
 								}else{
-									this.isShop = 0
+									this.isShop = 0;
+									this.user.account = uni.getStorageSync('bindingAccount');
 								}
 							}
 						}else{
@@ -280,17 +303,21 @@
 							this.code = res.data.data
 							console.log(res.data.data)
 							if(res.data.data != null){
+								this.codeState = true
+								console.log(this.codeState)
 								if(res.data.data.electronicCode == null || res.data.data.electronicCode == ''){
 									this.code.electronicCode = '暂无'
 								}
 								if(res.data.data.deliveryNum == null || res.data.data.deliveryNum == ''){
 									this.code.deliveryNum = '暂无'
 								}
+							}else{
+								this.codeState = false	
+								console.log(this.codeState)
 							}
-							console.log(this.code)
 						})
 					}else{
-						this.code = null
+						this.codeState = false
 					}
 				},
 				//电子码查看更多
@@ -533,9 +560,25 @@
 		display: inline-block;
 		color: #FFFFFF;
 		position: absolute;
-		top:30rpx;
+		/* top:30rpx; */
 		left: 148.6rpx;
 		font-size: 32rpx;
+	}
+	.loginName{
+		display: inline-block;
+		color: #FFFFFF;
+		position: absolute;
+		top:30rpx; 
+		left: 148.6rpx;
+		font-size: 32rpx;
+	}
+	.bindAccount{
+		display: inline-block;
+		color: #FFFFFF;
+		position: absolute;
+		top:60rpx;
+		left: 148.6rpx;
+		font-size: 28rpx;
 	}
 	.scan{
 		position: absolute;
