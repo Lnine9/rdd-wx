@@ -733,6 +733,10 @@
 	.codeName{
 		display: inline-block;
 		position: absolute;
+		text-overflow: ellipsis;
+		overflow: hidden;
+		width: 500rpx;
+		white-space: nowrap;
 		top:6rpx;
 		left: 114rpx;
 		font-size: 28rpx;
