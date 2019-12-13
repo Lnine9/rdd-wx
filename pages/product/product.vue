@@ -223,7 +223,7 @@
 				let code = "";
 
 				api.getQRCodeImg({
-					commodityId: 1
+					commodityId: this.commodityId
 				}).then((res) => {
 					code = res.data.data;
 					console.log('二维码图片');
@@ -481,6 +481,7 @@
 			},
 		},
 		onLoad: function(params) {
+			// params = 
 			console.log(params);
 			if (params.scene) { // 二维码解析进入
 				// 获取scene中的数据
