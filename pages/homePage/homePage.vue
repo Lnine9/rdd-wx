@@ -39,7 +39,7 @@
 
 		<!-- 精选商品 -->
 		<view class="f-header m-t">
-			<view class="tit-box">
+			<view class="tit-box title-adapt">
 				<text class="tit">精选商品</text>
 			</view>
 		</view>
@@ -367,6 +367,11 @@
 	.r-m-t {
 		margin-top: -15rpx;
 	}
+	
+	// 精选商品微调
+	.title-adapt {
+		// padding-top: 10rpx;
+	}
 
 	/* #ifdef MP */
 	.mp-search-box{
@@ -389,11 +394,10 @@
 	}
 	page{
 		.cate-section{
-			
 			position:relative;
 			z-index:5;
 			border-radius:25upx 25upx 0 0;
-			margin-top:-50upx;
+			margin-top:-45upx;
 		}
 		.carousel-section{
 			margin: 0 auto;
@@ -496,7 +500,7 @@
 
 	/* 秒杀专区 */
 	.seckill-section{
-		padding: 4upx 30upx 24upx;
+		padding: 0 30upx;
 		background: #fff;
 		margin-top: 30rpx;
 		.s-header{
@@ -549,7 +553,6 @@
 			font-size: 32rpx;
 			font-weight: 800;
 			color: $font-color-dark;
-			line-height: 1.8;
 			image{
 				width: 240rpx;
 				height: 240rpx;
@@ -593,7 +596,6 @@
 		display: inline-block;
 	}
 	.PriceArea{
-		margin-top: 10rpx;
 		margin-left: 15rpx;
 	}
 
@@ -628,9 +630,11 @@
 	}
 
 	.f-header{
+		width: 90%;
+		margin: 25rpx auto;
 		align-items:center;
-		height: 90upx;
-		padding: 20upx 30upx 8upx;
+		height: 80upx;
+		// padding: 20upx 30upx 8upx;
 		background: #fff;
 		image{
 			flex-shrink: 0;
@@ -663,12 +667,8 @@
 		display: flex;
 		justify-content: center;
 		flex-wrap:wrap;
-		padding: 0 30upx;
-		margin-left: 30rpx;
-		padding-left: 5rpx;
-		padding-right: 5rpx;
+		margin: -35rpx auto;
 		background: #fff;
-		margin-top: -15rpx;
 		width: 90%;
 		.guess-item{
 			display:flex;
