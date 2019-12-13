@@ -63,54 +63,38 @@
 			
 			// 提交数据并验证
 			toSubmit() {
-				// if (this.paymentAccount == "") {
+				// if (this.paymentAmount == "") {
 				// 	wx.showToast({
-				// 	  title: '请填写支付宝账号！',
+				// 	  title: '请填写提现金额！',
 				// 	  icon: 'none',
 				// 	  duration: 1500
 				// 	})
 				// 	return;
 				// }
-				// if (this.paymentName == "") {
+				// if (this.paymentAmount < 0) {
 				// 	wx.showToast({
-				// 	  title: '请填写真实姓名！',
+				// 	  title: '提现金额不能为负数！',
 				// 	  icon: 'none',
 				// 	  duration: 1500
 				// 	})
 				// 	return;
 				// }
-				if (this.paymentAmount == "") {
-					wx.showToast({
-					  title: '请填写提现金额！',
-					  icon: 'none',
-					  duration: 1500
-					})
-					return;
-				}
-				if (this.paymentAmount < 0) {
-					wx.showToast({
-					  title: '提现金额不能为负数！',
-					  icon: 'none',
-					  duration: 1500
-					})
-					return;
-				}
-				if (this.paymentAmount < 10) {
-					wx.showToast({
-					  title: '满10元才支持提现哟！',
-					  icon: 'none',
-					  duration: 2000
-					})
-					return;
-				}
-				if (this.paymentAmount > this.amount) {
-					wx.showToast({
-					  title: '输入金额过大！',
-					  icon: 'none',
-					  duration: 2000
-					})
-					return;
-				}
+				// if (this.paymentAmount < 10) {
+				// 	wx.showToast({
+				// 	  title: '满10元才支持提现哟！',
+				// 	  icon: 'none',
+				// 	  duration: 2000
+				// 	})
+				// 	return;
+				// }
+				// if (this.paymentAmount > this.amount) {
+				// 	wx.showToast({
+				// 	  title: '输入金额过大！',
+				// 	  icon: 'none',
+				// 	  duration: 2000
+				// 	})
+				// 	return;
+				// }
 				this.toWithdraw();
 			},
 			
@@ -122,11 +106,11 @@
 					wx.showToast({
 					  title: res.data.message,
 					  icon: 'none',
-					  duration: 1500
+					  duration: 3000
 					});
-					wx.navigateBack({
-						delta:1
-					})
+					// wx.navigateBack({
+					// 	delta:1
+					// })
 					// if (res.data.message.equals("提现成功")) {
 					// 	wx.navigateBack({
 					// 		delta:1

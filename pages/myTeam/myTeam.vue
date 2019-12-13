@@ -116,7 +116,7 @@
 	.noImg {
 		width: 200rpx;
 		height: 200rpx;
-		margin: 370rpx 0 0 270rpx;
+		margin: 270rpx 0 0 270rpx;
 	}
 	
 	.list {
@@ -175,6 +175,7 @@
 		left: 140rpx;
 	}
 	.noIncome {
+		font-size: 24rpx;
 		display: flex;
 		align-items: center;
 		justify-content: center;
