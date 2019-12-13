@@ -98,10 +98,10 @@
 		<movable-view direction="all" x="544" y="300" :animation="false" class="rebate-container" v-show="rebateShow">
 			<button class="rebate-img-container" open-type="getUserInfo" lang="zh_CN" @getuserinfo="shareEvn()">
 				<image src="/static/product/ic-rebate-red-wallet.png" mode="" class="rebate-img"></image>
-		
+
 				<text class="rebate-text">赚￥{{rebateValue}}</text>
 			</button>
-		
+
 			<image src="/static/product/ic-close.png" mode="" class="rebate-close" @tap="closeRebate()"></image>
 		</movable-view>
 
@@ -226,6 +226,9 @@
 					commodityId: this.commodityId
 				}).then((res) => {
 					code = res.data.data;
+					// http -> https
+					code = 'https' + code.substring(4, code.length);
+					this.dataDic.posterImg = 'https' + this.dataDic.posterImg.substring(4, this.dataDic.posterImg.length);
 					console.log('二维码图片');
 					console.log(code);
 					console.log('海报');
@@ -360,7 +363,7 @@
 				// 		console.log('调用失败!')
 				// 	}
 				// });
-				
+
 				uni.showModal({
 					title: '提示',
 					content: '请添加囧途宝盒客服微信咨询\n微信号：cqrdd2019',
@@ -463,7 +466,7 @@
 				this.login(data);
 				uni.setStorageSync('loginState',true);
 				uni.hideLoading();
-				
+
 				// 根据标识，继续之后的操作
 				if (this.buyLogin && !this.shareLogin) {
 					this.isBuy = true
@@ -481,7 +484,7 @@
 			},
 		},
 		onLoad: function(params) {
-			// params = 
+			// params =
 			console.log(params);
 			if (params.scene) { // 二维码解析进入
 				// 获取scene中的数据
