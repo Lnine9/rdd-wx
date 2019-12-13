@@ -93,6 +93,7 @@
 				this.addressData.city=val.checkArr[1];
 				this.addressData.area=val.checkArr[2];
 			},
+			
 			//提交
 			confirm(){
 				let data = this.addressData;
@@ -104,7 +105,7 @@
 					})
 					return;
 				}
-				if(!/(^1[3|4|5|7|8][0-9]{9}$)/.test(this.addressData.contactNumber)){
+				if(!/(^1[1|2|3|4|5|6|7|8|9][0-9]{9}$)/.test(this.addressData.contactNumber)){
 					wx.showToast({
 					  title: '请输入正确的手机号码！',
 					  icon: 'none',

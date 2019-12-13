@@ -53,10 +53,31 @@
 		methods:{
 			confirm(){
 				if(this.user.userAccount==''||this.user.userName==''){
-					this.warning='账号或者密码不能为空！！！'
+					wx.showToast({
+					  title: '账号或者密码不能为空！！！',
+					  icon:'none',
+					  duration: 3000
+					})
+				}
+				else if(!/(^1[1|2|3|4|5|6|7|8|9][0-9]{9}$)/.test(this.user.userAccount)){
+					wx.showToast({
+					  title: '请输入正确的手机号码！',
+					  icon: 'none',
+					  duration: 1500
+					})
+					return;
+				}
+				else if(this.user.userName<6){
+					wx.showToast({
+					  title: '密码长度大于6位！',
+					  icon: 'none',
+					  duration: 1500
+					})
+					return;
 				}
 				else{
 					api.bindingUser(this.user).then(res=>{
+						console.log(res.data.data)
 						if(res.data.data=="绑定成功"){
 							uni.switchTab({
 								url: '/pages/homePage/homePage'
@@ -68,7 +89,11 @@
 							})
 						}
 						else{
-							this.warning=res.data.data;
+							wx.showToast({
+							  title: res.data.data,
+							  icon:'none',
+							  duration: 3000
+							})
 						}
 					}).catch(err=>{
 						console.log(err)
