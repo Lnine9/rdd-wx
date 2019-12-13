@@ -23,7 +23,7 @@
 			<view style="font-size: 25rpx;padding: 39rpx 0 0 40rpx;">提现金额</view>
 			<view id="theInput" style="display: flex;">
 				<text style="font-size: 50rpx;margin: 20rpx 0 0 40rpx;">¥</text>
-				<input type="number" v-model="paymentAmount" style="width: 550rpx;margin: 35rpx 0 0 30rpx;font-size: 30rpx;" placeholder="请输入提现金额"/>
+				<input type="text" v-model="paymentAmount" style="width: 550rpx;margin: 35rpx 0 0 30rpx;font-size: 30rpx;" placeholder="请输入提现金额"/>
 			</view>
 			<view id="line"></view>
 		</view>
@@ -95,6 +95,14 @@
 				// 	})
 				// 	return;
 				// }
+				if(!/^\d+(\.\d{0,2})?$/.test(this.paymentAmount)) {
+					wx.showToast({
+					  title: '输入金额只能为整数或者两位小数！',
+					  icon: 'none',
+					  duration: 2000
+					})
+					return;
+				}
 				this.toWithdraw();
 			},
 			
