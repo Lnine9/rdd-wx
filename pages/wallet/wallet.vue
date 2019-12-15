@@ -20,7 +20,7 @@
 			<view class="income">
 				<image class="incomePic" src='../../static/wallet/share.png'></image>分享下单收益 （元）
 			</view>
-			<text class="text">{{wallet.shareIncome.toFixed(2)}}</text>
+			<text class="text">{{wallet.fanyongIncome.toFixed(2)}}</text>
 			<image class="arrow" src="../../static/wallet/arrow.png"></image>
 		</view>
 		<!-- <view class="incomes" @click="toIncome(0)">
