@@ -93,7 +93,7 @@
 			</view>
 		</view>
 
-		<!-- 右侧分享返佣 -->
+		<!-- 右下侧分享返佣 -->
 		<!-- 拖拽功能 -->
 		<movable-view direction="all" x="544" y="300" :animation="false" class="rebate-container" v-show="rebateShow">
 			<button class="rebate-img-container" open-type="getUserInfo" lang="zh_CN" @getuserinfo="shareEvn()">
@@ -169,7 +169,7 @@
 				commodityId: '', // 当前商品页的商品id
 				// 右侧分享返佣
 				rebateValue: 0,
-				rebateShow: true,
+				rebateShow: false,
 				// 分享海报的使用的变量
 				deliveryFlag: false,
 				canvasFlag: true,
@@ -321,9 +321,10 @@
 
 					console.log('返佣金额显示：' + this.dataDic.fyMoney);
 					if (this.dataDic.fyMoney != undefined && this.dataDic.fyMoney != null) {
-						this.rebateShow = true;
+						// this.rebateShow = true;
 						this.rebateValue = this.dataDic.fyMoney;
 					} else {
+						// 如果没有返佣金额，则不显示返佣红包
 						this.rebateShow = false;
 					}
 				}).catch(err => {
@@ -488,6 +489,14 @@
 		},
 		onLoad: function(params) {
 			// params =
+			let isVip = uni.getStorageSync('isVip');
+			console.log('判断是否是Vip');
+			console.log(isVip);
+			console.log(typeof isVip);
+			if (isVip === true) {
+				console.log('是Vip');
+				this.rebateShow = true;
+			}
 			console.log(params);
 			if (params.scene) { // 二维码解析进入
 				// 获取scene中的数据
@@ -540,29 +549,32 @@
 			// }
 		},
 		onShareAppMessage: function(res) {
+			// 隐藏下方分享栏(如果下方有的话)
+			this.deliveryFlag = false;
+			
 			// todo path通过拼接商品id与superiorUser(需要进行多次测试)
 			let path = '/pages/product/product?s=' + uni.getStorageSync('userId') + '&id=' + this.commodityId;
-			if (res.from === 'button') { // 如果通过点击按钮进行分享
-				console.log('通过点击按钮进行分享');
-				console.log(res.target)
-				// 默认使用海报图片作为分享图片
-				let posterPath = this.dataDic.posterImg;
-				if (posterPath == null || posterPath === '') {
-					// 该商品没有海报图片，则使用第一张商品图片
-					posterPath = this.commodityImg[0];
-				}
-				return {
-					title: this.dataDic.commodityTitle,
-					path: path,
-					imageUrl: posterPath
-				}
-			} else { // 通过小程序上方的操作栏进行分享
+			// if (res.from === 'button') { // 如果通过点击按钮进行分享
+			// 	console.log('通过点击按钮进行分享');
+			// 	console.log(res.target)
+			// 	// 默认使用海报图片作为分享图片
+			// 	let posterPath = this.dataDic.posterImg;
+			// 	if (posterPath == null || posterPath === '') {
+			// 		// 该商品没有海报图片，则使用第一张商品图片
+			// 		posterPath = this.commodityImg[0];
+			// 	}
+			// 	return {
+			// 		title: this.dataDic.commodityTitle,
+			// 		path: path,
+					// imageUrl: posterPath
+			// 	}
+			// } else { // 通过小程序上方的操作栏进行分享
 				console.log('上方的操作栏进行分享');
 				return {
 					title: this.dataDic.commodityTitle,
 					path: path
 				}
-			}
+			// }
 		},
 	}
 </script>
@@ -732,7 +744,7 @@
 	}
 
 	.carousel {
-		height: 400rpx;
+		height: 590rpx;
 		position: relative;
 
 		swiper {
@@ -1068,6 +1080,7 @@
 		padding: 0;
 		width: 165rpx;
 		height: 235rpx;
+		background-color:transparent;
 	}
 
 	.rebate-img {
