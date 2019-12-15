@@ -16,7 +16,7 @@
 				</view>
 			</view>
 		</view>
-		<view class="incomes" @click="toIncome(3)">
+		<view class="incomes" @click="toIncome(0)">
 			<view class="income">
 				<image class="incomePic" src='../../static/wallet/share.png'></image>分享下单收益 （元）
 			</view>
@@ -88,7 +88,7 @@
 			},
 			toIncome(type) {
 				uni.navigateTo({
-					url: `/pages/myTeam/myTeam?type=${type}`
+					url: `/pages/income/income?type=${type}`
 				})
 			},
 

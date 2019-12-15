@@ -42,9 +42,9 @@
 		onLoad(option) {
 			let title = '收益';
 			this.type = option.type;
-			console.log(option.type)
+			console.log(this.type)
 			if (option.type == 0) {
-				title = '返佣收益'
+				title = '分享下单收益'
 			}
 			if (option.type == 1) {
 				this.symbol="-"
@@ -54,7 +54,7 @@
 				title = '其他收益'
 			}
 			if (option.type == 3) {
-				title = '分享下单收益'
+				title = '推荐收益'
 			}
 			uni.setNavigationBarTitle({
 				title
