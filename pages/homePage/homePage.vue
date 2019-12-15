@@ -19,22 +19,22 @@
 			<view class="titleNview-background" :style="{backgroundColor:titleNViewBackground}"></view>
 			<swiper 
 				class="carousel" 
-				circular 
+				circular=true 
 				autoplay
 				indicator-dots
 				indicator-color="rgba(255,255,255,0.3))" 
 				indicator-active-color="rgba(255,255,255,1)"
 				@change="swiperChange" 
-				:current="swiperCurrent">
+				@current="swiperCurrent">
 				<swiper-item v-for="(item, index) in carouselList" :key="index" class="carousel-item" @click="navToWebView(item)">
 					<image :src="item.savePath" />
 				</swiper-item>
 			</swiper>
-			<view class="dots">
+		<!-- 	<view class="dots">
 			    <block v-for="(item, index) in carouselList.length" :key="item">
 				    <view class="dot" :class="index==swiperCurrent ? ' active' : ''"></view>
 			 </block>
-		  </view>
+		  </view> -->
 		</view>
 
 		<!-- 精选商品 -->
@@ -417,7 +417,6 @@
 				height: 280rpx;
 				.carousel-item{
 					padding: 0;
-					
 				}
 			}
 			.swiper-dots{

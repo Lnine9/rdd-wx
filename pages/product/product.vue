@@ -7,8 +7,14 @@
 
 		</view>
 		<view class="carousel">
-			<swiper interval="2000" autoplay indicator-dots indicator-color="rgba(255,255,255,0.3))" indicator-active-color="rgba(255,255,255,1)"
-			 circular=true duration="400">
+			<swiper
+				interval="2000"
+				autoplay
+				indicator-dots
+				indicator-color="rgba(255,255,255,0.3))"
+				indicator-active-color="rgba(255,255,255,1)"
+				circular=true
+				duration="400">
 				<swiper-item class="swiper-item" v-for="(item,index) in titleImg" :key="index">
 					<view @click="checkPicture(titleImg ,index)" class="image-wrapper">
 						<image :src="item" class="loaded" mode="aspectFill"></image>
@@ -320,7 +326,7 @@
 					this.showPage = true;
 
 					console.log('返佣金额显示：' + this.dataDic.fyMoney);
-					if (this.dataDic.fyMoney != undefined && this.dataDic.fyMoney != null) {
+					if (this.dataDic.fyMoney != undefined && this.dataDic.fyMoney != null && this.dataDic.fyMoney !== '') {
 						// this.rebateShow = true;
 						this.rebateValue = this.dataDic.fyMoney;
 					} else {
@@ -551,7 +557,7 @@
 		onShareAppMessage: function(res) {
 			// 隐藏下方分享栏(如果下方有的话)
 			this.deliveryFlag = false;
-			
+
 			// todo path通过拼接商品id与superiorUser(需要进行多次测试)
 			let path = '/pages/product/product?s=' + uni.getStorageSync('userId') + '&id=' + this.commodityId;
 			// if (res.from === 'button') { // 如果通过点击按钮进行分享
