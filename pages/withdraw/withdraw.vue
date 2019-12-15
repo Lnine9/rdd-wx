@@ -63,14 +63,14 @@
 			
 			// 提交数据并验证
 			toSubmit() {
-				// if (this.paymentAmount == "") {
-				// 	wx.showToast({
-				// 	  title: '请填写提现金额！',
-				// 	  icon: 'none',
-				// 	  duration: 1500
-				// 	})
-				// 	return;
-				// }
+				if (this.paymentAmount == "") {
+					wx.showToast({
+					  title: '请填写提现金额！',
+					  icon: 'none',
+					  duration: 1500
+					})
+					return;
+				}
 				// if (this.paymentAmount < 0) {
 				// 	wx.showToast({
 				// 	  title: '提现金额不能为负数！',
@@ -108,29 +108,35 @@
 			
 			// 后端数据的返回
 			toWithdraw() {
-				api.postData({
-					paymentAmount: this.paymentAmount
-				}).then(res => {
-					wx.showToast({
-					  title: res.data.message,
-					  icon: 'none',
-					  duration: 3000
-					});
-					// wx.navigateBack({
-					// 	delta:1
-					// })
-					// if (res.data.message.equals("提现成功")) {
-					// 	wx.navigateBack({
-					// 		delta:1
-					// 	})快速提现，请添加客服微信  ~  ( cqrdd2019 )
-					// }
-				}).catch(_ => {
-					wx.showToast({
-					  title: '网络错误',
-					  icon: 'none',
-					  duration: 4000
-					})
+				wx.showToast({
+				  title: '快速提现，请添加客服微信  ~  ( cqrdd2019 )',
+				  icon: 'none',
+				  duration: 4000
 				})
+			
+				// api.postData({
+				// 	paymentAmount: this.paymentAmount
+				// }).then(res => {
+				// 	wx.showToast({
+				// 	  title: res.data.message,
+				// 	  icon: 'none',
+				// 	  duration: 3000
+				// 	});
+				// 	// wx.navigateBack({
+				// 	// 	delta:1
+				// 	// })
+				// 	// if (res.data.message.equals("提现成功")) {
+				// 	// 	wx.navigateBack({
+				// 	// 		delta:1
+				// 	// 	})快速提现，请添加客服微信  ~  ( cqrdd2019 )
+				// 	// }
+				// }).catch(_ => {
+				// 	wx.showToast({
+				// 	  title: '网络错误',
+				// 	  icon: 'none',
+				// 	  duration: 4000
+				// 	})
+				// })
 			}
 		}
 	}
