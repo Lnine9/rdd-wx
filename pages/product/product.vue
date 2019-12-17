@@ -44,7 +44,7 @@
 						<image style="width: 24rpx;height: 28rpx;margin-right: 10rpx;" src="../../static/product/location.png"></image>
 						<text style="font-size:28rpx;font-weight:500;color:rgba(51,51,51,1);">{{dataDic.shopName}}</text>
 					</view>
-					<text style="font-size:24rpx;font-family:PingFang SC;font-weight:400;color: #808080;margin-left: 34rpx;">{{dataDic.shopAddress}}</text>
+					<text style="font-size:26rpx;font-family:PingFang SC;font-weight:400;color: #808080;margin-left: 34rpx;">{{dataDic.shopAddress}}</text>
 				</view>
 			</view>
 		</view>
@@ -139,7 +139,22 @@
 			<!-- 海报 要放外面放组件里面 会找不到 canvas-->
 			<canvas class="canvas" canvas-id="myCanvas"></canvas><!-- 海报 -->
 		</view>
-		<uni-loginPopUp ref="loginPopUp"></uni-loginPopUp>
+		
+		<!-- 通过分享链接进入，未登录用户出现的弹窗 -->
+		<view v-if="loginTipShow" class="login-tip" catchtouchmove="catchTouch">
+			<view class="login-tip-bg">
+				<view class="login-tip-container">
+					<text class="login-tip-title">提示</text>
+					<text class="login-tip-content">检测到您目前未登录，是否立即登录？</text>
+					
+					<view class="login-tip-btn-container">
+						<button class="login-tip-button-cancel" @click="close()">取消</button>
+						<button class="login-tip-button-update" open-type="getUserInfo" lang="zh_CN" @getuserinfo="loginUpdate()">确定</button>
+					</view>
+				</view>
+			</view>
+		</view>
+		<!-- <uni-loginPopUp ref="loginPopUp"></uni-loginPopUp> -->
 	</movable-area>
 </template>
 
@@ -182,6 +197,8 @@
 				posterData: {},
 				shareLogin: false, // 分享登录标识
 				buyLogin: false, // 购买登录标识
+				
+				loginTipShow: false, // 提示要求用户登陆的弹窗
 			};
 		},
 		components: {
@@ -281,10 +298,6 @@
 			canvasCancel(val) {
 				this.canvasFlag = val;
 			},
-
-
-
-			// -------
 			/**
 			 * 获取商品详细信息
 			 * @param {Object} commodityId
@@ -297,7 +310,17 @@
 			cancel: function() {
 				this.isBuy = false
 			},
-
+			// 登录提示窗关闭按钮
+			close: function() {
+				this.loginTipShow = false;
+			},
+			// 登录提示窗确定按钮
+			loginUpdate: function() {
+				console.log('点击登录');
+				this.loginTipShow = false;
+				
+				this.wxGetUserInfo();
+			},
 			getData: function(commodityId) {
 				uni.showLoading({
 					title: "正在加载"
@@ -458,7 +481,8 @@
 							code: loginRes.code,
 							nickName: _this.nickName,
 							avatarUrl: _this.avatarUrl,
-							superiorUser: _this.superiorUser
+							// superiorUser: _this.superiorUser
+							superiorUser: uni.getStorageSync('superiorUser') || null
 						}
 						console.log(loginParam)
 						api.getData(loginParam).then(res => {
@@ -487,22 +511,23 @@
 				// this.getData(this.commodityId);
 			},
 
-
 			// 关闭分享返佣的图片
 			closeRebate: function() {
 				this.rebateShow = false;
 			},
 		},
 		onLoad: function(params) {
-			// params =
+			
+			// 判断该用户是否是vip
 			let isVip = uni.getStorageSync('isVip');
-			console.log('判断是否是Vip');
-			console.log(isVip);
-			console.log(typeof isVip);
 			if (isVip === true) {
-				console.log('是Vip');
+				// 展示返佣
 				this.rebateShow = true;
 			}
+			// 获取登录状态
+			let loginState = uni.getStorageSync('loginState');
+			console.log('获取到的登录状态');
+			console.log(loginState);
 			console.log(params);
 			if (params.scene) { // 二维码解析进入
 				// 获取scene中的数据
@@ -517,24 +542,34 @@
 						this.commodityId = arr[1];
 					} else if (arr[0] === "s") { // 分享码中的推荐人id
 						this.superiorUser = arr[1];
+						uni.setStorageSync('superiorUser', this.superiorUser);
 					}
 					// arr = arrPara[i].split("=");
 					// wx.setStorageSync(arr[0], arr[1]);
 					// console.log("setStorageSync:", arr[0], "=", arr[1]);
 				}
 
-				uni.showToast({
-					title: '正在加载中',
-					icon: 'loading'
-				});
+				// uni.showToast({
+				// 	title: '正在加载中',
+				// 	icon: 'loading'
+				// });
+				// 只有在未登录的情况下出现要求登陆的弹窗
+				if (!loginState) {
+					this.loginTipShow = true;
+				}
 				this.getData(this.commodityId);
 			} else if (params.s && params.id) { // 通过分享卡片进入
-				console.log("分享卡片进入");
+				
 				this.superiorUser = params.s;
+				uni.setStorageSync('superiorUser', this.superiorUser);
 				this.commodityId = params.id;
 				this.getData(this.commodityId);
-			} else { // 首页商品跳转过来
-				console.log("首页进入");
+				
+				// 只有在未登录的情况下出现要求登陆的弹窗
+				if (!loginState) {
+					this.loginTipShow = true;
+				}
+			} else { // 首页商品跳转进入
 				this.superiorUser = null;
 				this.commodityId = params.id;
 				this.getData(this.commodityId);
@@ -1113,5 +1148,84 @@
 		color: #FFF3DB;
 		margin-bottom: 45rpx;
 		text-align: center;
+	}
+	
+	/* 未登录的提示弹窗 */
+	.login-tip {
+		position: fixed !important;
+		top: 0 !important;
+		left: 0 !important;
+		display: block !important;
+		width: 100% !important;
+		height: 100% !important;
+		z-index: 10;
+		background-color: rgba(0,0,0,0.5);
+	}
+	
+	.login-tip-bg {
+		width: 100%;
+		height: 100%;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+	}
+	
+	.login-tip-container {
+		margin: auto;
+		width: 580rpx;
+		height: 260rpx;
+		background-color: #fff;
+		border-radius: 10rpx;
+	}
+	
+	.login-tip-title {
+		display: inline-block;
+		width: 580rpx;
+		margin:20rpx 0;
+		text-align: center;
+		font-weight: bold;
+		font-size: 32rpx;
+		color: #333;
+	}
+	
+	.login-tip-content {
+		display: inline-block;
+		width: 580rpx;
+		margin: 20rpx 0 40rpx 0;
+		text-align: center;
+		font-size: 30rpx;
+	}
+	
+	.login-tip-btn-container {
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+	}
+	
+	.login-tip-button-cancel {
+		background: none;
+		border: none;
+		display: inline-block;
+		text-align: center;
+		border-width: 0 1rpx 0 0;
+		border-style: dashed;
+		border-color: #f3f3f3;
+		height: 80rpx;
+		width: 288rpx;
+		line-height: 80rpx;
+		font-size: 28rpx;
+		color: #FF5730;
+	}
+	.login-tip-button-update {
+		background: none;
+		border: none;
+		display: inline-block;
+		text-align: center;
+		width: 290rpx;
+		height: 80rpx;
+		line-height: 80rpx;
+		font-size: 28rpx;
+		color: #06C1AE;
 	}
 </style>
