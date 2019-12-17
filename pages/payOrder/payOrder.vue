@@ -251,23 +251,26 @@
 					addressId: this.address.addressId
 				};
 
+				console.log('开始请求');
 				PayOrderAPI.payOrder(params).then(res => {
+					console.log(res);
 					if (res.data.data) {
 						let data = res.data.data;
-						let result = 'appId=' + data.appid +
-							'&nonceStr=' + data.noncestr +
-							'&package=prepay_id=' + data.prepayid +
-							'&signType=MD5&timeStamp=' + data.timestamp +
-							'&key=CHONGQINGAiDonginformation201808';
-						// MD5加密
-						let paySignStr = md5(result).toUpperCase();
+						console.log(data);
+						// let result = 'appId=' + data.appid +
+						// 	'&nonceStr=' + data.noncestr +
+						// 	'&package=prepay_id=' + data.prepayid +
+						// 	'&signType=MD5&timeStamp=' + data.timestamp +
+						// 	'&key=jD1qNX96o5KSPomZ4xv8cdelsMhz9nnL';
+						// // MD5加密
+						// let paySignStr = md5(result).toUpperCase();
 						// 起调支付接口
 						wx.requestPayment({
-							'timeStamp': data.timestamp,
-							'nonceStr': data.noncestr,
-							'package': 'prepay_id=' + data.prepayid,
+							'timeStamp': data.jsonObject.timestamp,
+							'nonceStr': data.jsonObject.noncestr,
+							'package': 'prepay_id=' + data.jsonObject.prepayid,
 							'signType': 'MD5',
-							'paySign': paySignStr,
+							'paySign': data.paySignStr,
 							'success': function(res) {
 								uni.showToast({
 									title: '购买成功!',
@@ -289,7 +292,7 @@
 							},
 							'fail': function(res) {
 								uni.showToast({
-									title: '取消支付',
+									title: '支付失败',
 									icon: 'none'
 								});
 							},
