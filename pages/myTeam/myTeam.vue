@@ -15,7 +15,7 @@
 		<view class="list"  v-for="(item, index) in team" :key="index" v-show="!showType">
 			<view style="width: 500rpx;height: 186rpx;position: relative; margin-left: 20rpx;">
 				<image :src="item.avatarUrl" class="img"></image>
-				<view class="userName">{{item.userName}}</view>
+				<view class="userName">{{item.userName | ellipsis}}</view>
 				<view class="createAt">{{item.createAt}}</view>
 			</view>
 			<text class="remark">累积收益:</text>
@@ -27,6 +27,15 @@
 <script>
 	import {api} from './api.js'
 	export default {
+		filters: {
+		    ellipsis (value) {
+		      if (!value) return ''
+		      if (value.length > 7) {
+		        return value.slice(0,7) + '...'
+		      }
+		      return value
+		    }
+		  },
 		data() {
 			return {
 				recomend:{
