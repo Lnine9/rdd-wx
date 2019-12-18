@@ -38,18 +38,7 @@
 			};
 		},
 		mounted() {
-			this.judgeScan();
-			let token = uni.getStorageSync('token');
-			this.loginState = uni.getStorageSync('loginState');
-			uni.hideTabBar({})
-			if(this.loginState==true){
-				api.getTabBarInfo().then(res => {
-					this.tabBar=res.data.data;
-					console.log(res)
-				}).catch(err => {
-					console.log(err)
-				})
-			}
+			uni.hideTabBar({});
 			// if(this.loginState==true&&this.isShop==1){
 			// 	this.tabBar=[{
 			// 		imgClick:"/static/homePageNo.png",
@@ -73,6 +62,20 @@
 		},
 		computed:{
 
+		},
+		created() {
+			this.judgeScan();
+			let token = uni.getStorageSync('token');
+			this.loginState = uni.getStorageSync('loginState');
+			
+			if(this.loginState==true){
+				api.getTabBarInfo().then(res => {
+					this.tabBar=res.data.data;
+					console.log(res)
+				}).catch(err => {
+					console.log(err)
+				})
+			}
 		},
 		methods:{
 			//判断是否为商家
