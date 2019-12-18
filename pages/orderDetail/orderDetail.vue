@@ -249,7 +249,7 @@
 						this.imageUrl = this.order.commodityImgList[0];
 					}
 					// 格式化下单时间
-					this.order.createAt = this.getFormatDate(this.order.createAt);
+					// this.order.createAt = this.getFormatDate(this.order.createAt);
 					uni.stopPullDownRefresh();
 				}).catch(err => {
 					uni.showToast({
