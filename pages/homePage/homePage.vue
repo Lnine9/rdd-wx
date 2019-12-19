@@ -228,7 +228,12 @@
 				uni.checkSession({
 					  success: function () {
 						  _this.getUserMes();
-						  uni.setStorageSync('loginState',true);
+						  if(uni.getStorageSync('token')){
+							  uni.setStorageSync('loginState',true);
+						  }else{
+							  uni.setStorageSync('loginState',false);
+						  }
+						  
 						  console.log(uni.getStorageSync('loginState'))
 					  },
 					  fail: function () {

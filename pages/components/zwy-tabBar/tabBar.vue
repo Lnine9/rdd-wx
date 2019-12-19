@@ -68,10 +68,12 @@
 			let token = uni.getStorageSync('token');
 			this.loginState = uni.getStorageSync('loginState');
 			
-			if(this.loginState==true){
+			if(this.loginState==true && token!=null){
 				api.getTabBarInfo().then(res => {
-					this.tabBar=res.data.data;
-					console.log(res)
+					console.log(res);
+					if (res.data.code === 200) {
+						this.tabBar = res.data.data
+					}
 				}).catch(err => {
 					console.log(err)
 				})
