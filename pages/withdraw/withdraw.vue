@@ -23,7 +23,7 @@
 			<view style="font-size: 25rpx;padding: 39rpx 0 0 40rpx;">提现金额</view>
 			<view id="theInput" style="display: flex;">
 				<text style="font-size: 50rpx;margin: 20rpx 0 0 40rpx;">¥</text>
-				<input type="number" v-model="paymentAmount" style="width: 550rpx;margin: 35rpx 0 0 30rpx;font-size: 30rpx;" placeholder="请输入提现金额"/>
+				<input type="text" v-model="paymentAmount" style="width: 550rpx;margin: 35rpx 0 0 30rpx;font-size: 30rpx;" placeholder="请输入提现金额"/>
 			</view>
 			<view id="line"></view>
 		</view>
@@ -63,14 +63,14 @@
 			
 			// 提交数据并验证
 			toSubmit() {
-				// if (this.paymentAmount == "") {
-				// 	wx.showToast({
-				// 	  title: '请填写提现金额！',
-				// 	  icon: 'none',
-				// 	  duration: 1500
-				// 	})
-				// 	return;
-				// }
+				if (this.paymentAmount == "") {
+					wx.showToast({
+					  title: '请填写提现金额！',
+					  icon: 'none',
+					  duration: 1500
+					})
+					return;
+				}
 				// if (this.paymentAmount < 0) {
 				// 	wx.showToast({
 				// 	  title: '提现金额不能为负数！',
@@ -95,34 +95,48 @@
 				// 	})
 				// 	return;
 				// }
+				if(!/^\d+(\.\d{0,2})?$/.test(this.paymentAmount)) {
+					wx.showToast({
+					  title: '输入金额只能为整数或者两位小数！',
+					  icon: 'none',
+					  duration: 2000
+					})
+					return;
+				}
 				this.toWithdraw();
 			},
 			
 			// 后端数据的返回
 			toWithdraw() {
-				api.postData({
-					paymentAmount: this.paymentAmount
-				}).then(res => {
-					wx.showToast({
-					  title: res.data.message,
-					  icon: 'none',
-					  duration: 3000
-					});
-					// wx.navigateBack({
-					// 	delta:1
-					// })
-					// if (res.data.message.equals("提现成功")) {
-					// 	wx.navigateBack({
-					// 		delta:1
-					// 	})快速提现，请添加客服微信  ~  ( cqrdd2019 )
-					// }
-				}).catch(_ => {
-					wx.showToast({
-					  title: '网络错误',
-					  icon: 'none',
-					  duration: 4000
-					})
+				wx.showToast({
+				  title: '快速提现，请添加客服微信  ~  ( cqrdd2019 )',
+				  icon: 'none',
+				  duration: 4000
 				})
+			
+				// api.postData({
+				// 	paymentAmount: this.paymentAmount
+				// }).then(res => {
+				// 	wx.showToast({
+				// 	  title: res.data.message,
+				// 	  icon: 'none',
+				// 	  duration: 3000
+				// 	});
+				// 	// wx.navigateBack({
+				// 	// 	delta:1
+				// 	// })
+				// 	// if (res.data.message.equals("提现成功")) {
+				// 	// 	wx.navigateBack({
+				// 	// 		delta:1
+				// 	// 	})快速提现，请添加客服微信  ~  ( cqrdd2019 )
+				// 	// }
+				// }).catch(_ => {
+				// 	wx.showToast({
+				// 	  title: '网络错误',
+				// 	  icon: 'none',
+				// 	  duration: 4000
+				// 	})
+				// })
 			}
 		}
 	}

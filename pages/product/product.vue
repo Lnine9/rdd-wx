@@ -7,8 +7,14 @@
 
 		</view>
 		<view class="carousel">
-			<swiper interval="2000" autoplay indicator-dots indicator-color="rgba(255,255,255,0.3))" indicator-active-color="rgba(255,255,255,1)"
-			 circular=true duration="400">
+			<swiper
+				interval="2000"
+				autoplay
+				indicator-dots
+				indicator-color="rgba(255,255,255,0.3))"
+				indicator-active-color="rgba(255,255,255,1)"
+				circular=true
+				duration="400">
 				<swiper-item class="swiper-item" v-for="(item,index) in titleImg" :key="index">
 					<view @click="checkPicture(titleImg ,index)" class="image-wrapper">
 						<image :src="item" class="loaded" mode="aspectFill"></image>
@@ -38,7 +44,7 @@
 						<image style="width: 24rpx;height: 28rpx;margin-right: 10rpx;" src="../../static/product/location.png"></image>
 						<text style="font-size:28rpx;font-weight:500;color:rgba(51,51,51,1);">{{dataDic.shopName}}</text>
 					</view>
-					<text style="font-size:24rpx;font-family:PingFang SC;font-weight:400;color:rgba(204,204,204,1);margin-left: 34rpx;">{{dataDic.shopAddress}}</text>
+					<text style="font-size:26rpx;font-family:PingFang SC;font-weight:400;color: #808080;margin-left: 34rpx;">{{dataDic.shopAddress}}</text>
 				</view>
 			</view>
 		</view>
@@ -57,9 +63,9 @@
 				</view>
 				<text>商品介绍</text>
 			</view>
-			<rich-text :nodes="bottomImg"></rich-text>
+			<rich-text style="width: 100%;" :nodes="bottomImg"></rich-text>
 		</view>
-		<view class="bottom" v-show="!deliveryFlag">
+		<view class="bottom" v-if="!deliveryFlag">
 			<view @click="makeCall()" class="buyView" style="background-color: #FFFFFF;">
 				<image style="width: 31rpx;height: 30rpx;margin-right: 10rpx;" src="../../static/product/server.png"></image>
 				<text style="color:rgba(51,51,51,1);font-size: 28rpx;">联系客服</text>
@@ -92,15 +98,15 @@
 			</view>
 		</view>
 
-		<!-- 右侧分享返佣 -->
+		<!-- 右下侧分享返佣 -->
 		<!-- 拖拽功能 -->
 		<movable-view direction="all" x="544" y="300" :animation="false" class="rebate-container" v-show="rebateShow">
 			<button class="rebate-img-container" open-type="getUserInfo" lang="zh_CN" @getuserinfo="shareEvn()">
 				<image src="/static/product/ic-rebate-red-wallet.png" mode="" class="rebate-img"></image>
-		
+
 				<text class="rebate-text">赚￥{{rebateValue}}</text>
 			</button>
-		
+
 			<image src="/static/product/ic-close.png" mode="" class="rebate-close" @tap="closeRebate()"></image>
 		</movable-view>
 
@@ -128,11 +134,26 @@
 			</view>
 		</view>
 		<hchPoster ref="hchPoster" :canvasFlag.sync="canvasFlag" @cancel="canvasCancel" :posterObj.sync="posterData" />
-		<view :hidden="canvasFlag">
+		<view :hidden="canvasFlag" catchtouchmove="catchTouch">
 			<!-- 海报 要放外面放组件里面 会找不到 canvas-->
 			<canvas class="canvas" canvas-id="myCanvas"></canvas><!-- 海报 -->
 		</view>
-		<uni-loginPopUp ref="loginPopUp"></uni-loginPopUp>
+		
+		<!-- 通过分享链接进入，未登录用户出现的弹窗 -->
+		<view v-if="loginTipShow" class="login-tip" catchtouchmove="catchTouch">
+			<view class="login-tip-bg">
+				<view class="login-tip-container">
+					<text class="login-tip-title">提示</text>
+					<text class="login-tip-content">检测到您目前未登录，是否立即登录？</text>
+					
+					<view class="login-tip-btn-container">
+						<button class="login-tip-button-cancel" @click="close()">取消</button>
+						<button class="login-tip-button-update" open-type="getUserInfo" lang="zh_CN" @getuserinfo="loginUpdate()">确定</button>
+					</view>
+				</view>
+			</view>
+		</view>
+		<!-- <uni-loginPopUp ref="loginPopUp"></uni-loginPopUp> -->
 	</movable-area>
 </template>
 
@@ -168,32 +189,37 @@
 				commodityId: '', // 当前商品页的商品id
 				// 右侧分享返佣
 				rebateValue: 0,
-				rebateShow: true,
+				rebateShow: false,
 				// 分享海报的使用的变量
 				deliveryFlag: false,
 				canvasFlag: true,
 				posterData: {},
 				shareLogin: false, // 分享登录标识
 				buyLogin: false, // 购买登录标识
+				
+				loginTipShow: false, // 提示要求用户登陆的弹窗
 			};
 		},
 		components: {
 			uniNumberBox,
 			hchPoster,
-			'uni-loginPopUp':loginPopup
+			'uni-loginPopUp': loginPopup
 		},
 		computed: {
 			noDataCenter() {
+				let result = '';
 				if (!this.showPage) {
-					return "text-align:center"
-				} else {
-					return ""
+					result += "text-align:center;"
 				}
+				return result;
 			},
 			...mapState(['token'])
 		},
-
 		methods: {
+			catchTouch: function() {
+				console.log('stop touch');
+				return ;
+			},
 			createCanvasImageEvn() {
 				wx.showLoading({
 					title: '正在生成海报'
@@ -222,9 +248,12 @@
 				let code = "";
 
 				api.getQRCodeImg({
-					commodityId: 1
+					commodityId: this.commodityId
 				}).then((res) => {
 					code = res.data.data;
+					// http -> https
+					code = 'https' + code.substring(4, code.length);
+					this.dataDic.posterImg = 'https' + this.dataDic.posterImg.substring(4, this.dataDic.posterImg.length);
 					console.log('二维码图片');
 					console.log(code);
 					console.log('海报');
@@ -253,9 +282,9 @@
 				this.buyLogin = false;
 				this.shareLogin = true;
 				let loginState = uni.getStorageSync("loginState");
-				if(loginState == true){
+				if (loginState == true) {
 					this.deliveryFlag = true;
-				}else{
+				} else {
 					this.wxGetUserInfo();
 					// this.$refs.loginPopUp.open();
 				}
@@ -268,10 +297,6 @@
 			canvasCancel(val) {
 				this.canvasFlag = val;
 			},
-
-
-
-			// -------
 			/**
 			 * 获取商品详细信息
 			 * @param {Object} commodityId
@@ -284,7 +309,17 @@
 			cancel: function() {
 				this.isBuy = false
 			},
-
+			// 登录提示窗关闭按钮
+			close: function() {
+				this.loginTipShow = false;
+			},
+			// 登录提示窗确定按钮
+			loginUpdate: function() {
+				console.log('点击登录');
+				this.loginTipShow = false;
+				
+				this.wxGetUserInfo();
+			},
 			getData: function(commodityId) {
 				uni.showLoading({
 					title: "正在加载"
@@ -313,10 +348,11 @@
 					this.showPage = true;
 
 					console.log('返佣金额显示：' + this.dataDic.fyMoney);
-					if (this.dataDic.fyMoney != undefined && this.dataDic.fyMoney != null) {
-						this.rebateShow = true;
+					if (this.dataDic.fyMoney != undefined && this.dataDic.fyMoney != null && this.dataDic.fyMoney !== '') {
+						// this.rebateShow = true;
 						this.rebateValue = this.dataDic.fyMoney;
 					} else {
+						// 如果没有返佣金额，则不显示返佣红包
 						this.rebateShow = false;
 					}
 				}).catch(err => {
@@ -359,7 +395,7 @@
 				// 		console.log('调用失败!')
 				// 	}
 				// });
-				
+
 				uni.showModal({
 					title: '提示',
 					content: '请添加囧途宝盒客服微信咨询\n微信号：cqrdd2019',
@@ -370,9 +406,9 @@
 				this.buyLogin = true;
 				this.shareLogin = false;
 				let loginState = uni.getStorageSync("loginState");
-				if(loginState == true){
+				if (loginState == true) {
 					this.isBuy = true
-				}else{
+				} else {
 					this.wxGetUserInfo();
 					// this.$refs.loginPopUp.open();
 				}
@@ -444,7 +480,8 @@
 							code: loginRes.code,
 							nickName: _this.nickName,
 							avatarUrl: _this.avatarUrl,
-							superiorUser: _this.superiorUser
+							// superiorUser: _this.superiorUser
+							superiorUser: uni.getStorageSync('superiorUser') || null
 						}
 						console.log(loginParam)
 						api.getData(loginParam).then(res => {
@@ -460,9 +497,9 @@
 			//登录成功后跳转到首页
 			loginSuccess: function(data) {
 				this.login(data);
-				uni.setStorageSync('loginState',true);
+				uni.setStorageSync('loginState', true);
 				uni.hideLoading();
-				
+
 				// 根据标识，继续之后的操作
 				if (this.buyLogin && !this.shareLogin) {
 					this.isBuy = true
@@ -473,13 +510,23 @@
 				// this.getData(this.commodityId);
 			},
 
-
 			// 关闭分享返佣的图片
 			closeRebate: function() {
 				this.rebateShow = false;
 			},
 		},
 		onLoad: function(params) {
+			
+			// 判断该用户是否是vip
+			let isVip = uni.getStorageSync('isVip');
+			if (isVip === true) {
+				// 展示返佣
+				this.rebateShow = true;
+			}
+			// 获取登录状态
+			let loginState = uni.getStorageSync('loginState');
+			console.log('获取到的登录状态');
+			console.log(loginState);
 			console.log(params);
 			if (params.scene) { // 二维码解析进入
 				// 获取scene中的数据
@@ -494,24 +541,34 @@
 						this.commodityId = arr[1];
 					} else if (arr[0] === "s") { // 分享码中的推荐人id
 						this.superiorUser = arr[1];
+						uni.setStorageSync('superiorUser', this.superiorUser);
 					}
 					// arr = arrPara[i].split("=");
 					// wx.setStorageSync(arr[0], arr[1]);
 					// console.log("setStorageSync:", arr[0], "=", arr[1]);
 				}
 
-				uni.showToast({
-					title: '正在加载中',
-					icon: 'loading'
-				});
+				// uni.showToast({
+				// 	title: '正在加载中',
+				// 	icon: 'loading'
+				// });
+				// 只有在未登录的情况下出现要求登陆的弹窗
+				if (!loginState) {
+					this.loginTipShow = true;
+				}
 				this.getData(this.commodityId);
-			} else if(params.s && params.id) { // 通过分享卡片进入
-				console.log("分享卡片进入");
+			} else if (params.s && params.id) { // 通过分享卡片进入
+				
 				this.superiorUser = params.s;
+				uni.setStorageSync('superiorUser', this.superiorUser);
 				this.commodityId = params.id;
 				this.getData(this.commodityId);
-			} else { // 首页商品跳转过来
-				console.log("首页进入");
+				
+				// 只有在未登录的情况下出现要求登陆的弹窗
+				if (!loginState) {
+					this.loginTipShow = true;
+				}
+			} else { // 首页商品跳转进入
 				this.superiorUser = null;
 				this.commodityId = params.id;
 				this.getData(this.commodityId);
@@ -532,29 +589,32 @@
 			// }
 		},
 		onShareAppMessage: function(res) {
+			// 隐藏下方分享栏(如果下方有的话)
+			this.deliveryFlag = false;
+
 			// todo path通过拼接商品id与superiorUser(需要进行多次测试)
 			let path = '/pages/product/product?s=' + uni.getStorageSync('userId') + '&id=' + this.commodityId;
-			if (res.from === 'button') { // 如果通过点击按钮进行分享
-				console.log('通过点击按钮进行分享');
-				console.log(res.target)
-				// 默认使用海报图片作为分享图片
-				let posterPath = this.dataDic.posterImg;
-				if (posterPath == null || posterPath === '') {
-					// 该商品没有海报图片，则使用第一张商品图片
-					posterPath = this.commodityImg[0];
-				}
-				return {
-					title: this.dataDic.commodityTitle,
-					path: path,
-					imageUrl: posterPath
-				}
-			} else { // 通过小程序上方的操作栏进行分享
+			// if (res.from === 'button') { // 如果通过点击按钮进行分享
+			// 	console.log('通过点击按钮进行分享');
+			// 	console.log(res.target)
+			// 	// 默认使用海报图片作为分享图片
+			// 	let posterPath = this.dataDic.posterImg;
+			// 	if (posterPath == null || posterPath === '') {
+			// 		// 该商品没有海报图片，则使用第一张商品图片
+			// 		posterPath = this.commodityImg[0];
+			// 	}
+			// 	return {
+			// 		title: this.dataDic.commodityTitle,
+			// 		path: path,
+					// imageUrl: posterPath
+			// 	}
+			// } else { // 通过小程序上方的操作栏进行分享
 				console.log('上方的操作栏进行分享');
 				return {
 					title: this.dataDic.commodityTitle,
 					path: path
 				}
-			}
+			// }
 		},
 	}
 </script>
@@ -724,7 +784,7 @@
 	}
 
 	.carousel {
-		height: 400rpx;
+		height: 590rpx;
 		position: relative;
 
 		swiper {
@@ -1060,6 +1120,7 @@
 		padding: 0;
 		width: 165rpx;
 		height: 235rpx;
+		background-color:transparent;
 	}
 
 	.rebate-img {
@@ -1086,5 +1147,84 @@
 		color: #FFF3DB;
 		margin-bottom: 45rpx;
 		text-align: center;
+	}
+	
+	/* 未登录的提示弹窗 */
+	.login-tip {
+		position: fixed !important;
+		top: 0 !important;
+		left: 0 !important;
+		display: block !important;
+		width: 100% !important;
+		height: 100% !important;
+		z-index: 10;
+		background-color: rgba(0,0,0,0.5);
+	}
+	
+	.login-tip-bg {
+		width: 100%;
+		height: 100%;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+	}
+	
+	.login-tip-container {
+		margin: auto;
+		width: 580rpx;
+		height: 260rpx;
+		background-color: #fff;
+		border-radius: 10rpx;
+	}
+	
+	.login-tip-title {
+		display: inline-block;
+		width: 580rpx;
+		margin:20rpx 0;
+		text-align: center;
+		font-weight: bold;
+		font-size: 32rpx;
+		color: #333;
+	}
+	
+	.login-tip-content {
+		display: inline-block;
+		width: 580rpx;
+		margin: 20rpx 0 40rpx 0;
+		text-align: center;
+		font-size: 30rpx;
+	}
+	
+	.login-tip-btn-container {
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+	}
+	
+	.login-tip-button-cancel {
+		background: none;
+		border: none;
+		display: inline-block;
+		text-align: center;
+		border-width: 0 1rpx 0 0;
+		border-style: dashed;
+		border-color: #f3f3f3;
+		height: 80rpx;
+		width: 288rpx;
+		line-height: 80rpx;
+		font-size: 28rpx;
+		color: #FF5730;
+	}
+	.login-tip-button-update {
+		background: none;
+		border: none;
+		display: inline-block;
+		text-align: center;
+		width: 290rpx;
+		height: 80rpx;
+		line-height: 80rpx;
+		font-size: 28rpx;
+		color: #06C1AE;
 	}
 </style>

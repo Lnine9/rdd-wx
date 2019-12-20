@@ -8,7 +8,7 @@
 			<picker class="head-region" @change="bindPickerChange" :value="regionIndex" :range="areas">
 				<view class="uni-input" v-if="this.defaultRegion!=''">{{defaultRegion}}</view>
 				<view class="uni-input" v-if="this.defaultRegion==''">{{areas[regionIndex]}}</view>
-				<image src="../../static/homepage/drop_down.png" class="drop-down"></image>
+				<image src="/static/homepage/drop_down.png" class="drop-down"></image>
 			</picker>
 		</view>
 		<!-- 头部轮播 -->
@@ -19,22 +19,22 @@
 			<view class="titleNview-background" :style="{backgroundColor:titleNViewBackground}"></view>
 			<swiper 
 				class="carousel" 
-				circular 
+				circular=true 
 				autoplay
 				indicator-dots
 				indicator-color="rgba(255,255,255,0.3))" 
 				indicator-active-color="rgba(255,255,255,1)"
 				@change="swiperChange" 
-				:current="swiperCurrent">
+				@current="swiperCurrent">
 				<swiper-item v-for="(item, index) in carouselList" :key="index" class="carousel-item" @click="navToWebView(item)">
 					<image :src="item.savePath" />
 				</swiper-item>
 			</swiper>
-			<view class="dots">
+		<!-- 	<view class="dots">
 			    <block v-for="(item, index) in carouselList.length" :key="item">
 				    <view class="dot" :class="index==swiperCurrent ? ' active' : ''"></view>
 			 </block>
-		  </view>
+		  </view> -->
 		</view>
 
 		<!-- 精选商品 -->
@@ -55,7 +55,8 @@
 							<image :src="item.commodityImg[0]" mode="aspectFill"></image>
 							<text class="clamp">{{item.commodityTitle}}</text>
 							<view class="PriceArea">
-								<text class="priceOrigin">￥{{item.salePrice}}</text>
+								<text class="priceOrigin">￥</text>
+								<text class="priceOriginValue">{{item.salePrice}}</text>
 								<text class="priceCurrent">￥{{item.originalPrice}}</text>
 							</view>
 						</view>
@@ -72,7 +73,7 @@
 			<text class="yticon icon-you"></text>
 		</view>
 		<view class="guess-section r-m-t">
-			<view
+			<!-- <view
 				v-for="(item, index) in guessList" :key="index"
 				class="guess-item"
 				@click="navToDetailPage(item)">
@@ -84,7 +85,9 @@
 					<text class="priceOrigin">￥{{item.salePrice}}</text>
 					<text class="priceCurrent">￥{{item.originalPrice}}</text>
 				</view>
-			</view>
+			</view> -->
+			
+			<waterfall-flow class="guess-content" :list="list" :loading="loading" @click="choose"></waterfall-flow>
 		</view>
 		<tabBar :currentPage="currentPage"></tabBar>
 	</view>
@@ -95,6 +98,8 @@
 	// 高德地图 api
 	import amap from '../../libs/amap-wx.js';
 	import tabBar from '../components/zwy-tabBar/tabBar.vue';
+	// 商品展示瀑布流
+	import WaterfallFlow from './waterfall-flow/nairenk-waterfall-flow.vue'
 	export default {
 		data() {
 			return {
@@ -112,15 +117,56 @@
 				guessList:[],
 				goodsList: [],
 				addressName: '',
+				
+				page: 1,
+				start: 0,
+				end: 0,
+				list: [], // 列表
+				loading: true
 			};
 		},
 		components:{
-			tabBar
+			tabBar,
+			WaterfallFlow
 		},
 		onShow(){
 			this.wxGetLogin();
+			
+			// 获取瀑布流数据
+			// this.getList();
 		},
+		// 向下滑动刷新，暂时禁用
+		// onReachBottom() {
+		// 	this.page++;
+		// 	this.loading = true;
+		// 	this.getList();
+		// },
 		methods: {
+			// 选中
+			choose(item) {
+				//测试数据没有写id，用title代替
+				let id = item.commodityId;
+				uni.navigateTo({
+					url: `/pages/product/product?id=${id}`,
+				})
+			},
+			// 模拟加载数据
+			getList() {
+				if (this.list.length < this.guessList.length) {
+					setTimeout(() => {
+						this.end = this.page * 10;
+						this.list = this.list.concat(this.guessList.slice(this.start, this.end));
+						this.start = this.end;
+						// 延迟 120 毫秒隐藏加载动画，为了跟组件里面的 100 毫秒定位有个平缓过度
+						setTimeout(() => {
+							this.loading = false;
+						}, 120);
+					}, 1000)
+				} else {
+					this.loading = false;
+				}
+			},
+			
 			//轮播图切换
 			swiperChange(e) {
 				const index = e.detail.current;
@@ -182,7 +228,12 @@
 				uni.checkSession({
 					  success: function () {
 						  _this.getUserMes();
-						  uni.setStorageSync('loginState',true);
+						  if(uni.getStorageSync('token')){
+							  uni.setStorageSync('loginState',true);
+						  }else{
+							  uni.setStorageSync('loginState',false);
+						  }
+						  
 						  console.log(uni.getStorageSync('loginState'))
 					  },
 					  fail: function () {
@@ -285,6 +336,8 @@
 				api.getProducts(userAndLocalMes_1).then(res =>{
 					this.guessList = res.data.data
 					uni.stopPullDownRefresh();
+					
+					this.getList();
 				}).catch(err => {
 					uni.stopPullDownRefresh();
 					console.log(err)
@@ -347,11 +400,18 @@
 </script>
 
 <style lang="scss">
+	
+	.container {
+		height: 100%;
+		background: #F8F9FB;
+	}
+	
 	.header{
 		width: 90%;
 		height: 100rpx;
 		line-height: 100rpx;
 		margin: 0 auto;
+		background: #F8F9FB;
 	}
 	.head-text {
 		float: left;
@@ -399,12 +459,14 @@
 	}
 	page{
 		.cate-section{
+			background: #F8F9FB;
 			position:relative;
 			z-index:5;
 			border-radius:25upx 25upx 0 0;
-			margin-top:-45upx;
+			// margin-top:-45upx;
 		}
 		.carousel-section{
+			background: #F8F9FB;
 			margin: 0 auto;
 			width: 90%;
 			
@@ -417,7 +479,6 @@
 				height: 280rpx;
 				.carousel-item{
 					padding: 0;
-					
 				}
 			}
 			.swiper-dots{
@@ -429,9 +490,9 @@
 	/* #endif */
 
 
-	page {
-		background: #ffffff;
-	}
+	// page {
+	// 	background: #ffffff;
+	// }
 	.m-t{
 		margin-top: 16upx;
 	}
@@ -506,7 +567,6 @@
 	/* 秒杀专区 */
 	.seckill-section{
 		padding: 0 30upx;
-		background: #fff;
 		margin-top: 30rpx;
 		.s-header{
 			display:flex;
@@ -553,45 +613,53 @@
 		.floor-item{
 			display:flex;
 			flex-direction: column;
-			width: 240rpx;
+			width: 280rpx;
+			background: #FFFFFF;
+			padding-bottom: 20rpx;
 			margin-right: 30rpx;
 			font-size: 32rpx;
 			font-weight: 800;
 			color: $font-color-dark;
+			border-bottom-right-radius: 10rpx;
+			border-bottom-left-radius: 10rpx;
 			image{
-				width: 240rpx;
-				height: 240rpx;
-				border-radius: 20upx;
-				border: 2upx solid #E3E3E3
+				width: 280rpx;
+				height: 280rpx;
+				border-top-right-radius: 10rpx;
+				border-top-left-radius: 10rpx;
+				// border-radius: 20upx;
+				// border: 2upx solid #E3E3E3
 			}
-			.PriceArea{
-				margin-left: 10rpx;
+			.PriceArea {
+				/* margin-left: 10rpx; */
+			}
+
+			.priceOrigin {
+				font-size: 24rpx;
+				font-weight: 700;
+				color: rgba(255, 126, 48, 1);
+			}
+			
+			.priceOriginValue {
+				font-size: 31rpx;
+				font-weight: 700;
+				color: rgba(255, 126, 48, 1);
 			}
 			.clamp{
-				margin-left: 15rpx;
+				width: 280rpx;
+				// margin-left: 15rpx;
+				padding-left: 15rpx;
 				-webkit-box-orient: vertical;
 				-webkit-line-clamp:2;
 				word-break: break-all;
 				margin-top: 10rpx;
-				font-size: 27rpx;
-				font-weight: 400;
+				font-size: 32rpx;
+				font-weight: 500;
 				color:rgba(51,51,51,1);
-				max-width: 220rpx;
+				max-width: 280rpx;
 				white-space: nowrap;
 				text-overflow:ellipsis;
 				overflow:hidden;
-			}
-			.priceOrigin{
-				font-size: 27rpx;
-                font-weight: 700;
-				color:rgba(255,126,48,1);
-			}
-			.priceCurrent{
-				margin-left: 17rpx;
-				font-size: 24rpx;
-				font-weight: 500;
-				color:rgba(153,153,153,1);
-				text-decoration: line-through;
 			}
 		}
 	}
@@ -606,7 +674,9 @@
 
 	.clamp{
 		margin-bottom: 5rpx;
-		margin-left: 15rpx;
+		width: 280rpx;
+		// margin-left: 15rpx;
+		padding-left: 15rpx;
 		-webkit-box-orient: vertical;
 		-webkit-line-clamp:2;
 		word-break: break-all;
@@ -614,7 +684,7 @@
 		font-size: 27rpx;
 		font-weight: 500;
 		color:rgba(51,51,51,1);
-		max-width: 290rpx;
+		max-width: 280rpx;
 		white-space: nowrap;
 		text-overflow:ellipsis;
 		overflow:hidden;
@@ -635,12 +705,12 @@
 	}
 
 	.f-header{
+		background: #F8F9FB;
 		width: 90%;
 		margin: 25rpx auto;
 		align-items:center;
-		height: 80upx;
+		// height: 80upx;
 		// padding: 20upx 30upx 8upx;
-		background: #fff;
 		image{
 			flex-shrink: 0;
 			width: 80upx;
@@ -672,9 +742,14 @@
 		display: flex;
 		justify-content: center;
 		flex-wrap:wrap;
-		margin: -35rpx auto;
-		background: #fff;
+		margin: 0rpx auto;
+		background-color: #F8F9FB;
 		width: 90%;
+		.guess-content {
+			width: 100%;
+			margin-bottom: 10rpx;
+		}
+		
 		.guess-item{
 			display:flex;
 			flex-direction: column;

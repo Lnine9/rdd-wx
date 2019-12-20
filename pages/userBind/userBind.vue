@@ -29,9 +29,9 @@
 			<text class="warning">{{warning}}</text>
 		<button class="add-btn" @click="confirm">确认绑定</button>
 		</view>
-		<view class="register-section">
+		<!-- <view class="register-section">
 			还没有账号?
-			<text class="regist" @click="toRegist">马上注册</text>
+			<text class="regist" @click="toRegist">马上注册</text> -->
 			
 		</view>
 	</view>
@@ -103,11 +103,11 @@
 			changeEye(){
 				this.isShowEye=!this.isShowEye;
 			},
-			toRegist(){
-				uni.navigateTo({
-					url: `/pages/userBind/regist`
-				})
-			}
+			// toRegist(){
+			// 	uni.navigateTo({
+			// 		url: `/pages/userBind/regist`
+			// 	})
+			// }
 		}
 	}
 </script>

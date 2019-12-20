@@ -42,9 +42,9 @@
 		onLoad(option) {
 			let title = '收益';
 			this.type = option.type;
-			console.log(option.type)
+			console.log(this.type)
 			if (option.type == 0) {
-				title = '返佣收益'
+				title = '分享下单收益'
 			}
 			if (option.type == 1) {
 				this.symbol="-"
@@ -54,11 +54,12 @@
 				title = '其他收益'
 			}
 			if (option.type == 3) {
-				title = '分享下单收益'
+				title = '推荐收益'
 			}
 			uni.setNavigationBarTitle({
 				title
 			})
+			// this.formatDate(this.income);
 			this.getIncome();
 		},
 		methods: {
@@ -71,8 +72,8 @@
 				}).then(res => {
 					console.log(res.data);
 					this.income = res.data.data;
-					this.formatDate(this.income);
-
+					console.log(this.income)
+					this.changeDate(this.income)
 				}).catch(_ => {
 					wx.showToast({
 						title: '网络繁忙！',
@@ -81,7 +82,29 @@
 					})
 				})
 			},
-			
+			changeDate(income){
+				console.log(income.length)
+				for(let i=0;i<income.length;i++){
+					var date = new Date(income[i].createAt);
+					console.log(date)
+					let Y = date.getFullYear() + '-';
+					console.log(Y)
+					let M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
+					console.log(M)
+					let D = date.getDate() + ' ';
+					console.log(D)
+					let h = date.getHours() + ':';
+					console.log(h)
+					let m = (date.getMinutes() < 10 ? '0'+(date.getMinutes()) : date.getMinutes()) + ':';
+					console.log(m)
+					let s = date.getSeconds();
+					console.log(s)
+					income[i].createAt=Y+M+D+h+m+s;
+					console.log(income[i].createAt)
+				}
+				console.log(income)
+				this.formatDate(income);
+			},
 			// 分类后端数据
 			formatDate(income) {
 				// 数据分类存放数组
@@ -162,7 +185,7 @@
 
 	.img {
 		position: absolute;
-		top: 45rpx;
+		top: 50rpx;
 		left: 40rpx;
 		width: 70rpx;
 		height: 70rpx;
@@ -189,7 +212,7 @@
 	.updateAt {
 		width: 320rpx;
 		position: relative;
-		top: 100rpx;
+		top: 97rpx;
 		left: 140rpx;
 		font-size: 24rpx;
 		color: #CCCCCC;
@@ -200,7 +223,7 @@
 		color: #CCCCCC;
 		font-size: 24rpx;
 		position: relative;
-		top: 90rpx;
+		top: 87rpx;
 		left: 140rpx;
 	}
 

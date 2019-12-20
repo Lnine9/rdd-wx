@@ -89,6 +89,11 @@
 			<!-- 订单信息 -->
 			<view class="order-info-container">
 				<view>
+					<text class="order-text">商家电话</text>
+					<text class="order-value">{{order.shopPhone}}</text>
+				</view>
+				
+				<view>
 					<text class="order-text">订单编号</text>
 					<text class="order-value">{{order.orderId}}</text>
 				</view>
@@ -121,13 +126,17 @@
 		</view>
 
 		<!-- 底部操作栏 -->
-		<view v-if="takeWay === 1" class="bottom-btn-container">
+		<view class="bottom-btn-container">
 			<!-- 暂时不显示 -->
 			<button v-if="false" class="bottom-btn-look-logistics" @click="lookLogistics">
 				<text class="bottom-btn-look-logistics-text">查看物流</text>
 			</button>
 
-			<button class="bottom-btn-sure-receive" @click="confirmDelivery">
+			<button class="bottom-btn-look-logistics" @click="contactShop">
+				<text class="bottom-btn-look-logistics-text">联系商家</text>
+			</button>
+
+			<button v-if="takeWay === 1" class="bottom-btn-sure-receive" @click="confirmDelivery">
 				<text class="bottom-btn-sure-receive-text">{{sureBtnText}}</text>
 			</button>
 		</view>
@@ -190,6 +199,7 @@
 				OrderDetailAPI.getOrderDetail({
 					orderId: this.orderId
 				}).then(res => {
+					console.log(res);
 					this.order = res.data.data;
 					this.takeWay = Number(this.order.commodityType);
 					if (this.takeWay === 2) {
@@ -249,7 +259,7 @@
 						this.imageUrl = this.order.commodityImgList[0];
 					}
 					// 格式化下单时间
-					this.order.createAt = this.getFormatDate(this.order.createAt);
+					// this.order.createAt = this.getFormatDate(this.order.createAt);
 					uni.stopPullDownRefresh();
 				}).catch(err => {
 					uni.showToast({
@@ -265,6 +275,23 @@
 				// 	url: '/pages/orderDetail/deliver?deliveryNum=' + this.order.deliveryNum + 
 				// 		'&deliveryCompany=' + this.order.deliveryCompany
 				// });
+			},
+			// 联系商家
+			contactShop: function() {
+				uni.makePhoneCall({
+					// 手机号
+					phoneNumber: this.order.shopPhone,
+					success: (res) => {
+						console.log('调用成功!')
+					},
+					fail: (res) => {
+						console.log('调用失败!')
+						uni.showToast({
+							title: '拨号功能失效，\n请联系客服微信：cqrdd2019',
+							icon: 'none'
+						})
+					}
+				});
 			},
 			confirmDelivery: function() {
 				if (this.order.commodityType === '1') {
