@@ -979,12 +979,16 @@
 	.orderName{
 		position: absolute;
 		width: 320rpx;
-		top: 70rpx;
+		/* height: 100rpx; */
+		left: 230rpx;
+		top: 50rpx;
 		font-size: 32rpx;
 		font-weight: bold;
 		text-overflow: ellipsis;
 		overflow: hidden;
-		white-space: nowrap;
+		display: -webkit-box;
+		-webkit-line-clamp:2;
+		-webkit-box-orient: vertical;
 	}
 	.orderPrice{
 		position: absolute;
