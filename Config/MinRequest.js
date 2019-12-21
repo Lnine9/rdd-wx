@@ -5,6 +5,7 @@ const requestAfter = Symbol('requestAfter')
 
 class MinRequest {
 	[config] = {
+		// baseURL: 'http://106.91.21.204:8899',
 		// baseURL: 'http://127.0.0.1:8899',
 		baseURL: 'https://www.renduoduo2019.com:888',
 		method: 'GET',
@@ -60,8 +61,6 @@ class MinRequest {
 		}
 		return new Promise((resolve, reject) => {
 			options.success = function(res) {
-				console.log('通用接口打印');
-				console.log(res);
 				if ((res.data.message === "身份验证过期" || res.data.message === "登录信息不能为空") && uni.getStorageSync('loginState')) {
 					uni.showToast({
 						title: '登录信息过期，请重新登录',

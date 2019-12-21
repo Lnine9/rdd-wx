@@ -1,23 +1,10 @@
 <script>
-	import {Json}  from './Json.js'
-	import {amap} from './libs/amap-wx.js';
 	export default {
 		globalData: {  
-		    desc: ``  
+		    desc: ``
 		},  
-
 		onLaunch: function() {
-			// console.log('App Launch')
-			// let token = uni.getStorageSync('token') || '';
-			// if(token){
-			// 	//更新登陆状态
-			// 	uni.getStorage({
-			// 		key: 'token',
-			// 		success: (res) => {
-			// 			this.login(res.data);
-			// 		}
-			// 	});
-			// };					
+			console.log('App Launch')
 		},
 		onShow: function() {
 			console.log('App Show')
