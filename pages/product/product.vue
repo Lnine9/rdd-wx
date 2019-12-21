@@ -51,9 +51,8 @@
 
 		<view class="c-list">
 			<view class="c-row b-b">
-				<view class="con-list" style="font-size:24rpx;font-family:PingFang SC;font-weight:400;color:rgba(153,153,153,1);
-">
-					<template>{{dataDic.commodityInfo}}</template>
+				<view class="con-list" style="font-size:24rpx;font-family:PingFang SC;font-weight:400;color:rgba(153,153,153,1);">
+					<template><text>{{dataDic.commodityInfo}}</text></template>
 				</view>
 			</view>
 		</view>
