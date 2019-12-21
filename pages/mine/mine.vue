@@ -84,7 +84,7 @@
 					</view>
 					<view class="dottedLineFour"></view>
 					<view class="orderMenu">
-						<text class="orderInfo">电子码：<text style="font-size: 28rpx; color: #666666;">{{orderInfo.qrcode}}</text></text>
+						<text class="orderInfo">订单号：<text style="font-size: 28rpx; color: #666666;">{{orderInfo.orderId}}</text></text>
 						<text class="orderInfo">联系电话：<text style="font-size: 28rpx; color: #666666;">{{orderInfo.phone}}</text></text>
 					</view>
 					<view class="uni-tip-group-button">
@@ -978,9 +978,13 @@
 	}
 	.orderName{
 		position: absolute;
+		width: 320rpx;
 		top: 70rpx;
 		font-size: 32rpx;
 		font-weight: bold;
+		text-overflow: ellipsis;
+		overflow: hidden;
+		white-space: nowrap;
 	}
 	.orderPrice{
 		position: absolute;
@@ -992,6 +996,8 @@
 	.orderMenu{
 		display: inline-block;
 		width: 580rpx;
+		position: relative;
+		bottom: 20rpx;
 	}
 	.orderInfo{
 		display: inline-block;
@@ -1000,7 +1006,7 @@
 		word-break: break-all;
 		text-align: left;
 		font-size: 32rpx;
-		margin: 10rpx 49rpx;
+		margin: 15rpx 49rpx;
 	}
 	.uni-tip-group-button {
 		display: inline-block;
