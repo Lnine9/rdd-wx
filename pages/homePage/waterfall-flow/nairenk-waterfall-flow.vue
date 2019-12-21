@@ -54,13 +54,23 @@
 		watch: {
 			// 数据
 			list: function(newVal, oldVal) {
-				this.mark = oldVal.length;
+				// 处理地区切换
+				if (newVal.length === 0) {
+					this.boxHeight = [];
+					this.top = [];
+					this.left = [];
+					this.loadingTop = 0;
+					this.mark = 0;
+				} else {
+					this.mark = oldVal.length;
+				}
+				
 				if (newVal != oldVal) {
 					this.newList = this.list;
 					this.$nextTick(function() {
 						setTimeout(() => {
 							this.waterFall();
-						}, 120)
+						}, 100)
 					})
 				}
 			}
@@ -111,6 +121,7 @@
 		font-size: 32rpx;
 		font-weight: 500;
 		color: #303133;
+		background: #F8F9FB;
 		position: relative;
 		padding-bottom: var(--window-bottom);
 		display: flex;

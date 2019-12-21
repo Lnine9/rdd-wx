@@ -1,5 +1,5 @@
 <template>
-	<view style="padding-bottom: 100upx;" class="container">
+	<view class="container">
 		<!-- 小程序头部兼容 -->
 		<!-- #ifdef MP -->
 
@@ -17,24 +17,12 @@
 			<view class="titleNview-placing"></view>
 			<!-- 背景色区域 -->
 			<view class="titleNview-background" :style="{backgroundColor:titleNViewBackground}"></view>
-			<swiper 
-				class="carousel" 
-				circular=true 
-				autoplay
-				indicator-dots
-				indicator-color="rgba(255,255,255,0.3))" 
-				indicator-active-color="rgba(255,255,255,1)"
-				@change="swiperChange" 
-				@current="swiperCurrent">
+			<swiper class="carousel" circular=true autoplay indicator-dots indicator-color="rgba(255,255,255,0.3))"
+			 indicator-active-color="rgba(255,255,255,1)" @change="swiperChange" @current="swiperCurrent">
 				<swiper-item v-for="(item, index) in carouselList" :key="index" class="carousel-item" @click="navToWebView(item)">
 					<image :src="item.savePath" />
 				</swiper-item>
 			</swiper>
-		<!-- 	<view class="dots">
-			    <block v-for="(item, index) in carouselList.length" :key="item">
-				    <view class="dot" :class="index==swiperCurrent ? ' active' : ''"></view>
-			 </block>
-		  </view> -->
 		</view>
 
 		<!-- 精选商品 -->
@@ -48,10 +36,7 @@
 				<text class="yticon icon-you"></text>
 				<scroll-view class="floor-list" scroll-x>
 					<view class="scoll-wrapper">
-						<view
-							v-for="(item, index) in goodsList" :key="index"
-							class="floor-item"
-							@click="navToDetailPage(item)">
+						<view v-for="(item, index) in goodsList" :key="index" class="floor-item" @click="navToDetailPage(item)">
 							<image :src="item.commodityImg[0]" mode="aspectFill"></image>
 							<text class="clamp">{{item.commodityTitle}}</text>
 							<view class="PriceArea">
@@ -86,7 +71,7 @@
 					<text class="priceCurrent">￥{{item.originalPrice}}</text>
 				</view>
 			</view> -->
-			
+
 			<waterfall-flow class="guess-content" :list="list" :loading="loading" @click="choose"></waterfall-flow>
 		</view>
 		<tabBar :currentPage="currentPage"></tabBar>
@@ -94,7 +79,9 @@
 </template>
 
 <script>
-	import {api} from "./api.js"
+	import {
+		api
+	} from "./api.js"
 	// 高德地图 api
 	import amap from '../../libs/amap-wx.js';
 	import tabBar from '../components/zwy-tabBar/tabBar.vue';
@@ -105,7 +92,7 @@
 			return {
 				current: 0,
 				swiperCurrent: 0,
-				currentPage:'homePage',
+				currentPage: 'homePage',
 				areas: [],
 				amapPlugin: null,
 				key: '4226617a8bb2e82f8a0a6e42958a5d43',
@@ -114,10 +101,10 @@
 				carouselList: [],
 				defaultRegion: '',
 				regionIndex: 1,
-				guessList:[],
+				guessList: [],
 				goodsList: [],
 				addressName: '',
-				
+
 				page: 1,
 				start: 0,
 				end: 0,
@@ -125,22 +112,19 @@
 				loading: true
 			};
 		},
-		components:{
+		components: {
 			tabBar,
 			WaterfallFlow
 		},
-		onShow(){
+		onShow() {
 			this.wxGetLogin();
-			
-			// 获取瀑布流数据
-			// this.getList();
 		},
-		// 向下滑动刷新，暂时禁用
-		// onReachBottom() {
-		// 	this.page++;
-		// 	this.loading = true;
-		// 	this.getList();
-		// },
+		// 向下滑动刷新
+		onReachBottom() {
+			this.page++;
+			this.loading = true;
+			this.getList();
+		},
 		methods: {
 			// 选中
 			choose(item) {
@@ -150,7 +134,7 @@
 					url: `/pages/product/product?id=${id}`,
 				})
 			},
-			// 模拟加载数据
+			// 加载数据
 			getList() {
 				if (this.list.length < this.guessList.length) {
 					setTimeout(() => {
@@ -166,15 +150,15 @@
 					this.loading = false;
 				}
 			},
-			
+
 			//轮播图切换
 			swiperChange(e) {
 				const index = e.detail.current;
 				this.swiperCurrent = index;
 			},
-			
+
 			changeSwiper(e) {
-			    this.swiperCurrent = e.detail.current;
+				this.swiperCurrent = e.detail.current;
 			},
 			/**
 			 * web页面跳转
@@ -184,19 +168,17 @@
 			 * @param {Object} item
 			 */
 			navToWebView(item) {
-				if(item.announcementType == '0') {
+				if (item.announcementType == '0') {
 					// 公告页面跳转
 					let resulturl = item.announcementContent
 					getApp().globalData.desc = resulturl
 					uni.navigateTo({
 						url: `/pages/webView/webView`
 					})
-				}
-				else if (item.announcementType == '1') {
+				} else if (item.announcementType == '1') {
 					// 无跳转
 					return
-				}
-				else {
+				} else {
 					// 本地页面跳转
 					let resulturl = item.announcementContent
 					uni.navigateTo({
@@ -213,67 +195,70 @@
 				})
 			},
 			bindPickerChange(val) {
-				this.addressName=this.areas[val.detail.value]
-				uni.setStorageSync('location',this.areas[val.detail.value]);
+				this.addressName = this.areas[val.detail.value]
+				uni.setStorageSync('location', this.areas[val.detail.value]);
 				this.defaultRegion = this.areas[val.detail.value]
-				this.getBanner(),
-				// this.getUserMes(),
-				this.getRecommend(),
-				this.getGuess(),
-				this.getAreas()
+				this.getBanner();
+				// this.getUserMes();
+				this.getRecommend();
+				this.getGuess();
+				this.getAreas();
 			},
 			//判断是否登录
-			wxGetLogin(){
+			wxGetLogin() {
 				let _this = this
 				uni.checkSession({
-					  success: function () {
-						  _this.getUserMes();
-						  if(uni.getStorageSync('token')){
-							  uni.setStorageSync('loginState',true);
-						  }else{
-							  uni.setStorageSync('loginState',false);
-						  }
-						  
-						  console.log(uni.getStorageSync('loginState'))
-					  },
-					  fail: function () {
-						uni.setStorageSync('loginState',false);
+					success: function() {
+						_this.getUserMes();
+						if (uni.getStorageSync('token')) {
+							uni.setStorageSync('loginState', true);
+						} else {
+							uni.setStorageSync('loginState', false);
+						}
+
 						console.log(uni.getStorageSync('loginState'))
-					  }
-					})
+					},
+					fail: function() {
+						uni.setStorageSync('loginState', false);
+						console.log(uni.getStorageSync('loginState'))
+					}
+				})
 			},
 			/**
 			 * 获取用户信息
 			 */
-			getUserMes(){
+			getUserMes() {
 				let user = {
 					// 此处默认传入重庆市
 					// 用户信息和地区无关
-					area:'重庆市'
+					area: '重庆市'
 				};
-				api.getUserInfo(user).then(res =>{
+				api.getUserInfo(user).then(res => {
+					console.log('用户信息');
+					console.log(res);
 					this.service = res.data.data,
-					console.log(this.service)
+					console.log(this.service);
 					// userType 说明
 					// 0: app
 					// 1: 企业
 					// 2: 小程序
-					uni.setStorageSync('userId', this.service.userId),
-					console.log(this.service.userId)
-					uni.setStorageSync('userType', this.service.userType),
+					uni.setStorageSync('userId', this.service.userId);
+					console.log(this.service.userId);
+					uni.setStorageSync('userType', this.service.userType);
 					//缓存电话
-					uni.setStorageSync('bindingAccount',this.service.bindingAccount)
-					console.log(this.service.bindingAccount)
+					uni.setStorageSync('bindingAccount', this.service.bindingAccount);
+					console.log(this.service.bindingAccount);
 					// 默认重庆（debug）
-					uni.setStorageSync('location', "重庆市"),
-					//储存绑定信息
-					uni.setStorageSync('bindingId',this.service.bindingid),
-					// 存储角色信息
-					uni.setStorageSync('roleNameList', this.service.roleNameList),
+					// uni.setStorageSync('location', "重庆市");
 					// 当前用户是否为VIP
-					uni.setStorageSync('isVip', this.service.isVip==0?false:true)
+					uni.setStorageSync('isVip', this.service.isVip == 0 ? false : true);
 					// 当前地区是否有VIP业务
-					uni.setStorageSync('haveVip', this.service.haveVip==0?false:true)
+					uni.setStorageSync('haveVip', this.service.haveVip == 0 ? false : true);
+					//储存绑定信息
+					uni.setStorageSync('bindingId', this.service.bindingid);
+					// 存储角色信息
+					uni.setStorageSync('roleNameList', this.service.roleNameList);
+
 				}).catch(err => {
 					console.log(err)
 				});
@@ -284,11 +269,11 @@
 			 */
 			getBanner() {
 				let location = {
-					locationCode:'WCPHomePage'
+					locationCode: 'WCPHomePage'
 				};
-				api.getBannerImgs(location).then(res =>{
+				api.getBannerImgs(location).then(res => {
 					this.carouselList = res.data.data,
-					this.swiperLength = this.carouselList.length;
+						this.swiperLength = this.carouselList.length;
 				}).catch(err => {
 					console.log(err)
 				})
@@ -298,10 +283,15 @@
 			 * 获取地区列表信息
 			 */
 			getAreas() {
-				api.getAreas().then(res =>{
-					var array = res.data.data
-					this.areas = array.split(",")
+				api.getAreas().then(res => {
+					if (res.data.data) {
+						this.areas = res.data.data;
+					}
 				}).catch(err => {
+					uni.showToast({
+						title: '地区信息获取失败',
+						icon: 'none'
+					})
 					console.log(err)
 				})
 			},
@@ -311,13 +301,12 @@
 			 */
 			getRecommend() {
 				let userAndLocalMes = {
-					// area: uni.getStorageSync('location'),
-					area: this.addressName,
+					area: uni.getStorageSync('location'),
 					longitude: '',
 					latitude: '',
 					shopPlace: 'Recommend'
 				};
-				api.getProducts(userAndLocalMes).then(res =>{
+				api.getProducts(userAndLocalMes).then(res => {
 					this.goodsList = res.data.data
 				}).catch(err => {
 					console.log(err)
@@ -328,70 +317,111 @@
 			 * 猜你喜欢
 			 */
 			getGuess() {
+				// 清空现在已经加载的数据
+				this.list = [];
+				this.page = 1;
+				this.start = 0;
+				this.end = 0;
+				// 显示刷新加载图片
+				this.loading = true;
+
 				let userAndLocalMes_1 = {
-					// area: uni.getStorageSync('location'),
-					area: this.addressName,
-					shopPlace: 'Guess'
+					area: uni.getStorageSync('location'),
+					shopPlace: 'Guess',
 				};
-				api.getProducts(userAndLocalMes_1).then(res =>{
+				api.getProducts(userAndLocalMes_1).then(res => {
 					this.guessList = res.data.data
+					console.log('Guess');
+					console.log(this.guessList);
+
 					uni.stopPullDownRefresh();
-					
 					this.getList();
 				}).catch(err => {
 					uni.stopPullDownRefresh();
 					console.log(err)
 				})
-			}
-
-		},
-
-		onPullDownRefresh() {
-			this.getBanner(),
-			// this.wxGetLogin(),
-			// this.getUserMes(),
-			this.getRecommend(),
-			this.getGuess(),
-			this.getAreas()
-		},
-
-		/**
-		 * 猜你喜欢列表
-		 */
-		mounted() {
+			},
 			/**
-			 * 获取设备定位
+			 * 页面数据获取
 			 */
-			console.info('mounted')
-			console.info(!uni.getStorageSync('location'))
-			if(!uni.getStorageSync('location')){
-				this.amapPlugin = new amap.AMapWX({
-					    key: this.key
-					});
-
-					uni.showLoading({
-						title: '获取信息中'
-					});
-					this.amapPlugin.getPoiAround({
-						success: (data) => {
-							uni.hideLoading();
-							this.addressName = data.poisData[0].cityname;
-							uni.setStorageSync('location', this.addressName)
-							this.defaultRegion = uni.getStorageSync('location')||'';
-						},
-						fail: (res) => {
-							uni.hideLoading();
-							console.log(res)
-						}
-					});
-				}
-				this.defaultRegion = uni.getStorageSync('location')||'';
+			getPageData: function() {
+				this.defaultRegion = uni.getStorageSync('location') || '';
 				this.getBanner(),
-				// this.wxGetLogin(),
-				// this.getUserMes(),
-				this.getRecommend(),
-				this.getGuess(),
-				this.getAreas()
+					// this.wxGetLogin();
+					// this.getUserMes();
+					this.getRecommend();
+				this.getGuess();
+				this.getAreas();
+			}
+		},
+		onPullDownRefresh() {
+			this.getBanner();
+			// this.wxGetLogin();
+			// this.getUserMes();
+			this.getRecommend();
+			this.getGuess();
+			this.getAreas();
+		},
+		mounted() {
+			console.log('首页调用了mounted');
+			// 微信获取经纬度，使用高德地址编码解析
+			// wx.getLocation({
+			// 	type: 'wgs84',
+			// 	success: function(res) {
+			// 		console.log(JSON.stringify(res))
+			// 		var latitude = res.latitude
+			// 		var longitude = res.longitude
+			// 		var speed = res.speed
+			// 		var accuracy = res.accuracy;
+
+			// 		wx.request({
+			// 			url: 'https://restapi.amap.com/v3/geocode/regeo', // 高德逆地址编码
+			// 			data: {
+			// 				key: 'cf488077447e5123e2080cd2267ca96e',
+			// 				location: longitude + ',' + latitude,
+			// 			},
+			// 			header: {
+			// 				'content-type': 'application/json' // 默认值
+			// 			},
+			// 			success(res) {
+			// 				console.log(res.data)
+			// 			}
+			// 		})
+			// 	},
+			// 	fail: function(res) {
+			// 		console.log('fail' + JSON.stringify(res))
+			// 	}
+			// });
+
+			uni.showLoading({
+				title: '获取信息中'
+			});
+			this.amapPlugin = new amap.AMapWX({
+				key: this.key
+			});
+
+			this.amapPlugin.getPoiAround({
+				success: (data) => {
+					uni.hideLoading();
+					console.log('地区信息');
+					console.log(data);
+					// this.addressName = data.poisData[0].cityname;
+					let adname = data.poisData[0].adname;
+					if (adname === undefined || adname == null) {
+						uni.setStorageSync('location', '');
+					} else {
+						console.log('地区:' + adname);
+						uni.setStorageSync('location', adname);
+					}
+					this.getPageData();
+				},
+				fail: (res) => {
+					uni.hideLoading();
+					console.log(res);
+					uni.setStorageSync('location', '');
+					this.getPageData();
+				}
+			});
 		}
 		// #ifndef MP
 
@@ -400,102 +430,114 @@
 </script>
 
 <style lang="scss">
-	
 	.container {
-		height: 100%;
+		height: 100vh;
 		background: #F8F9FB;
 	}
-	
-	.header{
+
+	.header {
 		width: 90%;
 		height: 100rpx;
 		line-height: 100rpx;
 		margin: 0 auto;
 		background: #F8F9FB;
 	}
+
 	.head-text {
 		float: left;
 		font-size: 40rpx;
 		font-weight: bold;
 		color: #333333;
 	}
-	.head-region{
+
+	.head-region {
 		float: right;
 		font-size: 28rpx;
 	}
-	.drop-down{
+
+	.drop-down {
 		width: 7px;
 		height: 7px;
-		top: 12rpx;	
+		top: 12rpx;
 		margin-left: -30rpx;
 	}
+
 	.r-m-t {
 		margin-top: -15rpx;
 	}
-	
+
 	// 精选商品微调
 	.title-adapt {
 		// padding-top: 10rpx;
 	}
 
 	/* #ifdef MP */
-	.mp-search-box{
-		position:absolute;
+	.mp-search-box {
+		position: absolute;
 		left: 0;
 		top: 30upx;
 		z-index: 9999;
 		width: 100%;
 		padding: 0 80upx;
-		.ser-input{
-			flex:1;
+
+		.ser-input {
+			flex: 1;
 			height: 56upx;
 			line-height: 56upx;
 			text-align: center;
 			font-size: 28upx;
-			color:$font-color-base;
+			color: $font-color-base;
 			border-radius: 20px;
-			background: rgba(255,255,255,.6);
+			background: rgba(255, 255, 255, .6);
 		}
 	}
-	page{
-		.cate-section{
+
+	page {
+		.cate-section {
 			background: #F8F9FB;
-			position:relative;
-			z-index:5;
-			border-radius:25upx 25upx 0 0;
+			position: relative;
+			z-index: 5;
+			border-radius: 25upx 25upx 0 0;
 			// margin-top:-45upx;
 		}
-		.carousel-section{
+
+		.carousel-section {
 			background: #F8F9FB;
 			margin: 0 auto;
 			width: 90%;
-			
+
 			padding: 0;
+
 			.titleNview-placing {
 				padding-top: 0;
 				height: 0;
 			}
-			.carousel{
+
+			.carousel {
 				height: 280rpx;
-				.carousel-item{
+
+				.carousel-item {
 					padding: 0;
 				}
 			}
-			.swiper-dots{
-				left:45upx;
-				bottom:40upx;
+
+			.swiper-dots {
+				left: 45upx;
+				bottom: 40upx;
 			}
 		}
 	}
+
 	/* #endif */
 
 
 	// page {
 	// 	background: #ffffff;
 	// }
-	.m-t{
+	.m-t {
 		margin-top: 16upx;
 	}
+
 	/* 头部 轮播图 */
 	.carousel-section {
 		position: relative;
@@ -516,6 +558,7 @@
 			transition: .4s;
 		}
 	}
+
 	.carousel {
 		width: 100%;
 		height: 350upx;
@@ -533,6 +576,7 @@
 			border-radius: 20upx;
 		}
 	}
+
 	.swiper-dots {
 		display: flex;
 		position: absolute;
@@ -565,53 +609,61 @@
 	}
 
 	/* 秒杀专区 */
-	.seckill-section{
+	.seckill-section {
 		padding: 0 30upx;
 		margin-top: 30rpx;
-		.s-header{
-			display:flex;
-			align-items:center;
+
+		.s-header {
+			display: flex;
+			align-items: center;
 			height: 92upx;
 			line-height: 1;
-			.s-img{
+
+			.s-img {
 				width: 140upx;
 				height: 30upx;
 			}
-			.tip{
+
+			.tip {
 				font-size: $font-base;
 				color: $font-color-light;
 				margin: 0 20upx 0 40upx;
 			}
-			.timer{
-				display:inline-block;
+
+			.timer {
+				display: inline-block;
 				width: 40upx;
 				height: 36upx;
-				text-align:center;
+				text-align: center;
 				line-height: 36upx;
 				margin-right: 14upx;
 				font-size: $font-sm+2upx;
 				color: #fff;
 				border-radius: 20px;
-				background: rgba(0,0,0,.8);
+				background: rgba(0, 0, 0, .8);
 			}
-			.icon-you{
+
+			.icon-you {
 				font-size: $font-lg;
 				color: $font-color-light;
 				flex: 1;
 				text-align: right;
 			}
 		}
-		.floor-list{
+
+		.floor-list {
 			white-space: nowrap;
 		}
-		.scoll-wrapper{
-			display:flex;
+
+		.scoll-wrapper {
+			display: flex;
 			align-items: flex-start;
 			padding-left: 2rpx;
 			padding-right: 2rpx;
 		}
-		.floor-item{
-			display:flex;
+
+		.floor-item {
+			display: flex;
 			flex-direction: column;
 			width: 280rpx;
 			background: #FFFFFF;
@@ -622,7 +674,8 @@
 			color: $font-color-dark;
 			border-bottom-right-radius: 10rpx;
 			border-bottom-left-radius: 10rpx;
-			image{
+
+			image {
 				width: 280rpx;
 				height: 280rpx;
 				border-top-right-radius: 10rpx;
@@ -630,6 +683,7 @@
 				// border-radius: 20upx;
 				// border: 2upx solid #E3E3E3
 			}
+
 			.PriceArea {
 				/* margin-left: 10rpx; */
 			}
@@ -639,128 +693,139 @@
 				font-weight: 700;
 				color: rgba(255, 126, 48, 1);
 			}
-			
+
 			.priceOriginValue {
 				font-size: 31rpx;
 				font-weight: 700;
 				color: rgba(255, 126, 48, 1);
 			}
-			.clamp{
+
+			.clamp {
 				width: 280rpx;
 				// margin-left: 15rpx;
 				padding-left: 15rpx;
 				-webkit-box-orient: vertical;
-				-webkit-line-clamp:2;
+				-webkit-line-clamp: 2;
 				word-break: break-all;
 				margin-top: 10rpx;
 				font-size: 32rpx;
 				font-weight: 500;
-				color:rgba(51,51,51,1);
+				color: rgba(51, 51, 51, 1);
 				max-width: 280rpx;
 				white-space: nowrap;
-				text-overflow:ellipsis;
-				overflow:hidden;
+				text-overflow: ellipsis;
+				overflow: hidden;
 			}
 		}
 	}
+
 	.uni-input {
 		font-weight: 500;
 		margin-right: 37rpx;
 		display: inline-block;
 	}
-	.PriceArea{
+
+	.PriceArea {
 		margin-left: 15rpx;
 	}
 
-	.clamp{
+	.clamp {
 		margin-bottom: 5rpx;
 		width: 280rpx;
 		// margin-left: 15rpx;
 		padding-left: 15rpx;
 		-webkit-box-orient: vertical;
-		-webkit-line-clamp:2;
+		-webkit-line-clamp: 2;
 		word-break: break-all;
 		margin-top: 16rpx;
 		font-size: 27rpx;
 		font-weight: 500;
-		color:rgba(51,51,51,1);
+		color: rgba(51, 51, 51, 1);
 		max-width: 280rpx;
 		white-space: nowrap;
-		text-overflow:ellipsis;
-		overflow:hidden;
+		text-overflow: ellipsis;
+		overflow: hidden;
 	}
 
-	.priceOrigin{
+	.priceOrigin {
 		font-size: 27rpx;
 		font-weight: 700;
-		color:rgba(255,126,48,1);
+		color: rgba(255, 126, 48, 1);
 	}
 
-	.priceCurrent{
+	.priceCurrent {
 		margin-left: 17rpx;
 		font-size: 24rpx;
 		font-weight: 500;
-		color:rgba(153,153,153,1);
+		color: rgba(153, 153, 153, 1);
 		text-decoration: line-through;
 	}
 
-	.f-header{
+	.f-header {
 		background: #F8F9FB;
 		width: 90%;
 		margin: 25rpx auto;
-		align-items:center;
+		align-items: center;
+
 		// height: 80upx;
 		// padding: 20upx 30upx 8upx;
-		image{
+		image {
 			flex-shrink: 0;
 			width: 80upx;
 			height: 80upx;
 			margin-right: 20upx;
 		}
-		.tit-box{
+
+		.tit-box {
 			flex: 1;
 			display: flex;
 			flex-direction: column;
 		}
-		.tit{
-			font-size:32rpx;
+
+		.tit {
+			font-size: 32rpx;
 			font-weight: 700;
-			color:#333;
+			color: #333;
 		}
-		.tit2{
+
+		.tit2 {
 			font-size: $font-sm;
 			color: $font-color-light;
 		}
-		.icon-you{
+
+		.icon-you {
 			font-size: $font-lg +2upx;
 			color: $font-color-light;
 		}
 	}
 
 	/* 猜你喜欢 */
-	.guess-section{
+	.guess-section {
 		display: flex;
 		justify-content: center;
-		flex-wrap:wrap;
-		margin: 0rpx auto;
-		background-color: #F8F9FB;
+		flex-wrap: wrap;
+		padding-left: 37.5rpx;
+		padding-right: 37.5rpx;
+		background: #F8F9FB;
 		width: 90%;
+
 		.guess-content {
 			width: 100%;
-			margin-bottom: 10rpx;
+			padding-bottom: 110rpx;
 		}
-		
-		.guess-item{
-			display:flex;
+
+		.guess-item {
+			display: flex;
 			flex-direction: column;
 			width: 48%;
 			padding-bottom: 40upx;
-		
-			&:nth-child(2n+1){
+
+			&:nth-child(2n+1) {
 				margin-right: 4%;
 			}
 		}
-		.image-wrapper{
+
+		.image-wrapper {
 			width: 100%;
 			height: 330upx;
 			border-radius: 10px;
@@ -768,54 +833,57 @@
 			// border-color: #E3E3E3;
 			// border-width: 1px;
 			border: 2upx solid #E3E3E3;
-			image{
+
+			image {
 				width: 100%;
 				height: 100%;
 				opacity: 1;
 				// border: 2upx solid #E3E3E3
 			}
 		}
-		.title{
+
+		.title {
 			font-size: $font-lg;
 			color: $font-color-dark;
 			line-height: 80upx;
 		}
-		.price{
+
+		.price {
 			font-size: $font-lg;
 			color: $uni-color-primary;
 			line-height: 1;
 		}
 	}
-	
-	 .dots {
-	          position: absolute;
-	          bottom: 20rpx;
-	          left: 50%;
-	          // 这里一定要注意兼容不然很可能踩坑          
-	          transform: translate(-50%, 0);
-	          -webkit-transform: translate(-50%, 0);        
-	          z-index: 99;
-	          display: flex;
-	          flex-direction: row;
-	          justify-content: center;
-	
-	          .dot {
-	              // width: 24rpx;
-				  width: 8rpx;
-	              height: 8rpx;
-	              transition: all .6s;
-	              background: rgba(0, 0, 0, .3);
-	              margin-right: 10rpx;
-	          }
-	
-	          .active {
-	              width: 8rpx;
-	              height: 8rpx;
-	              background: rgba(255, 255, 255, .8);
-	          }
-	      }
 
-	
+	.dots {
+		position: absolute;
+		bottom: 20rpx;
+		left: 50%;
+		// 这里一定要注意兼容不然很可能踩坑          
+		transform: translate(-50%, 0);
+		-webkit-transform: translate(-50%, 0);
+		z-index: 99;
+		display: flex;
+		flex-direction: row;
+		justify-content: center;
+
+		.dot {
+			// width: 24rpx;
+			width: 8rpx;
+			height: 8rpx;
+			transition: all .6s;
+			background: rgba(0, 0, 0, .3);
+			margin-right: 10rpx;
+		}
+
+		.active {
+			width: 8rpx;
+			height: 8rpx;
+			background: rgba(255, 255, 255, .8);
+		}
+	}
+
+
 	::-webkit-scrollbar {
 		width: 0;
 		height: 0;
