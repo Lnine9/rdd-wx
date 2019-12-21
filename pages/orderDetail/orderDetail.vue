@@ -548,6 +548,7 @@
 
 	.commodity-container {
 		margin-top: 20rpx;
+		padding-bottom: 98rpx;
 		display: flex;
 		flex-direction: column;
 		background: #FFFFFF;
