@@ -6,8 +6,7 @@
 		<!-- #endif -->
 		<view class="header"><label class="head-text">首页</label>
 			<picker class="head-region" @change="bindPickerChange" :value="regionIndex" :range="areas">
-				<view class="uni-input" v-if="this.defaultRegion!=''">{{defaultRegion}}</view>
-				<view class="uni-input" v-if="this.defaultRegion==''">{{areas[regionIndex]}}</view>
+				<view class="uni-input">{{defaultRegion}}</view>
 				<image src="/static/homepage/drop_down.png" class="drop-down"></image>
 			</picker>
 		</view>
@@ -157,18 +156,14 @@
 				})
 			},
 			// 加载数据
-			getList() {
+			getList: function() {
 				if (this.list.length < this.guessList.length) {
 					setTimeout(() => {
+						console.log(this.list);
 						this.end = this.page * 10;
 						this.list = this.list.concat(this.guessList.slice(this.start, this.end));
+						console.log(this.list);
 						this.start = this.end;
-
-						if (this.list.length != 0) {
-							this.showNoGuess = false;
-						} else {
-							this.showNoGuess = true;
-						}
 						// 延迟 120 毫秒隐藏加载动画，为了跟组件里面的 100 毫秒定位有个平缓过度
 						setTimeout(() => {
 							this.loading = false;
@@ -264,8 +259,8 @@
 				api.getUserInfo(user).then(res => {
 					console.log('用户信息');
 					console.log(res);
-					this.service = res.data.data,
-						console.log(this.service);
+					this.service = res.data.data;
+					console.log(this.service);
 					// userType 说明
 					// 0: app
 					// 1: 企业
@@ -335,27 +330,12 @@
 					shopPlace: 'Recommend'
 				};
 				api.getProducts(userAndLocalMes).then(res => {
-					if (res.data.data) {
-						this.goodsList = res.data.data;
-					} else {
-						this.goodsList = [];
-					}
-					// this.goodsList = res.data.data;
-					// 隐藏情况为空的布局
-					if (this.goodsList.length != 0) {
-						this.showNoGoods = false;
-					} else {
-						this.showNoGoods = true;
-					}
+					this.goodsList = res.data.data;
+					this.showNoGoods = this.goodsList == 0;
 				}).catch(err => {
 					console.log(err);
 					this.goodsList = [];
-					// 隐藏情况为空的布局
-					if (this.goodsList.length != 0) {
-						this.showNoGoods = false;
-					} else {
-						this.showNoGoods = true;
-					}
+					this.showNoGoods = true;
 				})
 			},
 
@@ -376,18 +356,16 @@
 					shopPlace: 'Guess',
 				};
 				api.getProducts(userAndLocalMes_1).then(res => {
-					if (res.data.data) {
-						this.guessList = res.data.data;
-					} else {
-						this.guessList = [];
-					}
-					// this.guessList = res.data.data;
+					this.guessList = res.data.data;
+					this.showNoGuess = this.guessList.length == 0;
+
 					uni.stopPullDownRefresh();
 					this.getList();
 				}).catch(err => {
 					uni.stopPullDownRefresh();
 					console.log(err);
 					this.guessList = [];
+					this.showNoGuess = true;
 				})
 			},
 			/**
@@ -395,6 +373,10 @@
 			 */
 			getPageData: function() {
 				this.defaultRegion = uni.getStorageSync('location') || '';
+				
+				if (this.defaultRegion == '') {
+					this.defaultRegion = '请选择地区';
+				}
 				this.getBanner();
 				// this.wxGetLogin();
 				// this.getUserMes();
@@ -452,8 +434,6 @@
 			this.amapPlugin.getPoiAround({
 				success: (data) => {
 					uni.hideLoading();
-					console.log('地区信息');
-					console.log(data);
 					// this.addressName = data.poisData[0].cityname;
 					let adname = data.poisData[0].adname;
 					if (adname === undefined || adname == null) {

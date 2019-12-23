@@ -61,13 +61,10 @@
 					this.left = [];
 					this.loadingTop = 0;
 					this.mark = 0;
-					
-					console.log('瀑布流组件高度变成零');
 				} else {
-					
 					this.mark = oldVal.length;
 				}
-				
+
 				if (newVal != oldVal) {
 					this.newList = this.list;
 					this.$nextTick(function() {
@@ -182,7 +179,7 @@
 		font-weight: 700;
 		color: rgba(255, 126, 48, 1);
 	}
-	
+
 	.priceOriginValue {
 		font-size: 31rpx;
 		font-weight: 700;
@@ -216,7 +213,7 @@
 		text-align: center;
 		padding: 20upx 0;
 	}
-	
+
 	// 暂无商品样式
 	.no-commodity-container {
 		background: #F8F9FB;
@@ -225,19 +222,19 @@
 		display: flex;
 		justify-content: center;
 	}
-	
+
 	.no-commodity-content {
 		display: flex;
 		flex-direction: column;
 		margin: auto;
 		align-items: center;
 	}
-	
+
 	.no-commodity-img {
 		width: 230rpx;
 		height: 230rpx;
 	}
-	
+
 	.no-commodity-txt {
 		font-size: 28rpx;
 		color: #CCCCCC;
