@@ -252,8 +252,14 @@
 				}).then((res) => {
 					code = res.data.data;
 					// http -> https
-					code = 'https' + code.substring(4, code.length);
-					this.dataDic.posterImg = 'https' + this.dataDic.posterImg.substring(4, this.dataDic.posterImg.length);
+					if (code[4] != 's') {
+						code = 'https' + code.substring(4, code.length);
+					}
+					
+					if (this.dataDic.posterImg[4] != 's') {
+						this.dataDic.posterImg = 'https' + this.dataDic.posterImg.substring(4, this.dataDic.posterImg.length);
+					}
+					
 					console.log('二维码图片');
 					console.log(code);
 					console.log('海报');

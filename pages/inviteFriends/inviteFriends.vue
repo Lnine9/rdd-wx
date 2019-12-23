@@ -84,6 +84,9 @@
 				console.log(res);
 
 				this.QR = res.data.data;
+				if (this.QR[4] != 's') {
+					this.QR = 'https' + this.QR.substring(4, this.QR.length);
+				}
 				this.drawCode();
 			}).catch(err => {
 				console.log(err);
