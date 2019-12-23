@@ -48,7 +48,7 @@
 				boxHeight: [],
 				top: [],
 				left: [],
-				loadingTop: 0
+				loadingTop: 0,
 			}
 		},
 		watch: {
@@ -61,7 +61,10 @@
 					this.left = [];
 					this.loadingTop = 0;
 					this.mark = 0;
+					
+					console.log('瀑布流组件高度变成零');
 				} else {
+					
 					this.mark = oldVal.length;
 				}
 				
@@ -90,6 +93,8 @@
 							this.boxHeight.push(height);
 							this.top.push(0);
 							this.left.push(i);
+							// 商品数量较少时，也需要设置组件高度
+							this.loadingTop = height;
 						} else {
 							let minHeight = this.boxHeight[0];
 							let index = 0;
@@ -210,5 +215,32 @@
 		width: 100%;
 		text-align: center;
 		padding: 20upx 0;
+	}
+	
+	// 暂无商品样式
+	.no-commodity-container {
+		background: #F8F9FB;
+		width: 100%;
+		height: 397.2rpx;
+		display: flex;
+		justify-content: center;
+	}
+	
+	.no-commodity-content {
+		display: flex;
+		flex-direction: column;
+		margin: auto;
+		align-items: center;
+	}
+	
+	.no-commodity-img {
+		width: 230rpx;
+		height: 230rpx;
+	}
+	
+	.no-commodity-txt {
+		font-size: 28rpx;
+		color: #CCCCCC;
+		margin-top: 40rpx;
 	}
 </style>

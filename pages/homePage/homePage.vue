@@ -31,7 +31,7 @@
 				<text class="tit">精选商品</text>
 			</view>
 		</view>
-		<view class="cate-section">
+		<view class="cate-section" v-show="!showNoGoods">
 			<view class="seckill-section m-t">
 				<text class="yticon icon-you"></text>
 				<scroll-view class="floor-list" scroll-x>
@@ -50,6 +50,14 @@
 			</view>
 		</view>
 
+		<!-- 暂无精选商品的情况 -->
+		<view class="no-commodity-container" v-show="showNoGoods">
+			<view class="no-commodity-content">
+				<image src="/static/homepage/no-commodity-img.png" mode="aspectFill" class="no-commodity-img"></image>
+				<text class="no-commodity-txt">商家正在努力上新中...</text>
+			</view>
+		</view>
+
 		<!-- 猜你喜欢 -->
 		<view class="f-header m-t r-m-t">
 			<view class="tit-box">
@@ -57,7 +65,8 @@
 			</view>
 			<text class="yticon icon-you"></text>
 		</view>
-		<view class="guess-section r-m-t">
+
+		<view class="guess-section r-m-t" v-if="!showNoGuess">
 			<!-- <view
 				v-for="(item, index) in guessList" :key="index"
 				class="guess-item"
@@ -73,7 +82,17 @@
 			</view> -->
 
 			<waterfall-flow class="guess-content" :list="list" :loading="loading" @click="choose"></waterfall-flow>
+
 		</view>
+
+		<!-- 暂无猜你喜欢的情况 -->
+		<view class="no-commodity-container" style="padding-bottom: 110rpx;" v-else>
+			<view class="no-commodity-content">
+				<image src="/static/homepage/no-commodity-img.png" mode="aspectFill" class="no-commodity-img"></image>
+				<text class="no-commodity-txt">商家正在努力上新中...</text>
+			</view>
+		</view>
+
 		<tabBar :currentPage="currentPage"></tabBar>
 	</view>
 </template>
@@ -109,7 +128,10 @@
 				start: 0,
 				end: 0,
 				list: [], // 列表
-				loading: true
+				loading: true,
+
+				showNoGuess: true,
+				showNoGoods: true
 			};
 		},
 		components: {
@@ -141,6 +163,12 @@
 						this.end = this.page * 10;
 						this.list = this.list.concat(this.guessList.slice(this.start, this.end));
 						this.start = this.end;
+
+						if (this.list.length != 0) {
+							this.showNoGuess = false;
+						} else {
+							this.showNoGuess = true;
+						}
 						// 延迟 120 毫秒隐藏加载动画，为了跟组件里面的 100 毫秒定位有个平缓过度
 						setTimeout(() => {
 							this.loading = false;
@@ -237,7 +265,7 @@
 					console.log('用户信息');
 					console.log(res);
 					this.service = res.data.data,
-					console.log(this.service);
+						console.log(this.service);
 					// userType 说明
 					// 0: app
 					// 1: 企业
@@ -299,7 +327,7 @@
 			/**
 			 * 获取精选商品
 			 */
-			getRecommend() {
+			getRecommend: function() {
 				let userAndLocalMes = {
 					area: uni.getStorageSync('location'),
 					longitude: '',
@@ -307,16 +335,34 @@
 					shopPlace: 'Recommend'
 				};
 				api.getProducts(userAndLocalMes).then(res => {
-					this.goodsList = res.data.data
+					if (res.data.data) {
+						this.goodsList = res.data.data;
+					} else {
+						this.goodsList = [];
+					}
+					// this.goodsList = res.data.data;
+					// 隐藏情况为空的布局
+					if (this.goodsList.length != 0) {
+						this.showNoGoods = false;
+					} else {
+						this.showNoGoods = true;
+					}
 				}).catch(err => {
-					console.log(err)
+					console.log(err);
+					this.goodsList = [];
+					// 隐藏情况为空的布局
+					if (this.goodsList.length != 0) {
+						this.showNoGoods = false;
+					} else {
+						this.showNoGoods = true;
+					}
 				})
 			},
 
 			/**
 			 * 猜你喜欢
 			 */
-			getGuess() {
+			getGuess: function() {
 				// 清空现在已经加载的数据
 				this.list = [];
 				this.page = 1;
@@ -330,15 +376,18 @@
 					shopPlace: 'Guess',
 				};
 				api.getProducts(userAndLocalMes_1).then(res => {
-					this.guessList = res.data.data
-					console.log('Guess');
-					console.log(this.guessList);
-
+					if (res.data.data) {
+						this.guessList = res.data.data;
+					} else {
+						this.guessList = [];
+					}
+					// this.guessList = res.data.data;
 					uni.stopPullDownRefresh();
 					this.getList();
 				}).catch(err => {
 					uni.stopPullDownRefresh();
-					console.log(err)
+					console.log(err);
+					this.guessList = [];
 				})
 			},
 			/**
@@ -346,10 +395,10 @@
 			 */
 			getPageData: function() {
 				this.defaultRegion = uni.getStorageSync('location') || '';
-				this.getBanner(),
-					// this.wxGetLogin();
-					// this.getUserMes();
-					this.getRecommend();
+				this.getBanner();
+				// this.wxGetLogin();
+				// this.getUserMes();
+				this.getRecommend();
 				this.getGuess();
 				this.getAreas();
 			}
@@ -747,6 +796,33 @@
 		overflow: hidden;
 	}
 
+	// 暂无商品样式
+	.no-commodity-container {
+		background: #F8F9FB;
+		width: 100%;
+		height: 397.2rpx;
+		display: flex;
+		justify-content: center;
+	}
+
+	.no-commodity-content {
+		display: flex;
+		flex-direction: column;
+		margin: auto;
+		align-items: center;
+	}
+
+	.no-commodity-img {
+		width: 230rpx;
+		height: 230rpx;
+	}
+
+	.no-commodity-txt {
+		font-size: 28rpx;
+		color: #CCCCCC;
+		margin-top: 40rpx;
+	}
+
 	.priceOrigin {
 		font-size: 27rpx;
 		font-weight: 700;
@@ -804,14 +880,14 @@
 		display: flex;
 		justify-content: center;
 		flex-wrap: wrap;
-		padding-left: 37.5rpx;
-		padding-right: 37.5rpx;
+		padding-left: 5%;
+		padding-right: 5%;
 		background: #F8F9FB;
 		width: 90%;
+		padding-bottom: 110rpx;
 
 		.guess-content {
 			width: 100%;
-			padding-bottom: 110rpx;
 		}
 
 		.guess-item {
