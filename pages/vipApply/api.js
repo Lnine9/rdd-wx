@@ -18,8 +18,15 @@ import {minRequest} from '../../Config/MinRequest'
 
 export class api{
   // 这里统一管理api请求
-  static vipApply(data){
-	  
+  static sendData(data){
 	  return minRequest.post('/api/VipApply/applyWCPVip', data)
+  }
+  /**
+   * 获取用户基本信息
+   * 并存入缓存
+   * @param {Object} location
+   */
+  static getUserInfo(location){
+  	  return minRequest.get('/api/AppPersonalCenter/appGetUserEnterpriseInfo', location)
   }
 }

@@ -1,51 +1,142 @@
 <template>
-	<view id="whole">
+	<view>
 		<view id="header">
-			<image class="pic" src="../../static/withdraw/ic-提现金额.png"></image>
-			<text style="font-size: 23rpx;color: #999999;position: relative;top: 48rpx;left: 280rpx;">
+			<button class="recording" @click="toIncome(1)">提现记录</button>
+			<image class="pic" src="../../static/withdraw/withdraw.png"></image>
+			<text style="font-size: 23rpx;color: #999999;position: relative;top: 28rpx;left: 270rpx;">
 				可提现金额 （元）
 			</text>
-			<view style="font-weight: bold;font-size: 60rpx;position: relative;top: 70rpx;left: 270rpx;">
-			{{amount}}
+			<view style="width: 700rpx;text-align: center;font-weight: bold;font-size: 60rpx;position: relative;top: 40rpx;left: 20rpx;">
+			{{amount.toFixed(2)}}
 			</view>
 		</view>
-		<view id="account" class="info">
+		<!-- <view id="account" class="info">
 			<text class="title">支付宝账号</text>
-			<input class="inputBox" v-model="account" placeholder="请输入支付宝账号"/>
+			<input class="inputBox" v-model="paymentAccount" placeholder="请输入支付宝账号"/>
 		</view>
 		<view class="info">
 			<text class="title">真实姓名</text>
-			<input class="inputBox" v-model="name" placeholder="请输入支付宝真实姓名"/>
-		</view>
-		<view class="info">
-			<text class="title">密码</text>
-			<input class="inputBox" v-model="password" password="true" placeholder="请输入RenDuoDuo登录密码"/>
-		</view>
+			<input class="inputBox" v-model="paymentName" placeholder="请输入支付宝真实姓名"/>
+		</view> -->
+		
 		<view id="wAmount">
 			<view style="font-size: 25rpx;padding: 39rpx 0 0 40rpx;">提现金额</view>
-			<view style="display: flex;">
+			<view id="theInput" style="display: flex;">
 				<text style="font-size: 50rpx;margin: 20rpx 0 0 40rpx;">¥</text>
-				<input type="number" v-model="money" style="width: 550rpx;margin: 33rpx 0 0 30rpx;font-size: 30rpx;" placeholder="请输入提现金额"/>
+				<input type="text" v-model="paymentAmount" style="width: 550rpx;margin: 35rpx 0 0 30rpx;font-size: 30rpx;" placeholder="请输入提现金额"/>
 			</view>
+			<view id="line"></view>
 		</view>
+		
 		<button class="goWithdraw" @click="toSubmit">立即提现</button>
 	</view>
 </template>
 
 <script>
+	import {api} from './api.js'
 	export default {
 		data() {
 			return {
-				amount: 230.63,
-				account: "",
-				name: "",
-				password:"",
-				money: ""
+				amount: 0,
+				paymentAccount: "",
+				paymentName: "",
+				paymentAmount: ""
+			}
+		},
+		
+		// 上一个页面传来的值
+		onLoad(option) {
+			if (option.data == null) {
+				this.amount = 0;
+			} else {
+				this.amount = parseFloat(option.data);
 			}
 		},
 		methods: {
-			toSubmit: function() {
-				
+			
+			// 页面的跳转
+			toIncome(type) {
+				uni.navigateTo({
+					url:`/pages/income/income?type=${type}`
+				})
+			},
+			
+			// 提交数据并验证
+			toSubmit() {
+				if (this.paymentAmount == "") {
+					wx.showToast({
+					  title: '请填写提现金额！',
+					  icon: 'none',
+					  duration: 1500
+					})
+					return;
+				}
+				// if (this.paymentAmount < 0) {
+				// 	wx.showToast({
+				// 	  title: '提现金额不能为负数！',
+				// 	  icon: 'none',
+				// 	  duration: 1500
+				// 	})
+				// 	return;
+				// }
+				// if (this.paymentAmount < 10) {
+				// 	wx.showToast({
+				// 	  title: '满10元才支持提现哟！',
+				// 	  icon: 'none',
+				// 	  duration: 2000
+				// 	})
+				// 	return;
+				// }
+				// if (this.paymentAmount > this.amount) {
+				// 	wx.showToast({
+				// 	  title: '输入金额过大！',
+				// 	  icon: 'none',
+				// 	  duration: 2000
+				// 	})
+				// 	return;
+				// }
+				if(!/^\d+(\.\d{0,2})?$/.test(this.paymentAmount)) {
+					wx.showToast({
+					  title: '输入金额只能为整数或者两位小数！',
+					  icon: 'none',
+					  duration: 2000
+					})
+					return;
+				}
+				this.toWithdraw();
+			},
+			
+			// 后端数据的返回
+			toWithdraw() {
+				wx.showToast({
+				  title: '快速提现，请添加客服微信  ~  ( cqrdd2019 )',
+				  icon: 'none',
+				  duration: 4000
+				})
+			
+				// api.postData({
+				// 	paymentAmount: this.paymentAmount
+				// }).then(res => {
+				// 	wx.showToast({
+				// 	  title: res.data.message,
+				// 	  icon: 'none',
+				// 	  duration: 3000
+				// 	});
+				// 	// wx.navigateBack({
+				// 	// 	delta:1
+				// 	// })
+				// 	// if (res.data.message.equals("提现成功")) {
+				// 	// 	wx.navigateBack({
+				// 	// 		delta:1
+				// 	// 	})快速提现，请添加客服微信  ~  ( cqrdd2019 )
+				// 	// }
+				// }).catch(_ => {
+				// 	wx.showToast({
+				// 	  title: '网络错误',
+				// 	  icon: 'none',
+				// 	  duration: 4000
+				// 	})
+				// })
 			}
 		}
 	}
@@ -54,14 +145,13 @@
 <style>
 	.pic {
 		position: relative;
-		top: 60rpx;
+		top: 40rpx;
 		left: 240rpx;
 		width: 43rpx;
 		height: 43rpx;
 	}
-	#whole {
-		width:750rpx;
-		height: 1210rpx;
+	page {
+		padding-bottom: 50rpx;
 		background:rgba(248,249,251,1);
 	}
 	#header {
@@ -87,17 +177,23 @@
 		margin-top: 30rpx;
 	}
 	.goWithdraw {
-		margin-top: 250rpx;
-		font-size: 30rpx;
-		color: white;
-		line-height: 88rpx;
-		width:670rpx;
-		height:88rpx;
-		background:rgba(6,193,174,1);
-		border-radius:44rpx;
+		position: fixed;
+		left: 24rpx;
+		right: 30rpx;
+		bottom: 50rpx;
+		z-index: 95;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 670rpx;
+		height: 80rpx;
+		font-size: 32rpx;
+		color: #FFFFFF;
+		background-color: #06C1AE;
+		border-radius: 40rpx;	
 	}
 	#wAmount {
-		margin-top: 20rpx;
+		margin-top: 15rpx;
 		width:749rpx;
 		height:200rpx;
 		background:rgba(255,255,255,1);
@@ -108,5 +204,25 @@
 		margin: 40rpx 0 0 0rpx;
 		width: 520rpx;
 	}
+	.recording {
+		line-height: 60rpx;
+		color: #FFFFFF;
+		font-size: 24rpx;
+		position: relative;
+		top: 10rpx;
+		left: 260rpx;
+		width: 160rpx;
+		height: 60rpx;
+		background:rgba(6,193,174,1);
+		border-radius:60rpx;
+	}
+	
+	#line {
+		background-color: #F3F3F3;
+		width: 670rpx;
+		height: 2rpx;
+		margin-left: 40rpx;
+	}
+	
 	
 </style>

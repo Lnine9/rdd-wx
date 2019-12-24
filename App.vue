@@ -1,18 +1,10 @@
 <script>
 	export default {
+		globalData: {  
+		    desc: ``
+		},  
 		onLaunch: function() {
 			console.log('App Launch')
-			let token = uni.getStorageSync('token') || '';
-			if(token){
-				//更新登陆状态
-				uni.getStorage({
-					key: 'token',
-					success: (res) => {
-						this.login(res.data);
-					}
-				});
-			}
-			
 		},
 		onShow: function() {
 			console.log('App Show')
@@ -25,4 +17,7 @@
 
 <style>
 	/*每个页面公共css */
+	page{
+		 
+	}
 </style>

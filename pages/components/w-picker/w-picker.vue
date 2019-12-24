@@ -6,6 +6,7 @@
 			  <view class="w-picker-btn" @tap="pickerCancel">取消</view>
 			  <view class="w-picker-btn" :style="{'color':themeColor}" @tap="pickerConfirm">确定</view>
 			</view>
+
 			<view class="w-picker-view" v-if="mode=='linkage'">
 				<picker-view :indicator-style="itemHeight" :value="pickVal" @change="bindChange">
 					<picker-view-column v-for="(col,colIndex) in data" :key="colIndex">
@@ -190,7 +191,7 @@
 			};
 		},
 		computed:{
-			
+
 		},
 		props:{
 			mode:{
@@ -592,7 +593,7 @@
 						};
 						_this.checkArr=[year,month,day,area];
 						_this.resultStr=`${year+'-'+month+'-'+day+area.label}`;
-						break;		
+						break;
 					case "date":
 						year=_this.data.years[arr[0]]||_this.data.years[_this.data.years.length-1];
 						month=_this.data.months[arr[1]]||_this.data.months[_this.data.months.length-1];
@@ -708,7 +709,7 @@
 						if(!_this.hideArea){
 							area=_this.data.areas[arr[2]]||_this.data.areas[0];
 						}
-						
+
 						if(province.label!=checkArr[0]){
 							_this.data.citys = citys[arr[0]]||citys[0];
 							if(!_this.hideArea){
@@ -746,7 +747,7 @@
 					case "selector":
 						_this.checkArr=_this.data[arr[0]]||_this.data[_this.data.length-1];
 						_this.resultStr=_this.data[arr[0]]?_this.data[arr[0]].label:_this.data[_this.data.length-1].label;
-						break;	
+						break;
 				}
 				_this.$nextTick(()=>{
 					_this.pickVal=arr;
@@ -809,7 +810,7 @@
 					case "limitHour":
 						data=initPicker.limitHour.init(_this.dayStep,this.defaultVal);
 						dVal=data.defaultVal||_this.defaultVal;
-						break;	
+						break;
 					case "range":
 						data=initPicker.range.init(_this.startYear,_this.endYear,_this.useCurrent(),_this.current);
 						dVal=data.defaultVal||_this.defaultVal;
@@ -852,7 +853,7 @@
 						area=data.areas[dVal[3]]||data.areas[data.areas.length-1];
 						_this.checkArr=[year,month,day,area];
 						_this.resultStr=`${year+'-'+month+'-'+day+' '+area.label}`;
-						break;	
+						break;
 					case "date":
 						year=data.years[dVal[0]]||data.years[data.years.length-1];
 						month=data.months[dVal[1]]||data.months[data.months.length-1];
@@ -959,7 +960,7 @@
 		  	font-size: 30upx;
 		  }
 		}
-		
+
 		.w-picker-hd:after {
 		  content: ' ';
 		  position: absolute;
