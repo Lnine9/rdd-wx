@@ -1,6 +1,6 @@
 <template>
 	<view>
-
+		
 		<view class="recomendView" v-show="showRecomend">
 			<view style="display: flex;align-items: center;">
 				<image :src="recomend.avatarUrl" style="margin-left: 60rpx;width: 90rpx;height: 90rpx;border-radius: 10rpx;"></image>
@@ -9,10 +9,9 @@
 			<view class="recomendTag">我的推荐人</view>
 		</view>
 		<view v-show="showType">
-			<image src="../../static/teamNo.png" class="noImg"></image>
-			<text class="noIncome">{{showTypeText}}</text>
+			<noPic :picSrc="picSrc" :noText="noText"></noPic>
 		</view>
-		<view class="list" v-for="(item, index) in team" :key="index" v-show="!showType">
+		<view class="list"  v-for="(item, index) in team" :key="index" v-show="!showType">
 			<view style="width: 500rpx;height: 186rpx;position: relative; margin-left: 20rpx;">
 				<image :src="item.avatarUrl" class="img"></image>
 				<view class="userName">{{item.userName | ellipsis}}</view>
@@ -25,10 +24,12 @@
 </template>
 
 <script>
-	import {
-		api
-	} from './api.js'
+	import {api} from './api.js'
+	import noPic from '../components/noPic/noPic.vue'
 	export default {
+		components: {
+			noPic
+		},
 		filters: {
 			ellipsis(value) {
 				if (!value) return ''
@@ -40,16 +41,47 @@
 		},
 		data() {
 			return {
-				recomend: {
+				recomend:{
 
 				},
-				user: {
-					userName: '',
-					photo: ''
+				user:{
+					userName:'',
+					photo:''
 				},
-				showTypeText: "暂无好友",
-				showType: false,
+				picSrc: "../../../static/teamNo.png",
+				noText:"暂无好友",
+				showType:true,
 				showRecomend: false,
+				team:[],
+				}
+			},
+			onLoad(option) {
+				this.wxGetUserInfo();
+				if (option.type == 3) {
+					let title = '分享下单收益';
+					uni.setNavigationBarTitle({
+						title
+					})
+				} else {
+					this.getRecomend();
+				}
+				this.getTeam();
+			},
+			
+			methods:{
+				getTeam(){
+					api.getList().then(res =>{
+						this.team=res.data.data;
+							this.team.forEach(item=>{
+								if (item.amount == null){
+									item.amount = '0.00'
+								}
+							})
+						
+						if(this.team.length==0){
+							this.showType=true;
+						}else{
+							this.showType=false;
 				team: [],
 			}
 		},
@@ -77,7 +109,7 @@
 					} else {
 						this.showType = false;
 					}
-					
+
 					this.team.forEach(item => {
 						if (item.amount == null) {
 							item.amount = '0.00'
@@ -148,30 +180,28 @@
 		width: 90rpx;
 		height: 90rpx;
 	}
-
-	.name {
+	.name{
 		margin-left: 10rpx;
 		width: 320rpx;
 		letter-spacing: 3rpx;
 		font-size: 30rpx;
 		color: #333333;
 	}
-
-	.remark {
-
+	
+	.remark{
+		
 		float: right;
 		margin: -110rpx 150rpx 0 0;
 		font-size: 24rpx;
 	}
-
 	.amount {
 		float: right;
 		margin: -113rpx 40rpx 0 0;
 		font-size: 32rpx;
-		color: rgba(6, 193, 174, 1);
+		color: rgba(6,193,174,1);
 		font-weight: bold;
 	}
-
+	
 	.createAt {
 		width: 320rpx;
 		position: relative;
@@ -180,7 +210,7 @@
 		font-size: 24rpx;
 		color: #CCCCCC;
 	}
-
+	
 	.userName {
 		width: 320rpx;
 		letter-spacing: 3rpx;

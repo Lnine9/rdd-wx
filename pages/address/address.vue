@@ -1,8 +1,7 @@
 <template>
 	<view>
 		<view v-show="showtype">
-			<image class="noAddress" src="../../static/noAdress.png"></image>
-			<text class="warning">暂无收货地址</text>
+			<noPic :picSrc="picSrc" :noText="noText"></noPic>
 		</view>
 		<view  class="list" v-for="(item, index) in addressList" :key="index" v-show="!showtype">
 			<view  @click="choose(index)" class="wrapper">
@@ -26,10 +25,16 @@
 
 <script>
 	import {api} from	'./api.js'
+	import noPic from '../components/noPic/noPic.vue'
 	export default {
+		components: {
+			noPic
+		},
 		data() {
 			return {
-				showtype:false,
+				picSrc: "../../../static/noAdress.png",
+				noText: "暂无收货地址",
+				showtype:true,
 				isChoose:false,
 				defaultIndex:0,
 				addressList: [

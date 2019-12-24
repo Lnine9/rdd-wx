@@ -2,9 +2,7 @@
 	<view v-bind:style="noDataCenter">
 		<!-- 缺省图 -->
 		<view v-if="isNodata" class="nodataText">
-		<image src="../../static/myOrder/myOrderNoData.png" class="noDataPic"></image>
-		<text class="nodataText smallFontSize" >暂无订单</text>
-
+		  <noPic :picSrc="picSrc" :noText="noText"></noPic>
 		</view>
 		<!-- 店铺title -->
 		<view v-if="!isNodata" style="height: 100vh;background-color: #F8F9FB;">
@@ -63,19 +61,20 @@
 </template>
 
 <script>
-	import {
-		api
-	} from './api.js'
+	import {api} from './api.js'
+	import noPic from '../components/noPic/noPic.vue'
 	export default {
+		components: {
+			noPic
+		},
 		data() {
 			return {
-
-				isNodata: false,
+				picSrc: "../../../static/myOrder/myOrderNoData.png",
+				noText: "暂无订单",
+				isNodata: true,
 				statusStyle: [],
-
 				shopList: []
 			}
-
 		},
 		// 时间转换
 		filters: {

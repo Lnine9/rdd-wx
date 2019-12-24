@@ -23,20 +23,6 @@
 			<text class="text">{{wallet.fanyongIncome.toFixed(2)}}</text>
 			<image class="arrow" src="../../static/wallet/arrow.png"></image>
 		</view>
-		<!-- <view class="incomes" @click="toIncome(0)">
-			<view class="income">
-				<image class="incomePic" src='../../static/wallet/fanyong.png'>好友收益 （元）
-			</view>
-			<text class="text">{{wallet.fanyongIncome.toFixed(2)}}</text>
-			<image class="arrow" src="../../static/wallet/arrow.png"></image>
-		</view>
-		<view class="incomes" @click="toIncome(4)">
-			<view class="income">
-				<image class="incomePic" src='../../static/wallet/other.png'>其他收益 （元）
-			</view>
-			<text class="text">{{wallet.otherIncome.toFixed(2)}}</text>
-			<image class="arrow" src="../../static/wallet/arrow.png"></image>
-		</view> -->
 
 		<button class="withdraw" @click="toWithdraw(wallet.blance)">去提现</button>
 

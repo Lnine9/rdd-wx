@@ -393,6 +393,7 @@
 		margin-left: 29rpx;
 	}
 	.warning{
+		font-size: 28rpx;
 		display: flex;
 		align-items: center;
 		justify-content: center;
