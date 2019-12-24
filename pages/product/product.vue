@@ -74,10 +74,11 @@
 				<text>立即购买</text>
 			</button>
 		</view>
-		<!-- 选择购买数量 -->
-
-		<view v-show="isBuy" style="background-color: rgba(0,0,0,0.5); z-index: 3;position: fixed;bottom: 0rpx;right: 0rpx;width: 100vw;height: 100vh;"></view>
-		<view v-show="isBuy" class="cart-item">
+		
+		
+		<!-- 商品属性选择 -->
+		<view v-show="isBuy" @click="closeAttrChoose" style="background-color: rgba(0,0,0,0.5); z-index: 3;position: fixed;bottom: 0rpx;right: 0rpx;width: 100vw;height: 100vh;"></view>
+		<view v-show="isBuy" class="cart-item" @click.stop>
 			<view class="image-wrapper">
 				<image :src="titleImg[0]" style="width: 200rpx;height: 200rpx;"></image>
 			</view>
@@ -216,6 +217,9 @@
 			...mapState(['token'])
 		},
 		methods: {
+			closeAttrChoose: function() {
+				console.log('关闭底部弹窗');
+			},
 			catchTouch: function() {
 				console.log('stop touch');
 				return ;
@@ -224,33 +228,10 @@
 				wx.showLoading({
 					title: '正在生成海报'
 				});
-				// 这个是固定写死的小程序码
-				// Object.assign(this.posterData, {
-				// 	// url: 'https://img0.zuipin.cn/mp_zuipin/poster/hch-pro.jpg', //商品主图
-				// 	url: this.commodityImg[0], //商品主图
-				// 	// icon: 'https://img0.zuipin.cn/mp_zuipin/poster/hch-hyj.png', //醉品价图标
-				// 	icon: 'none', //优惠价图标
-				// 	// title: "诗酒茶系列 武夷大红袍 2018年 花香型中火 一级 体验装 16g", //标题
-				// 	title: this.dataDic.commodityTitle + ' ' + this.dataDic.commodityInfo.split(" ").join(""), //标题
-				// 	discountPrice: this.dataDic.salePrice, //折后价格
-				// 	orignPrice: this.dataDic.originalPrice, //原价
-				// 	// code: 'https://img0.zuipin.cn/mp_zuipin/poster/hch-code.png', // 小程序码
-				// 	code: 'https://img0.zuipin.cn/mp_zuipin/poster/hch-code.png', //todo 二维码
-				// })
-				// this.$forceUpdate(); //强制渲染数据
-				// setTimeout(() => {
-				// 	this.canvasFlag = false; //显示canvas海报
-				// 	this.deliveryFlag = false; //关闭分享弹窗
-				// 	this.$refs.hchPoster.createCanvasImage(); //调用子组件的方法
-				// }, 500)
-				// 这个是固定写死的小程序码 end
-				// 以下是根据后端接口动态生成小程序码
-				let code = "";
-
 				api.getQRCodeImg({
 					commodityId: this.commodityId
 				}).then((res) => {
-					code = res.data.data;
+					let code = res.data.data;
 					// http -> https
 					if (code[4] != 's') {
 						code = 'https' + code.substring(4, code.length);
@@ -321,7 +302,6 @@
 			},
 			// 登录提示窗确定按钮
 			loginUpdate: function() {
-				console.log('点击登录');
 				this.loginTipShow = false;
 				
 				this.wxGetUserInfo();
@@ -333,6 +313,7 @@
 				api.getList({
 					commodityId: commodityId
 				}).then(res => {
+					console.log('获取到的商品信息');
 					console.log(res);
 					this.dataDic = res.data.data;
 					this.dataDic.commodityNum = Number.parseInt(this.dataDic.commodityNum);
@@ -512,8 +493,6 @@
 				} else if (this.shareLogin = true && !this.buyLogin) {
 					this.deliveryFlag = true;
 				}
-				// 开始获取商品信息
-				// this.getData(this.commodityId);
 			},
 
 			// 关闭分享返佣的图片
@@ -549,15 +528,8 @@
 						this.superiorUser = arr[1];
 						uni.setStorageSync('superiorUser', this.superiorUser);
 					}
-					// arr = arrPara[i].split("=");
-					// wx.setStorageSync(arr[0], arr[1]);
-					// console.log("setStorageSync:", arr[0], "=", arr[1]);
 				}
 
-				// uni.showToast({
-				// 	title: '正在加载中',
-				// 	icon: 'loading'
-				// });
 				// 只有在未登录的情况下出现要求登陆的弹窗
 				if (!loginState) {
 					this.loginTipShow = true;
