@@ -55,36 +55,7 @@
 				team:[],
 				}
 			},
-			onLoad(option) {
-				this.wxGetUserInfo();
-				if (option.type == 3) {
-					let title = '分享下单收益';
-					uni.setNavigationBarTitle({
-						title
-					})
-				} else {
-					this.getRecomend();
-				}
-				this.getTeam();
-			},
 			
-			methods:{
-				getTeam(){
-					api.getList().then(res =>{
-						this.team=res.data.data;
-							this.team.forEach(item=>{
-								if (item.amount == null){
-									item.amount = '0.00'
-								}
-							})
-						
-						if(this.team.length==0){
-							this.showType=true;
-						}else{
-							this.showType=false;
-				team: [],
-			}
-		},
 		onLoad(option) {
 			this.wxGetUserInfo();
 			if (option.type == 3) {
@@ -149,8 +120,9 @@
 					}
 				});
 			},
+		},
 		}
-	}
+	
 </script>
 
 <style>
