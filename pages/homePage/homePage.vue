@@ -58,14 +58,14 @@
 		</view>
 
 		<!-- 猜你喜欢 -->
-		<view class="f-header m-t r-m-t">
+		<view class="f-header m-t">
 			<view class="tit-box">
 				<text class="tit">猜你喜欢</text>
 			</view>
-			<text class="yticon icon-you"></text>
+			<!-- <text class="yticon icon-you"></text> -->
 		</view>
 
-		<view class="guess-section r-m-t" v-if="!showNoGuess">
+		<view class="guess-section" v-if="!showNoGuess">
 			<!-- <view
 				v-for="(item, index) in guessList" :key="index"
 				class="guess-item"
@@ -523,6 +523,7 @@
 
 	page {
 		.cate-section {
+			margin-top: -15rpx;
 			background: #F8F9FB;
 			position: relative;
 			z-index: 5;
@@ -864,6 +865,7 @@
 		padding-right: 5%;
 		background: #F8F9FB;
 		width: 90%;
+		margin-top: -10rpx;
 		padding-bottom: 110rpx;
 
 		.guess-content {
