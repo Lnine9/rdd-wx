@@ -15,7 +15,7 @@
 						<view class="referee">分享下单赚钱</view>
 					</view>
 					<!-- <view class="vip">
-						<image src="../../static/ic-会员价购买.png"></image>
+						<image src="../../static/honor.png"></image>
 						<view class="VIPprice">会员价购买</view>
 					</view> -->
 				</view>
