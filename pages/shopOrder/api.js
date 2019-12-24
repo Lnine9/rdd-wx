@@ -4,4 +4,7 @@ export class api{
   static getAllCommodityOrderByLeader(data){
 	  return minRequest.get('/api/WCPCommodityOrder/getAllCommodityOrderByLeader',data)
   }
-}
+  static comfirmOrder(data){
+  	  return minRequest.post('/api/WCPCommodityOrder/comfirmWCPCommodityOrder',data)
+  }
+}	

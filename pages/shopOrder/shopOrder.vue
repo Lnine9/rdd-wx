@@ -38,18 +38,23 @@
 										<text class="text1"> {{commodity.orderId}}</text>
 										<text class="orderState" :class="{'active':commodity.orderState==1}">{{orderState[index]}}</text>
 										</view>
-										<view class="detail1">电子码:<text class="text1"> {{commodity.electronicCode}}</text></view>
+										<view class="detail1">电子码:<text class="text1"> {{commodity.electronicCode}}</text>
+										</view>
 									</view>
 									<view class="theType" v-show="commodity.commodityType==1">
 										<view class="detail1">快递单号:<text class="text1"> {{commodity.orderId}}</text></view>
-										<view class="detail1">快递状态:<text class="text1"> {{state[index]}}</text></view>
+										<view class="detail1">快递状态:<text class="text1" :class="{'active':commodity.orderState==0}"> {{state[index]}}</text></view>
 									</view>
 									<view class="details">
-										<view class="detail3">商品名:<text class="text1"> {{commodity.commodityTitle}}</text></view>
+										<view class="detail3">商品名:<text class="text1"> {{commodity.commodityTitle | ellipsis}}</text></view>
 										<view class="detail">支付金额 (元):<text class="text1"> {{commodity.actualPrice*commodity.commodityNum}}</text></view>
 										<view class="detail">数量 (个):<text class="text1"> {{commodity.commodityNum}}</text></view>
-										<view class="detail2">时间:<text class="text1"> {{commodity.createAt}}</text></view>
+										<view class="detail2">时间:
+										<text class="text1"> {{commodity.createAt}}</text>
+										<button class="scanCode" v-show="orderState[index]=='未确认' && commodity.commodityType==2" @click="comfirmOrderPopUp(index)">确认订单</button>
+										</view>
 									</view>
+									
 								</view>
 							</view>
 						</view>
@@ -57,6 +62,18 @@
 				</view>
 			<!-- </view> -->
 		</view>
+		<uni-popup ref="scanPopup"  type="center" maskClick="true">
+			<view class="orderPopUp">
+				<view class="dottedLineFour"></view>
+				<view class="orderMenu">
+					<text class="orderInfo">订单号：<text style="font-size: 28rpx; color: #666666;">{{orderId}}</text></text>
+				</view>
+				<view class="uni-tip-group-button">
+					<text class="uni-tip-button-cancle" @click="closeOrder()">取消</text>
+					<text class="uni-tip-button-update" @click="comfirmOrder(orderId)">确定提交</text>
+				</view>
+			</view>	
+		</uni-popup>
 		<tabBar :currentPage="currentPage"></tabBar>
 	</view>
 </template>
@@ -64,13 +81,24 @@
 <script>
 	import {api} from './api.js';
 	import tabBar from '../components/zwy-tabBar/tabBar.vue';
+	import uniPopup from "../components/uni-popup/uni-popup.vue";
 	const Sys = uni.getSystemInfoSync();
 	const wH = Sys.windowHeight;
 	let n = 1;
 	const tabs = Array(10).fill('').map(()=> 'tab' + Array(n).fill('s').join('') + n++);
 	export default {
+		filters: {
+			ellipsis(value) {
+				if (!value) return ''
+				if (value.length > 10) {
+					return value.slice(0, 10) + '...'
+				}
+				return value
+			}
+		},
 		components: {
-			tabBar
+			tabBar,
+			uniPopup
 		},
 		data() {
 			return {
@@ -81,7 +109,8 @@
 				showType:true,
 				tabs:["全部","未确认","已确认"],
 				swiperCurrent: 0,
-				commodityList:[]
+				commodityList:[],
+				orderId:'',
 			}
 		},
 		onLoad() {
@@ -108,14 +137,12 @@
 				if(index==0){
 					index='';
 				}
-				console.log(typeof index)
+				this.commodityList=[];
 				api.getAllCommodityOrderByLeader({
 					orderState: index
 				}).then(res=>{
-					this.commodityList=[];
 					this.total=0;
-					console.log(res.data.data)
-					if(res.data.data!=null)
+					if(res.data.data.length!=0)
 					{
 						this.commodityList=res.data.data;
 						this.showType=false;
@@ -139,6 +166,7 @@
 								this.orderState[i]='--';
 							}
 						}
+						console.log(this.state,this.orderState)
 						for(let i=0;i<this.commodityList.length;i++){
 						this.total=this.total+this.commodityList[i].actualPrice*this.commodityList[i].commodityNum;
 						}	
@@ -149,7 +177,48 @@
 				}).catch(err=>{
 					console.log(err)
 				});
-			}
+			},
+			comfirmOrderPopUp(index){
+				this.$refs.scanPopup.open();
+				this.orderId=this.commodityList[index].orderId;
+			},
+			//取消订单
+			closeOrder(){
+				this.$refs.scanPopup.close();
+			},
+			comfirmOrder(data){
+				console.log(data)
+				api.comfirmOrder({
+					orderId:data
+				}).then(res=>{
+					console.log(res);
+					this.$refs.scanPopup.close();
+					if(res.data.data == true){
+						uni.showToast({
+						    title: '提交成功',
+						    duration: 2000,
+							icon:'success'
+						});
+						setTimeout(() => {
+							// 设置全局变量标识支付成功
+							// getApp().globalData.payOrder = true;
+							// 购买成功去往个人中心
+							this.change(0);
+						
+							// uni.showToast({
+							// 	title: '请稍后',
+								// 	icon: 'loading'
+							// });
+						}, 2000);
+					}else{
+						uni.showToast({
+						    title: '提交失败',
+						    duration: 2000,
+							icon:'none'
+						});
+					}
+				})
+			},
 		}
 	}
 </script>
@@ -336,7 +405,112 @@
 		height: 200rpx;
 	}
 	.commodity{
-		padding-bottom: 40rpx;
+		padding-bottom: 30rpx;
 		border-top: 1rpx solid #CCCCCC;
+	}
+	.scanCode{	
+		position:relative;
+		left: 420rpx;
+		right: 30rpx;
+		bottom: 50rpx;
+		z-index: 95;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 140rpx;
+		height: 55rpx;
+		font-size: 20rpx;
+		color: #06C1AE;
+		background-color: #ffffff;
+		border: 2rpx solid #06C1AE;
+		border-radius: 40rpx;
+		
+	}
+	.orderPopUp{
+		width: 580rpx;
+		/* height: 720rpx; */
+		position: relative;
+		background-image: url('../../static/code/popup.png');
+		background-repeat: no-repeat;
+		background-size: 100% 100%;
+		border-radius: 15rpx;
+		border-width: 1rpx;
+	}
+	.orderTitle{
+		position: relative;
+		width: 580rpx;
+		height: 250rpx;
+	}
+	.orderPicture{
+		display: inline-block;
+		margin: 40rpx 40rpx;
+		width: 150rpx;
+		height: 150rpx;
+	}
+	.orderName{
+		position: absolute;
+		width: 320rpx;
+		/* height: 100rpx; */
+		left: 230rpx;
+		top: 50rpx;
+		font-size: 32rpx;
+		font-weight: bold;
+		text-overflow: ellipsis;
+		overflow: hidden;
+		display: -webkit-box;
+		-webkit-line-clamp:2;
+		-webkit-box-orient: vertical;
+	}
+	.orderPrice{
+		position: absolute;
+		top: 140rpx;
+		font-size: 32rpx;
+		font-weight: bold;
+		color: #FF7E30;
+	}
+	.orderMenu{
+		display: inline-block;
+		width: 580rpx;
+		position: relative;
+		bottom: 20rpx;
+	}
+	.orderInfo{
+		display: inline-block;
+		width: 482rpx;
+		white-space: normal;
+		word-break: break-all;
+		text-align: left;
+		font-size: 32rpx;
+		margin: 15rpx 49rpx;
+	}
+	.uni-tip-group-button {
+		display: inline-block;
+		width: 580rpx;
+		height: 80rpx;
+		border-width: 1rpx 0 0 0;
+		border-style: dashed;
+		border-color: #f3f3f3;
+		margin-top: 40rpx;
+	}
+	.uni-tip-button-cancle {
+		display: inline-block;
+		text-align: center;
+		border-width: 0 1rpx 0 0;
+		border-style: dashed;
+		border-color: #f3f3f3;
+		height: 80rpx;
+		width: 288rpx;
+		line-height: 80rpx;
+		font-size: 28rpx;
+		color: #3b4144;
+	}
+	.uni-tip-button-update {
+		display: inline-block;
+		text-align: center;
+		width: 290rpx;
+		height: 80rpx;
+		line-height: 80rpx;
+		font-size: 28rpx;
+		color: #06C1AE;
 	}
 </style>
