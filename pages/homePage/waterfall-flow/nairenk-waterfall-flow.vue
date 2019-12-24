@@ -100,7 +100,7 @@
 								index = 1;
 							}
 							this.boxHeight[index] = minHeight + height + 5;
-							this.top.push(minHeight + 10);
+							this.top.push(minHeight + 20);
 							this.left.push(index);
 							this.$set(this.newList[i], 'top', minHeight + 5);
 							this.$set(this.newList[i], 'left', index);
