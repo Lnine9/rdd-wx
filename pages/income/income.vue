@@ -177,11 +177,6 @@
 		padding-bottom: 50rpx;
 		background:rgba(248,249,251,1);
 	}
-	.noImg {
-		width: 200rpx;
-		height: 200rpx;
-		margin: 370rpx 0 0 270rpx;
-	}
 
 	.list {
 		margin-top: 3rpx;

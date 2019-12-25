@@ -1,7 +1,7 @@
 <template>
-	<view v-bind:style="noDataCenter">
+	<view>
 		<!-- 缺省图 -->
-		<view v-if="isNodata" class="nodataText">
+		<view v-if="isNodata">
 		  <noPic :picSrc="picSrc" :noText="noText"></noPic>
 		</view>
 		<!-- 店铺title -->
@@ -238,10 +238,7 @@
 	}
 
 	.orderList {
-		
 		padding-top: 20rpx;
-		
-
 		width: 100%;
 
 	}
@@ -364,7 +361,6 @@
 		justify-content: space-around;
 		position: relative;
 		left: 5vw;
-
 		height: 100rpx;
 		width: 90vw;
 	}
@@ -386,17 +382,4 @@
 		color: #FF7E30;
 	}
 
-	.noDataPic {
-		width: 200rpx;
-		height: 200rpx;
-		padding-top: 20vh;
-	}
-	.nodataText{
-		margin-top: 20rpx;
-		display: flex;
-		align-items: center;
-		flex-direction: column;
-		justify-content: center;
-		color: #CCCCCC;
-	}
 </style>
