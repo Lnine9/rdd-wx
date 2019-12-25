@@ -54,10 +54,7 @@
 		}, {
 			"path": "pages/address/address",
 			"style": {
-				"navigationBarTitleText": "收货地址",
-				"titleNView": {
-					"fontSize": "30px"
-				}
+				"navigationBarTitleText": "收货地址"
 			}
 		}, {
 			"path": "pages/payOrder/payOrder",

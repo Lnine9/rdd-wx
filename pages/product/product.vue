@@ -1,20 +1,12 @@
 <template>
 	<movable-area v-bind:style="noDataCenter" v-if="showPage" class="container">
 		<view v-if="!showPage" class="nodataText">
-
-			<image src="../../static/myOrder/myOrderNoData.png" class="noDataPic"></image>
-			<text class="nodataText">暂无数据</text>
-
+			<image src="/static/myOrder/myOrderNoData.png" class="noDataPic"></image>
+			<text>暂无数据</text>
 		</view>
 		<view class="carousel">
-			<swiper
-				interval="2000"
-				autoplay
-				indicator-dots
-				indicator-color="rgba(255,255,255,0.3))"
-				indicator-active-color="rgba(255,255,255,1)"
-				circular=true
-				duration="400">
+			<swiper interval="2000" autoplay indicator-dots indicator-color="rgba(255,255,255,0.3))" indicator-active-color="rgba(255,255,255,1)"
+			 circular=true duration="400">
 				<swiper-item class="swiper-item" v-for="(item,index) in titleImg" :key="index">
 					<view @click="checkPicture(titleImg ,index)" class="image-wrapper">
 						<image :src="item" class="loaded" mode="aspectFill"></image>
@@ -74,28 +66,47 @@
 				<text>立即购买</text>
 			</button>
 		</view>
-		
-		
+
+
 		<!-- 商品属性选择 -->
 		<view v-show="isBuy" @click="closeAttrChoose" style="background-color: rgba(0,0,0,0.5); z-index: 3;position: fixed;bottom: 0rpx;right: 0rpx;width: 100vw;height: 100vh;"></view>
-		<view v-show="isBuy" class="cart-item" @click.stop>
-			<view class="image-wrapper">
-				<image :src="titleImg[0]" style="width: 200rpx;height: 200rpx;"></image>
+		<view v-show="isBuy" class="cart-item" @click.stop="">
+			<view class="commodity-info-container">
+				<view class="commodity-info-image">
+					<image :src="titleImg[0]" style="width: 200rpx;height: 200rpx;"></image>
+				</view>
+				<view class="item-right">
+					<view style="display: flex;justify-content: space-between;align-items: center;">
+						<text class="title" style="font-size: 35rpx;font-weight: 500;overflow: hidden;text-overflow:ellipsis;white-space: nowrap;width: 320rpx;">
+							{{dataDic.commodityTitle}}
+						</text>
+						<text class="cancel-txt" @click="cancel">取消</text>
+					</view>
+					<view class="price-container">
+						<text class="small-price-txt">¥</text>
+						<text class="big-price-txt">{{showSalePrice}}</text>
+					</view>
+				</view>
 			</view>
-			<view class="item-right">
-				<view style="display: flex;justify-content: space-between;align-items: center;">
-					<text class=" title" style="font-weight: 500;overflow: hidden;
-			text-overflow:ellipsis;
-			white-space: nowrap;width: 320rpx;
-			">{{dataDic.commodityTitle}}</text>
-					<text class="del-btn" @click="cancel">取消</text>
+
+			<view class="commodity-attr-list-container">
+				<view class="commodity-attr-container" v-for="(attrValueObj, attrIndex) in attrValueList" :key="attrIndex">
+					<view class="commodity-attr-name">{{attrValueObj.name}}</view>
+
+					<view class="commodity-attr-value-container">
+						<view class="commodity-attr-value" :class="(value.content === attrValueObj.selectedValue)? 'commodity-attr-value-active': 'commodity-attr-value-disabled'"
+						 v-for="(value, valueIndex) in attrValueObj.contentList" :key="valueIndex" :data-value="value" @tap="selectAttrValue">
+							{{value.content}}
+						</view>
+					</view>
 				</view>
-				<text class="price">¥{{buyNum * dataDic.salePrice}}</text>
-				<view style="display: flex;justify-content: space-between;margin-top: 40rpx;align-items: center;">
-					<uniNumberBox :min="1" :max="dataDic.commodityNum" :value="buyNum>dataDic.commodityNum?dataDic.commodityNum:buyNum"
-					 @change="numberChange()"></uniNumberBox>
-					<button class="buyButton" @click="buy()">立即购买</button>
-				</view>
+			</view>
+
+			<view class="purchase-number-container">
+				<view class="commodity-attr-name" style="margin-right: 50rpx;">购买数量</view>
+				<uniNumberBox :min="1" :max="dataDic.commodityNum" :value="buyNum>dataDic.commodityNum?dataDic.commodityNum:buyNum"
+				 @change="numberChange()"></uniNumberBox>
+				<button class="buyButton" @click="buy()">立即购买</button>
 			</view>
 		</view>
 
@@ -139,14 +150,14 @@
 			<!-- 海报 要放外面放组件里面 会找不到 canvas-->
 			<canvas class="canvas" canvas-id="myCanvas"></canvas><!-- 海报 -->
 		</view>
-		
+
 		<!-- 通过分享链接进入，未登录用户出现的弹窗 -->
 		<view v-if="loginTipShow" class="login-tip" catchtouchmove="catchTouch">
 			<view class="login-tip-bg">
 				<view class="login-tip-container">
 					<text class="login-tip-title">提示</text>
 					<text class="login-tip-content">检测到您目前未登录，是否立即登录？</text>
-					
+
 					<view class="login-tip-btn-container">
 						<button class="login-tip-button-cancel" @click="close()">取消</button>
 						<button class="login-tip-button-update" open-type="getUserInfo" lang="zh_CN" @getuserinfo="loginUpdate()">确定</button>
@@ -178,7 +189,8 @@
 				showPage: false,
 				buyNum: 1,
 				isBuy: false,
-				dataDic: {},
+				dataDic: {}, // 商品信息
+				attrValueList: [], // 商品属性列表
 				commodityImg: [],
 				specClass: 'none',
 				titleImg: [],
@@ -197,7 +209,7 @@
 				posterData: {},
 				shareLogin: false, // 分享登录标识
 				buyLogin: false, // 购买登录标识
-				
+
 				loginTipShow: false, // 提示要求用户登陆的弹窗
 			};
 		},
@@ -214,15 +226,73 @@
 				}
 				return result;
 			},
+			showSalePrice() {
+				console.log('计算showSalePrice');
+				// 因为选项产生的附加价格
+				let extraPrice = 0;
+				for (let attrValueObj of this.attrValueList) {
+					if (attrValueObj.selectedValue !== '') {
+						for (let value of attrValueObj.contentList) {
+							if (value.content === attrValueObj.selectedValue) {
+								extraPrice += Number(value.extraSaleMoney);
+								break;
+							}
+						}
+					}
+				}
+				console.log('附加价格');
+				console.log(extraPrice);
+				// 计算单价
+				let singlePrice = this.dataDic.salePrice + extraPrice;
+				let str = new String(this.buyNum * this.dataDic.salePrice);
+				console.log('最后的价格结果');
+				console.log(str);
+				// 尽可能去除小数点
+				if (str.indexOf('.') != -1) {
+					for (let i = str.length - 1; i >= 0; i--) {
+						if (str[i] !== '0') {
+							str = str.slice(0, i + 1);
+							break;
+						}
+					}
+				}
+				
+				console.log('返回的值');
+				console.log(str);
+				
+				return str;
+			},
 			...mapState(['token'])
 		},
 		methods: {
+			// 选中属性
+			selectAttrValue: function(item) {
+				console.log('你选中了这个属性');
+				console.log('item');
+				console.log(item);
+				let chooseValue = item.currentTarget.dataset.value;
+				// 
+				for (let i = 0; i < this.attrValueList.length; i++) {
+					if (this.attrValueList[i].name === chooseValue.name) {
+						console.log(this.attrValueList[i]);
+						
+						// this.$set(this.attrValueList[i], 'selectedValue', chooseValue.content)
+						
+						this.attrValueList[i].selectedValue = chooseValue.content;
+						
+						console.log('找到了');
+						console.log(this.attrValueList[i]);
+						break;
+					}
+				}
+			},
+			// 选择商品属性时，上方灰色部分，回到商品页面
 			closeAttrChoose: function() {
-				console.log('关闭底部弹窗');
+				this.isBuy = false;
 			},
 			catchTouch: function() {
 				console.log('stop touch');
-				return ;
+				return;
 			},
 			createCanvasImageEvn() {
 				wx.showLoading({
@@ -236,11 +306,11 @@
 					if (code[4] != 's') {
 						code = 'https' + code.substring(4, code.length);
 					}
-					
+
 					if (this.dataDic.posterImg[4] != 's') {
 						this.dataDic.posterImg = 'https' + this.dataDic.posterImg.substring(4, this.dataDic.posterImg.length);
 					}
-					
+
 					console.log('二维码图片');
 					console.log(code);
 					console.log('海报');
@@ -303,7 +373,7 @@
 			// 登录提示窗确定按钮
 			loginUpdate: function() {
 				this.loginTipShow = false;
-				
+
 				this.wxGetUserInfo();
 			},
 			getData: function(commodityId) {
@@ -315,9 +385,29 @@
 				}).then(res => {
 					console.log('获取到的商品信息');
 					console.log(res);
+					// 设置商品信息
 					this.dataDic = res.data.data;
 					this.dataDic.commodityNum = Number.parseInt(this.dataDic.commodityNum);
 					this.dataDic.salePrice = Number.parseFloat(this.dataDic.salePrice);
+
+					// 设置商品属性
+					this.attrValueList = res.data.data.attrs;
+					if (this.attrValueList == undefined || this.attrValueList == null) {
+						this.attrValueList = [];
+					} else {
+						// 初始化返回值，vue双向绑定机制
+						for (let i = 0; i < res.data.data.attrs.length; i++) {
+							this.$set(res.data.data.attrs[i], 'selectedValue', '');
+						}
+						// 该属性只有一种时，默认选中
+						for (let i = 0; i < this.attrValueList.length; i++) {
+							if (this.attrValueList[i].contentList.length === 1) {
+								this.attrValueList[i].selectedValue = this.attrValueList[i].contentList[0].content;
+							}
+						}
+						console.log('测试打印属性');
+						console.log(this.attrValueList);
+					}
 
 					this.titleImg = this.dataDic.commodityImg;
 					this.bottomImg = this.dataDic.commodityIntroduce;
@@ -501,7 +591,7 @@
 			},
 		},
 		onLoad: function(params) {
-			
+
 			// 判断该用户是否是vip
 			let isVip = uni.getStorageSync('isVip');
 			if (isVip === true) {
@@ -536,12 +626,12 @@
 				}
 				this.getData(this.commodityId);
 			} else if (params.s && params.id) { // 通过分享卡片进入
-				
+
 				this.superiorUser = params.s;
 				uni.setStorageSync('superiorUser', this.superiorUser);
 				this.commodityId = params.id;
 				this.getData(this.commodityId);
-				
+
 				// 只有在未登录的情况下出现要求登陆的弹窗
 				if (!loginState) {
 					this.loginTipShow = true;
@@ -551,20 +641,6 @@
 				this.commodityId = params.id;
 				this.getData(this.commodityId);
 			}
-
-
-			// this.commodityId = params.id;
-			// if (params.s === undefined) {
-			// 	this.superiorUser = null;
-			// 	this.getData(this.commodityId);
-			// } else {
-			// 	this.superiorUser = params.s;
-			// 	uni.showToast({
-			// 		title: '正在加载中',
-			// 		icon: 'loading'
-			// 	})
-			// 	this.wxGetUserInfo();
-			// }
 		},
 		onShareAppMessage: function(res) {
 			// 隐藏下方分享栏(如果下方有的话)
@@ -572,27 +648,11 @@
 
 			// todo path通过拼接商品id与superiorUser(需要进行多次测试)
 			let path = '/pages/product/product?s=' + uni.getStorageSync('userId') + '&id=' + this.commodityId;
-			// if (res.from === 'button') { // 如果通过点击按钮进行分享
-			// 	console.log('通过点击按钮进行分享');
-			// 	console.log(res.target)
-			// 	// 默认使用海报图片作为分享图片
-			// 	let posterPath = this.dataDic.posterImg;
-			// 	if (posterPath == null || posterPath === '') {
-			// 		// 该商品没有海报图片，则使用第一张商品图片
-			// 		posterPath = this.commodityImg[0];
-			// 	}
-			// 	return {
-			// 		title: this.dataDic.commodityTitle,
-			// 		path: path,
-					// imageUrl: posterPath
-			// 	}
-			// } else { // 通过小程序上方的操作栏进行分享
-				console.log('上方的操作栏进行分享');
-				return {
-					title: this.dataDic.commodityTitle,
-					path: path
-				}
-			// }
+			console.log('上方的操作栏进行分享');
+			return {
+				title: this.dataDic.commodityTitle,
+				path: path
+			}
 		},
 	}
 </script>
@@ -940,13 +1000,118 @@
 
 	.cart-item {
 		background-color: #FFFFFF;
-		width: 100vw;
+		width: 100%;
 		z-index: 4;
 		display: flex;
+		flex-direction: column;
 		position: fixed;
 		bottom: 0rpx;
-		padding-top: 30rpx;
-		padding-left: 20rpx;
+		padding: 30rpx 0;
+
+		.commodity-info-container {
+			margin: 0 5%;
+			display: flex;
+			flex-direction: row;
+		}
+
+		.commodity-info-image {
+			width: 200rpx;
+			height: 200rpx;
+		}
+
+		.cancel-txt {
+			/* margin-right: 20rpx; */
+			font-size: 28rpx;
+			color: $font-color-light;
+		}
+
+		.price-container {
+			margin-top: auto;
+			display: flex;
+			flex-direction: row;
+			font-weight: 700;
+			color: rgba(255, 126, 48, 1);
+		}
+
+		.small-price-txt {
+			margin-top: auto;
+			font-size: 24rpx;
+		}
+
+		.big-price-txt {
+			font-size: 31rpx;
+		}
+
+		// 商品属性start
+		.commodity-attr-list-container {
+			margin: 0 5%;
+			max-height: 500rpx;
+			overflow: auto;
+		}
+
+		.commodity-attr-container {
+			width: 100%;
+			overflow: hidden;
+			margin-top: 10rpx;
+			border-bottom: 1rpx solid #F3F3F3;
+			display: flex;
+			flex-direction: column;
+		}
+
+		.commodity-attr-name {
+			/* width: 20%; */
+			/* float: left; */
+			font-size: 32rpx;
+			font-family: PingFang SC;
+			font-weight: 500;
+			padding: 15rpx 0;
+		}
+
+		.commodity-attr-value-container {
+			width: 80%;
+			float: left;
+			padding: 15rpx 0 30rpx 0;
+			overflow: hidden;
+		}
+
+		.commodity-attr-value {
+			float: left;
+			height: 60rpx;
+			line-height: 60rpx;
+			text-align: center;
+			background: rgba(234, 234, 234, 1);
+			opacity: 0.5;
+			border-radius: 10rpx;
+			font-size: 28rpx;
+			font-family: PingFang SC;
+			font-weight: 500;
+			color: #333333;
+			padding: 0 20rpx;
+			margin-right: 30rpx;
+		}
+
+		// 该属性被选中
+		.commodity-attr-value-active {
+			color: rgba(6, 193, 174, 1);
+			border: 1rpx solid rgba(6, 193, 174, 1);
+
+		}
+
+		// 该属性未被选中
+		.commodity-attr-value-disabled {
+			color: #333333;
+			border: 1rpx solid rgba(234, 234, 234, 1);
+		}
+
+		// 商品属性end
+
+		// 购买数量与立即购买按钮的box
+		.purchase-number-container {
+			margin: 40rpx 5%;
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+		}
 
 		.image-wrapper {
 			width: 230upx;
@@ -967,7 +1132,6 @@
 			position: relative;
 			padding-left: 30upx;
 
-			.title,
 			.price {
 				font-size: $font-base + 2upx;
 				color: $font-color-dark;
@@ -1030,14 +1194,14 @@
 	}
 
 	.buyButton {
+		margin-left: 10rpx;
+		margin-right: 0;
 		background-color: #FFFFFF;
 		color: rgba(6, 193, 174, 1);
 		font-size: 24rpx;
 		height: 63rpx;
 		width: 180rpx;
 		border: 1rpx solid rgba(6, 193, 174, 1);
-
-		margin-left: 100rpx;
 	}
 
 	/*  详情 */
@@ -1098,7 +1262,7 @@
 		padding: 0;
 		width: 165rpx;
 		height: 235rpx;
-		background-color:transparent;
+		background-color: transparent;
 	}
 
 	.rebate-img {
@@ -1126,7 +1290,7 @@
 		margin-bottom: 45rpx;
 		text-align: center;
 	}
-	
+
 	/* 未登录的提示弹窗 */
 	.login-tip {
 		position: fixed !important;
@@ -1136,9 +1300,9 @@
 		width: 100% !important;
 		height: 100% !important;
 		z-index: 10;
-		background-color: rgba(0,0,0,0.5);
+		background-color: rgba(0, 0, 0, 0.5);
 	}
-	
+
 	.login-tip-bg {
 		width: 100%;
 		height: 100%;
@@ -1147,7 +1311,7 @@
 		justify-content: center;
 		align-items: center;
 	}
-	
+
 	.login-tip-container {
 		margin: auto;
 		width: 580rpx;
@@ -1155,17 +1319,17 @@
 		background-color: #fff;
 		border-radius: 10rpx;
 	}
-	
+
 	.login-tip-title {
 		display: inline-block;
 		width: 580rpx;
-		margin:20rpx 0;
+		margin: 20rpx 0;
 		text-align: center;
 		font-weight: bold;
 		font-size: 32rpx;
 		color: #333;
 	}
-	
+
 	.login-tip-content {
 		display: inline-block;
 		width: 580rpx;
@@ -1173,13 +1337,13 @@
 		text-align: center;
 		font-size: 30rpx;
 	}
-	
+
 	.login-tip-btn-container {
 		display: flex;
 		flex-direction: row;
 		justify-content: space-between;
 	}
-	
+
 	.login-tip-button-cancel {
 		background: none;
 		border: none;
@@ -1194,6 +1358,7 @@
 		font-size: 28rpx;
 		color: #FF5730;
 	}
+
 	.login-tip-button-update {
 		background: none;
 		border: none;
