@@ -470,19 +470,25 @@
 		color: #FF7E30;
 	}
 	.orderMenu{
-		display: inline-block;
+		padding-top: 30rpx;
+		padding-bottom: 30rpx;
+		/* display: inline-block;
 		width: 580rpx;
 		position: relative;
-		bottom: 20rpx;
+		bottom: 20rpx; */
+		width: 100%;
+		display: flex;
+		justify-content: center;
+		flex-direction: row;
 	}
 	.orderInfo{
-		display: inline-block;
-		width: 482rpx;
+		/* display: inline-block; */
+		/* width: 482rpx; */
 		white-space: normal;
 		word-break: break-all;
-		text-align: left;
+		/* text-align: left; */
 		font-size: 32rpx;
-		margin: 15rpx 49rpx;
+		/* margin: 15rpx 49rpx; */
 	}
 	.uni-tip-group-button {
 		display: inline-block;

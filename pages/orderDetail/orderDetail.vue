@@ -140,7 +140,17 @@
 				<text class="bottom-btn-sure-receive-text">{{sureBtnText}}</text>
 			</button>
 		</view>
-
+		
+		<uni-popup ref="popup" type="center" maskClick="true">
+				<view class="phoneCell">
+					<text style="font-size: 40rpx; margin-left: 40rpx; font-weight: bold;">拨打电话</text>
+				</view>
+				<view v-for="item in phones">
+					<view class="phoneCell">
+						<text class="phoneCell-text" @click="callToShop(item)">{{item}}</text>
+					</view>
+				</view>
+		</uni-popup>
 	</view>
 </template>
 
@@ -148,14 +158,15 @@
 	import {
 		OrderDetailAPI
 	} from './api.js'
-
 	import qr from '../utils/wxqrcode.js'
-
+	import uniPopup from "../components/uni-popup/uni-popup.vue"
+	
 	export default {
 		data() {
 			return {
 				orderId: '',
 				hasLogistics: false,
+				phones: [],
 				takeWay: 1, // 1,寄送，2,核销
 				order: {
 					orderId: '',
@@ -186,6 +197,9 @@
 				deliveryInfoShow: '', // 显示在物流信息的文字
 			}
 		},
+		components:{
+			'uni-popup':uniPopup
+		},
 		onLoad: function(params) {
 			this.orderId = params.orderid;
 
@@ -199,8 +213,8 @@
 				OrderDetailAPI.getOrderDetail({
 					orderId: this.orderId
 				}).then(res => {
-					console.log(res);
 					this.order = res.data.data;
+					this.phones = this.order.shopPhone.split(",")
 					this.takeWay = Number(this.order.commodityType);
 					if (this.takeWay === 2) {
 						// 核销类型显示物流信息
@@ -278,9 +292,12 @@
 			},
 			// 联系商家
 			contactShop: function() {
+				this.$refs.popup.open();
+			},
+			callToShop: function(item){
 				uni.makePhoneCall({
 					// 手机号
-					phoneNumber: this.order.shopPhone,
+					phoneNumber: item,
 					success: (res) => {
 						console.log('调用成功!')
 					},
@@ -733,7 +750,7 @@
 		border-radius: 50rpx;
 		border: #999999 2rpx solid;
 		margin: auto 30rpx auto 0;
-		width: 160rpx;
+		width: 180rpx;
 		height: 60rpx;
 	}
 
@@ -758,5 +775,17 @@
 		color: #06C1AE;
 		font-size: 24rpx;
 		margin: auto;
+	}
+	.phoneCell{
+		display:flex;
+		align-items: center;
+		width: 580rpx;
+		height: 100rpx;
+		background-color: #FFFFFF;
+		border-radius: 10rpx;
+	}
+	.phoneCell-text{
+		margin-left: 40rpx;
+		font-weight: lighter;
 	}
 </style>
