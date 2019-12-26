@@ -67,21 +67,24 @@
 			</button>
 		</view>
 
-
 		<!-- 商品属性选择 -->
 		<view v-show="isBuy" @click="closeAttrChoose" style="background-color: rgba(0,0,0,0.5); z-index: 3;position: fixed;bottom: 0rpx;right: 0rpx;width: 100vw;height: 100vh;"></view>
-		<view v-show="isBuy" class="cart-item" @click.stop="">
+		<view v-show="isBuy" :class="isBuy?'open-ready-to-buy':'close-ready-to-buy'" class="cart-item" @click.stop="">
 			<view class="commodity-info-container">
 				<view class="commodity-info-image">
-					<image :src="titleImg[0]" style="width: 200rpx;height: 200rpx;"></image>
+					<image :src="showSaleImageUrl" style="width: 200rpx;height: 200rpx;"></image>
 				</view>
 				<view class="item-right">
 					<view style="display: flex;justify-content: space-between;align-items: center;">
-						<text class="title" style="font-size: 35rpx;font-weight: 500;overflow: hidden;text-overflow:ellipsis;white-space: nowrap;width: 320rpx;">
+						<text class="item-right-title" style="font-size: 35rpx;font-weight: 500;overflow: hidden;text-overflow:ellipsis;white-space: nowrap;width: 320rpx;">
 							{{dataDic.commodityTitle}}
 						</text>
 						<text class="cancel-txt" @click="cancel">取消</text>
 					</view>
+					<view class="selected-attr-txt">
+						<text>{{selectedAttr}}</text>
+					</view>
+					
 					<view class="price-container">
 						<text class="small-price-txt">¥</text>
 						<text class="big-price-txt">{{showSalePrice}}</text>
@@ -211,6 +214,7 @@
 				buyLogin: false, // 购买登录标识
 
 				loginTipShow: false, // 提示要求用户登陆的弹窗
+				showSaleImageUrl: '', // 用户准备购买时展示的商品图片
 			};
 		},
 		components: {
@@ -226,6 +230,17 @@
 				}
 				return result;
 			},
+			// 当前选中的属性，展示的文字
+			selectedAttr() {
+				let str = '当前选择：';
+				for (let attrValueObj of this.attrValueList) {
+					if (attrValueObj.selectedValue !== '') {
+						str += attrValueObj.selectedValue + '，';
+					}
+				}
+				return str.slice(0, str.length - 1);
+			},
+			// 购买时展示的价格
 			showSalePrice() {
 				console.log('计算showSalePrice');
 				// 因为选项产生的附加价格
@@ -235,6 +250,7 @@
 						for (let value of attrValueObj.contentList) {
 							if (value.content === attrValueObj.selectedValue) {
 								extraPrice += Number(value.extraSaleMoney);
+								console.log('属性：' + value.content + '，产生的附加价格：' + value.extraSaleMoney);
 								break;
 							}
 						}
@@ -244,7 +260,7 @@
 				console.log(extraPrice);
 				// 计算单价
 				let singlePrice = this.dataDic.salePrice + extraPrice;
-				let str = new String(this.buyNum * this.dataDic.salePrice);
+				let str = new String(this.buyNum * singlePrice);
 				console.log('最后的价格结果');
 				console.log(str);
 				// 尽可能去除小数点
@@ -267,21 +283,20 @@
 		methods: {
 			// 选中属性
 			selectAttrValue: function(item) {
-				console.log('你选中了这个属性');
-				console.log('item');
-				console.log(item);
 				let chooseValue = item.currentTarget.dataset.value;
-				// 
-				for (let i = 0; i < this.attrValueList.length; i++) {
-					if (this.attrValueList[i].name === chooseValue.name) {
-						console.log(this.attrValueList[i]);
+				// 设置选中属性，并通过绑定修改样式
+				for (let attrValueObj of this.attrValueList) {
+					if (attrValueObj.name === chooseValue.name) {
 						
-						// this.$set(this.attrValueList[i], 'selectedValue', chooseValue.content)
-						
-						this.attrValueList[i].selectedValue = chooseValue.content;
-						
-						console.log('找到了');
-						console.log(this.attrValueList[i]);
+						attrValueObj.selectedValue = chooseValue.content;
+						console.log('当前选中的attrValueObj');
+						console.log(attrValueObj);
+						// 根据当前选中的属性，选择是否要加载新的图片
+						for (let value of attrValueObj.contentList) {
+							if (value.content === chooseValue.content && value.savePath !== undefined && value.savePath != null) {
+								this.showSaleImageUrl = value.savePath;
+							}
+						}
 						break;
 					}
 				}
@@ -484,6 +499,7 @@
 				this.shareLogin = false;
 				let loginState = uni.getStorageSync("loginState");
 				if (loginState == true) {
+					this.showSaleImageUrl = this.titleImg[0];
 					this.isBuy = true
 				} else {
 					this.wxGetUserInfo();
@@ -492,6 +508,17 @@
 			},
 
 			buy: function() {
+				// 属性选择验证
+				for (let attrValueObj of this.attrValueList) {
+					if (attrValueObj.selectedValue === '') {
+						uni.showToast({
+							title: '请选择' + attrValueObj.name,
+							icon: 'none',
+						});
+						
+						return;
+					}
+				}
 				uni.navigateTo({
 					url: `/pages/payOrder/payOrder?commodityId=${this.dataDic.commodityId}&commodityNum=${this.buyNum}&remark = ${this.dataDic.remark}&addressId=${this.dataDic.addressId}`
 				})
@@ -998,7 +1025,43 @@
 		background-color: #06C1AE;
 	}
 
+	// 准备购买时弹窗动画
+	@keyframes slideContentUp {
+	  from {
+	    transform: translateY(100%); /*设置为正数则底部弹出来，负数则相反*/
+	  }
+	 
+	  to {
+	    transform: translateY(0%);
+	  }
+	}
+	 
+	@keyframes slideContentDown {
+	  from {
+	    transform: translateY(0%);
+	  }
+	 
+	  to {
+	    transform: translateY(100%);
+	  }
+	}
+
+	/* 显示或关闭内容时动画 */
+	 
+	.open-ready-to-buy {
+	  animation: slideContentUp 0.5s ease-in both;
+	  /* animation-fill-mode: both 动画将会执行 forwards 和 backwards 执行的动作。 */
+	}
+	 
+	.close-ready-to-buy {
+	  animation: slideContentDown 0.5s ease-in both;
+	  /* animation-fill-mode: both 动画将会执行 forwards 和 backwards 执行的动作。 */
+	}
+
+
 	.cart-item {
+		border-top-left-radius: 15rpx;
+		border-top-right-radius: 15rpx;
 		background-color: #FFFFFF;
 		width: 100%;
 		z-index: 4;
@@ -1131,6 +1194,12 @@
 
 			position: relative;
 			padding-left: 30upx;
+
+			.item-right-title {
+				font-size: 35rpx;
+				font: bold;
+				color: #333333;
+			}
 
 			.price {
 				font-size: $font-base + 2upx;
