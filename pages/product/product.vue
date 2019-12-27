@@ -72,19 +72,19 @@
 		<view v-show="isBuy" :class="isBuy?'open-ready-to-buy':'close-ready-to-buy'" class="cart-item" @click.stop="">
 			<view class="commodity-info-container">
 				<view class="commodity-info-image">
-					<image :src="showSaleImageUrl" style="width: 200rpx;height: 200rpx;"></image>
+					<image :src="showSaleImageUrl" style="width: 210rpx;height: 210rpx;"></image>
 				</view>
 				<view class="item-right">
 					<view style="display: flex;justify-content: space-between;align-items: center;">
-						<text class="item-right-title" style="font-size: 35rpx;font-weight: 500;overflow: hidden;text-overflow:ellipsis;white-space: nowrap;width: 320rpx;">
+						<text class="item-right-title">
 							{{dataDic.commodityTitle}}
 						</text>
 						<text class="cancel-txt" @click="cancel">取消</text>
 					</view>
-					<view class="selected-attr-txt">
-						<text>{{selectedAttr}}</text>
+					<view class="selected-attr-container">
+						<text class="selected-attr-txt">{{selectedAttr}}</text>
 					</view>
-					
+
 					<view class="price-container">
 						<text class="small-price-txt">¥</text>
 						<text class="big-price-txt">{{showSalePrice}}</text>
@@ -232,10 +232,13 @@
 			},
 			// 当前选中的属性，展示的文字
 			selectedAttr() {
+				if (this.attrValueList == undefined || this.attrValueList == null || this.attrValueList.length === 0) {
+					return '';
+				}
 				let str = '当前选择：';
 				for (let attrValueObj of this.attrValueList) {
 					if (attrValueObj.selectedValue !== '') {
-						str += attrValueObj.selectedValue + '，';
+						str += '"' + attrValueObj.selectedValue + '" ';
 					}
 				}
 				return str.slice(0, str.length - 1);
@@ -272,10 +275,10 @@
 						}
 					}
 				}
-				
+
 				console.log('返回的值');
 				console.log(str);
-				
+
 				return str;
 			},
 			...mapState(['token'])
@@ -287,7 +290,7 @@
 				// 设置选中属性，并通过绑定修改样式
 				for (let attrValueObj of this.attrValueList) {
 					if (attrValueObj.name === chooseValue.name) {
-						
+
 						attrValueObj.selectedValue = chooseValue.content;
 						console.log('当前选中的attrValueObj');
 						console.log(attrValueObj);
@@ -515,7 +518,7 @@
 							title: '请选择' + attrValueObj.name,
 							icon: 'none',
 						});
-						
+
 						return;
 					}
 				}
@@ -1027,35 +1030,36 @@
 
 	// 准备购买时弹窗动画
 	@keyframes slideContentUp {
-	  from {
-	    transform: translateY(100%); /*设置为正数则底部弹出来，负数则相反*/
-	  }
-	 
-	  to {
-	    transform: translateY(0%);
-	  }
+		from {
+			transform: translateY(100%);
+			/*设置为正数则底部弹出来，负数则相反*/
+		}
+
+		to {
+			transform: translateY(0%);
+		}
 	}
-	 
+
 	@keyframes slideContentDown {
-	  from {
-	    transform: translateY(0%);
-	  }
-	 
-	  to {
-	    transform: translateY(100%);
-	  }
+		from {
+			transform: translateY(0%);
+		}
+
+		to {
+			transform: translateY(100%);
+		}
 	}
 
 	/* 显示或关闭内容时动画 */
-	 
+
 	.open-ready-to-buy {
-	  animation: slideContentUp 0.5s ease-in both;
-	  /* animation-fill-mode: both 动画将会执行 forwards 和 backwards 执行的动作。 */
+		animation: slideContentUp 0.5s ease-in both;
+		/* animation-fill-mode: both 动画将会执行 forwards 和 backwards 执行的动作。 */
 	}
-	 
+
 	.close-ready-to-buy {
-	  animation: slideContentDown 0.5s ease-in both;
-	  /* animation-fill-mode: both 动画将会执行 forwards 和 backwards 执行的动作。 */
+		animation: slideContentDown 0.5s ease-in both;
+		/* animation-fill-mode: both 动画将会执行 forwards 和 backwards 执行的动作。 */
 	}
 
 
@@ -1078,8 +1082,8 @@
 		}
 
 		.commodity-info-image {
-			width: 200rpx;
-			height: 200rpx;
+			width: 210rpx;
+			height: 210rpx;
 		}
 
 		.cancel-txt {
@@ -1088,10 +1092,23 @@
 			color: $font-color-light;
 		}
 
+		.selected-attr-container {}
+
+		.selected-attr-txt {
+			word-break: break-all;
+			font-size: 25rpx;
+			font-weight: 500;
+			display: -webkit-box;
+			text-overflow: ellipsis;
+			overflow: hidden;
+			-webkit-box-orient: vertical;
+			-webkit-line-clamp: 3;
+		}
+
 		.price-container {
 			margin-top: auto;
-			display: flex;
-			flex-direction: row;
+			/* display: flex; */
+		/* 	flex-direction: row; */
 			font-weight: 700;
 			color: rgba(255, 126, 48, 1);
 		}
@@ -1102,6 +1119,7 @@
 		}
 
 		.big-price-txt {
+			text-align: bottom;
 			font-size: 31rpx;
 		}
 
@@ -1150,6 +1168,8 @@
 			font-weight: 500;
 			color: #333333;
 			padding: 0 20rpx;
+			margin-top: 5rpx;
+			margin-bottom: 5rpx;
 			margin-right: 30rpx;
 		}
 
@@ -1191,14 +1211,17 @@
 			display: flex;
 			flex-direction: column;
 			flex: 1;
-
 			position: relative;
 			padding-left: 30upx;
 
 			.item-right-title {
 				font-size: 35rpx;
-				font: bold;
+				font-weight: bold;
 				color: #333333;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				white-space: nowrap;
+				width: 320rpx;
 			}
 
 			.price {
