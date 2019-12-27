@@ -790,7 +790,7 @@
 	}
 
 	.carousel {
-		height: 590rpx;
+		height: 750rpx;
 		position: relative;
 
 		swiper {
