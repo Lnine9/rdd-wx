@@ -1,10 +1,8 @@
 <template>
-	<view v-bind:style="noDataCenter">
+	<view>
 		<!-- 缺省图 -->
-		<view v-if="isNodata" class="nodataText">
-		<image src="../../static/myOrder/myOrderNoData.png" class="noDataPic"></image>
-		<text class="nodataText smallFontSize" >暂无订单</text>
-
+		<view v-if="isNodata">
+		  <noPic :picSrc="picSrc" :noText="noText"></noPic>
 		</view>
 		<!-- 店铺title -->
 		<view v-if="!isNodata" style="height: 100vh;background-color: #F8F9FB;">
@@ -63,19 +61,20 @@
 </template>
 
 <script>
-	import {
-		api
-	} from './api.js'
+	import {api} from './api.js'
+	import noPic from '../components/noPic/noPic.vue'
 	export default {
+		components: {
+			noPic
+		},
 		data() {
 			return {
-
-				isNodata: false,
+				picSrc: "../../../static/myOrder/myOrderNoData.png",
+				noText: "暂无订单",
+				isNodata: true,
 				statusStyle: [],
-
 				shopList: []
 			}
-
 		},
 		// 时间转换
 		filters: {
@@ -239,10 +238,7 @@
 	}
 
 	.orderList {
-		
 		padding-top: 20rpx;
-		
-
 		width: 100%;
 
 	}
@@ -365,7 +361,6 @@
 		justify-content: space-around;
 		position: relative;
 		left: 5vw;
-
 		height: 100rpx;
 		width: 90vw;
 	}
@@ -387,17 +382,4 @@
 		color: #FF7E30;
 	}
 
-	.noDataPic {
-		width: 200rpx;
-		height: 200rpx;
-		padding-top: 20vh;
-	}
-	.nodataText{
-		margin-top: 20rpx;
-		display: flex;
-		align-items: center;
-		flex-direction: column;
-		justify-content: center;
-		color: #CCCCCC;
-	}
 </style>

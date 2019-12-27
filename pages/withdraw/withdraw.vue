@@ -10,14 +10,6 @@
 			{{amount.toFixed(2)}}
 			</view>
 		</view>
-		<!-- <view id="account" class="info">
-			<text class="title">支付宝账号</text>
-			<input class="inputBox" v-model="paymentAccount" placeholder="请输入支付宝账号"/>
-		</view>
-		<view class="info">
-			<text class="title">真实姓名</text>
-			<input class="inputBox" v-model="paymentName" placeholder="请输入支付宝真实姓名"/>
-		</view> -->
 		
 		<view id="wAmount">
 			<view style="font-size: 25rpx;padding: 39rpx 0 0 40rpx;">提现金额</view>

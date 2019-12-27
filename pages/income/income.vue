@@ -1,8 +1,7 @@
 <template>
 	<view>
 		<view v-show="showTypeImg">
-			<image src="../../static/income/noIncome.png" class="noImg"></image>
-			<text class="noIncome">暂无收益</text>
+			<noPic :picSrc="picSrc" :noText="noText"></noPic>
 		</view>
 		<view v-for="(income, index1) in incomes" :key="index1" v-show="showTypeIncome">
 			<view style="height: 88rpx;">
@@ -25,9 +24,15 @@
 
 <script>
 	import {api} from './api.js'
+	import noPic from '../components/noPic/noPic.vue'
 	export default {
+		components: {
+			noPic
+		},
 		data() {
 			return {
+				picSrc: "../../../static/income/noIncome.png",
+				noText: "暂无收益",
 				showTypeImg: true,
 				showTypeIncome: false,
 				type: 1,
@@ -80,6 +85,8 @@
 						icon: 'none',
 						duration: 1500
 					})
+					this.showTypeImg = true;
+					this.showTypeIncome = false;
 				})
 			},
 			changeDate(income){
@@ -169,11 +176,6 @@
 	page {
 		padding-bottom: 50rpx;
 		background:rgba(248,249,251,1);
-	}
-	.noImg {
-		width: 200rpx;
-		height: 200rpx;
-		margin: 370rpx 0 0 270rpx;
 	}
 
 	.list {
