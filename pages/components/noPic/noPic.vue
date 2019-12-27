@@ -23,7 +23,7 @@
 	.noImg {
 		width: 200rpx;
 		height: 200rpx;
-		margin-top: 250rpx;
+		margin: 250rpx 0 0 270rpx;
 	}
 	.nodataText{
 		font-size: 28rpx;

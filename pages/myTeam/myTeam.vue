@@ -131,12 +131,6 @@
 		background: rgba(248, 249, 251, 1);
 	}
 
-	.noImg {
-		width: 200rpx;
-		height: 200rpx;
-		margin: 270rpx 0 0 270rpx;
-	}
-
 	.list {
 		margin-top: 3rpx;
 		width: 750rpx;

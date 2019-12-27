@@ -246,12 +246,7 @@ page{
 		background-color: #06C1AE;
 		border-radius: 40rpx;	
 	}
-	.noAddress{
-		margin-left: 280rpx;
-		margin-top: 370rpx;
-		width: 200rpx;
-		height: 200rpx;
-	}
+
 	.warning{
 		display: flex;
 		align-items: center;
