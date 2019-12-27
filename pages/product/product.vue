@@ -495,11 +495,11 @@
 				})
 			},
 			reayToBuy: function() {
+				this.showSaleImageUrl = this.titleImg[0];
 				this.buyLogin = true;
 				this.shareLogin = false;
 				let loginState = uni.getStorageSync("loginState");
 				if (loginState == true) {
-					this.showSaleImageUrl = this.titleImg[0];
 					this.isBuy = true
 				} else {
 					this.wxGetUserInfo();
