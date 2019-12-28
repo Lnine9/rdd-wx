@@ -180,7 +180,7 @@
 			{
 				"name": "产品详情",
 				"path": "pages/product/product",
-				"query": "id=1111111111110"
+				"query": "id=1111111111113"
 			},
 			{
 				"name": "登录",

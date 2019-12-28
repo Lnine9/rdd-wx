@@ -511,6 +511,8 @@
 			},
 
 			buy: function() {
+				// 存储当前选择的属性id
+				let selectedValueId = '';
 				// 属性选择验证
 				for (let attrValueObj of this.attrValueList) {
 					if (attrValueObj.selectedValue === '') {
@@ -521,9 +523,23 @@
 
 						return;
 					}
+					
+					for (let value of attrValueObj.contentList) {
+						if (attrValueObj.selectedValue === value.content) {
+							selectedValueId += value.commodityAttrId + ",";
+						}
+					}
 				}
+				// 去除末尾逗号
+				if (selectedValueId != null && selectedValueId != '') {
+					selectedValueId = selectedValueId.slice(0, selectedValueId.length - 1);
+				}
+				console.log('将要传递的id的值，中间用逗号隔开');
+				console.log(selectedValueId);
+				console.log('传递的价格');
+				console.log(this.showSalePrice);
 				uni.navigateTo({
-					url: `/pages/payOrder/payOrder?commodityId=${this.dataDic.commodityId}&commodityNum=${this.buyNum}&remark = ${this.dataDic.remark}&addressId=${this.dataDic.addressId}`
+					url: `/pages/payOrder/payOrder?commodityId=${this.dataDic.commodityId}&commodityNum=${this.buyNum}&selectedValueId=${selectedValueId}&selectedAttr=${this.selectedAttr}&showSalePrice=${this.showSalePrice}`
 				})
 			},
 			...mapMutations(['login']),
