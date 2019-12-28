@@ -50,10 +50,7 @@
 		}, {
 			"path": "pages/address/address",
 			"style": {
-				"navigationBarTitleText": "收货地址",
-				"titleNView": {
-					"fontSize": "30px"
-				}
+				"navigationBarTitleText": "收货地址"
 			}
 		}, {
 			"path": "pages/payOrder/payOrder",
@@ -176,7 +173,7 @@
 			{
 				"name": "产品详情",
 				"path": "pages/product/product",
-				"query": "id=16129286320176582"
+				"query": "id=1111111111113"
 			},
 			{
 				"name": "登录",

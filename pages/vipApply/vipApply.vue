@@ -35,7 +35,7 @@
 			<button @click ="recommend">立即申请</button>
         </view>
     </view>
-</template> 
+</template>
 
 <script>
 	import {api} from	'./api.js'
@@ -52,7 +52,7 @@
         },
         methods: {
 			/**
-			 * 
+			 *
 			 * @param {Object} options
 			 */
             recommend:function(options){
@@ -83,7 +83,7 @@
 						  title: '请输入正确的电话号码',
 						  icon: 'none',
 						  duration: 3000
-						})	 
+						})
 						return null;
 					}
 				}
@@ -95,7 +95,7 @@
 					  duration: 3000
 					})
 				})
-				
+
 			},
 			/**
 			 * 获取用户信息
@@ -154,13 +154,13 @@
         height: 359rpx;
 		position: relative;
     }
-	
+
 	.vipApplyLogo image{
 		width: 729rpx;
 		height: 359rpx;
 		margin-bottom: 50rpx;
 	}
-	
+
 	.vipApplyLogo .text1{
 		font-weight: Bold;
 		font-size: 36rpx;
@@ -169,7 +169,7 @@
 		top: -110rpx;
 		left: 73rpx;
 	}
-	
+
 	.vipApplyLogo .text2{
 		font-weight: Medium;
 		font-size: 28rpx;
@@ -178,7 +178,7 @@
 		top: -50rpx;
 		left: 73rpx;
 	}
-	
+
 	.vipApplyLogo .text3{
 		font-weight: Medium;
 		font-size: 24rpx;
@@ -187,37 +187,37 @@
 		top: 60rpx;
 		left: 73rpx;
 	}
-	
+
 	.exclusive{
 		font-size: 28rpx;
 		font-weight: bold;
 		color: #333333;
 		margin: -180rpx 0 0 31rpx;
 	}
-	
+
 	.legalRight{
 		width: 729rpx;
 		height: 160rpx;
 	}
-	
+
 	.legalRight image{
 		width: 90rpx;
 		height: 90rpx;
 	}
-	
+
 	.legalRight .recommend{
 		margin: -320rpx 0 0 31rpx;
 	}
-	
+
 	.recommend .referee{
 		margin: -485rpx 0 0 110rpx;
 		font-size: 30rpx;
 	}
-	
+
 	.legalRight .vip{
 		margin: -420rpx 0 0 401rpx;
 	}
-	
+
 	.vip .VIPprice{
 		margin: -485rpx 0 0 110rpx;
 		font-size: 30rpx;
@@ -230,7 +230,7 @@
 		padding: 25rpx;
 		margin-top: 2rpx;
     }
-	
+
 	.applyInformation text {
 		margin-top: 20rpx;
 	    display: block;
@@ -238,7 +238,7 @@
 	    margin-left: 10rpx;
 		font-size: 30rpx;
 	}
-	
+
 	.applyInformation .inputName{
 		/* margin-left: -30rpx; */
 		margin-top: -40rpx;
@@ -246,7 +246,7 @@
 		color: black;
 		text-align: right;
 	}
-	
+
 	.applyInformation .inputPhoneAndRemarks{
 		margin-left: 470rpx;
 		margin-top: -40rpx;

@@ -10,9 +10,11 @@
 				<!-- 商品名 -->
 				<text class="commodity-title">{{commodity.commodityTitle}}</text>
 
+				<text class="select-commodity-attr">{{selectedAttr}}</text>
+				
 				<!-- 价格展示 与 数量 -->
 				<view class="commodity-price-container">
-					<text class="commodity-actual-price">￥{{commodity.salePrice}}</text>
+					<text class="commodity-actual-price">￥{{showSalePrice}}</text>
 
 					<text class="commodity-primary-price">￥{{commodity.originalPrice}}</text>
 
@@ -108,44 +110,51 @@
 				},
 				imageUrl: '',
 				addressId: '', // 外部传递过来的id（暂时未使用）
-				address: {
-				},
+				address: {},
 				wholeAddress: '', // 完整路径(上方字符串的拼接)
 				hasDefaultAddress: false,
 				userPhone: '', // 核销类型的商品需要填写电话号码
 				remark: '',
 				totalPrice: 0,
+				
+				selectedValueId: '',
+				selectedAttr: '',
+				showSalePrice: 0,
 			}
 		},
 
 		onLoad: function(params) {
+			console.log(params);
 			this.commodityId = params.commodityId;
 			this.commodityNum = params.commodityNum;
-			
-			
-},
+			// 已选择的商品属性id(请求)与属性名(展示)
+			this.selectedValueId = params.selectedValueId;
+			this.selectedAttr = params.selectedAttr;
+			// 展示的价格
+			this.showSalePrice = params.showSalePrice;
+		},
 
-		onShow:function(){
+		onShow: function() {
 			this.address = uni.getStorageSync("chooseAddress")
 			uni.removeStorageSync('chooseAddress');
 			console.log(this.address)
 			this.getCommodityInfo();
 		},
-			// uni.startPullDownRefresh();
-			
-		
+		// uni.startPullDownRefresh();
+
+
 		// onPullDownRefresh: function() {
 		// 	this.getCommodityInfo();
-			
+
 		// },
 		methods: {
-			
+
 			// 判断对象是不是空的
-		 isEmptyObject(obj) {
-			  for (var key in obj) {
-			    return false;
-			  }
-			  return true;
+			isEmptyObject(obj) {
+				for (var key in obj) {
+					return false;
+				}
+				return true;
 			},
 
 			getCommodityInfo: function() {
@@ -166,21 +175,21 @@
 
 						// 寄送，请求默认地址
 						if (this.commodity.takeWay === 1) {
-							
-							if (this.isEmptyObject(this.address)){
+
+							if (this.isEmptyObject(this.address)) {
 								console.log("地址是空的")
 								this.getDefaultAddress();
 							}
-							
+
 						}
 
-						
+
 					}).catch(err => {
 						uni.showToast({
 							title: '商品信息获取失败，刷新试试',
 							icon: 'none'
 						});
-						
+
 					})
 				} else {
 					uni.navigateBack();
@@ -248,7 +257,8 @@
 					commodityNum: this.commodityNum,
 					userPhone: this.userPhone,
 					remark: this.remark,
-					addressId: this.address.addressId
+					addressId: this.address.addressId,
+					commodityAttrIds: this.selectedValueId
 				};
 
 				console.log('开始请求');
@@ -286,7 +296,7 @@
 
 									// uni.showToast({
 									// 	title: '请稍后',
-										// 	icon: 'loading'
+									// 	icon: 'loading'
 									// });
 								}, 2000);
 							},
@@ -372,6 +382,18 @@
 		margin: auto 20rpx auto 0;
 		color: #303038;
 		font-size: 34rpx;
+		font-weight: bold;
+		display: -webkit-box;
+		text-overflow: ellipsis;
+		overflow: hidden;
+		-webkit-box-orient: vertical;
+		-webkit-line-clamp: 2;
+	}
+	
+	.select-commodity-attr {
+		margin: auto 20rpx auto 0;
+		color: #333333;
+		font-size: 25rpx;
 		font-weight: bold;
 		display: -webkit-box;
 		text-overflow: ellipsis;

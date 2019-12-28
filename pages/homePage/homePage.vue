@@ -295,8 +295,10 @@
 					locationCode: 'WCPHomePage'
 				};
 				api.getBannerImgs(location).then(res => {
-					this.carouselList = res.data.data,
-						this.swiperLength = this.carouselList.length;
+					console.log('轮播图数据');
+					console.log(res);
+					this.carouselList = res.data.data;
+					this.swiperLength = this.carouselList.length;
 				}).catch(err => {
 					console.log(err)
 				})
@@ -315,7 +317,7 @@
 						title: '地区信息获取失败',
 						icon: 'none'
 					})
-					console.log(err)
+					console.log(err);
 				})
 			},
 
@@ -373,7 +375,7 @@
 			 */
 			getPageData: function() {
 				this.defaultRegion = uni.getStorageSync('location') || '';
-				
+
 				if (this.defaultRegion == '') {
 					this.defaultRegion = '请选择地区';
 				}
