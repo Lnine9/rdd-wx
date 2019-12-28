@@ -155,7 +155,7 @@
 				<view class="phoneCell">
 					<text style="font-size: 40rpx; margin-left: 40rpx; font-weight: bold;">拨打电话</text>
 				</view>
-				<view v-for="item in phones">
+				<view v-for="(index, item) in phones" :key="index">
 					<view class="phoneCell">
 						<text class="phoneCell-text" @click="callToShop(item)">{{item}}</text>
 					</view>
@@ -224,7 +224,7 @@
 					orderId: this.orderId
 				}).then(res => {
 					this.order = res.data.data;
-					this.phones = this.order.shopPhone.split(",")
+					this.phones = this.order.shopPhone.split(",");
 					if (this.order.attrInfo != undefined && this.order.attrInfo != null && this.order.attrInfo != '') {
 						// 商品属性信息json->string
 						let map = JSON.parse(this.order.attrInfo);

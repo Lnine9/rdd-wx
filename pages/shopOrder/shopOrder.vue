@@ -38,8 +38,8 @@
 										<text class="text1"> {{commodity.orderId}}</text>
 										<text class="orderState" :class="{'active':commodity.orderState==1}">{{orderState[index]}}</text>
 										</view>
-										<view class="detail1">电子码:<text class="text1"> {{commodity.electronicCode}}</text>
-										</view>
+								<!-- 		<view class="detail1">电子码:<text class="text1"> {{commodity.electronicCode}}</text>
+										</view> -->
 									</view>
 									<view class="theType" v-show="commodity.commodityType==1">
 										<view class="detail1">快递单号:<text class="text1"> {{commodity.orderId}}</text></view>
@@ -47,6 +47,13 @@
 									</view>
 									<view class="details">
 										<view class="detail3">商品名:<text class="text1"> {{commodity.commodityTitle | ellipsis}}</text></view>
+										<view v-show="commodity.attrInfo != null" class="commodity-attr-info-container">
+											<view style="min-width: 140rpx;">
+												商品规格:
+											</view>
+											
+											<text class="commodity-attr-info"> {{commodity.attrInfo}}</text>
+											</view>
 										<view class="detail">支付金额 (元):<text class="text1"> {{commodity.actualPrice*commodity.commodityNum}}</text></view>
 										<view class="detail">数量 (个):<text class="text1"> {{commodity.commodityNum}}</text></view>
 										<view class="detail2">时间:
@@ -145,8 +152,25 @@
 					if(res.data.data.length!=0)
 					{
 						this.commodityList=res.data.data;
+						console.log(this.commodityList);
 						this.showType=false;
+						
+						
+						
 						for(let i=0;i<res.data.data.length;i++){
+							
+							if (this.commodityList[i].attrInfo != undefined && this.commodityList[i].attrInfo != null && this.commodityList[i].attrInfo != '') {
+								// 商品属性信息json->string
+								let map = JSON.parse(this.commodityList[i].attrInfo);
+								this.commodityList[i].attrInfo = '';
+								for(var key in map) {
+									this.commodityList[i].attrInfo += map[key] + '，';
+								}
+								this.commodityList[i].attrInfo = this.commodityList[i].attrInfo.slice(0, this.commodityList[i].attrInfo.length - 1);
+							} else {
+								this.commodityList[i].attrInfo = null;
+							}
+							
 							if(this.commodityList[i].deliveryState==0){
 								this.state[i]='未寄送';
 							}else if(this.commodityList[i].deliveryState==1){
@@ -388,6 +412,21 @@
 		color: black;
 		margin-left: 15rpx;
 		font-size: 30rpx;
+	}
+	
+	.commodity-attr-info-container {
+		display: flex;
+		flex-direction: row;
+		color: #CCCCCC;
+		font-size: 30rpx;
+		margin:20rpx 20rpx 0 27.5rpx;
+	}
+	
+	.commodity-attr-info {
+		color: black;
+		margin-left: 15rpx;
+		font-size: 30rpx;
+		word-break: break-all;
 	}
 	.theType {
 		margin-left: 29rpx;
