@@ -88,24 +88,34 @@
 
 			<!-- 订单信息 -->
 			<view class="order-info-container">
-				<view>
+<!-- 				<view>
 					<text class="order-text">商家电话</text>
 					<text class="order-value">{{order.shopPhone}}</text>
+				</view> -->
+				
+				<view class="attr-info-container">
+					<view class="order-text">
+						商品规格
+					</view>
+					
+					<view class="attr-info">
+						{{order.attrInfo}}
+					</view>
 				</view>
 				
-				<view>
-					<text class="order-text">订单编号</text>
-					<text class="order-value">{{order.orderId}}</text>
+				<view class="attr-info-container">
+					<view class="order-text">订单编号</view>
+					<view class="order-value">{{order.orderId}}</view>
 				</view>
 
-				<view>
-					<text class="order-text">下单时间</text>
-					<text class="order-value">{{order.createAt}}</text>
+				<view class="attr-info-container">
+					<view class="order-text">下单时间</view>
+					<view class="order-value">{{order.createAt}}</view>
 				</view>
 
-				<view v-if="takeWay === 2">
-					<text class="order-text">电子码<text style="color: #FFFFFF;">白</text></text>
-					<text class="order-value">{{order.electronicCode}}</text>
+				<view v-if="takeWay === 2" class="attr-info-container">
+					<view class="order-text">电子码<text style="color: #FFFFFF;">白</text></view>
+					<view class="order-value">{{order.electronicCode}}</view>
 				</view>
 
 				<view v-if="takeWay === 2" class="qr-code-container">
@@ -184,6 +194,8 @@
 				qrImageUrl: '', // 二维码图片
 				statusStyle: '', // 订单or发货状态样式
 				deliveryInfoShow: '', // 显示在物流信息的文字
+				
+				// attrInfo: '', // 选购的商品的属性信息
 			}
 		},
 		onLoad: function(params) {
@@ -201,6 +213,18 @@
 				}).then(res => {
 					console.log(res);
 					this.order = res.data.data;
+					if (this.order.attrInfo != undefined && this.order.attrInfo != null && this.order.attrInfo != '') {
+						// 商品属性信息json->string
+						let map = JSON.parse(this.order.attrInfo);
+						this.order.attrInfo = '';
+						for(var key in map) {
+							console.log('kkkkkk');
+							this.order.attrInfo += map[key] + '，';
+						}
+						this.order.attrInfo = this.order.attrInfo.slice(0, this.order.attrInfo.length - 1);
+					}
+					
+					console.log(this.order.attrInfo);
 					this.takeWay = Number(this.order.commodityType);
 					if (this.takeWay === 2) {
 						// 核销类型显示物流信息
@@ -665,9 +689,24 @@
 		flex-direction: column;
 	}
 
+	.attr-info-container {
+		display: flex;
+		flex-direction: row;
+	}
+
+	.attr-info {
+		max-width: 590rpx;
+		color: #999999;
+		font-size: 26rpx;
+		word-break: break-all;
+		margin-top: 10rpx;
+		margin-bottom: 10rpx;
+		margin-right: 30rpx;
+	}
+
 	.order-text {
 		color: #303038;
-		width: 100rpx;
+		min-width: 200rpx;
 		font-size: 26rpx;
 		margin: 10rpx 0 10rpx 30rpx;
 	}
@@ -675,7 +714,9 @@
 	.order-value {
 		color: #999999;
 		font-size: 26rpx;
-		margin: 10rpx 0 10rpx 93rpx;
+		margin-top: 10rpx;
+		margin-bottom: 10rpx;
+		margin-right: 30rpx;
 	}
 
 	.qr-code-container {
