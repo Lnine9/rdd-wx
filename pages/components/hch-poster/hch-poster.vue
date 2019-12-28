@@ -223,10 +223,15 @@
 				// ctx.save();
 				this.roundRect(ctx, 50, 40, (this.phoneW - 100), (this.phoneH - 120), 10, '#f7f7f7', '#f7f7f7'); //绘制海报圆角背景 上半截灰色的
 				ctx.restore();
+				console.log('开始下载海报图片了');
+				console.log(new Date());
 				//将网络图片转成本地路径 商品图片
 				wx.getImageInfo({
 					src: url,
 					success(res) {
+						console.log('下载海报图片完成了');
+						console.log(res.path);
+						console.log(new Date());
 						// ctx.restore();
 						// ctx.save();
 						//覆盖绘制
@@ -240,10 +245,15 @@
 						ctx.draw(true)
 
 						wx.hideLoading();
+						console.log('开始下载二维码图片了');
+						console.log(new Date());
 						// 绘制二维码
 						wx.getImageInfo({
 							src: code,
 							success(res) {
+								console.log('下载二维码图片完成了');
+								console.log(res.path);
+								console.log(new Date());
 								// ctx.restore();
 								// 小程序码背景设置成圆角
 								_this.roundRect(ctx, 60, (_this.phoneH - 160), 70, 70, 5,
@@ -389,6 +399,7 @@
 				ctx.setFillStyle('#fff') //文字颜色：默认黑色
 				ctx.font = 'normal bold 14px sans-serif';
 				ctx.fillText('保存图片', (_this.phoneW - 58) / 2, (this.phoneH - 33), 58);
+				
 				//绘制保存按钮 end
 				// wx.hideLoading();
 			},

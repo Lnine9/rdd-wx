@@ -54,7 +54,7 @@
 											
 											<text class="commodity-attr-info"> {{commodity.attrInfo}}</text>
 											</view>
-										<view class="detail">支付金额 (元):<text class="text1"> {{commodity.actualPrice*commodity.commodityNum}}</text></view>
+										<view class="detail">支付金额 (元):<text class="text1"> {{commodity.actualPrice}}</text></view>
 										<view class="detail">数量 (个):<text class="text1"> {{commodity.commodityNum}}</text></view>
 										<view class="detail2">时间:
 										<text class="text1"> {{commodity.createAt}}</text>
@@ -192,7 +192,7 @@
 						}
 						console.log(this.state,this.orderState)
 						for(let i=0;i<this.commodityList.length;i++){
-						this.total=this.total+this.commodityList[i].actualPrice*this.commodityList[i].commodityNum;
+						this.total=this.total+this.commodityList[i].actualPrice;
 						}	
 					}
 					else{

@@ -164,7 +164,7 @@
 			{
 				"name": "订单详情",
 				"path": "pages/orderDetail/orderDetail",
-				"query": "orderid=1575372216410"
+				"query": "orderid=1576587798997"
 			},
 			{
 				"name": "首页",
@@ -173,7 +173,7 @@
 			{
 				"name": "产品详情",
 				"path": "pages/product/product",
-				"query": "id=1111111111113"
+				"query": "id=1576587798997"
 			},
 			{
 				"name": "登录",
