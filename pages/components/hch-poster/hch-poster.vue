@@ -189,13 +189,11 @@
 				})
 			},
 
-
 			// 生成海报
 			createCanvasImage() {
-				console.log(this.posterObj, 'posterObj')
+				let startTime = (new Date()).valueOf();
 				// this.canvasFlag=false;
 				// this.deliveryFlag = false;//关闭分享的弹窗
-				console.log("海报生成中")
 				// 将提示性的loading放在外部
 				// wx.showLoading({
 				// 	title: '海报生成中...'
@@ -213,9 +211,9 @@
 				let code = this.posterObj.code
 				// let closeBtn = 'https://imgzuipin.oss-cn-hangzhou.aliyuncs.com/mp_zuipin/poster/close_btn.png'
 				let closeBtn = 'https://czb-file.oss-cn-zhangjiakou.aliyuncs.com/close_btn.png';
-				console.log(ctx)
-				console.log(this)
 
+				let endTime = (new Date()).valueOf();
+				console.log('生成海报初始化配置:' + (endTime - startTime));
 				ctx.draw() //清空原来的画图内容
 				ctx.save();
 				// this.roundRect(ctx, 50, 40, (this.phoneW - 100), (this.phoneH - 120), 10, '#fff', '#fff'); //绘制海报圆角背景白色的
@@ -223,15 +221,15 @@
 				// ctx.save();
 				this.roundRect(ctx, 50, 40, (this.phoneW - 100), (this.phoneH - 120), 10, '#f7f7f7', '#f7f7f7'); //绘制海报圆角背景 上半截灰色的
 				ctx.restore();
-				console.log('开始下载海报图片了');
-				console.log(new Date());
+				startTime = (new Date()).valueOf();
 				//将网络图片转成本地路径 商品图片
 				wx.getImageInfo({
 					src: url,
 					success(res) {
-						console.log('下载海报图片完成了');
-						console.log(res.path);
-						console.log(new Date());
+						endTime = (new Date()).valueOf();
+						console.log('下载海报图片:' + (endTime - startTime));
+
+						startTime = (new Date()).valueOf();
 						// ctx.restore();
 						// ctx.save();
 						//覆盖绘制
@@ -243,24 +241,25 @@
 						ctx.drawImage(res.path, 50, 40, (_this.phoneW - 100), (_this.phoneH - 120), 10); //绘制图
 						// ctx.restore(); //恢复之前保存的绘图上下文 恢复之前保存的绘图上下午即状态 可以继续绘制
 						ctx.draw(true)
-
+						endTime = (new Date()).valueOf();
+						console.log('绘制海报图片:' + (endTime - startTime));
 						wx.hideLoading();
-						console.log('开始下载二维码图片了');
-						console.log(new Date());
 						// 绘制二维码
+						startTime = (new Date()).valueOf();
 						wx.getImageInfo({
 							src: code,
 							success(res) {
-								console.log('下载二维码图片完成了');
-								console.log(res.path);
-								console.log(new Date());
+								endTime = (new Date()).valueOf();
+								console.log('下载二维码图片:' + (endTime - startTime));
 								// ctx.restore();
 								// 小程序码背景设置成圆角
+								startTime = (new Date()).valueOf();
 								_this.roundRect(ctx, 60, (_this.phoneH - 160), 70, 70, 5,
 									'#FFF', '#FFF') //绘制图片圆角背景
 								ctx.drawImage(res.path, 60, (_this.phoneH - 160), 70, 70)
 								ctx.draw(true)
-						
+								endTime = (new Date()).valueOf();
+								console.log('绘制二维码图片:' + (endTime - startTime));
 								wx.hideLoading();
 							},
 							fail() {
