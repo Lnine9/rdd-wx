@@ -93,7 +93,7 @@
 					<text class="order-value">{{order.shopPhone}}</text>
 				</view> -->
 
-				<view class="attr-info-container">
+				<view class="attr-info-container" v-show="order.attrInfo != null && order.attrInfo != undefined">
 					<view class="order-text">
 						商品规格
 					</view>

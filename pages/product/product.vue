@@ -261,18 +261,19 @@
 				}
 				// 计算单价
 				let singlePrice = this.dataDic.salePrice + extraPrice;
+				
+				let price = this.buyNum * singlePrice;
 				let str = new String(this.buyNum * singlePrice);
-				// 尽可能去除小数点
+				
 				if (str.indexOf('.') != -1) {
-					for (let i = str.length - 1; i >= 0; i--) {
-						if (str[i] !== '0') {
-							str = str.slice(0, i + 1);
-							break;
-						}
-					}
+					// 如果有小数点，保留两位小数
+					price = price.toFixed(2);
+				} else {
+					// 没有小数点，不保留小数
+					price = price.toFixed(0);
 				}
 
-				return str;
+				return price;
 			},
 			...mapState(['token'])
 		},
@@ -541,8 +542,12 @@
 				if (selectedValueId != null && selectedValueId != '') {
 					selectedValueId = selectedValueId.slice(0, selectedValueId.length - 1);
 				}
+				console.log('传递商品图片');
+				console.log(this.showSaleImageUrl);
+				let imageUrl = encodeURIComponent(this.showSaleImageUrl);
+				console.log(imageUrl);
 				uni.navigateTo({
-					url: `/pages/payOrder/payOrder?commodityId=${this.dataDic.commodityId}&commodityNum=${this.buyNum}&selectedValueId=${selectedValueId}&selectedAttr=${this.selectedAttr}&showSalePrice=${this.showSalePrice}`
+					url: `/pages/payOrder/payOrder?commodityId=${this.dataDic.commodityId}&commodityNum=${this.buyNum}&selectedValueId=${selectedValueId}&selectedAttr=${this.selectedAttr}&showSalePrice=${this.showSalePrice}&imageUrl=${imageUrl}`
 				})
 			},
 			...mapMutations(['login']),
