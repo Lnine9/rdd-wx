@@ -2,7 +2,7 @@
 	<!-- 海报(想让海报显示隐藏要用hidden，v-if关闭后没办法在完整的出来海报) 保存海报按钮和关闭按钮 在html代码中写出来 绑定点击方法然后透明 再用canvas 覆盖 -->
 	<view class="canvas_box" :hidden="canvasFlag">
 		<view class="canvas_box_mask"></view><!-- 遮罩 -->
-		<cover-image class="canvas_close_btn" src="../../../static/product/ic-close.png" @tap="canvasCancelEvn"  /></cover-image><!-- 关闭 -->
+		<cover-image class="canvas_close_btn" :style="{'top':toTop + 'rpx'}" src="../../../static/product/ic-close.png" @tap="canvasCancelEvn"  /></cover-image><!-- 关闭 -->
 		<view class="button-wrapper">
 			<!-- 保存海报按钮 -->
 			<cover-view class="save_btn" @tap="saveCanvasImage"></cover-view>
@@ -15,8 +15,11 @@
 	export default {
 		data() {
 			return {
-
+				toTop:40
 			}
+		},
+		mounted() {
+		
 		},
 		props: {
 			canvasFlag: {
@@ -206,6 +209,8 @@
 				this.phoneW = phoneData.windowWidth;
 				let scaleW = this.phoneW / 375; //按照苹果留 375*667比例 其他型号手机等比例缩放 显示
 				let scaleH = this.phoneH / 667; //按照苹果留 375*667比例 其他型号手机等比例缩放 显示
+				let pro = 1.778
+				let topH = this.phoneH / 2 - (this.phoneW - 100) * pro / 2
 				console.log(this.phoneH, this.phoneW)
 				const ctx = wx.createCanvasContext('myCanvas');
 				let url = this.posterObj.url; //商品主图
@@ -221,7 +226,8 @@
 				// this.roundRect(ctx, 50, 40, (this.phoneW - 100), (this.phoneH - 120), 10, '#fff', '#fff'); //绘制海报圆角背景白色的
 				// ctx.restore(); //恢复之前保存的绘图上下文 恢复之前保存的绘图上下午即状态 可以继续绘制
 				// ctx.save();
-				this.roundRect(ctx, 50, 40, (this.phoneW - 100), (this.phoneH - 120), 10, '#f7f7f7', '#f7f7f7'); //绘制海报圆角背景 上半截灰色的
+				this.toTop = topH;
+				this.roundRect(ctx, 50, topH, (this.phoneW - 100), (this.phoneW - 100) * pro, 10, '#f7f7f7', '#f7f7f7'); //绘制海报圆角背景 上半截灰色的
 				ctx.restore();
 				//将网络图片转成本地路径 商品图片
 				wx.getImageInfo({
@@ -233,9 +239,9 @@
 						//问题：在微信小程序使用canvas绘制圆角图片时，微信调试工具正常显示，android真机都不显示。
 						// 原因：因为ctx.clip()剪切区域使用的填充颜色是透明的，所以图片没出来。
 						// 解决方案：将剪切区域设置成实体颜色就好了。
-						_this.roundRect(ctx, 50, 40, (_this.phoneW - 100), (_this.phoneH - 120), 10,
+						_this.roundRect(ctx, 50, topH, (_this.phoneW - 100), (_this.phoneW - 100) * pro, 10,
 							'#000', '#000') //绘制图片圆角背景
-						ctx.drawImage(res.path, 50, 40, (_this.phoneW - 100), (_this.phoneH - 120), 10); //绘制图
+						ctx.drawImage(res.path, 50, topH, (_this.phoneW - 100), (_this.phoneW - 100) * pro, 10); //绘制图
 						// ctx.restore(); //恢复之前保存的绘图上下文 恢复之前保存的绘图上下午即状态 可以继续绘制
 						ctx.draw(true)
 
@@ -246,9 +252,9 @@
 							success(res) {
 								// ctx.restore();
 								// 小程序码背景设置成圆角
-								_this.roundRect(ctx, 60, (_this.phoneH - 160), 70, 70, 5,
+								_this.roundRect(ctx, 60, (_this.phoneH - topH - 80), 70, 70, 5,
 									'#FFF', '#FFF') //绘制图片圆角背景
-								ctx.drawImage(res.path, 60, (_this.phoneH - 160), 70, 70)
+								ctx.drawImage(res.path, 60, (_this.phoneH - topH - 80), 70, 70)
 								ctx.draw(true)
 						
 								wx.hideLoading();
@@ -383,12 +389,12 @@
 				//绘制保存按钮
 				ctx.save();
 				// this.roundRect(ctx,(this.phoneW-160)/2,(this.phoneH-55),160, 36,18,'#ff3600','#ff6a00','btn')
-				this.roundRect(ctx, (this.phoneW - 160) / 2, (this.phoneH - 55), 160, 36, 18, '#06C1AE', '#06C1AE', 'btn')
+				this.roundRect(ctx, (this.phoneW - 160) / 2, (_this.phoneH - topH + 9), 160, 36, 18, '#06C1AE', '#06C1AE', 'btn')
 				ctx.restore();
 				ctx.setFontSize(14)
 				ctx.setFillStyle('#fff') //文字颜色：默认黑色
 				ctx.font = 'normal bold 14px sans-serif';
-				ctx.fillText('保存图片', (_this.phoneW - 58) / 2, (this.phoneH - 33), 58);
+				ctx.fillText('保存图片', (_this.phoneW - 58) / 2, (_this.phoneH - topH + 33), 58);
 				//绘制保存按钮 end
 				// wx.hideLoading();
 			},
@@ -504,12 +510,9 @@
 			height: 50rpx;
 			width: 50rpx;
 			position: fixed;
-			top: 40rpx;
 			// right: 0;
 			z-index: 12;
-
 			right: 40rpx;
-
 		}
 	}
 </style>
