@@ -3,7 +3,7 @@
 		<!-- 商品展示 -->
 		<view class="commodity-container">
 			<view class="commodity-img-container">
-				<image :src="imageUrl" mode="暂无图片" class="commodity-img"></image>
+				<image :src="showSaleImageUrl" mode="" class="commodity-img"></image>
 			</view>
 
 			<view class="commodity-content-container">
@@ -77,7 +77,7 @@
 		<view class="pay-btn-container">
 			<view class="pay-btn-price-container">
 				<text class="pay-btn-price-total">合计:</text>
-				<text class="pay-btn-price-text">￥{{totalPrice}}</text>
+				<text class="pay-btn-price-text">￥{{showSalePrice}}</text>
 			</view>
 
 			<view class="pay-btn" @tap="payOrder">
@@ -108,7 +108,7 @@
 					commodityTitle: '',
 					takeWay: 2,
 				},
-				imageUrl: '',
+				// imageUrl: '',
 				addressId: '', // 外部传递过来的id（暂时未使用）
 				address: {},
 				wholeAddress: '', // 完整路径(上方字符串的拼接)
@@ -119,7 +119,8 @@
 				
 				selectedValueId: '',
 				selectedAttr: '',
-				showSalePrice: 0,
+				showSalePrice: 0, // 商品详情页面获取的价格
+				showSaleImageUrl: '', // 商品详情页面获取的图片
 			}
 		},
 
@@ -132,6 +133,10 @@
 			this.selectedAttr = params.selectedAttr;
 			// 展示的价格
 			this.showSalePrice = params.showSalePrice;
+			console.log('商品图片');
+			console.log(params.imageUrl);
+			// 商品图片
+			this.showSaleImageUrl = decodeURIComponent(params.imageUrl);
 		},
 
 		onShow: function() {
@@ -166,12 +171,12 @@
 						this.commodity = res.data.data;
 						this.commodity.salePrice = Number(this.commodity.salePrice);
 						this.commodity.originalPrice = Number(this.commodity.originalPrice);
-						// 设置显示的图片
-						if (this.commodity.commodityImg.length > 0) {
-							this.imageUrl = this.commodity.commodityImg[0];
-						}
-						// 获取总价格
-						this.totalPrice = Number(this.commodity.salePrice) * Number(this.commodityNum);
+						// // 设置显示的图片
+						// if (this.commodity.commodityImg.length > 0) {
+						// 	this.imageUrl = this.commodity.commodityImg[0];
+						// }
+						// // 获取总价格
+						// this.totalPrice = Number(this.showSalePrice) * Number(this.commodityNum);
 
 						// 寄送，请求默认地址
 						if (this.commodity.takeWay === 1) {

@@ -68,11 +68,11 @@
 		</view>
 
 		<!-- 商品属性选择 -->
-		<view v-show="isBuy" @click="closeAttrChoose" style="background-color: rgba(0,0,0,0.5); z-index: 3;position: fixed;bottom: 0rpx;right: 0rpx;width: 100vw;height: 100vh;"></view>
+		<view v-show="isBuy" catchtouchmove="catchTouch" @click="closeAttrChoose" style="background-color: rgba(0,0,0,0.5); z-index: 3;position: fixed;bottom: 0rpx;right: 0rpx;width: 100vw;height: 100vh;"></view>
 		<view v-show="isBuy" :class="isBuy?'open-ready-to-buy':'close-ready-to-buy'" class="cart-item" @click.stop="">
 			<view class="commodity-info-container">
 				<view class="commodity-info-image">
-					<image :src="showSaleImageUrl" style="width: 210rpx;height: 210rpx;"></image>
+					<image :src="showSaleImageUrl" @click="checkPicture([showSaleImageUrl], 0)" style="width: 210rpx;height: 210rpx;"></image>
 				</view>
 				<view class="item-right">
 					<view style="display: flex;justify-content: space-between;align-items: center;">
@@ -215,6 +215,8 @@
 
 				loginTipShow: false, // 提示要求用户登陆的弹窗
 				showSaleImageUrl: '', // 用户准备购买时展示的商品图片
+				
+				code: '', // 商品分享二维码
 			};
 		},
 		components: {
@@ -245,7 +247,6 @@
 			},
 			// 购买时展示的价格
 			showSalePrice() {
-				console.log('计算showSalePrice');
 				// 因为选项产生的附加价格
 				let extraPrice = 0;
 				for (let attrValueObj of this.attrValueList) {
@@ -253,33 +254,26 @@
 						for (let value of attrValueObj.contentList) {
 							if (value.content === attrValueObj.selectedValue) {
 								extraPrice += Number(value.extraSaleMoney);
-								console.log('属性：' + value.content + '，产生的附加价格：' + value.extraSaleMoney);
 								break;
 							}
 						}
 					}
 				}
-				console.log('附加价格');
-				console.log(extraPrice);
 				// 计算单价
 				let singlePrice = this.dataDic.salePrice + extraPrice;
+				
+				let price = this.buyNum * singlePrice;
 				let str = new String(this.buyNum * singlePrice);
-				console.log('最后的价格结果');
-				console.log(str);
-				// 尽可能去除小数点
+				
 				if (str.indexOf('.') != -1) {
-					for (let i = str.length - 1; i >= 0; i--) {
-						if (str[i] !== '0') {
-							str = str.slice(0, i + 1);
-							break;
-						}
-					}
+					// 如果有小数点，保留两位小数
+					price = price.toFixed(2);
+				} else {
+					// 没有小数点，不保留小数
+					price = price.toFixed(0);
 				}
 
-				console.log('返回的值');
-				console.log(str);
-
-				return str;
+				return price;
 			},
 			...mapState(['token'])
 		},
@@ -292,8 +286,6 @@
 					if (attrValueObj.name === chooseValue.name) {
 
 						attrValueObj.selectedValue = chooseValue.content;
-						console.log('当前选中的attrValueObj');
-						console.log(attrValueObj);
 						// 根据当前选中的属性，选择是否要加载新的图片
 						for (let value of attrValueObj.contentList) {
 							if (value.content === chooseValue.content && value.savePath !== undefined && value.savePath != null) {
@@ -309,47 +301,61 @@
 				this.isBuy = false;
 			},
 			catchTouch: function() {
-				console.log('stop touch');
 				return;
 			},
 			createCanvasImageEvn() {
 				wx.showLoading({
 					title: '正在生成海报'
 				});
-				api.getQRCodeImg({
-					commodityId: this.commodityId
-				}).then((res) => {
-					let code = res.data.data;
-					// http -> https
-					if (code[4] != 's') {
-						code = 'https' + code.substring(4, code.length);
-					}
-
-					if (this.dataDic.posterImg[4] != 's') {
-						this.dataDic.posterImg = 'https' + this.dataDic.posterImg.substring(4, this.dataDic.posterImg.length);
-					}
-
-					console.log('二维码图片');
-					console.log(code);
-					console.log('海报');
-					console.log(this.dataDic.posterImg);
-					Object.assign(this.posterData, {
-						url: this.dataDic.posterImg, //商品海报图片
-						icon: 'none', //优惠价图标
-						title: this.dataDic.commodityTitle + ' ' + this.dataDic.commodityInfo.split(" ").join(""), //标题
-						discountPrice: this.dataDic.salePrice, //折后价格
-						orignPrice: this.dataDic.originalPrice, //原价
-						code: code, //商品二维码
+				
+				let startTime = (new Date()).valueOf();
+				// 如果没有获取到二维码图片，重新获取
+				if (this.code === '') {
+					api.getQRCodeImg({
+						commodityId: this.commodityId
+					}).then((res) => {
+						let endTime = (new Date()).valueOf();
+						this.code = res.data.data;
+						// http -> https
+						if (this.code[4] != 's') {
+							this.code = 'https' + this.code.substring(4, this.code.length);
+						}
+						console.log('异常方式获取二维码图片');
+						console.log('异常获取二维码:' + (endTime - startTime));
+						Object.assign(this.posterData, {
+							url: this.dataDic.posterImg, //商品海报图片
+							icon: 'none', //优惠价图标
+							title: this.dataDic.commodityTitle + ' ' + this.dataDic.commodityInfo.split(" ").join(""), //标题
+							discountPrice: this.dataDic.salePrice, //折后价格
+							orignPrice: this.dataDic.originalPrice, //原价
+							code: this.code, //商品二维码
+						});
+						this.$forceUpdate(); //强制渲染数据
+						setTimeout(() => {
+							this.canvasFlag = false; //显示canvas海报
+							this.deliveryFlag = false; //关闭分享弹窗
+							this.$refs.hchPoster.createCanvasImage(); //调用子组件的方法
+						}, 500);
+					}).catch(err => {
+						console.log(err);
 					});
-					this.$forceUpdate(); //强制渲染数据
-					setTimeout(() => {
-						this.canvasFlag = false; //显示canvas海报
-						this.deliveryFlag = false; //关闭分享弹窗
-						this.$refs.hchPoster.createCanvasImage(); //调用子组件的方法
-					}, 500)
-				}).catch(err => {
-					console.log(err);
-				})
+					return;
+				}
+				
+				Object.assign(this.posterData, {
+					url: this.dataDic.posterImg, //商品海报图片
+					icon: 'none', //优惠价图标
+					title: this.dataDic.commodityTitle + ' ' + this.dataDic.commodityInfo.split(" ").join(""), //标题
+					discountPrice: this.dataDic.salePrice, //折后价格
+					orignPrice: this.dataDic.originalPrice, //原价
+					code: this.code, //商品二维码
+				});
+				this.$forceUpdate(); //强制渲染数据
+				setTimeout(() => {
+					this.canvasFlag = false; //显示canvas海报
+					this.deliveryFlag = false; //关闭分享弹窗
+					this.$refs.hchPoster.createCanvasImage(); //调用子组件的方法
+				}, 500);
 				// 以下是根据后端接口动态生成小程序码 end
 			},
 			// 分享弹窗
@@ -401,13 +407,18 @@
 				api.getList({
 					commodityId: commodityId
 				}).then(res => {
-					console.log('获取到的商品信息');
-					console.log(res);
 					// 设置商品信息
 					this.dataDic = res.data.data;
 					this.dataDic.commodityNum = Number.parseInt(this.dataDic.commodityNum);
 					this.dataDic.salePrice = Number.parseFloat(this.dataDic.salePrice);
 
+					// 海报图片数据path处理
+					console.log('商品海报图片');
+					console.log(this.dataDic.posterImg);
+					if (this.dataDic.posterImg != undefined && this.dataDic.posterImg != null && this.dataDic.posterImg[4] != 's') {
+						this.dataDic.posterImg = 'https' + this.dataDic.posterImg.substring(4, this.dataDic.posterImg.length);
+					}
+					
 					// 设置商品属性
 					this.attrValueList = res.data.data.attrs;
 					if (this.attrValueList == undefined || this.attrValueList == null) {
@@ -423,8 +434,6 @@
 								this.attrValueList[i].selectedValue = this.attrValueList[i].contentList[0].content;
 							}
 						}
-						console.log('测试打印属性');
-						console.log(this.attrValueList);
 					}
 
 					this.titleImg = this.dataDic.commodityImg;
@@ -442,7 +451,6 @@
 					uni.hideLoading()
 					this.showPage = true;
 
-					console.log('返佣金额显示：' + this.dataDic.fyMoney);
 					if (this.dataDic.fyMoney != undefined && this.dataDic.fyMoney != null && this.dataDic.fyMoney !== '') {
 						// this.rebateShow = true;
 						this.rebateValue = this.dataDic.fyMoney;
@@ -451,7 +459,7 @@
 						this.rebateShow = false;
 					}
 				}).catch(err => {
-
+					console.log('获取商品信息失败');
 					console.log(err);
 					uni.hideLoading()
 					uni.showToast({
@@ -534,12 +542,12 @@
 				if (selectedValueId != null && selectedValueId != '') {
 					selectedValueId = selectedValueId.slice(0, selectedValueId.length - 1);
 				}
-				console.log('将要传递的id的值，中间用逗号隔开');
-				console.log(selectedValueId);
-				console.log('传递的价格');
-				console.log(this.showSalePrice);
+				console.log('传递商品图片');
+				console.log(this.showSaleImageUrl);
+				let imageUrl = encodeURIComponent(this.showSaleImageUrl);
+				console.log(imageUrl);
 				uni.navigateTo({
-					url: `/pages/payOrder/payOrder?commodityId=${this.dataDic.commodityId}&commodityNum=${this.buyNum}&selectedValueId=${selectedValueId}&selectedAttr=${this.selectedAttr}&showSalePrice=${this.showSalePrice}`
+					url: `/pages/payOrder/payOrder?commodityId=${this.dataDic.commodityId}&commodityNum=${this.buyNum}&selectedValueId=${selectedValueId}&selectedAttr=${this.selectedAttr}&showSalePrice=${this.showSalePrice}&imageUrl=${imageUrl}`
 				})
 			},
 			...mapMutations(['login']),
@@ -551,9 +559,7 @@
 					success: function(infoRes) {
 						let nickName = infoRes.userInfo.nickName; //昵称
 						_this.nickName = nickName;
-						console.log('用户名' + nickName)
 						let avatarUrl = infoRes.userInfo.avatarUrl; //头像
-						console.log(infoRes)
 						_this.avatarUrl = avatarUrl;
 						uni.base
 						try {
@@ -581,14 +587,11 @@
 				uni.login({
 					provider: 'weixin',
 					success: function(loginRes) {
-						console.log(loginRes)
 						if (!_this.isCanUse) {
 							//非第一次授权获取用户信息
 							uni.getUserInfo({
 								provider: 'weixin',
 								success: function(infoRes) {
-
-									console.log(infoRes);
 									//获取用户信息后向调用信息更新方法
 									let nickName = infoRes.userInfo.nickName; //昵称
 									_this.nickName = nickName;
@@ -598,7 +601,6 @@
 							});
 						}
 						//2.将用户登录code传递到后台置换用户SessionKey、OpenId等信息
-						console.log('请求后台');
 						let loginParam = {
 							code: loginRes.code,
 							nickName: _this.nickName,
@@ -606,11 +608,8 @@
 							// superiorUser: _this.superiorUser
 							superiorUser: uni.getStorageSync('superiorUser') || null
 						}
-						console.log(loginParam)
 						api.getData(loginParam).then(res => {
-							console.log(res)
 							_this.loginSuccess(res.data.token)
-							console.info('awewe' + uni.getStorageSync('token'))
 						}).catch(err => {
 							console.log(err)
 						})
@@ -635,9 +634,28 @@
 			closeRebate: function() {
 				this.rebateShow = false;
 			},
+			// 获取二维码图片
+			getHchImage: function () {
+				let startTime = (new Date()).valueOf();
+				api.getQRCodeImg({
+					commodityId: this.commodityId
+				}).then((res) => {
+					let endTime = (new Date()).valueOf();
+					this.code = res.data.data;
+					console.log('正常获取二维码');
+					console.log(this.code);
+					console.log('正常获取二维码:' + (endTime - startTime));
+					// http -> https
+					if (this.code != undefined && this.code != null && this.code[4] != 's') {
+						this.code = 'https' + this.code.substring(4, this.code.length);
+					}
+				}).catch(err => {
+					console.log(err);
+				})
+			}
 		},
 		onLoad: function(params) {
-
+			console.log(params.id);
 			// 判断该用户是否是vip
 			let isVip = uni.getStorageSync('isVip');
 			if (isVip === true) {
@@ -646,14 +664,9 @@
 			}
 			// 获取登录状态
 			let loginState = uni.getStorageSync('loginState');
-			console.log('获取到的登录状态');
-			console.log(loginState);
-			console.log(params);
 			if (params.scene) { // 二维码解析进入
 				// 获取scene中的数据
-				console.log("has scene");
 				let scene = decodeURIComponent(params.scene);
-				console.log("scene is ", scene);
 				let arrPara = scene.split("&");
 				let arr = [];
 				for (let i in arrPara) {
@@ -687,6 +700,9 @@
 				this.commodityId = params.id;
 				this.getData(this.commodityId);
 			}
+			
+			// 获取海报所需要的数据
+			this.getHchImage();
 		},
 		onShareAppMessage: function(res) {
 			// 隐藏下方分享栏(如果下方有的话)
@@ -694,7 +710,6 @@
 
 			// todo path通过拼接商品id与superiorUser(需要进行多次测试)
 			let path = '/pages/product/product?s=' + uni.getStorageSync('userId') + '&id=' + this.commodityId;
-			console.log('上方的操作栏进行分享');
 			return {
 				title: this.dataDic.commodityTitle,
 				path: path

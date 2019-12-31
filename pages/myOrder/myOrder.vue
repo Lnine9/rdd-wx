@@ -51,7 +51,7 @@
 						<text class="totalPrice largeFontSize boldFontWeight">{{"￥"+item.actualPrice * item.commodityNum}}</text>
 					</view>
 
-					<button class="button  normalGray smallFontSize" @click="toDetail(item.orderId)"> 查看详情</button>
+					<button class="button  normalGray smallFontSize" @click="toDetail(item.orderId)">查看详情</button>
 
 				</view>
 			</view>
@@ -368,7 +368,7 @@
 	.button {
 		background-color: #FFFFFF;
 		height: 60rpx;
-		width: 160rpx;
+		width: 180rpx;
 		border: 1rpx solid rgba(204, 204, 204, 1);
 		border-radius: 30rpx;
 	}
