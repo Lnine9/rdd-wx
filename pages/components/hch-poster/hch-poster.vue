@@ -257,7 +257,6 @@
 								// ctx.restore();
 								// 小程序码背景设置成圆角
 								startTime = (new Date()).valueOf();
-								_this.roundRect(ctx, 60, (_this.phoneH - 160), 70, 70, 5,
 								_this.roundRect(ctx, 60, (_this.phoneH - topH - 80), 70, 70, 5,
 									'#FFF', '#FFF') //绘制图片圆角背景
 								ctx.drawImage(res.path, 60, (_this.phoneH - topH - 80), 70, 70)

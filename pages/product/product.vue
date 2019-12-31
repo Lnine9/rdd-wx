@@ -30,13 +30,21 @@
 
 		</view>
 		<view class="c-list">
-			<view class="c-row b-b">
+			<view class="c-row b-b" @click="navToShop">
 				<view class="con-list">
-					<view style="display: flex;align-items: center;">
-						<image style="width: 24rpx;height: 28rpx;margin-right: 10rpx;" src="../../static/product/location.png"></image>
-						<text style="font-size:28rpx;font-weight:500;color:rgba(51,51,51,1);">{{dataDic.shopName}}</text>
+					<image style="width: 30rpx;height: 34rpx;margin-top: auto;margin-bottom: auto;margin-right: 20rpx;" src="/static/product/location.png"></image>
+
+					<view class="shop-container">
+						<view class="shop-info-container">
+							<text style="font-size:28rpx;font-weight:500;color:rgba(51,51,51,1);">{{dataDic.shopName}}</text>
+							<text class="address-txt">{{dataDic.shopAddress}}</text>
+						</view>
+
+						<view class="nav-text-style">
+							地图/导航 >
+						</view>
 					</view>
-					<text style="font-size:26rpx;font-family:PingFang SC;font-weight:400;color: #808080;margin-left: 34rpx;">{{dataDic.shopAddress}}</text>
+
 				</view>
 			</view>
 		</view>
@@ -215,7 +223,7 @@
 
 				loginTipShow: false, // 提示要求用户登陆的弹窗
 				showSaleImageUrl: '', // 用户准备购买时展示的商品图片
-				
+
 				code: '', // 商品分享二维码
 			};
 		},
@@ -261,10 +269,10 @@
 				}
 				// 计算单价
 				let singlePrice = this.dataDic.salePrice + extraPrice;
-				
+
 				let price = this.buyNum * singlePrice;
 				let str = new String(this.buyNum * singlePrice);
-				
+
 				if (str.indexOf('.') != -1) {
 					// 如果有小数点，保留两位小数
 					price = price.toFixed(2);
@@ -300,14 +308,25 @@
 			closeAttrChoose: function() {
 				this.isBuy = false;
 			},
+			// 滑动穿透解决
 			catchTouch: function() {
 				return;
+			},
+			// 地图导航
+			navToShop: function() {
+				wx.openLocation({
+					latitude: new Number(this.dataDic.latitude),
+					longitude: new Number(this.dataDic.longitude),
+					name: this.dataDic.shopName,
+					address: this.dataDic.shopAddress,
+					scale: 18
+				});
 			},
 			createCanvasImageEvn() {
 				wx.showLoading({
 					title: '正在生成海报'
 				});
-				
+
 				let startTime = (new Date()).valueOf();
 				// 如果没有获取到二维码图片，重新获取
 				if (this.code === '') {
@@ -341,7 +360,7 @@
 					});
 					return;
 				}
-				
+
 				Object.assign(this.posterData, {
 					url: this.dataDic.posterImg, //商品海报图片
 					icon: 'none', //优惠价图标
@@ -407,6 +426,8 @@
 				api.getList({
 					commodityId: commodityId
 				}).then(res => {
+					console.log('商品信息');
+					console.log(res);
 					// 设置商品信息
 					this.dataDic = res.data.data;
 					this.dataDic.commodityNum = Number.parseInt(this.dataDic.commodityNum);
@@ -418,7 +439,7 @@
 					if (this.dataDic.posterImg != undefined && this.dataDic.posterImg != null && this.dataDic.posterImg[4] != 's') {
 						this.dataDic.posterImg = 'https' + this.dataDic.posterImg.substring(4, this.dataDic.posterImg.length);
 					}
-					
+
 					// 设置商品属性
 					this.attrValueList = res.data.data.attrs;
 					if (this.attrValueList == undefined || this.attrValueList == null) {
@@ -531,7 +552,7 @@
 
 						return;
 					}
-					
+
 					for (let value of attrValueObj.contentList) {
 						if (attrValueObj.selectedValue === value.content) {
 							selectedValueId += value.commodityAttrId + ",";
@@ -635,7 +656,7 @@
 				this.rebateShow = false;
 			},
 			// 获取二维码图片
-			getHchImage: function () {
+			getHchImage: function() {
 				let startTime = (new Date()).valueOf();
 				api.getQRCodeImg({
 					commodityId: this.commodityId
@@ -655,6 +676,7 @@
 			}
 		},
 		onLoad: function(params) {
+			console.log('商品id');
 			console.log(params.id);
 			// 判断该用户是否是vip
 			let isVip = uni.getStorageSync('isVip');
@@ -700,7 +722,7 @@
 				this.commodityId = params.id;
 				this.getData(this.commodityId);
 			}
-			
+
 			// 获取海报所需要的数据
 			this.getHchImage();
 		},
@@ -1022,9 +1044,42 @@
 		.con-list {
 			flex: 1;
 			display: flex;
-			flex-direction: column;
+			flex-direction: row;
 			color: $font-color-dark;
 			line-height: 40upx;
+		}
+
+		.shop-container {
+			width: 640rpx;
+			display: flex;
+			flex-direction: row;
+			justify-content: space-between;
+		}
+
+		.shop-info-container {
+			display: flex;
+			flex-direction: column;
+		}
+
+		.address-txt {
+			font-size: 26rpx;
+			font-family: PingFang SC;
+			font-weight: 400;
+			color: #808080;
+			display: -webkit-box;
+			text-overflow: ellipsis;
+			overflow: hidden;
+			-webkit-box-orient: vertical;
+			-webkit-line-clamp: 1;
+		}
+
+		.nav-text-style {
+			margin-top: auto;
+			margin-bottom: auto;
+			float: right;
+			color: $renduoduo-primary-txt;
+			font-size: 30rpx;
+			font-weight: 500;
 		}
 
 		.red {
@@ -1139,7 +1194,7 @@
 		.price-container {
 			margin-top: auto;
 			/* display: flex; */
-		/* 	flex-direction: row; */
+			/* 	flex-direction: row; */
 			font-weight: 700;
 			color: rgba(255, 126, 48, 1);
 		}
