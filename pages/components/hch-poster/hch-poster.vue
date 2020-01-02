@@ -400,7 +400,6 @@
 				ctx.setFontSize(14)
 				ctx.setFillStyle('#fff') //文字颜色：默认黑色
 				ctx.font = 'normal bold 14px sans-serif';
-				ctx.fillText('保存图片', (_this.phoneW - 58) / 2, (this.phoneH - 33), 58);
 
 				ctx.fillText('保存图片', (_this.phoneW - 58) / 2, (_this.phoneH - topH + 33), 58);
 				//绘制保存按钮 end
@@ -414,12 +413,14 @@
 					title: '保存中...'
 				})
 				let _this = this;
+				let pro = 1.778
+				let topH = this.phoneH / 2 - (this.phoneW - 100) * pro / 2
 				// 1-把画布转化成临时文件
 				uni.canvasToTempFilePath({
 					x: 50,
-					y: 40,
+					y: topH,
 					width: (this.phoneW - 100), // 画布的宽
-					height: (this.phoneH - 120), // 画布的高
+					height: (this.phoneW - 100) * pro, // 画布的高
 					destWidth: (this.phoneW - 100) * 5,
 					destHeight: (this.phoneH - 120) * 5,
 					canvasId: 'myCanvas',
