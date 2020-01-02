@@ -25,8 +25,8 @@
 
 						<text class="goodsName normalFontDark  normalFontWeight bigFontSize">{{item.commodityTitle}}</text>
 						<view style="display: flex;flex-direction: row;margin-top: 40rpx;align-items: center;width: 67.5vw;">
-							<text class="actualPrice boldFontWeight largeFontSize">{{"￥"+item.actualPrice}}</text>
-							<text class="originPrice normalGray midalFontSize">{{"￥"+item.originalPrice}}</text>
+							<text class="actualPrice boldFontWeight largeFontSize">{{"￥"+actualPrice(item)}}</text>
+							<text class="originPrice normalGray midalFontSize">{{"￥"+originPrice(item)}}</text>
 							<text class="number normalGray midalFontSize">{{"×"+item.commodityNum}}</text>
 						</view>
 
@@ -48,7 +48,7 @@
 				<view class="bottom">
 					<view class="totalText bigFontSize">
 						<text>合计：</text>
-						<text class="totalPrice largeFontSize boldFontWeight">{{"￥"+item.actualPrice * item.commodityNum}}</text>
+						<text class="totalPrice largeFontSize boldFontWeight">{{"￥"+item.actualPrice}}</text>
 					</view>
 
 					<button class="button  normalGray smallFontSize" @click="toDetail(item.orderId)">查看详情</button>
@@ -95,7 +95,8 @@
 				s = s < 10 ? ('0' + s) : s;
 				console.log("adsfasdfas" + date)
 				return y + '-' + MM + '-' + d + " " + h + ':' + m + ":" + s ;
-			}
+			},
+			
 		},
 
 		computed: {
@@ -107,6 +108,12 @@
 		},
 
 		methods: {
+			actualPrice: function(item) {
+				return (item.actualPrice / item.commodityNum).toFixed(2);
+			},
+			originPrice: function(item) {
+				return (item.originalPrice / item.commodityNum).toFixed(2);
+			},
 			// 跳转到详情
 			toDetail: function(orderID) {
 				console.log(orderID);

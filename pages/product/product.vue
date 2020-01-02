@@ -1057,11 +1057,13 @@
 		}
 
 		.shop-info-container {
+			max-width: 450rpx;
 			display: flex;
 			flex-direction: column;
 		}
 
 		.address-txt {
+			max-width: 450rpx;
 			font-size: 26rpx;
 			font-family: PingFang SC;
 			font-weight: 400;
@@ -1074,6 +1076,7 @@
 		}
 
 		.nav-text-style {
+			min-width: 190rpx;
 			margin-top: auto;
 			margin-bottom: auto;
 			float: right;

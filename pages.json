@@ -19,12 +19,12 @@
 				"enablePullDownRefresh": true
 			}
 		},
-		{
-			"path": "pages/applyMerchant/applyMerchant",
-			"style": {
-				"navigationBarTitleText": "商家入驻"
-			}
-		},
+//		{
+//			"path": "pages/applyMerchant/applyMerchant",
+//			"style": {
+//				"navigationBarTitleText": "商家入驻"
+//			}
+//		},
 		{
 			"path": "pages/inviteFriends/inviteFriends",
 			"style": {
@@ -124,7 +124,7 @@
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
-		
+
 		"navigationBarTitleText": "囧途宝盒",
 		"navigationBarBackgroundColor": "#EAEAEA",
 		"backgroundColor": "#EAEAEA"
