@@ -9,7 +9,7 @@
 			 circular=true duration="400">
 				<swiper-item class="swiper-item" v-for="(item,index) in titleImg" :key="index">
 					<view @click="checkPicture(titleImg ,index)" class="image-wrapper">
-						<image :src="item" class="loaded" mode="aspectFill"></image>
+						<image :src="item" mode="aspectFill"></image>
 					</view>
 				</swiper-item>
 			</swiper>
@@ -286,6 +286,10 @@
 			...mapState(['token'])
 		},
 		methods: {
+			// 商品加载完成的回调
+			commodityImageLoad: function () {
+
+			},
 			// 选中属性
 			selectAttrValue: function(item) {
 				let chooseValue = item.currentTarget.dataset.value;
@@ -440,6 +444,9 @@
 						this.dataDic.posterImg = 'https' + this.dataDic.posterImg.substring(4, this.dataDic.posterImg.length);
 					}
 
+					console.log('商品图片');
+					console.log(this.dataDic.commodityImg[0]);
+
 					// 设置商品属性
 					this.attrValueList = res.data.data.attrs;
 					if (this.attrValueList == undefined || this.attrValueList == null) {
@@ -469,11 +476,16 @@
 					// this.bottomImg += `</div>`
 
 					this.commodityImg = this.dataDic.commodityImg
-					uni.hideLoading()
+					uni.hideLoading();
 					this.showPage = true;
 
+					// 返佣红包显示与隐藏问题
 					if (this.dataDic.fyMoney != undefined && this.dataDic.fyMoney != null && this.dataDic.fyMoney !== '') {
 						// this.rebateShow = true;
+						// 返佣金额为0，隐藏
+						if (this.dataDic.fyMoney == 0) {
+							this.rebateShow = false;
+						}
 						this.rebateValue = this.dataDic.fyMoney;
 					} else {
 						// 如果没有返佣金额，则不显示返佣红包
@@ -734,7 +746,8 @@
 			let path = '/pages/product/product?s=' + uni.getStorageSync('userId') + '&id=' + this.commodityId;
 			return {
 				title: this.dataDic.commodityTitle,
-				path: path
+				path: path,
+				imageUrl: this.titleImg[0]
 			}
 		},
 	}
@@ -1076,6 +1089,7 @@
 		}
 
 		.nav-text-style {
+			text-align: right;
 			min-width: 190rpx;
 			margin-top: auto;
 			margin-bottom: auto;
