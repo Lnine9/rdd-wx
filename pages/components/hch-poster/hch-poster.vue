@@ -3,7 +3,7 @@
 	<view class="canvas_box" :hidden="canvasFlag">
 		<view class="canvas_box_mask"></view><!-- 遮罩 -->
 		<cover-image class="canvas_close_btn" :style="{'top':toTop + 'rpx'}" src="../../../static/product/ic-close.png" @tap="canvasCancelEvn"  /></cover-image><!-- 关闭 -->
-		<view class="button-wrapper">
+		<view class="button-wrapper" :style="{'bottom': saveBtnToTop + 'rpx'}">
 			<!-- 保存海报按钮 -->
 			<cover-view class="save_btn" @tap="saveCanvasImage"></cover-view>
 		</view>
@@ -15,7 +15,8 @@
 	export default {
 		data() {
 			return {
-				toTop:40
+				toTop:40,
+				saveBtnToTop: ''
 			}
 		},
 		props: {
@@ -222,6 +223,7 @@
 				// ctx.restore(); //恢复之前保存的绘图上下文 恢复之前保存的绘图上下午即状态 可以继续绘制
 				// ctx.save();
 				this.toTop = topH;
+				this.saveBtnToTop = topH + 13
 				this.roundRect(ctx, 50, topH, (this.phoneW - 100), (this.phoneW - 100) * pro, 10, '#f7f7f7', '#f7f7f7'); //绘制海报圆角背景 上半截灰色的
 				ctx.restore();
 				startTime = (new Date()).valueOf();
@@ -498,7 +500,6 @@
 			width: 320rpx;
 			height: 72rpx;
 			position: fixed;
-			bottom: 20rpx;
 			left: 215rpx;
 			z-index: 16;
 		}
