@@ -1,20 +1,18 @@
 <template>
 	<view style="margin-bottom: 40rpx;">
 		<view class="QS-tabs-box">
-			<scroll-view scroll-x scroll-with-animation :scroll-left="scrollLeft">
-				<view 
-					v-for="(item,index) in tabs" :key="index"
-					class="nav-item"
-					:class="{select: index === swiperCurrent}"
-					@click="change(index)"
-				>{{item}}</view>
-			</scroll-view>
+			<view 
+				v-for="(item,index) in tabs" :key="index"
+				class="nav-item"
+				:class="{select: index === swiperCurrent}"
+				@click="change(index)"
+			>{{item}}
+			</view>
 		</view>
 		<view 
 		:style="{'height': '1200rpx'}" 
 		:current="swiperCurrent">
-<!-- 			<view class="swiper-item" v-for="(item, index) in tabs" :key="index"> -->
-				<view scroll-y style="height: 100%;width: 100%;" >
+				<scroll-view scroll-y style="height:1200rpx;width: 100%;" @scrolltolower="moreOrder">
 					<view class="scroll-items">
 						<view style="position: relative">
 							<view style="background-color: #FFFFFF;height: 250rpx;">
@@ -30,7 +28,7 @@
 								<image class="noAddress" src="../../static/myOrder/myOrderNoData.png"></image>
 								<text class="warning">暂无订单</text>
 							</view>
-							<view style="width: 750rpx;background: #FFFFFF;margin-top: 20rpx;padding-top: 5rpx;padding-bottom: 90rpx;" v-show="!showType">
+							<view style="width: 750rpx;background: #FFFFFF;margin-top: 20rpx;padding-top: 5rpx;padding-bottom: 30rpx;" v-show="!showType">
 								<view style="border-left: rgb(39, 134, 217) 5rpx solid;margin: 30rpx 0 20rpx 20rpx;padding: 0 0 0 20rpx ;">订单信息</view>
 								<view v-for="(commodity, index) in commodityList" :key="index" class="commodity">
 									<view class="theType" v-show="commodity.commodityType==2">
@@ -45,29 +43,39 @@
 										<view class="detail1">快递单号:<text class="text1"> {{commodity.orderId}}</text></view>
 										<view class="detail1">快递状态:<text class="text1" :class="{'active':commodity.orderState==0}"> {{state[index]}}</text></view>
 									</view>
+									
 									<view class="details">
-										<view class="detail3">商品名:<text class="text1"> {{commodity.commodityTitle | ellipsis}}</text></view>
+										<view  class="detail3">
+											<view style="min-width: 140rpx;">
+												商品名:
+											</view>
+											<text class="commodity-attr-info"> {{commodity.commodityTitle}}</text>
+										</view>
+										
 										<view v-show="commodity.attrInfo != null" class="commodity-attr-info-container">
 											<view style="min-width: 140rpx;">
 												商品规格:
 											</view>
-											
 											<text class="commodity-attr-info"> {{commodity.attrInfo}}</text>
-											</view>
+										</view>
+										
 										<view class="detail">支付金额 (元):<text class="text1"> {{commodity.actualPrice}}</text></view>
 										<view class="detail">数量 (个):<text class="text1"> {{commodity.commodityNum}}</text></view>
 										<view class="detail2">时间:
 										<text class="text1"> {{commodity.createAt}}</text>
-										<button class="scanCode" v-show="orderState[index]=='未确认' && commodity.commodityType==2" @click="comfirmOrderPopUp(index)">确认订单</button>
+										<button class="scanCode" v-show="commodity.orderState==1 && commodity.commodityType==2" @click="comfirmOrderPopUp(index)">确认订单</button>
 										</view>
 									</view>
-									
 								</view>
+							</view>
+							<view v-show="!showType" style="height: 100rpx;">
+								<uni-load-more :status="status" />
 							</view>
 						</view>
 					</view>
-				</view>
-			<!-- </view> -->
+					<!-- <view class="warningData">{{warning}}</view> -->
+					<!-- <loading class="warningData">{{warning}}</loading> -->
+				</scroll-view>
 		</view>
 		<uni-popup ref="scanPopup"  type="center" maskClick="true">
 			<view class="orderPopUp">
@@ -89,26 +97,21 @@
 	import {api} from './api.js';
 	import tabBar from '../components/zwy-tabBar/tabBar.vue';
 	import uniPopup from "../components/uni-popup/uni-popup.vue";
+	import uniLoadMore from "../components/uni-load-more/uni-load-more.vue"
 	const Sys = uni.getSystemInfoSync();
 	const wH = Sys.windowHeight;
 	let n = 1;
 	const tabs = Array(10).fill('').map(()=> 'tab' + Array(n).fill('s').join('') + n++);
 	export default {
-		filters: {
-			ellipsis(value) {
-				if (!value) return ''
-				if (value.length > 10) {
-					return value.slice(0, 10) + '...'
-				}
-				return value
-			}
-		},
 		components: {
 			tabBar,
-			uniPopup
+			uniPopup,
+			uniLoadMore
 		},
 		data() {
 			return {
+				status:'more',
+				page:1,
 				currentPage:'shopOrder',
 				orderState:[],
 				state:[],
@@ -135,68 +138,105 @@
 				}, 1000);
 			},
 			change(index) {
+				this.total=0;
 				this.swiperCurrent = index;
-				this.getAllCommodityOrderByLeader(index);
-			},
-			getAllCommodityOrderByLeader(index){
+				this.status='more';
+				this.page=1;
+				this.commodityList=[];
 				this.state=[];
 				this.orderState=[];
+				this.getAllCommodityOrderByLeader(index);
+			},
+			moreOrder(){
+				if(this.status!='noMore'){
+					this.status='loading';
+					this.page=this.page+1;
+					this.getAllCommodityOrderByLeader(this.swiperCurrent);
+				}
+			},
+			getTotalPrice(index){
+				api.getTotalPrice({
+					orderState: index,
+				}).then(res=>{
+					this.total=res.data.data;
+				}).catch(err=>{
+					console.log(err)
+				})
+			},
+			getAllCommodityOrderByLeader(index){
+				let commodityState=[];
+				let commodityOrderState=[];
 				if(index==0){
 					index='';
 				}
-				this.commodityList=[];
+				let commodity=[];
 				api.getAllCommodityOrderByLeader({
-					orderState: index
+					orderState: index,
+					page:this.page,
 				}).then(res=>{
-					this.total=0;
 					if(res.data.data.length!=0)
 					{
-						this.commodityList=res.data.data;
-						console.log(this.commodityList);
-						this.showType=false;
-						
-						
-						
+						commodity=res.data.data;
+						this.showType=false;	
 						for(let i=0;i<res.data.data.length;i++){
 							
-							if (this.commodityList[i].attrInfo != undefined && this.commodityList[i].attrInfo != null && this.commodityList[i].attrInfo != '') {
+							if (commodity[i].attrInfo != undefined && commodity[i].attrInfo != null && commodity[i].attrInfo != '') {
 								// 商品属性信息json->string
-								let map = JSON.parse(this.commodityList[i].attrInfo);
-								this.commodityList[i].attrInfo = '';
+								let map = JSON.parse(commodity[i].attrInfo);
+								commodity[i].attrInfo = '';
 								for(var key in map) {
-									this.commodityList[i].attrInfo += map[key] + '，';
+									commodity[i].attrInfo += map[key] + '，';
 								}
-								this.commodityList[i].attrInfo = this.commodityList[i].attrInfo.slice(0, this.commodityList[i].attrInfo.length - 1);
+								commodity[i].attrInfo = commodity[i].attrInfo.slice(0, commodity[i].attrInfo.length - 1);
 							} else {
-								this.commodityList[i].attrInfo = null;
+								commodity[i].attrInfo = null;
 							}
 							
-							if(this.commodityList[i].deliveryState==0){
-								this.state[i]='未寄送';
-							}else if(this.commodityList[i].deliveryState==1){
-								this.state[i]='已寄送';
-							}else if(this.commodityList[i].deliveryState==2){
-								this.state[i]='已签收';
+							if(commodity[i].deliveryState==0){
+								commodityState[i]='未寄送';
+							}else if(commodity[i].deliveryState==1){
+								commodityState[i]='已寄送';
+							}else if(commodity[i].deliveryState==2){
+								commodityState[i]='已签收';
 							}else{
-								this.state[i]='--';
+								commodityState[i]='--';
 							};
 							
 							
-							if(this.commodityList[i].orderState==1){
-								this.orderState[i]='未确认';
-							}else if(this.commodityList[i].orderState==2){
-								this.orderState[i]='已确认';
+							if(commodity[i].orderState==1){
+								commodityOrderState[i]='未确认';
+							}else if(commodity[i].orderState==2){
+								commodityOrderState[i]='已确认';
 							}else{
-								this.orderState[i]='--';
+								commodityOrderState[i]='--';
 							}
 						}
-						console.log(this.state,this.orderState)
-						for(let i=0;i<this.commodityList.length;i++){
-						this.total=this.total+this.commodityList[i].actualPrice;
-						}	
+						this.getTotalPrice(index);
+					}
+					else if(this.commodityList.length==0){
+						this.showType=true;
+					}
+					if(res.data.data.length==0)
+					{
+						this.status='noMore';
+					}
+					else if(res.data.data.length==10){
+						console.log(commodity);
+						this.commodityList=this.commodityList.concat(commodity);						
+						this.state=this.state.concat(commodityState);
+						this.orderState=this.orderState.concat(commodityOrderState);
+						console.log(this.commodityList);
+						console.log(this.status);
+						this.status='more';
 					}
 					else{
-						this.showType=true;
+						console.log(commodity);
+						this.commodityList=this.commodityList.concat(commodity);
+						this.state=this.state.concat(commodityState);
+						this.orderState=this.orderState.concat(commodityOrderState);
+						console.log(this.commodityList);
+						console.log(this.status);
+						this.status='noMore';
 					}
 				}).catch(err=>{
 					console.log(err)
@@ -215,7 +255,7 @@
 				api.comfirmOrder({
 					orderId:data
 				}).then(res=>{
-					console.log(res);
+					console.log("6666666666666"+res);
 					this.$refs.scanPopup.close();
 					if(res.data.data == true){
 						uni.showToast({
@@ -223,16 +263,8 @@
 						    duration: 2000,
 							icon:'success'
 						});
-						setTimeout(() => {
-							// 设置全局变量标识支付成功
-							// getApp().globalData.payOrder = true;
-							// 购买成功去往个人中心
-							this.change(0);
-						
-							// uni.showToast({
-							// 	title: '请稍后',
-								// 	icon: 'loading'
-							// });
+						setTimeout(() => {							
+							this.change(this.swiperCurrent);
 						}, 2000);
 					}else{
 						uni.showToast({
@@ -389,7 +421,9 @@
 	}
 	.detail3 {
 		color: #CCCCCC;
+		display: flex;
 		width: 450rpx;
+		flex-direction: row;
 		font-size: 30rpx;
 		margin:20rpx 245rpx 0 0;
 	}
@@ -558,5 +592,11 @@
 		line-height: 80rpx;
 		font-size: 28rpx;
 		color: #06C1AE;
+	}
+	.warningData{
+		color: #CCCCCC;
+		font-size: 24rpx;
+		margin-bottom: 10rpx;
+		margin-left: 280rpx;
 	}
 </style>
