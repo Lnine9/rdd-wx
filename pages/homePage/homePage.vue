@@ -6,7 +6,7 @@
 		<!-- #endif -->
 
 		<!-- 导航栏与状态栏占位与内容填充 -->
-		<view class="nav-box" :style='"height:" + (status + navHeight) + "px;"'>
+		<view class="nav-box" :style='"height:" + (status + navHeight) + "px;" + navColor'>
 			<!-- 手机状态栏占位符 -->
 			<view class="width-max" :style='"height:" + status + "px;"'></view>
 
@@ -26,9 +26,7 @@
 			</view>
 		</view>
 
-		<!-- 使用轮播图作为背景 -->
-		<!-- <view class="width-max">	 -->
-			<!-- 顶部轮播图 -->
+		<!-- 顶部轮播图 -->
 		<view class="carousel-section">
 			<!-- 背景色区域 -->
 			<swiper class="carousel" circular=true autoplay indicator-dots indicator-color="rgba(255,255,255,0.3))"
@@ -38,8 +36,6 @@
 				</swiper-item>
 			</swiper>
 		</view>
-<!--
-		</view> -->
 
 		<!-- 精选商品 -->
 		<view class="f-header m-t">
@@ -127,6 +123,8 @@
 			return {
 				status: 0, // 状态栏高度
 				navHeight: 0, // 导航栏高度(包含状态栏)
+				navColor: '', //导航栏颜色
+				swiperHeight: 0, // 轮播图高度
 				current: 0,
 				swiperCurrent: 0,
 				currentPage: 'homePage',
@@ -161,12 +159,32 @@
 		},
 		onLoad() {
 			this.setNavSize();
+			
+			let _this = this;
+			// 获取轮播图高度并存储
+			wx.createSelectorQuery().selectAll('.carousel').boundingClientRect(function (rect) {
+				console.log('轮播图高度');
+				console.log(rect[0].height);
+				_this.swiperHeight = rect[0].height;
+			}).exec();
 		},
 		// 向下滑动刷新
 		onReachBottom() {
 			this.page++;
 			this.loading = true;
 			this.getList();
+		},
+		onPageScroll: function(e) {
+			// 滚动到指定位置，导航栏变色
+			// this.swiperHeight为轮播图的高度
+			console.log('滑动');
+			console.log(this.swiperHeight);
+			console.log(e.scrollTop);
+			if (e.scrollTop > this.swiperHeight) {
+				this.navColor = 'background: #F6374b';
+			} else {
+				this.navColor = '';
+			}
 		},
 		methods: {
 			setNavSize: function() {
@@ -180,10 +198,6 @@
 				} else {
 					this.navHeight = 44;
 				}
-				// that.setData({
-				// 	status: statusHeight,
-				// 	navHeight: navHeight
-				// })
 			},
 			// 选中
 			choose(item) {
@@ -531,7 +545,7 @@
 
 				.search {
 					margin: auto 0;
-					width: 220rpx;
+					width: 200rpx;
 				}
 
 				.search-txt {
@@ -606,7 +620,7 @@
 		.cate-section {
 			margin-top: -15rpx;
 			background: #F8F9FB;
-			position: relative;
+			// position: relative;
 			z-index: 5;
 			border-radius: 25upx 25upx 0 0;
 			// margin-top:-45upx;
@@ -617,17 +631,26 @@
 			background: #F8F9FB;
 			width: 100%;
 
-			.carousel {
-				height: 390rpx;
-
-				.carousel-item {
-					padding: 0;
-				}
-			}
-
 			.swiper-dots {
 				left: 45upx;
 				bottom: 40upx;
+			}
+			
+			.carousel {
+				width: 100%;
+				height: 390rpx;
+			
+				.carousel-item {
+					width: 100%;
+					height: 100%;
+					padding: 0;
+					overflow: hidden;
+				}
+			
+				image {
+					width: 100%;
+					height: 100%;
+				}
 			}
 		}
 	}
@@ -642,22 +665,7 @@
 		margin-top: 16upx;
 	}
 
-	.carousel {
-		width: 100%;
-		height: 350upx;
 
-		.carousel-item {
-			width: 100%;
-			height: 100%;
-			padding: 0 28upx;
-			overflow: hidden;
-		}
-
-		image {
-			width: 100%;
-			height: 100%;
-		}
-	}
 
 	.swiper-dots {
 		display: flex;
