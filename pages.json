@@ -121,6 +121,11 @@
 			"style": {
 				"navigationBarTitleText": "注册"
 			}
+		}, {
+			"path": "pages/classification/classification",
+			"style": {
+				"navigationBarTitleText": "囧途宝盒"
+			}
 		}
     ],
 	"globalStyle": {
@@ -198,6 +203,10 @@
 			{
 				"name": "物流信息",
 				"path": "pages/orderDetail/deliver"
+			},
+			{
+				"name": "分类",
+				"path": "pages/classification/classification"
 			}
 		]
 	}
