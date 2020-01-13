@@ -7,4 +7,7 @@ export class api{
   static comfirmOrder(data){
   	  return minRequest.post('/api/WCPCommodityOrder/comfirmWCPCommodityOrder',data)
   }
+  static getTotalPrice(data){
+  	  return minRequest.get('/api/WCPCommodityOrder/getTotalPrice',data)
+  }
 }	
