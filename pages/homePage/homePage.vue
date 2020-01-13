@@ -4,18 +4,33 @@
 		<!-- #ifdef MP -->
 
 		<!-- #endif -->
-		<view class="header"><label class="head-text">首页</label>
-			<picker class="head-region" @change="bindPickerChange" :value="regionIndex" :range="areas">
-				<view class="uni-input">{{defaultRegion}}</view>
-				<image src="/static/homepage/drop_down.png" class="drop-down"></image>
-			</picker>
+
+		<!-- 导航栏与状态栏占位与内容填充 -->
+		<view class="nav-box" :style='"height:" + (status + navHeight) + "px;"'>
+			<!-- 手机状态栏占位符 -->
+			<view class="width-max" :style='"height:" + status + "px;"'></view>
+
+			<!-- 地区选择与搜索框 -->
+			<view class="nav-content-box" :style='"height:" + navHeight + "px;"'>
+				<picker class="head-region" @change="bindPickerChange" :value="regionIndex" :range="areas">
+					<view class="uni-input">{{defaultRegion}}</view>
+					<image src="/static/homepage/drop_down.png" class="drop-down"></image>
+				</picker>
+
+				<!-- 搜索框(TODO) -->
+				<view class="search-box" :style='"height:" + (navHeight - 15) + "px;"'>
+					<icon class="search-icon" size='15' type='search'></icon>
+					<input class="search" type="text" value="" :style='"height:" + (navHeight - 15) + "px;"' />
+					<text class="search-txt">搜索</text>
+				</view>
+			</view>
 		</view>
-		<!-- 头部轮播 -->
+
+		<!-- 使用轮播图作为背景 -->
+		<!-- <view class="width-max">	 -->
+			<!-- 顶部轮播图 -->
 		<view class="carousel-section">
-			<!-- 标题栏和状态栏占位符 -->
-			<view class="titleNview-placing"></view>
 			<!-- 背景色区域 -->
-			<view class="titleNview-background" :style="{backgroundColor:titleNViewBackground}"></view>
 			<swiper class="carousel" circular=true autoplay indicator-dots indicator-color="rgba(255,255,255,0.3))"
 			 indicator-active-color="rgba(255,255,255,1)" @change="swiperChange" @current="swiperCurrent">
 				<swiper-item v-for="(item, index) in carouselList" :key="index" class="carousel-item" @click="navToWebView(item)">
@@ -23,6 +38,8 @@
 				</swiper-item>
 			</swiper>
 		</view>
+<!--
+		</view> -->
 
 		<!-- 精选商品 -->
 		<view class="f-header m-t">
@@ -108,6 +125,8 @@
 	export default {
 		data() {
 			return {
+				status: 0, // 状态栏高度
+				navHeight: 0, // 导航栏高度(包含状态栏)
 				current: 0,
 				swiperCurrent: 0,
 				currentPage: 'homePage',
@@ -140,6 +159,9 @@
 		onShow() {
 			this.wxGetLogin();
 		},
+		onLoad() {
+			this.setNavSize();
+		},
 		// 向下滑动刷新
 		onReachBottom() {
 			this.page++;
@@ -147,6 +169,22 @@
 			this.getList();
 		},
 		methods: {
+			setNavSize: function() {
+				let that = this;
+				let sysinfo = wx.getSystemInfoSync();
+				this.status = sysinfo.statusBarHeight;
+				let isiOS = sysinfo.system.indexOf('iOS') > -1;
+				let navHeight;
+				if (!isiOS) {
+					this.navHeight = 48;
+				} else {
+					this.navHeight = 44;
+				}
+				// that.setData({
+				// 	status: statusHeight,
+				// 	navHeight: navHeight
+				// })
+			},
 			// 选中
 			choose(item) {
 				//测试数据没有写id，用title代替
@@ -466,6 +504,47 @@
 		background: #F8F9FB;
 	}
 
+	.width-max {
+		width: 100%;
+	}
+
+	.nav-box {
+		position: fixed;
+		width: 100%;
+		z-index: 1;
+
+		.nav-content-box {
+			width: 100%;
+			display: flex;
+			flex-direction: row;
+
+			.search-box {
+				margin: auto 0 auto 10rpx;
+				display: flex;
+				margin-left: 10rpx;
+				border-radius: 25rpx;
+				background: #F8F9FB;
+
+				.search-icon {
+					margin: auto 10rpx auto 15rpx;
+				}
+
+				.search {
+					margin: auto 0;
+					width: 220rpx;
+				}
+
+				.search-txt {
+					margin: auto 15rpx auto 10rpx;
+					font-size: 28rpx;
+					color: #4BB1F1;
+				}
+			}
+		}
+	}
+
+
+
 	.header {
 		width: 90%;
 		height: 100rpx;
@@ -482,7 +561,7 @@
 	}
 
 	.head-region {
-		float: right;
+		margin: auto 0 auto 5%;
 		font-size: 28rpx;
 	}
 
@@ -534,19 +613,12 @@
 		}
 
 		.carousel-section {
+			z-index: -1;
 			background: #F8F9FB;
-			margin: 0 auto;
-			width: 90%;
-
-			padding: 0;
-
-			.titleNview-placing {
-				padding-top: 0;
-				height: 0;
-			}
+			width: 100%;
 
 			.carousel {
-				height: 280rpx;
+				height: 390rpx;
 
 				.carousel-item {
 					padding: 0;
@@ -570,27 +642,6 @@
 		margin-top: 16upx;
 	}
 
-	/* 头部 轮播图 */
-	.carousel-section {
-		position: relative;
-		padding-top: 10px;
-
-		.titleNview-placing {
-			height: var(--status-bar-height);
-			padding-top: 44px;
-			box-sizing: content-box;
-		}
-
-		.titleNview-background {
-			position: absolute;
-			top: 0;
-			left: 0;
-			width: 100%;
-			// height: 400upx;
-			transition: .4s;
-		}
-	}
-
 	.carousel {
 		width: 100%;
 		height: 350upx;
@@ -605,7 +656,6 @@
 		image {
 			width: 100%;
 			height: 100%;
-			border-radius: 20upx;
 		}
 	}
 
@@ -919,7 +969,7 @@
 		position: absolute;
 		bottom: 20rpx;
 		left: 50%;
-		// 这里一定要注意兼容不然很可能踩坑          
+		// 这里一定要注意兼容不然很可能踩坑
 		transform: translate(-50%, 0);
 		-webkit-transform: translate(-50%, 0);
 		z-index: 99;
