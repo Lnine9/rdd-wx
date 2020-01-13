@@ -10,18 +10,22 @@
 			<!-- 手机状态栏占位符 -->
 			<view class="width-max" :style='"height:" + status + "px;"'></view>
 
+			<!-- 标题栏 -->
+			<view class="width-max nav-title-txt" :style='"line-height:" + navHeight + "px;height:" + navHeight + "px;"'>
+				囧途宝盒
+			</view>
+
 			<!-- 地区选择与搜索框 -->
-			<view class="nav-content-box" :style='"height:" + navHeight + "px;"'>
-				<picker class="head-region" @change="bindPickerChange" :value="regionIndex" :range="areas">
-					<view class="uni-input">{{defaultRegion}}</view>
+			<view class="nav-content-box" :style='"height:" + navHeight + "px;" + navColor'>
+				<picker class="picker-region" @change="bindPickerChange" :value="regionIndex" :range="areas">
+					<text class="area-picker-txt">{{defaultRegion}}</text>
 					<image src="/static/homepage/drop_down.png" class="drop-down"></image>
 				</picker>
 
 				<!-- 搜索框(TODO) -->
 				<view class="search-box" :style='"height:" + (navHeight - 15) + "px;"'>
 					<icon class="search-icon" size='15' type='search'></icon>
-					<input class="search" type="text" value="" :style='"height:" + (navHeight - 15) + "px;"' />
-					<text class="search-txt">搜索</text>
+					<input class="search" placeholder-class="search-placeholder-txt" placeholder="搜你所想" type="text" value="" />
 				</view>
 			</view>
 		</view>
@@ -37,8 +41,86 @@
 			</swiper>
 		</view>
 
+		<!-- 首页主内容 -->
+		<view class="main-content-box">
+			<!-- 占位view，占用原先的圆角处 -->
+			<view class="width-max main-content-placeholder"></view>
+			
+			<!-- 类别 -->
+			<view class="category-box">
+				<view class="category-content">
+					<view class="category-content-img-box">
+						<image class="category-content-img" src="/static/homepage/category1.png" mode=""></image>
+					</view>
+					<view class="category-content-txt">
+						<text>餐饮美食</text>
+					</view>
+				</view>
+				
+				<view class="category-content">
+					<view class="category-content-img-box">
+						<image class="category-content-img" src="/static/homepage/category1.png" mode=""></image>
+					</view>
+					<view class="category-content-txt">
+						<text>餐饮美食</text>
+					</view>
+				</view>
+				
+				<view class="category-content">
+					<view class="category-content-img-box">
+						<image class="category-content-img" src="/static/homepage/category1.png" mode=""></image>
+					</view>
+					<view class="category-content-txt">
+						<text>餐饮美食</text>
+					</view>
+				</view>
+				
+				<view class="category-content">
+					<view class="category-content-img-box">
+						<image class="category-content-img" src="/static/homepage/category1.png" mode=""></image>
+					</view>
+					<view class="category-content-txt">
+						<text>餐饮美食</text>
+					</view>
+				</view>
+				
+				<view class="category-content">
+					<view class="category-content-img-box">
+						<image class="category-content-img" src="/static/homepage/category1.png" mode=""></image>
+					</view>
+					<view class="category-content-txt">
+						<text>餐饮美食</text>
+					</view>
+				</view>
+			</view>
+			
+			<!-- 特别推荐类别 -->
+			<view class="section-title-txt">
+				<text>汽车专栏</text>
+			</view>
+			
+			<view class="special-rec-section">
+				<image class="special-rec-section-img" src="" mode=""></image>
+			</view>
+			
+			<view class="section-title-txt">
+				<text>猜你喜欢</text>
+			</view>
+			
+			<view class="guess-section" v-if="!showNoGuess">
+				<waterfall-flow class="guess-content" :list="list" :loading="loading" @click="choose"></waterfall-flow>
+			</view>
+			
+			<!-- 暂无猜你喜欢的情况 -->
+			<view class="no-commodity-container" style="padding-bottom: 110rpx;" v-else>
+				<view class="no-commodity-content">
+					<image src="/static/homepage/no-commodity-img.png" mode="aspectFill" class="no-commodity-img"></image>
+					<text class="no-commodity-txt">商家正在努力上新中...</text>
+				</view>
+			</view>
+		</view>
 		<!-- 精选商品 -->
-		<view class="f-header m-t">
+<!-- 		<view class="f-header m-t">
 			<view class="tit-box title-adapt">
 				<text class="tit">精选商品</text>
 			</view>
@@ -61,49 +143,14 @@
 				</scroll-view>
 			</view>
 		</view>
-
+ -->
 		<!-- 暂无精选商品的情况 -->
-		<view class="no-commodity-container" v-show="showNoGoods">
+<!-- 		<view class="no-commodity-container" v-show="showNoGoods">
 			<view class="no-commodity-content">
 				<image src="/static/homepage/no-commodity-img.png" mode="aspectFill" class="no-commodity-img"></image>
 				<text class="no-commodity-txt">商家正在努力上新中...</text>
 			</view>
-		</view>
-
-		<!-- 猜你喜欢 -->
-		<view class="f-header m-t">
-			<view class="tit-box">
-				<text class="tit">猜你喜欢</text>
-			</view>
-			<!-- <text class="yticon icon-you"></text> -->
-		</view>
-
-		<view class="guess-section" v-if="!showNoGuess">
-			<!-- <view
-				v-for="(item, index) in guessList" :key="index"
-				class="guess-item"
-				@click="navToDetailPage(item)">
-				<view class="image-wrapper">
-					<image :src="item.commodityImg[0]" mode="aspectFill"></image>
-				</view>
-				<text class="clamp">{{item.commodityTitle}}</text>
-				<view class="PriceArea">
-					<text class="priceOrigin">￥{{item.salePrice}}</text>
-					<text class="priceCurrent">￥{{item.originalPrice}}</text>
-				</view>
-			</view> -->
-
-			<waterfall-flow class="guess-content" :list="list" :loading="loading" @click="choose"></waterfall-flow>
-
-		</view>
-
-		<!-- 暂无猜你喜欢的情况 -->
-		<view class="no-commodity-container" style="padding-bottom: 110rpx;" v-else>
-			<view class="no-commodity-content">
-				<image src="/static/homepage/no-commodity-img.png" mode="aspectFill" class="no-commodity-img"></image>
-				<text class="no-commodity-txt">商家正在努力上新中...</text>
-			</view>
-		</view>
+		</view> -->
 
 		<tabBar :currentPage="currentPage"></tabBar>
 	</view>
@@ -117,7 +164,7 @@
 	import amap from '../../libs/amap-wx.js';
 	import tabBar from '../components/zwy-tabBar/tabBar.vue';
 	// 商品展示瀑布流
-	import WaterfallFlow from './waterfall-flow/nairenk-waterfall-flow.vue'
+	import WaterfallFlow from '../components/waterfall-flow/nairenk-waterfall-flow.vue'
 	export default {
 		data() {
 			return {
@@ -181,7 +228,7 @@
 			console.log(this.swiperHeight);
 			console.log(e.scrollTop);
 			if (e.scrollTop > this.swiperHeight) {
-				this.navColor = 'background: #F6374b';
+				this.navColor = 'background: #DE2032';
 			} else {
 				this.navColor = '';
 			}
@@ -515,11 +562,17 @@
 <style lang="scss">
 	.container {
 		height: 100vh;
-		background: #F8F9FB;
 	}
 
 	.width-max {
 		width: 100%;
+	}
+
+	.nav-title-txt {
+		font-size: 32rpx;
+		color: #FFFFFF;
+		text-align: center;
+		font-weight: 500;
 	}
 
 	.nav-box {
@@ -533,25 +586,26 @@
 			flex-direction: row;
 
 			.search-box {
-				margin: auto 0 auto 10rpx;
+				margin: auto 5% auto 0;
 				display: flex;
 				margin-left: 10rpx;
 				border-radius: 25rpx;
-				background: #F8F9FB;
+				background: rgba(255,255,255,0.5);
+				width: 538rpx;
+				
+				.search-placeholder-txt {
+					color: #999999;
+					font-size: 26rpx;
+				}
 
 				.search-icon {
-					margin: auto 10rpx auto 15rpx;
+					margin: auto 10rpx auto 20rpx;
 				}
 
 				.search {
 					margin: auto 0;
-					width: 200rpx;
-				}
-
-				.search-txt {
-					margin: auto 15rpx auto 10rpx;
-					font-size: 28rpx;
-					color: #4BB1F1;
+					width: 470rpx;
+					height: 100%;
 				}
 			}
 		}
@@ -574,16 +628,16 @@
 		color: #333333;
 	}
 
-	.head-region {
+	.picker-region {
+		display: flex;
 		margin: auto 0 auto 5%;
 		font-size: 28rpx;
 	}
 
 	.drop-down {
-		width: 7px;
-		height: 7px;
-		top: 12rpx;
-		margin-left: -30rpx;
+		width: 22rpx;
+		height: 14rpx;
+		margin: auto 14rpx auto 7rpx;
 	}
 
 	.r-m-t {
@@ -638,7 +692,7 @@
 			
 			.carousel {
 				width: 100%;
-				height: 390rpx;
+				height: 516rpx;
 			
 				.carousel-item {
 					width: 100%;
@@ -808,11 +862,11 @@
 			}
 		}
 	}
-
-	.uni-input {
+	
+	.area-picker-txt {
 		font-weight: 500;
-		margin-right: 37rpx;
-		display: inline-block;
+		font-size: 28rpx;
+		color: #FFFFFF;
 	}
 
 	.PriceArea {
@@ -839,7 +893,6 @@
 
 	// 暂无商品样式
 	.no-commodity-container {
-		background: #F8F9FB;
 		width: 100%;
 		height: 397.2rpx;
 		display: flex;
@@ -878,42 +931,71 @@
 		text-decoration: line-through;
 	}
 
-	.f-header {
-		background: #F8F9FB;
+	.main-content-box {
+		position: relative;
+		top: -35rpx;
+		background-color: rgba($color: #FFFFFF, $alpha: 1.0);
+		border-top-right-radius: 35rpx;
+		border-top-left-radius: 35rpx;
+	}
+	
+	
+	.main-content-placeholder {
+		height: 35rpx;
+	}
+	
+	.category-box {
 		width: 90%;
-		margin: 25rpx auto;
-		align-items: center;
+		margin: 0 5%;
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+	}
+	
+	.category-content {
+		display: flex;
+		flex-direction: column;
+		width: 100rpx;		
+	}
+	
+	.category-content-img-box {
+		margin: 0 auto;
+		width: 80rpx;
+		height: 80rpx;
+		background-color: #DF2A3C;
+		border-radius: 40rpx;
+		display: flex;
+		margin-bottom: 5rpx;
+	}
+	
+	.category-content-img {
+		width: 52rpx;
+		height: 66rpx;
+		margin: auto;
+	}
+	
+	.category-content-txt {
+		font-size: 24rpx;
+		font-weight:500;
+	}
 
-		// height: 80upx;
-		// padding: 20upx 30upx 8upx;
-		image {
-			flex-shrink: 0;
-			width: 80upx;
-			height: 80upx;
-			margin-right: 20upx;
-		}
+	/* 通用栏目标题 */
+	.section-title-txt {
+		margin: 32rpx 0 30rpx 5%;
+		color: #333333;
+		font-size: 32rpx;
+		font-weight: bold;
+	}
 
-		.tit-box {
-			flex: 1;
-			display: flex;
-			flex-direction: column;
-		}
+	.special-rec-section {
+		width: 90%;
+		margin: 0 5%;
+		height: 259rpx;
+	}
 
-		.tit {
-			font-size: 32rpx;
-			font-weight: 700;
-			color: #333;
-		}
-
-		.tit2 {
-			font-size: $font-sm;
-			color: $font-color-light;
-		}
-
-		.icon-you {
-			font-size: $font-lg +2upx;
-			color: $font-color-light;
-		}
+	.special-rec-section-img {
+		width: 100%;
+		height: 100%;
 	}
 
 	/* 猜你喜欢 */
@@ -923,9 +1005,7 @@
 		flex-wrap: wrap;
 		padding-left: 5%;
 		padding-right: 5%;
-		background: #F8F9FB;
 		width: 90%;
-		margin-top: -10rpx;
 		padding-bottom: 110rpx;
 
 		.guess-content {

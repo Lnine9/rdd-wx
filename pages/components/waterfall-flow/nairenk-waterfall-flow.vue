@@ -123,7 +123,6 @@
 		font-size: 32rpx;
 		font-weight: 500;
 		color: #303133;
-		background: #F8F9FB;
 		position: relative;
 		padding-bottom: var(--window-bottom);
 		display: flex;
@@ -216,7 +215,6 @@
 
 	// 暂无商品样式
 	.no-commodity-container {
-		background: #F8F9FB;
 		width: 100%;
 		height: 397.2rpx;
 		display: flex;
