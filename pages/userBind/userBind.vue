@@ -13,14 +13,14 @@
 			v-model="user.userName" 
 			type="password"
 			password="true"
-			placeholder="请输入验证码" 
+			placeholder="请输入密码" 
 			placeholder-class="placeholder"  />
 			
 			<input class="input"
 			v-show="isShowEye"
 			v-model="user.userName" 
 			type="text"
-			placeholder="请输入验证码" 
+			placeholder="请输入密码" 
 			placeholder-class="placeholder"  />
 			<image class="eyes" src="../../static/hidePassword.png" v-show="isShowEye" @click="changeEye"></image>
 			<image class="eyes" src="../../static/showPassword.png" v-show="!isShowEye" @click="changeEye"></image>
@@ -31,14 +31,13 @@
 		</view>
 		<!-- <view class="register-section">
 			还没有账号?
-			<text class="regist" @click="toRegist">马上注册</text> -->
-			
+			<text class="regist" @click="toRegist">马上注册</text> -->	
 		</view>
 	</view>
 </template>
 
 <script>
-	import {api} from	'./api.js'
+	import {api} from'./api.js'
 	export default{
 		data() {
 			return{

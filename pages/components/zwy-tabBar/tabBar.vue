@@ -160,8 +160,8 @@
 			}
 		}
 		image{
-			width: 40rpx;
-			height:43rpx;
+			width: 50rpx;
+			height:54rpx;
 		}
 	}
 </style>
