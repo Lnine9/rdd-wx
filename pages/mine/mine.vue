@@ -545,7 +545,7 @@
 	.head{
 		width: 750rpx;
 		height: 263rpx;
-		background-image: url('../../static/user/userBackground.png');
+		background-image: url('../../static/newMenu/userBackground.png');
 	}
 	.subHead{
 		position: relative;
