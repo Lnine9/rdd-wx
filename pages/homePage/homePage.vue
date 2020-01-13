@@ -590,7 +590,7 @@
 				display: flex;
 				margin-left: 10rpx;
 				border-radius: 25rpx;
-				background: rgba(255,255,255,0.5);
+				background: rgba(255,255,255,0.8);
 				width: 538rpx;
 				
 				.search-placeholder-txt {
