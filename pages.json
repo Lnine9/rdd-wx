@@ -20,6 +20,15 @@
 				"enablePullDownRefresh": true
 			}
 		},
+		{
+			"path": "pages/search/search",
+			"style": {
+				"navigationBarTitleText": "搜索",
+				"enablePullDownRefresh": true,
+				"navigationBarBackgroundColor": "#de2032"	
+			}
+		},
+
 //		{
 //			"path": "pages/applyMerchant/applyMerchant",
 //			"style": {
@@ -207,7 +216,12 @@
 			{
 				"name": "分类",
 				"path": "pages/classification/classification"
+			},
+			{
+				"name": "搜索",
+				"path": "pages/search/search"
 			}
+
 		]
 	}
 }
