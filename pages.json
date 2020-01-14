@@ -20,14 +20,7 @@
 				"enablePullDownRefresh": true
 			}
 		},
-		{
-			"path": "pages/search/search",
-			"style": {
-				"navigationBarTitleText": "搜索",
-				"enablePullDownRefresh": true,
-				"navigationBarBackgroundColor": "#de2032"	
-			}
-		},
+		
 
 //		{
 //			"path": "pages/applyMerchant/applyMerchant",
@@ -87,6 +80,14 @@
 			"style": {
 				"navigationBarTitleText": "物流信息",
 				"enablePullDownRefresh": true
+			}
+		},
+		{
+			"path": "pages/search/search",
+			"style": {
+				"navigationBarTitleText": "搜索",
+				"enablePullDownRefresh": true,
+				"navigationBarBackgroundColor": "#de2032"	
 			}
 		},
 		{
