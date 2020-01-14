@@ -4,4 +4,7 @@ export class api{
   static getAreas(data){
 	  return minRequest.get('/api/WCPCommodityInfo/getAreas')
   }
+  static getAreas(data){
+  	  return minRequest.get('/api/WCPCommodityInfo/getAreas')
+  }
 }
