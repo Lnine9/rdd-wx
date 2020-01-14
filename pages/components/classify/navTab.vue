@@ -1,24 +1,25 @@
 <template>
 	<view class="navTabBox">
 		<!-- 标题数量小于5 -->
-		<view class="shortTab" v-if="tabBars.length<=5">
+		<view class="shortTab" v-if="tabBars.length<=4">
 			<!-- 导航栏 -->
 			<view class='navTab'>
 				<view v-for="(item,index) in tabBars" :key="index" class='navTabItem' :class="index===tabClick?'click':''" @click='navClick(index)'>{{item.name}}</view>
 			</view>
 			<!-- 下划线 -->
-			<view class="underlineBox" :style='"transform:translateX("+isLeft+"px);width:"+isWidth+"px"'>
+			<!-- <view class="underlineBox" :style='"transform:translateX("+isLeft+"px);width:"+isWidth+"px"'>
 				<view class="underline"></view>
-			</view>
+			</view> -->
 		</view>
 		<!-- 标题数量大于5 开启长导航栏模式 -->
-		<view class="longTab" v-if="tabBars.length>5">
+		<view class="longTab" v-if="tabBars.length>4">
 			<scroll-view scroll-x="true" style="white-space: nowrap; display: flex" scroll-with-animation :scroll-into-view="toView">
 				<view class="longItem" :data-index="index" :class="index===tabClick?'click':''" v-for="(item,index) in tabBars"
-				 :key="index" :id="'id'+index" @click="longClick(index)">{{item.name}}</view>
-				<view class="underlineBox" :style='"transform:translateX("+isLeft+"px);"'>
-					<view class="underline"></view>
+				 :key="index" :id="'id'+index" @click="longClick(index)">{{item.name}}
 				</view>
+				<!-- <view class="underlineBox" :style='"transform:translateX("+isLeft+"px);"'>
+					<view class="underline"></view>
+				</view> -->
 			</scroll-view>
 
 		</view>
@@ -31,7 +32,7 @@
 		props: {
 			tabBars: {
 				type: Array,
-				default: []
+				Default: [],
 			}
 
 		},
@@ -50,7 +51,7 @@
 			uni.getSystemInfo({
 				success(e) {
 					that.isWidth = e.windowWidth / that.tabBars.length //宽度除以导航标题个数=一个导航所占宽度
-					that.isLongWidth = e.windowWidth / 5
+					that.isLongWidth = e.windowWidth / 4
 				}
 			})
 			this.toView = 'id0'
@@ -81,6 +82,7 @@
 		color: rgba(255, 255, 255, 0.50);
 		position: fixed;
 		z-index: 1000;
+		background-color: #de2032;
 
 		.click {
 			color: white;
@@ -88,39 +90,24 @@
 
 		.longTab {
 			width: 100%;
-			background-color: #ec706b;
+			background-color: #de2032;
 
 			.longItem {
-				width: 20%;
-				height: 50upx;
+				width: 25%;
+				height: 100upx;
 				display: inline-block;
-				line-height: 40upx;
+				line-height: 100upx;
 				text-align: center;
-			}
-
-			.underlineBox {
-				height: 3px;
-				width: 20%;
-				display: flex;
-				align-content: center;
-				justify-content: center;
-				transition: .5s;
-
-				.underline {
-					width: 84upx;
-					height: 4px;
-					background-color: white;
-				}
+				font-size: 28rpx;
 			}
 		}
 
 		.shortTab {
 			width: 100%;
-
 			.navTab {
 				display: flex;
 				width: 100%;
-				height: 90upx;
+				height: 150upx;
 				position: relative;
 
 				.navTabItem {
@@ -128,21 +115,7 @@
 					align-items: center;
 					justify-content: center;
 					width: 100%;
-					font-size: 28upx;
-				}
-			}
-
-			.underlineBox {
-				height: 3px;
-				display: flex;
-				align-content: center;
-				justify-content: center;
-				transition: .5s;
-
-				.underline {
-					width: 84upx;
-					height: 3px;
-					background-color: white;
+					font-size: 28rpx;
 				}
 			}
 		}
