@@ -25,7 +25,7 @@
 				<!-- 搜索框(TODO) -->
 				<view class="search-box" :style='"height:" + (navHeight - 15) + "px;"'>
 					<icon class="search-icon" size='15' type='search'></icon>
-					<input class="search" placeholder-class="search-placeholder-txt" placeholder="搜你所想" type="text" value="" />
+					<input class="search" disabled placeholder-class="search-placeholder-txt" placeholder="搜你所想" type="text"  value="" @click="getToSearch()" />
 				</view>
 			</view>
 		</view>
@@ -254,7 +254,12 @@
 					this.loading = false;
 				}
 			},
-
+			// 跳转搜索页面
+			getToSearch(){
+				uni.navigateTo({
+					url: `/pages/search/search`
+				})
+			},
 			//轮播图切换
 			swiperChange: function(e) {
 				const index = e.detail.current;
