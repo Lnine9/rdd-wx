@@ -138,7 +138,6 @@
 				this.activeMenuArr = JSON.parse(JSON.stringify(tmpMenuActiveArr));
 				this.shadowActiveMenuArr = JSON.parse(JSON.stringify(tmpMenuActiveArr));
 				//加载菜单数据
-				console.log("this.filterData.length: " + JSON.stringify(this.filterData.length));
 				this.subData = this.filterData;
 			},
 			//展开更多
@@ -291,6 +290,9 @@
 					index: index,
 					value:value
 				});
+				for(let i=0;i<this.menu.length;i++){
+					this.menu[i]=this.filterData[i].submenu[index[i]];
+				}
 			},
 			//show菜单页
 			showPageLayer(index) {
