@@ -34,4 +34,14 @@ export class api{
   	  return minRequest.get('/api/WCPCommodityInfo/getAreas')
   }
   
+  /**
+   * 获取商品分类数据
+   */
+  static getHomepageRouter(params){
+	  params.userType = 0;
+	  
+  	  return minRequest.get('/api/AppHomePage/selectHomePageRouters', params)
+  }
+  
+  
 }

@@ -33,8 +33,9 @@
 		<!-- 顶部轮播图 -->
 		<view class="carousel-section">
 			<!-- 背景色区域 -->
-			<swiper class="carousel" circular=true autoplay indicator-dots indicator-color="rgba(255,255,255,0.3))"
-			 indicator-active-color="rgba(255,255,255,1)" @change="swiperChange" @current="swiperCurrent">
+			<swiper class="carousel" :style='"height:" + ((2 * navHeight + status) * 7 / 3) + "px;"' circular=true autoplay
+			 indicator-dots indicator-color="rgba(255,255,255,0.3))" indicator-active-color="rgba(255,255,255,1)" @change="swiperChange"
+			 @current="swiperCurrent">
 				<swiper-item v-for="(item, index) in carouselList" :key="index" class="carousel-item" @click="navToWebView(item)">
 					<image :src="item.savePath" />
 				</swiper-item>
@@ -45,72 +46,38 @@
 		<view class="main-content-box">
 			<!-- 占位view，占用原先的圆角处 -->
 			<view class="width-max main-content-placeholder"></view>
-			
+
 			<!-- 类别 -->
 			<view class="category-box">
-				<view class="category-content">
-					<view class="category-content-img-box">
-						<image class="category-content-img" src="/static/homepage/category1.png" mode=""></image>
-					</view>
+				<view v-for="(item, index) of routerList" :key="index" class="category-content" :data-index="index" @tap="navToRoute">
+					<!-- <view class="category-content-img-box">
+						<image class="category-content-img" :src="item.savePath" mode=""></image>
+					</view> -->
+
+					<image class="category-content-img-box" :src="item.savePath" mode="scaleToFill"></image>
 					<view class="category-content-txt">
-						<text>餐饮美食</text>
-					</view>
-				</view>
-				
-				<view class="category-content">
-					<view class="category-content-img-box">
-						<image class="category-content-img" src="/static/homepage/category1.png" mode=""></image>
-					</view>
-					<view class="category-content-txt">
-						<text>餐饮美食</text>
-					</view>
-				</view>
-				
-				<view class="category-content">
-					<view class="category-content-img-box">
-						<image class="category-content-img" src="/static/homepage/category1.png" mode=""></image>
-					</view>
-					<view class="category-content-txt">
-						<text>餐饮美食</text>
-					</view>
-				</view>
-				
-				<view class="category-content">
-					<view class="category-content-img-box">
-						<image class="category-content-img" src="/static/homepage/category1.png" mode=""></image>
-					</view>
-					<view class="category-content-txt">
-						<text>餐饮美食</text>
-					</view>
-				</view>
-				
-				<view class="category-content">
-					<view class="category-content-img-box">
-						<image class="category-content-img" src="/static/homepage/category1.png" mode=""></image>
-					</view>
-					<view class="category-content-txt">
-						<text>餐饮美食</text>
+						<text>{{item.menuName}}</text>
 					</view>
 				</view>
 			</view>
-			
+
 			<!-- 特别推荐类别 -->
 			<view class="section-title-txt">
-				<text>汽车专栏</text>
+				<text>{{specialRouter.menuName === undefined? '' : specialRouter.menuName}}</text>
 			</view>
-			
+
 			<view class="special-rec-section">
-				<image class="special-rec-section-img" src="" mode=""></image>
+				<image class="special-rec-section-img" :src="specialRouter.savePath" mode="scaleToFill" data-index="specical" @tap="navToRoute"></image>
 			</view>
-			
+
 			<view class="section-title-txt">
 				<text>猜你喜欢</text>
 			</view>
-			
+
 			<view class="guess-section" v-if="!showNoGuess">
 				<waterfall-flow class="guess-content" :list="list" :loading="loading" @click="choose"></waterfall-flow>
 			</view>
-			
+
 			<!-- 暂无猜你喜欢的情况 -->
 			<view class="no-commodity-container" style="padding-bottom: 110rpx;" v-else>
 				<view class="no-commodity-content">
@@ -119,38 +86,6 @@
 				</view>
 			</view>
 		</view>
-		<!-- 精选商品 -->
-<!-- 		<view class="f-header m-t">
-			<view class="tit-box title-adapt">
-				<text class="tit">精选商品</text>
-			</view>
-		</view>
-		<view class="cate-section" v-show="!showNoGoods">
-			<view class="seckill-section m-t">
-				<text class="yticon icon-you"></text>
-				<scroll-view class="floor-list" scroll-x>
-					<view class="scoll-wrapper">
-						<view v-for="(item, index) in goodsList" :key="index" class="floor-item" @click="navToDetailPage(item)">
-							<image :src="item.commodityImg[0]" mode="aspectFill"></image>
-							<text class="clamp">{{item.commodityTitle}}</text>
-							<view class="PriceArea">
-								<text class="priceOrigin">￥</text>
-								<text class="priceOriginValue">{{item.salePrice}}</text>
-								<text class="priceCurrent">￥{{item.originalPrice}}</text>
-							</view>
-						</view>
-					</view>
-				</scroll-view>
-			</view>
-		</view>
- -->
-		<!-- 暂无精选商品的情况 -->
-<!-- 		<view class="no-commodity-container" v-show="showNoGoods">
-			<view class="no-commodity-content">
-				<image src="/static/homepage/no-commodity-img.png" mode="aspectFill" class="no-commodity-img"></image>
-				<text class="no-commodity-txt">商家正在努力上新中...</text>
-			</view>
-		</view> -->
 
 		<tabBar :currentPage="currentPage"></tabBar>
 	</view>
@@ -172,6 +107,10 @@
 				navHeight: 0, // 导航栏高度(包含状态栏)
 				navColor: '', //导航栏颜色
 				swiperHeight: 0, // 轮播图高度
+
+				routerList: [], // 商品分类
+				specialRouter: {}, // 特殊推荐
+
 				current: 0,
 				swiperCurrent: 0,
 				currentPage: 'homePage',
@@ -206,14 +145,11 @@
 		},
 		onLoad() {
 			this.setNavSize();
-			
-			let _this = this;
-			// 获取轮播图高度并存储
-			wx.createSelectorQuery().selectAll('.carousel').boundingClientRect(function (rect) {
-				console.log('轮播图高度');
-				console.log(rect[0].height);
-				_this.swiperHeight = rect[0].height;
-			}).exec();
+
+			this.getHomepageRouter();
+
+			// 计算轮播图高度并存储
+			this.swiperHeight = (2 * this.navHeight + this.status) * 7 / 3;
 		},
 		// 向下滑动刷新
 		onReachBottom() {
@@ -224,9 +160,6 @@
 		onPageScroll: function(e) {
 			// 滚动到指定位置，导航栏变色
 			// this.swiperHeight为轮播图的高度
-			console.log('滑动');
-			console.log(this.swiperHeight);
-			console.log(e.scrollTop);
 			if (e.scrollTop > this.swiperHeight) {
 				this.navColor = 'background: #DE2032';
 			} else {
@@ -234,6 +167,55 @@
 			}
 		},
 		methods: {
+			/** 首页分类数据获取 */
+			getHomepageRouter: function() {
+				let params = {
+					menuIdentityCode: 'WCPHomepageNav'
+				};
+				api.getHomepageRouter(params).then(res => {
+					console.log('首页商品分类数据获取');
+					console.log(res);
+					if (res.data.data.length > 0) {
+						this.routerList = res.data.data;
+					}
+				}).catch(err => {
+					console.log(err);
+					this.routerList = [];
+				});
+
+				let params2 = {
+					menuIdentityCode: 'WCPSpecNav'
+				};
+				api.getHomepageRouter(params2).then(res => {
+					console.log('首页特殊商品分类数据获取');
+					console.log(res);
+					if (res.data.data.length > 0) {
+						this.specialRouter = res.data.data[0];
+					}
+				}).catch(err => {
+					console.log(err);
+					this.specialRouter = {};
+				});
+			},
+			/** 路由跳转事件，index=-1，为特殊推荐 */
+			navToRoute: function(target) {
+				let index = target.currentTarget.dataset.index;
+				console.log('你点击了路由跳转，标识如下');
+				console.log(index);
+				let routePath = {};
+				if (index === 'specical') {
+					console.log('特殊推荐');
+					// routePath = this.specialRouter.androidPath;
+				} else {
+					// routePath = this.routerList[index].androidPath;
+				}
+
+				// 跳转到分类页面
+				uni.navigateTo({
+					url: routePath,
+				});
+			},
+			/** 计算并存储导航栏，状态栏高度 */
 			setNavSize: function() {
 				let that = this;
 				let sysinfo = wx.getSystemInfoSync();
@@ -247,12 +229,12 @@
 				}
 			},
 			// 选中
-			choose(item) {
+			choose: function(item) {
 				//测试数据没有写id，用title代替
 				let id = item.commodityId;
 				uni.navigateTo({
 					url: `/pages/product/product?id=${id}`,
-				})
+				});
 			},
 			// 加载数据
 			getList: function() {
@@ -274,12 +256,12 @@
 			},
 
 			//轮播图切换
-			swiperChange(e) {
+			swiperChange: function(e) {
 				const index = e.detail.current;
 				this.swiperCurrent = index;
 			},
 
-			changeSwiper(e) {
+			changeSwiper: function(e) {
 				this.swiperCurrent = e.detail.current;
 			},
 			/**
@@ -289,7 +271,7 @@
 			 * 2. 小程序页面跳转
 			 * @param {Object} item
 			 */
-			navToWebView(item) {
+			navToWebView: function(item) {
 				if (item.announcementType == '0') {
 					// 公告页面跳转
 					let resulturl = item.announcementContent
@@ -309,25 +291,23 @@
 				}
 			},
 			//详情页
-			navToDetailPage(item) {
+			navToDetailPage: function(item) {
 				//测试数据没有写id，用title代替
 				let id = item.commodityId;
 				uni.navigateTo({
 					url: `/pages/product/product?id=${id}`,
 				})
 			},
-			bindPickerChange(val) {
+			bindPickerChange: function(val) {
 				this.addressName = this.areas[val.detail.value]
 				uni.setStorageSync('location', this.areas[val.detail.value]);
 				this.defaultRegion = this.areas[val.detail.value]
 				this.getBanner();
-				// this.getUserMes();
-				this.getRecommend();
 				this.getGuess();
 				this.getAreas();
 			},
 			//判断是否登录
-			wxGetLogin() {
+			wxGetLogin: function() {
 				let _this = this
 				uni.checkSession({
 					success: function() {
@@ -349,7 +329,7 @@
 			/**
 			 * 获取用户信息
 			 */
-			getUserMes() {
+			getUserMes: function() {
 				let user = {
 					// 此处默认传入重庆市
 					// 用户信息和地区无关
@@ -389,7 +369,7 @@
 			/**
 			 * 获取轮播图信息
 			 */
-			getBanner() {
+			getBanner: function() {
 				let location = {
 					locationCode: 'WCPHomePage'
 				};
@@ -406,7 +386,7 @@
 			/**
 			 * 获取地区列表信息
 			 */
-			getAreas() {
+			getAreas: function() {
 				api.getAreas().then(res => {
 					if (res.data.data) {
 						this.areas = res.data.data;
@@ -420,25 +400,25 @@
 				})
 			},
 
-			/**
-			 * 获取精选商品
-			 */
-			getRecommend: function() {
-				let userAndLocalMes = {
-					area: uni.getStorageSync('location'),
-					longitude: '',
-					latitude: '',
-					shopPlace: 'Recommend'
-				};
-				api.getProducts(userAndLocalMes).then(res => {
-					this.goodsList = res.data.data;
-					this.showNoGoods = this.goodsList == 0;
-				}).catch(err => {
-					console.log(err);
-					this.goodsList = [];
-					this.showNoGoods = true;
-				})
-			},
+			// /**
+			//  * 获取精选商品
+			//  */
+			// getRecommend: function() {
+			// 	let userAndLocalMes = {
+			// 		area: uni.getStorageSync('location'),
+			// 		longitude: '',
+			// 		latitude: '',
+			// 		shopPlace: 'Recommend'
+			// 	};
+			// 	api.getProducts(userAndLocalMes).then(res => {
+			// 		this.goodsList = res.data.data;
+			// 		this.showNoGoods = this.goodsList == 0;
+			// 	}).catch(err => {
+			// 		console.log(err);
+			// 		this.goodsList = [];
+			// 		this.showNoGoods = true;
+			// 	})
+			// },
 
 			/**
 			 * 猜你喜欢
@@ -479,18 +459,12 @@
 					this.defaultRegion = '请选择地区';
 				}
 				this.getBanner();
-				// this.wxGetLogin();
-				// this.getUserMes();
-				this.getRecommend();
 				this.getGuess();
 				this.getAreas();
 			}
 		},
 		onPullDownRefresh() {
 			this.getBanner();
-			// this.wxGetLogin();
-			// this.getUserMes();
-			this.getRecommend();
 			this.getGuess();
 			this.getAreas();
 		},
@@ -590,9 +564,9 @@
 				display: flex;
 				margin-left: 10rpx;
 				border-radius: 25rpx;
-				background: rgba(255,255,255,0.8);
+				background: rgba(255, 255, 255, 0.8);
 				width: 538rpx;
-				
+
 				.search-placeholder-txt {
 					color: #999999;
 					font-size: 26rpx;
@@ -689,18 +663,19 @@
 				left: 45upx;
 				bottom: 40upx;
 			}
-			
+
 			.carousel {
 				width: 100%;
-				height: 516rpx;
-			
+				// height: 516rpx;
+				// height: 265px;
+
 				.carousel-item {
 					width: 100%;
 					height: 100%;
 					padding: 0;
 					overflow: hidden;
 				}
-			
+
 				image {
 					width: 100%;
 					height: 100%;
@@ -862,7 +837,7 @@
 			}
 		}
 	}
-	
+
 	.area-picker-txt {
 		font-weight: 500;
 		font-size: 28rpx;
@@ -938,45 +913,46 @@
 		border-top-right-radius: 35rpx;
 		border-top-left-radius: 35rpx;
 	}
-	
-	
+
+
 	.main-content-placeholder {
 		height: 35rpx;
 	}
-	
+
 	.category-box {
-		width: 90%;
-		margin: 0 5%;
+		width: 97%;
+		margin: 0 auto;
 		display: flex;
 		flex-direction: row;
+		flex-wrap: wrap;
 		justify-content: space-between;
 	}
-	
+
 	.category-content {
 		display: flex;
+		flex: 0 0 20%;
 		flex-direction: column;
-		width: 100rpx;		
+		margin-bottom: 10rpx;
 	}
-	
+
 	.category-content-img-box {
 		margin: 0 auto;
 		width: 80rpx;
 		height: 80rpx;
-		background-color: #DF2A3C;
-		border-radius: 40rpx;
 		display: flex;
 		margin-bottom: 5rpx;
 	}
-	
+
 	.category-content-img {
 		width: 52rpx;
 		height: 66rpx;
 		margin: auto;
 	}
-	
+
 	.category-content-txt {
+		text-align: center;
 		font-size: 24rpx;
-		font-weight:500;
+		font-weight: 500;
 	}
 
 	/* 通用栏目标题 */
