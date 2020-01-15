@@ -1,24 +1,17 @@
 import {minRequest} from '../../Config/MinRequest'
 
-// 请求拦截器
-// minRequest.interceptors.request((request) => {
-//   return request
-// })
-
-// // 响应拦截器
-// minRequest.interceptors.response((response) => {
-//   return response.data
-// })
-
-// // 设置默认配置
-// minRequest.((config) => {
-//   config.baseURL = ''
-//   return config
-// })
 
 export class api{
   // 这里统一管理api请求
-  static getData(data){
-	  return minRequest.get('/auth/loginWCP', data)
+  /**
+   * 获取精选商品 & 猜你喜欢列表
+   * @param {Object} userAndLocalMes
+   */
+  static getProducts(){
+  	  return minRequest.get('/api/WCPCommodityInfo/getCommodityTitleList')
+  } 
+  
+  static selectDict(data){
+  	  return minRequest.get('/api/dict/getDicByName',data)
   }
 }
