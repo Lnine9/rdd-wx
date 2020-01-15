@@ -271,14 +271,6 @@
 					console.log(res);
 					if (res.data.data) {
 						let data = res.data.data;
-						console.log(data);
-						// let result = 'appId=' + data.appid +
-						// 	'&nonceStr=' + data.noncestr +
-						// 	'&package=prepay_id=' + data.prepayid +
-						// 	'&signType=MD5&timeStamp=' + data.timestamp +
-						// 	'&key=jD1qNX96o5KSPomZ4xv8cdelsMhz9nnL';
-						// // MD5加密
-						// let paySignStr = md5(result).toUpperCase();
 						// 起调支付接口
 						wx.requestPayment({
 							'timeStamp': data.jsonObject.timestamp,
@@ -292,17 +284,11 @@
 									icon: 'success',
 								});
 								setTimeout(() => {
-									// 设置全局变量标识支付成功
-									// getApp().globalData.payOrder = true;
 									// 购买成功去往个人中心
 									uni.switchTab({
 										url: '/pages/mine/mine'
 									});
-
-									// uni.showToast({
-									// 	title: '请稍后',
-									// 	icon: 'loading'
-									// });
+						
 								}, 2000);
 							},
 							'fail': function(res) {
