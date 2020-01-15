@@ -210,24 +210,38 @@
 				else{
 					this.valueArr.area=(String)(e.value[0]);
 				}
-
+				
 				if(e.index[1]==0){
 					this.valueArr.distance=0;
 					this.valueArr.salePrice=0;
+					this.valueArr.salesVolume=0;
 				}
 				else if(e.index[1]==1){
 					this.valueArr.distance=1;
 					this.valueArr.salePrice=0;
+					this.valueArr.salesVolume=0;
 				}
 				else if(e.index[1]==2){
 					this.valueArr.distance=0;
 					this.valueArr.salePrice=2;
+					this.valueArr.salesVolume=0;
 				}
 				else{
 					this.valueArr.distance=0;
 					this.valueArr.salePrice=1;
+					this.valueArr.salesVolume=0;
 				}
-				this.valueArr.salesVolume=(Number)(e.value[2]);
+				if(e.index[2]!=0){
+					this.valueArr.salesVolume=(Number)(e.value[2]);
+					this.valueArr.distance=0;
+					this.valueArr.salePrice=0;
+				}
+				else{
+					this.valueArr.salesVolume=0;
+					this.valueArr.distance=0;
+					this.valueArr.salePrice=0;
+				}
+				console.log(this.valueArr)
 				this.getClassification();
 			}
 		}
