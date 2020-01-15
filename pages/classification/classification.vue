@@ -1,7 +1,14 @@
 <template>
 	<view>
+		<view class="searchHead" v-if="!isSearch">
+			<view class="searchBorder">
+				<image class="searchImg" src="../../static/search/search.png"></image>
+				<input class="searchFont" :placeholder="inputSerach" placeholder-style="color:#FFFFFF" @click="getToSearch()"/>
+			</view>
+			<text class="cancel" @click="back()">取消</text>
+		</view>
 		<!-- 滑动导航栏 -->
-		<view>
+		<view v-else>
 			<navTab ref="navTab" :tabBars="tabBars" @change="change"></navTab>
 		</view>
 		<view>
@@ -54,20 +61,11 @@
 				},
 				filterDropdownValue:[],
 				filterData:[],
-				tabBars: [{
-					name: '餐饮美食',
-				}, {
-					name: '休闲娱乐',
-				}, {
-					name: '丽人优享',
-				}, {
-					name: '运动健康',
-				}, {
-					name: '母婴亲子',
-				}],
+				inputSerach:'请输入要搜索的商品',
+				tabBars: ["全部"],
 				swiperCurrent: 0,
 				regionList:[],
-				showNoGuess:false,
+				isSearch:true,
 				list: [], // 列表
 				guessList:[],
 				page: 1,
@@ -75,11 +73,13 @@
 				end: 0,
 				loading: true,
 				currentPage: 'classification',
+				showNoGuess:false
 			}
 		},
 		onLoad: function (option) { //option为object类型，会序列化上个页面传递的参数
 			//定时器模拟ajax异步请求数据
 			this.getAreas();
+			this.getContent();
 			this.getClassification();
 			setTimeout(()=>{
 				this.filterDropdownValue = [[0],[0],[0]];
@@ -125,6 +125,16 @@
 						region.name=res.data.data[i];
 						region.value=res.data.data[i];
 						this.regionList=this.regionList.concat(region);
+					}
+				}).catch(err=>{
+					console.log(err);
+				})
+			},
+			getContent(){
+				api.getContent().then(res=>{
+					console.info(res.data)
+					if(res.data.code == 200){
+						this.tabBars = this.tabBars.concat(res.data.data);
 					}
 				}).catch(err=>{
 					console.log(err);
@@ -177,7 +187,8 @@
 				})
 			},
 			change(index){
-				this.valueArr.content=this.tabBars[index].name;
+				this.valueArr.content=this.tabBars[index];
+				console.info(this.valueArr.content);
 				this.list=[];
 				this.guessList=[];
 				this.page=1;
@@ -199,7 +210,7 @@
 				else{
 					this.valueArr.area=(String)(e.value[0]);
 				}
-				
+
 				if(e.index[1]==0){
 					this.valueArr.distance=0;
 					this.valueArr.salePrice=0;
@@ -227,6 +238,41 @@
 	page {
 		padding-bottom: 50rpx;
 		background: #F8F9FB;
+	}
+	.searchHead{
+		display: inline-block;
+		width: 750rpx;
+		height: 110rpx;
+		background-color: #de2032;
+	}
+	.searchBorder{
+		position: relative;
+		left: 30rpx ;
+		top: 10rpx;
+		width: 600rpx;
+		height: 76rpx;
+		background-color: #ed8794;
+		border-radius: 50rpx;
+	}
+	.cancel{
+		position: absolute;
+		right: 50rpx;
+		top: 30rpx;
+		color: #FFFFFF;
+	}
+	.searchImg{
+		position: absolute;
+		left: 23rpx;
+		top: 18rpx;
+		width: 40rpx;
+		height: 40rpx;
+	}
+	.searchFont{
+		position: absolute;
+		left: 85rpx;
+		top: 18rpx;
+		color: #FFFFFF;
+		font-size: 28rpx;
 	}
 	 /* 暂无商品样式 */
 	.no-commodity-container {

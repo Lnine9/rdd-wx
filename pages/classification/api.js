@@ -7,4 +7,7 @@ export class api{
   static getClassification(data){
   	  return minRequest.get('/api/WCPCommodityInfo/getClassification',data)
   }
+  static getContent(){
+  	  return minRequest.get('/api/WCPCommodityInfo/getContent')
+  }
 }

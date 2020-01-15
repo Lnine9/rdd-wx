@@ -65,7 +65,7 @@ export default [{
 		]
 	},
 	{
-		"name":'销量',
+		"name":'默认',
 		"type": 'hierarchy',
 		"submenu": [
 			{
@@ -73,11 +73,11 @@ export default [{
 				"value":0
 			},
 			{
-				"name":"从低到高",
+				"name":"销量升序",
 				"value":2
 			},
 			{
-				"name":"从高到低",
+				"name":"销量降序",
 				"value":1
 			}
 		]
