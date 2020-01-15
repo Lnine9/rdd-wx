@@ -23,4 +23,12 @@ export class PayOrderAPI {
 	static payOrder(params) {
 	  return minRequest.post('/api/WeChatAppletVip/WeChatApplet', params)
 	}
+	
+	/**
+	 * 获取购买成功的消息
+	 * @param {Object} params
+	 */
+	static getSendMessage() {
+	  return minRequest.post('/api/wxController/sendMessage')
+	}
 }
