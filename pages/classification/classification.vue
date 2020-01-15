@@ -3,7 +3,7 @@
 		<view class="searchHead" v-if="!isSearch">
 			<view class="searchBorder">
 				<image class="searchImg" src="../../static/search/search.png"></image>
-				<input class="searchFont" :placeholder="inputSerach" placeholder-style="color:#FFFFFF" @click="getToSearch()"/>
+				<input class="searchFont" disabled :placeholder="inputSerach" placeholder-style="color:#FFFFFF" @click="getToSearch()"/>
 			</view>
 			<text class="cancel" @click="back()">取消</text>
 		</view>
@@ -65,7 +65,7 @@
 				tabBars: ["全部"],
 				swiperCurrent: 0,
 				regionList:[],
-				isSearch:true,
+				isSearch:false,
 				list: [], // 列表
 				guessList:[],
 				page: 1,
@@ -77,6 +77,8 @@
 			}
 		},
 		onLoad: function (option) { //option为object类型，会序列化上个页面传递的参数
+			this.inputSerach = options.key;
+			this.isSearch = options.isSearch;
 			//定时器模拟ajax异步请求数据
 			this.getAreas();
 			this.getContent();
@@ -243,6 +245,17 @@
 				}
 				console.log(this.valueArr)
 				this.getClassification();
+			},
+			//返回主页面
+			back(){
+				uni.navigateBack({
+					url: `/pages/homePage/homePage`
+				})
+			},
+			getToSearch(){
+				uni.navigateTo({
+					url: `/pages/search/search?inputSerach=` + this.inputSerach
+				})
 			}
 		}
 	}
