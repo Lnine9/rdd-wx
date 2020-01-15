@@ -200,14 +200,11 @@
 			/** 路由跳转事件，index=-1，为特殊推荐 */
 			navToRoute: function(target) {
 				let index = target.currentTarget.dataset.index;
-				console.log('你点击了路由跳转，标识如下');
-				console.log(index);
 				let routePath = {};
 				if (index === 'specical') {
-					console.log('特殊推荐');
-					// routePath = this.specialRouter.androidPath;
+					routePath = this.specialRouter.androidPath;
 				} else {
-					// routePath = this.routerList[index].androidPath;
+					routePath = this.routerList[index].androidPath;
 				}
 
 				// 跳转到分类页面
