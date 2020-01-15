@@ -35,11 +35,11 @@
 */
 ///以下演示数据中,我故意把value设置成name,只是为了方便演示,使示例更加易懂,实际使用时候value应该是一个标识,给后台识别所用的.
 export default [{
-		// name:'附近',
+		name:'全城',
 		"type": 'hierarchy',
 		"submenu": [{
-				"name": '全城',
-				"value": "全城",
+				"name": "重庆市",
+				"value": "重庆市"
 			},
 		]
 	},
@@ -48,19 +48,19 @@ export default [{
 		"type": 'hierarchy',
 		"submenu": [{
 				"name": "默认排序",
-				"value": "默认排序"
+				"value": 0
 			},
 			{
 				"name": "离我最近",
-				"value": "离我最近"
+				"value": 1
 			},
 			{
 				"name": "价格升序",
-				"value": "价格升序"
+				"value": 2
 			},
 			{
 				"name": "价格降序",
-				"value": "价格降序"
+				"value": 1
 			}
 		]
 	},
@@ -70,15 +70,15 @@ export default [{
 		"submenu": [
 			{
 				"name":"默认",
-				"value":"默认"
+				"value":0
 			},
 			{
 				"name":"从低到高",
-				"value":"从低到高"
+				"value":2
 			},
 			{
 				"name":"从高到低",
-				"value":"从高到低"
+				"value":1
 			}
 		]
 	}

@@ -67,7 +67,7 @@
 				var tempIndex = index - 2
 				tempIndex = tempIndex <= 0 ? 0 : tempIndex
 				this.toView = `id${tempIndex}` //动画滚动,滚动至中心位置
-				console.log(index);
+				this.$emit("change", index);
 				this.tabClick = index //设置导航点击了哪一个
 				this.isLeft = index * this.isLongWidth //设置下划线位置
 				this.$parent.currentTab = index //设置swiper的第几页
@@ -93,7 +93,7 @@
 			background-color: #de2032;
 
 			.longItem {
-				width: 25%;
+				width: 22%;
 				height: 100upx;
 				display: inline-block;
 				line-height: 100upx;
