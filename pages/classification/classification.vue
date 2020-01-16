@@ -14,7 +14,7 @@
 		<view>
 			<HMfilterDropdown :filterData="filterData" :defaultSelected ="filterDropdownValue" :updateMenuName="false" @confirm="confirm"></HMfilterDropdown>
 		</view>
-		<!-- 商品展示 -->
+		<!-- 商品展示 -->.
 		<view class="guess-section" v-show="!showNoGuess">
 			<waterfall-flow class="guess-content" :list="list" :loading="loading" @click="choose"></waterfall-flow>
 		</view>
@@ -58,6 +58,8 @@
 					latitude: 0.00,
 					longitude: 0.00,
 					commodityTitle:'',
+					pageSize:10,
+					page:1,
 				},
 				filterDropdownValue:[],
 				filterData:[],
@@ -68,9 +70,6 @@
 				isSearch:false,
 				list: [], // 列表
 				guessList:[],
-				page: 1,
-				start: 0,
-				end: 0,
 				loading: true,
 				currentPage: 'classification',
 				showNoGuess:false
@@ -109,9 +108,9 @@
 		},
 		// 向下滑动刷新
 		onReachBottom() {
-			this.page++;
+			this.valueArr.page++;
 			this.loading = true;
-			this.getList();
+			this.getClassification();
 		},
 		methods: {
 			getAreas(){
@@ -146,12 +145,15 @@
 				api.getClassification(this.valueArr).then(res=>{
 					if(res.data.data.length!=0){
 						this.showNoGuess=false;
-						this.guessList = res.data.data;
+						this.list=this.list.concat(res.data.data);
+						this.loading=false;
 						uni.stopPullDownRefresh();
-						this.getList();
+					}
+					else if(this.list==null){
+						this.showNoGuess=true;
 					}
 					else{
-						this.showNoGuess=true;
+						this.loading=false;
 					}
 				}).catch(err=>{
 					console.log(err);
@@ -163,22 +165,6 @@
 							wx.setStorageSync('longitude', res.longitude)
 				        }
 				})
-			},
-			// 加载数据
-			getList: function() {
-				if (this.list.length < this.guessList.length) {
-					setTimeout(() => {
-						this.end = this.page * 10;
-						this.list = this.list.concat(this.guessList.slice(this.start, this.end));
-						this.start = this.end;
-						// 延迟 120 毫秒隐藏加载动画，为了跟组件里面的 100 毫秒定位有个平缓过度
-						setTimeout(() => {
-							this.loading = false;
-						}, 120);
-					}, 1000)
-				} else {
-					this.loading = false;
-				}
 			},
 			// 选中
 			choose(item) {
@@ -192,8 +178,7 @@
 				this.valueArr.content=this.tabBars[index];
 				console.info(this.valueArr.content);
 				this.list=[];
-				this.guessList=[];
-				this.page=1;
+				this.valueArr.page=1;
 				this.start=0;
 				this.end=0;
 				this.loading=true;
@@ -201,8 +186,7 @@
 			},
 			confirm(e){
 				this.list=[];
-				this.guessList=[];
-				this.page=1;
+				this.valueArr.page=1;
 				this.start=0;
 				this.end=0;
 				this.loading=true;
@@ -243,7 +227,6 @@
 					this.valueArr.distance=0;
 					this.valueArr.salePrice=0;
 				}
-				console.log(this.valueArr)
 				this.getClassification();
 			},
 			//返回主页面

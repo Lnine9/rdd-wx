@@ -82,7 +82,9 @@
 				//滚动区域定位
 				firstScrollInto: 0,
 				secondScrollInto: 0,
-				componentTop:0	//组件top
+				componentTop:0	,//组件top
+				menuArr:[0,0,0],
+				flag:0,
 			}
 		},
 		props: {
@@ -107,7 +109,8 @@
 				immediate: true
 			},
 			defaultSelected(newVal) {
-				this.activeMenuArr = JSON.parse(JSON.stringify(newVal));
+				this.active
+				let Arr = JSON.parse(JSON.stringify(newVal));
 				this.shadowActiveMenuArr = JSON.parse(JSON.stringify(newVal));
 			}
 		},
@@ -163,6 +166,13 @@
 					if(this.updateMenuName){
 						this.menu[page_index].name = (level3_index != null && sub.submenu[level3_index].name) || (level2_index != null && sub.name) || this.subData[page_index].submenu[level1_index].name;
 					}
+					// 从这儿改
+					for(let i=1;i<this.activeMenuArr.length;i++){
+						if(i!=page_index && page_index!=0){
+							this.activeMenuArr[i]=[0];
+							this.shadowActiveMenuArr[i] = JSON.parse(JSON.stringify(this.activeMenuArr[i]));
+						}
+					}
 					this.shadowActiveMenuArr[page_index] = JSON.parse(JSON.stringify(this.activeMenuArr[page_index]));
 					this.togglePage(this.showPage);
 				}
@@ -190,6 +200,7 @@
 			},
 			//选中筛选类label-UI状态
 			selectFilterLabel(page_index, box_index, label_index) {
+				this.flag=page_index;
 				let find_index = this.activeMenuArr[page_index][box_index].indexOf(label_index);
 				if (find_index > -1) {
 					this.activeMenuArr[page_index][box_index].splice(find_index, 1);
@@ -285,14 +296,24 @@
 					index[i] = item;
 					
 				});
-				
 				this.$emit('confirm', {
 					index: index,
 					value:value
-				});
+				})
 				for(let i=0;i<this.menu.length;i++){
 					this.menu[i]=this.filterData[i].submenu[index[i]];
 				}
+				if(this.flag!=0){
+					for(let i=1;i<this.menu.length;i++){
+						if(i==this.flag){
+							this.menu[i]=this.filterData[i].submenu[index[i]];
+						}
+						else{
+							this.menu[i]=this.filterData[i].submenu[index[0]];
+						}
+					}
+				}
+				this.menuArr = JSON.parse(JSON.stringify(this.shadowActiveMenuArr));
 			},
 			//show菜单页
 			showPageLayer(index) {
