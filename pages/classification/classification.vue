@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<view class="searchHead" v-if="!isSearch">
+		<view class="searchHead" v-show="!isSearch">
 			<view class="searchBorder">
 				<image class="searchImg" src="../../static/search/search.png"></image>
 				<input class="searchFont" disabled :placeholder="inputSerach" placeholder-style="color:#FFFFFF" @click="getToSearch()"/>
@@ -8,8 +8,8 @@
 			<text class="cancel" @click="back()">取消</text>
 		</view>
 		<!-- 滑动导航栏 -->
-		<view v-else>
-			<navTab ref="navTab" :tabBars="tabBars" @change="change"></navTab>
+		<view v-show="isSearch">
+			<navTab ref="navTab" :value="valueArr" :tabBars="tabBars" @change="change"></navTab>
 		</view>
 		<view>
 			<HMfilterDropdown :filterData="filterData" :defaultSelected ="filterDropdownValue" :updateMenuName="false" @confirm="confirm"></HMfilterDropdown>
@@ -78,9 +78,10 @@
 		onLoad: function (option) { //option为object类型，会序列化上个页面传递的参数
 			if(option.key != undefined){
 				wx.setStorageSync('inputSerach', option.key)
-				wx.setStorageSync('isSearch', option.isSearch)
 			}
 			if(option.content != undefined){
+				console.log("测试打印分类获取");
+				console.log(option.content);
 				wx.setStorageSync('content', option.content)
 			}
 			//定时器模拟ajax异步请求数据
@@ -100,17 +101,17 @@
 			this.valueArr.longitude = wx.getStorageSync('longitude')
 			if(wx.getStorageSync('inputSerach') != ''){
 				this.inputSerach = wx.getStorageSync('inputSerach')
-				this.isSearch = wx.getStorageSync('isSearch')
-				this.valueArr.commodityTitle = this.inputSerach
+				this.isSearch = false
+				this.valueArr.commodityTitle = this.inputSerach;
+				this.getClassification();
 			}
+			
 			if(wx.getStorageSync('content') != ''){
 				this.valueArr.content = wx.getStorageSync('content')
-			}
-			if(wx.getStorageSync('inputSerach') != '' && wx.getStorageSync('content') != ''){
 				this.isSearch = true;
+				this.getContent();
 			}
-			this.getContent();
-			this.getClassification();
+			
 		},
 		onPullDownRefresh: function() {
 			wx.showNavigationBarLoading() //在标题栏中显示加载
@@ -152,6 +153,7 @@
 					console.info(res.data)
 					if(res.data.code == 200){
 						this.tabBars = this.tabBars.concat(res.data.data);
+						
 					}
 				}).catch(err=>{
 					console.log(err);

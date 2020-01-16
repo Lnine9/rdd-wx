@@ -32,7 +32,9 @@
 		props: {
 			tabBars: {
 				type: Array,
-				Default: [],
+			},
+			value:{
+				type: Array,
 			}
 
 		},
@@ -55,8 +57,14 @@
 				}
 			})
 			this.toView = 'id0'
+			this.value1()
 		},
 		methods: {
+			value1(){
+				console.log("我进来了");
+				console.log(this.tabBars);
+				console.log(this.value);
+			},
 			// 导航栏点击
 			navClick(index) {
 				this.$parent.currentTab = index //设置swiper的第几页
