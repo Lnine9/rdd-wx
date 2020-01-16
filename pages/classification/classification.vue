@@ -253,8 +253,8 @@
 				})
 			},
 			getToSearch(){
-				uni.navigateTo({
-					url: `/pages/search/search?inputSerach=` + this.inputSerach
+				uni.navigateBack({
+					url: `/pages/search/search` 
 				})
 			}
 		}

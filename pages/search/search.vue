@@ -3,9 +3,10 @@
 		<view class="searchHead">
 			<view class="searchBorder">
 				<image class="searchImg" src="../../static/search/search.png"></image>
-				<UniSInput class="searchFont " @inputValue="getInputValue"   placeholder="请输入要搜索的商品" @confirm ="doSearch(false)" confirm-type="search" v-model="keyword"></UniSInput>
+				<UniSInput type="text" class="searchFont " @inputValue="getInputValue"   placeholder="请输入要搜索的商品" @confirm ="doSearch(false)" confirm-type="search" v-model="keyword.value"></UniSInput>
 			</view>
-			<view class="cancel" @click="back()">取消</view>
+			<!-- <view class="cancel" @click="back()">取消</view> -->
+			<view class="cancel" @click="doSearch(false)">取消</view>
 		</view>
 		<!-- <view class="search-box"> -->
 			<!-- <! mSearch组件 如果使用原样式，删除组件元素--> 
@@ -14,7 +15,7 @@
 			<!-- 原样式 如果使用原样式，恢复下方注销代码 -->
 			<!-- 			
 			<view class="input-box">
-				<input type="text" :placeholder="defaultKeyword" @input="inputChange" v-model="keyword" @confirm="doSearch(false)"
+				<input  :placeholder="defaultKeyword" @input="inputChange" v-model="keyword" @confirm="doSearch(false)"
 				 placeholder-class="placeholder-class" confirm-type="search">
 			</view>
 			<view class="search-btn" @tap="doSearch(false)">搜索</view> 
@@ -72,7 +73,7 @@
 			return {
 				defaultKeyword: "",
 			    keyword: '',
-				oldKeywordList: ['火锅专区'],
+				oldKeywordList: [],
 				hotKeywordList: [],
 				keywordList: [],
 				forbid: '',
@@ -82,7 +83,6 @@
 		},
 		onLoad() {
 			this.init();
-			
 		},
 		components: {
 			//引用mSearch组件，如不需要删除即可
@@ -91,20 +91,20 @@
 		methods: {
 			init() { 
 				this.getProducts();
-				// this.loadDefaultKeyword();
+			    this.loadDefaultKeyword();
 				this.loadOldKeyword();
 				this.loadHotKeyword();
-			   
+			    
 				// this.drawCorrelativeKeyword(this.keywordList, this.keyword);
 			},
 			blur(){
 				uni.hideKeyboard()
 			},
 			//加载默认搜索关键字
-			// loadDefaultKeyword() {
-			// 	//定义默认搜索关键字，可以自己实现ajax请求数据再赋值,用户未输入时，以水印方式显示在输入框，直接不输入内容搜索会搜索默认关键字
-			// 	this.defaultKeyword = "默认关键字";
-			// },
+			loadDefaultKeyword() {
+				//定义默认搜索关键字，可以自己实现ajax请求数据再赋值,用户未输入时，以水印方式显示在输入框，直接不输入内容搜索会搜索默认关键字
+				this.defaultKeyword = "默认关键字";
+			},
 			//加载历史搜索,自动读取本地Storage
 			loadOldKeyword() {
 				uni.getStorage({
@@ -114,6 +114,7 @@
 						this.oldKeywordList = OldKeys;
 					}
 				});
+				console.log(this.oldKeywordList)
 			},
 			// 加载热门搜索
 			loadHotKeyword() {
@@ -146,16 +147,17 @@
 			//监听输入
 			getInputValue(event) {
 				//兼容引入组件时传入参数情况
-				var keyword = event.detail?event.detail.value:event;
-				console.log(keyword)
-				if (!keyword) {
+				var keywords = event.detail?event.detail.value:event;
+				this.keyword = keywords.value;
+				console.log(this.keyword)
+				if (!keywords) {
 					this.keywordList = [];
 					this.isShowKeywordList = false;
 					return;
 				}
 				if(event.value != ""){
 					this.isShowKeywordList = true;
-				    this.keywordList = this.drawCorrelativeKeyword(this.shopList, keyword);
+				    this.keywordList = this.drawCorrelativeKeyword(this.shopList, keywords);
 				}else{
 					this.isShowKeywordList = false;
 				}
@@ -226,9 +228,10 @@
 			},
 			//执行搜索
 			doSearch(key) {
-				key = key ? key : this.keyword ? this.keyword : this.defaultKeyword;
+				console.log(this.keyword);
+			    key = key ? key : this.keyword ? this.keyword : this.defaultKeyword;
 				this.keyword = key;
-				console.log(key);
+				console.log("历史："+key);
 				this.saveKeyword(key); //保存为历史 
 				uni.navigateTo({
 					url:`/pages/classification/classification?key=${key}?isSearch=false`
@@ -248,6 +251,7 @@
 			},
 			//保存关键字到历史记录
 			saveKeyword(keyword) {
+				console.log("历史记录："+keyword);
 				uni.getStorage({
 					key: 'OldKeys',
 					success: (res) => {
@@ -260,7 +264,7 @@
 							OldKeys.splice(findIndex, 1);
 							OldKeys.unshift(keyword);
 						}
-						console.log(OldKeys);
+						console.log("记录："+OldKeys);
 						//最多10个纪录
 						OldKeys.length > 10 && OldKeys.pop();
 						uni.setStorage({
@@ -268,7 +272,7 @@
 							data: JSON.stringify(OldKeys)
 						});
 						this.oldKeywordList = OldKeys; //更新历史搜索
-						console.log(this.oldKeywordList);
+						console.log("历史记录"+this.oldKeywordList);
 					},
 					fail: (e) => {
 						var OldKeys = [keyword];
