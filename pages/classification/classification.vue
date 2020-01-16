@@ -85,8 +85,6 @@
 			}
 			//定时器模拟ajax异步请求数据
 			this.getAreas();
-			this.getContent();
-			this.getClassification();
 			setTimeout(()=>{
 				this.filterDropdownValue = [[0],[0],[0]];
 				this.filterData = data; 
@@ -103,6 +101,7 @@
 			if(wx.getStorageSync('inputSerach') != ''){
 				this.inputSerach = wx.getStorageSync('inputSerach')
 				this.isSearch = wx.getStorageSync('isSearch')
+				this.valueArr.commodityTitle = this.inputSerach
 			}
 			if(wx.getStorageSync('content') != ''){
 				this.valueArr.content = wx.getStorageSync('content')
@@ -110,7 +109,8 @@
 			if(wx.getStorageSync('inputSerach') != '' && wx.getStorageSync('content') != ''){
 				this.isSearch = true;
 			}
-			uni.clearStorageSync();
+			this.getContent();
+			this.getClassification();
 		},
 		onPullDownRefresh: function() {
 			wx.showNavigationBarLoading() //在标题栏中显示加载
@@ -164,6 +164,7 @@
 						this.list=this.list.concat(res.data.data);
 						this.loading=false;
 						uni.stopPullDownRefresh();
+						console.log(res.data.data)
 					}
 					else if(this.list==null){
 						this.showNoGuess=true;
@@ -266,13 +267,15 @@
 		background: #F8F9FB;
 	}
 	.searchHead{
+		position: fixed;
 		display: inline-block;
 		width: 750rpx;
 		height: 110rpx;
 		background-color: #de2032;
+		z-index: 1000;
 	}
 	.searchBorder{
-		position: relative;
+		position: fixed;
 		left: 30rpx ;
 		top: 10rpx;
 		width: 600rpx;
@@ -281,7 +284,7 @@
 		border-radius: 50rpx;
 	}
 	.cancel{
-		position: absolute;
+		position: fixed;
 		right: 50rpx;
 		top: 30rpx;
 		color: #FFFFFF;
