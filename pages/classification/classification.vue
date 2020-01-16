@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<view class="searchHead" v-if="!isSearch">
+		<view class="searchHead" v-show="!isSearch">
 			<view class="searchBorder">
 				<image class="searchImg" src="../../static/search/search.png"></image>
 				<input class="searchFont" disabled :placeholder="inputSerach" placeholder-style="color:#FFFFFF" @click="getToSearch()"/>
@@ -8,7 +8,7 @@
 			<text class="cancel" @click="back()">取消</text>
 		</view>
 		<!-- 滑动导航栏 -->
-		<view v-else>
+		<view v-show="isSearch">
 			<navTab ref="navTab" :tabBars="tabBars" @change="change"></navTab>
 		</view>
 		<view>
@@ -78,13 +78,23 @@
 		onLoad: function (option) { //option为object类型，会序列化上个页面传递的参数
 			if(option.key != undefined){
 				wx.setStorageSync('inputSerach', option.key)
-				wx.setStorageSync('isSearch', option.isSearch)
 			}
 			if(option.content != undefined){
-				wx.setStorageSync('content', option.content)
+				console.log("测试打印分类获取");
+				console.log(option.content);
+				
 			}
 			//定时器模拟ajax异步请求数据
 			this.getAreas();
+			api.getContent().then(res=>{
+				console.info(res.data)
+				if(res.data.code == 200){
+					this.tabBars = this.tabBars.concat(res.data.data);
+					wx.setStorageSync('tabBars', this.tabBars)
+				}
+			}).catch(err=>{
+				console.log(err);
+			})
 			setTimeout(()=>{
 				this.filterDropdownValue = [[0],[0],[0]];
 				this.filterData = data; 
@@ -100,16 +110,13 @@
 			this.valueArr.longitude = wx.getStorageSync('longitude')
 			if(wx.getStorageSync('inputSerach') != ''){
 				this.inputSerach = wx.getStorageSync('inputSerach')
-				this.isSearch = wx.getStorageSync('isSearch')
+				this.isSearch = false
 				this.valueArr.commodityTitle = this.inputSerach
 			}
 			if(wx.getStorageSync('content') != ''){
 				this.valueArr.content = wx.getStorageSync('content')
-			}
-			if(wx.getStorageSync('inputSerach') != '' && wx.getStorageSync('content') != ''){
 				this.isSearch = true;
 			}
-			this.getContent();
 			this.getClassification();
 		},
 		onPullDownRefresh: function() {
@@ -148,14 +155,7 @@
 				})
 			},
 			getContent(){
-				api.getContent().then(res=>{
-					console.info(res.data)
-					if(res.data.code == 200){
-						this.tabBars = this.tabBars.concat(res.data.data);
-					}
-				}).catch(err=>{
-					console.log(err);
-				})
+				
 			},
 			getClassification(){
 				api.getClassification(this.valueArr).then(res=>{
