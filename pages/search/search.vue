@@ -3,7 +3,7 @@
 		<view class="searchHead">
 			<view class="searchBorder">
 				<image class="searchImg" src="../../static/search/search.png" @click="doSearch(false)"></image>
-				<UniSInput type="text" class="searchFont " @inputValue="getInputValue"   placeholder="请输入要搜索的商品" @confirm ="doSearch(false)" confirm-type="search" v-model="keyword" :keyword=keyword></UniSInput>
+				<UniSInput type="text" class="searchFont " @inputValue="getInputValue"   placeholder="请输入要搜索的商品" @confirm ="doSearch(false)" confirm-type="search"  :keyword="keyword"></UniSInput>
 			</view>
 			<view class="cancel" @click="back()">取消</view>
 			<!-- <view class="cancel" @click="doSearch(false)">取消</view> -->
@@ -81,7 +81,7 @@
 				isShowKeywordList: false
 			}
 		},
-		onLoad() {
+		mounted() {
 			this.init();
 		},
 		components: {
@@ -94,7 +94,6 @@
 			    this.loadDefaultKeyword();
 				this.loadOldKeyword();
 				this.loadHotKeyword();
-			    
 				// this.drawCorrelativeKeyword(this.keywordList, this.keyword);
 			},
 			blur(){
@@ -136,13 +135,12 @@
 			getProducts(){	
 				console.log(12);
 				api.getProducts().then(res => {
-					for(let i=0;i<res.data.data.length;i++){
-						this.shopList[i] = res.data.data[i].commodityTitle ;
-					} 
+					this.shopList = res.data.data ;
+					console.log(this.shopList)
 				}).catch(err => {
 					 console.log(err);
 				})
-				console.log(this.shopList)
+				
 			},
 			//监听输入
 			getInputValue(event) {
@@ -175,7 +173,7 @@
 				var len = keywords.length,
 					keywordArr = [];
 				for (var i = 0; i < len; i++) {
-					 var row = keywords[i];
+					 var row = keywords[i].commodityTitle;
 					 if(keyword.value.length<=row.length){
 						 // console.log(Object.is(row[keyword.value.length-1],keyword.value));
 						 if(row.slice(0,keyword.value.length)== keyword.value){
@@ -197,7 +195,6 @@
 			},
 			//顶置关键字
 			setkeyword(data) {
-				// this.keyword = data.keyword;
 				this.keyword = data.keyword;
 				console.log(this.keyword)
 			},
