@@ -2,11 +2,11 @@
 	<view class="content">
 		<view class="searchHead">
 			<view class="searchBorder">
-				<image class="searchImg" src="../../static/search/search.png"></image>
-				<UniSInput type="text" class="searchFont " @inputValue="getInputValue"   placeholder="请输入要搜索的商品" @confirm ="doSearch(false)" confirm-type="search" v-model="keyword.value"></UniSInput>
+				<image class="searchImg" src="../../static/search/search.png" @click="doSearch(false)"></image>
+				<UniSInput type="text" class="searchFont " @inputValue="getInputValue"   placeholder="请输入要搜索的商品" @confirm ="doSearch(false)" confirm-type="search" v-model="keyword" :keyword=keyword></UniSInput>
 			</view>
-			<!-- <view class="cancel" @click="back()">取消</view> -->
-			<view class="cancel" @click="doSearch(false)">取消</view>
+			<view class="cancel" @click="back()">取消</view>
+			<!-- <view class="cancel" @click="doSearch(false)">取消</view> -->
 		</view>
 		<!-- <view class="search-box"> -->
 			<!-- <! mSearch组件 如果使用原样式，删除组件元素--> 
@@ -197,7 +197,9 @@
 			},
 			//顶置关键字
 			setkeyword(data) {
+				// this.keyword = data.keyword;
 				this.keyword = data.keyword;
+				console.log(this.keyword)
 			},
 			//清除历史搜索
 			oldDelete() {
@@ -228,7 +230,6 @@
 			},
 			//执行搜索
 			doSearch(key) {
-				console.log(this.keyword);
 			    key = key ? key : this.keyword ? this.keyword : this.defaultKeyword;
 				this.keyword = key;
 				console.log("历史："+key);
@@ -251,7 +252,6 @@
 			},
 			//保存关键字到历史记录
 			saveKeyword(keyword) {
-				console.log("历史记录："+keyword);
 				uni.getStorage({
 					key: 'OldKeys',
 					success: (res) => {

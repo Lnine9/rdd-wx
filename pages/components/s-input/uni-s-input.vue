@@ -1,7 +1,7 @@
 <template>
     <view class="container">
       <!--  <view class="label-title">{{label}}</view> -->
-        <input :class="inputClass" :type="type" @input="inputChange" :id="id" :placeholder-class="placeholderClass" :placeholder="placeholder" :value="value" placeholder-style="color:#FFFFFF">
+        <input :class="inputClass" :type="type" @input="inputChange" :id="id" :placeholder-class="placeholderClass" :placeholder="placeholder"  :value="value" placeholder-style="color:#FFFFFF" v-model="keyword">
         <view v-if="value" class="clear-icon" @click="restInput">x</view>
     </view>
 </template>
@@ -30,6 +30,10 @@ export default {
             type: String,
             default: 'text'
         },
+		keyword: {
+			type: String,
+			default:''
+		},
         // label: {
         //     type: String,
         //     default: '名称'
@@ -42,6 +46,7 @@ export default {
     data () {
         return {
             value: ''
+			// input:'sdsdfdsfsd'
         }
     },
     methods: {
