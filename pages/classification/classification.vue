@@ -79,7 +79,6 @@
 			if(option.key != undefined){
 				wx.setStorageSync('inputSerach', option.key)
 			}
-
 			//定时器模拟ajax异步请求数据
 			this.getAreas();
 			api.getContent().then(res=>{
@@ -109,11 +108,14 @@
 				this.isSearch = false
 				this.valueArr.commodityTitle = this.inputSerach
 			}
-
 			if(wx.getStorageSync('content') != ''){
 				this.valueArr.content = wx.getStorageSync('content')
 				this.isSearch = true;
 			}
+			uni.removeStorage({
+				key: 'content'
+			});
+			console.info("2:"+wx.getStorageSync('content'))
 			this.getClassification();
 		},
 		onPullDownRefresh: function() {
@@ -159,7 +161,6 @@
 						this.list=this.list.concat(res.data.data);
 						this.loading=false;
 						uni.stopPullDownRefresh();
-						console.log(res.data.data)
 					}
 					else if(this.list.length==0){
 						this.showNoGuess=true;
@@ -185,10 +186,10 @@
 				uni.navigateTo({
 					url: `/pages/product/product?id=${id}`,
 				})
+				this.list=[];
 			},
 			change(index){
 				this.valueArr.content=this.tabBars[index];
-				console.info(this.valueArr.content);
 				this.list=[];
 				this.valueArr.page=1;
 				this.start=0;

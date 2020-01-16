@@ -69,10 +69,7 @@
 					}
 				}
 			}
-			uni.removeStorage({
-				key: 'content'
-			});
-			console.info("2:"+wx.getStorageSync('content'))
+			
 		},
 		methods: {
 			// 导航栏点击
