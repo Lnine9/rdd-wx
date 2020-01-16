@@ -67,7 +67,7 @@
 				tabBars: ["全部"],
 				swiperCurrent: 0,
 				regionList:[],
-				isSearch:false,
+				isSearch:true,
 				list: [], // 列表
 				guessList:[],
 				loading: true,
@@ -76,8 +76,13 @@
 			}
 		},
 		onLoad: function (option) { //option为object类型，会序列化上个页面传递的参数
-			this.inputSerach = options.key;
-			this.isSearch = options.isSearch;
+			if(option.key != undefined){
+				wx.setStorageSync('inputSerach', option.key)
+				wx.setStorageSync('isSearch', option.isSearch)
+			}
+			if(option.content != undefined){
+				wx.setStorageSync('content', option.content)
+			}
 			//定时器模拟ajax异步请求数据
 			this.getAreas();
 			this.getContent();
@@ -95,6 +100,17 @@
 		onShow() {
 			this.valueArr.latitude = wx.getStorageSync('latitude')
 			this.valueArr.longitude = wx.getStorageSync('longitude')
+			if(wx.getStorageSync('inputSerach') != ''){
+				this.inputSerach = wx.getStorageSync('inputSerach')
+				this.isSearch = wx.getStorageSync('isSearch')
+			}
+			if(wx.getStorageSync('content') != ''){
+				this.valueArr.content = wx.getStorageSync('content')
+			}
+			if(wx.getStorageSync('inputSerach') != '' && wx.getStorageSync('content') != ''){
+				this.isSearch = true;
+			}
+			uni.clearStorageSync();
 		},
 		onPullDownRefresh: function() {
 			wx.showNavigationBarLoading() //在标题栏中显示加载
@@ -237,7 +253,7 @@
 			},
 			getToSearch(){
 				uni.navigateBack({
-					url: `/pages/search/search` 
+					url: `/pages/search/search`
 				})
 			}
 		}
