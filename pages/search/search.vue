@@ -3,7 +3,8 @@
 		<view class="searchHead">
 			<view class="searchBorder">
 				<image class="searchImg" src="../../static/search/search.png" @click="doSearch(false)"></image>
-				<UniSInput type="text" class="searchFont " @inputValue="getInputValue"   placeholder="请输入要搜索的商品" @confirm ="doSearch(false)" confirm-type="search"  :keyword="keyword"></UniSInput>
+				<UniSInput type="text" class="searchFont" @inputValue="getInputValue"   placeholder="请输入要搜索的商品"   :keyword="keyword"></UniSInput>
+				<!-- <input type="text" class="searchFont" placeholder="请输入要搜索的商品" @confirm ="doSearch(false)" confirm-type="search"/> -->
 			</view>
 			<view class="cancel" @click="back()">取消</view>
 			<!-- <view class="cancel" @click="doSearch(false)">取消</view> -->
@@ -228,12 +229,20 @@
 			//执行搜索
 			doSearch(key) {
 			    key = key ? key : this.keyword ? this.keyword : this.defaultKeyword;
-				this.keyword = key;
 				console.log("历史："+key);
-				this.saveKeyword(key); //保存为历史 
-				uni.navigateTo({
-					url:`/pages/classification/classification?key=${key}?isSearch=false`
-				})
+				if(key == '默认关键字'){
+					uni.showToast({
+						title: "请输入要搜索的内容！",
+						icon: 'none',
+						duration: 2000
+					});
+				}else{
+					this.keyword = key;
+					this.saveKeyword(key); //保存为历史 
+					uni.navigateTo({
+						url:`/pages/classification/classification?key=${key}?isSearch=false`
+					})
+				}	
 				// uni.showToast({
 				// 	title: key,
 				// 	icon: 'none',

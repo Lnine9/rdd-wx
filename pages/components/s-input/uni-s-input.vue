@@ -1,7 +1,7 @@
 <template>
     <view class="container">
       <!--  <view class="label-title">{{label}}</view> -->
-        <input :class="inputClass" :type="type" @input="inputChange" :id="id" :placeholder-class="placeholderClass" :placeholder="placeholder"  :value="value" placeholder-style="color:#FFFFFF" v-model="keyword">
+        <input :class="inputClass" :type="type" @input="inputChange" :id="id" :placeholder-class="placeholderClass" :placeholder="placeholder" @confirm ="doSearch()" confirm-type="search"  :value="value" placeholder-style="color:#FFFFFF" v-model="keyword">
         <view v-if="value" class="clear-icon" @click="restInput">x</view>
     </view>
 </template>
@@ -32,12 +32,8 @@ export default {
         },
 		keyword: {
 			type: String,
-			default:''
+
 		},
-        // label: {
-        //     type: String,
-        //     default: '名称'
-        // },
         initValue: {
             type: String,
             default: ''
@@ -46,10 +42,14 @@ export default {
     data () {
         return {
             value: ''
-			// input:'sdsdfdsfsd'
         }
     },
     methods: {
+		//调用父组件搜索
+		doSearch(){
+			this.$parent.doSearch(false);
+		},
+		//清空
         restInput () {
             this.value = ''
             this.$emit('inputValue', {
@@ -67,6 +67,7 @@ export default {
     },
     created () {
         this.value = this.initValue
+		console.log("bkb" + this.initValue)
         this.$emit('inputValue', {
             id: this.id,
             value: this.initValue
