@@ -9,7 +9,7 @@
 		</view>
 		<!-- 滑动导航栏 -->
 		<view v-show="isSearch">
-			<navTab ref="navTab" :value="valueArr" :tabBars="tabBars" @change="change"></navTab>
+			<navTab ref="navTab" :tabBars="tabBars" @change="change"></navTab>
 		</view>
 		<view>
 			<HMfilterDropdown :filterData="filterData" :defaultSelected ="filterDropdownValue" :updateMenuName="false" @confirm="confirm"></HMfilterDropdown>
@@ -79,13 +79,18 @@
 			if(option.key != undefined){
 				wx.setStorageSync('inputSerach', option.key)
 			}
-			if(option.content != undefined){
-				console.log("测试打印分类获取");
-				console.log(option.content);
-				wx.setStorageSync('content', option.content)
-			}
+
 			//定时器模拟ajax异步请求数据
 			this.getAreas();
+			api.getContent().then(res=>{
+				console.info(res.data)
+				if(res.data.code == 200){
+					this.tabBars = this.tabBars.concat(res.data.data);
+					wx.setStorageSync('tabBars', this.tabBars)
+				}
+			}).catch(err=>{
+				console.log(err);
+			})
 			setTimeout(()=>{
 				this.filterDropdownValue = [[0],[0],[0]];
 				this.filterData = data; 
@@ -102,16 +107,14 @@
 			if(wx.getStorageSync('inputSerach') != ''){
 				this.inputSerach = wx.getStorageSync('inputSerach')
 				this.isSearch = false
-				this.valueArr.commodityTitle = this.inputSerach;
-				this.getClassification();
+				this.valueArr.commodityTitle = this.inputSerach
 			}
-			
+
 			if(wx.getStorageSync('content') != ''){
 				this.valueArr.content = wx.getStorageSync('content')
 				this.isSearch = true;
-				this.getContent();
 			}
-			
+			this.getClassification();
 		},
 		onPullDownRefresh: function() {
 			wx.showNavigationBarLoading() //在标题栏中显示加载
@@ -143,17 +146,6 @@
 						region.name=res.data.data[i];
 						region.value=res.data.data[i];
 						this.regionList=this.regionList.concat(region);
-					}
-				}).catch(err=>{
-					console.log(err);
-				})
-			},
-			getContent(){
-				api.getContent().then(res=>{
-					console.info(res.data)
-					if(res.data.code == 200){
-						this.tabBars = this.tabBars.concat(res.data.data);
-						
 					}
 				}).catch(err=>{
 					console.log(err);

@@ -32,9 +32,7 @@
 		props: {
 			tabBars: {
 				type: Array,
-			},
-			value:{
-				type: Array,
+				Default: [],
 			}
 
 		},
@@ -44,7 +42,8 @@
 				isLeft: 0, //导航栏下划线位置
 				isWidth: 0, //每个导航栏占位
 				toView: '',
-				isLongWidth: 0
+				isLongWidth: 0,
+				content:''
 			};
 		},
 		created() {
@@ -56,15 +55,26 @@
 					that.isLongWidth = e.windowWidth / 4
 				}
 			})
-			this.toView = 'id0'
-			this.value1()
+			that.toView = 'id0'
+			that.content=wx.getStorageSync('content')
+			that.tabBars=wx.getStorageSync('tabBars')
+			console.log("1:"+that.content)
+			for(var i = 0; i < that.tabBars.length; i++){
+				if(that.tabBars[i]==that.content){
+					if(that.tabBars.length > 4){
+						this.longClick(i);
+					}
+					else{
+						this.navClick(i);
+					}
+				}
+			}
+			uni.removeStorage({
+				key: 'content'
+			});
+			console.info("2:"+wx.getStorageSync('content'))
 		},
 		methods: {
-			value1(){
-				console.log("我进来了");
-				console.log(this.tabBars);
-				console.log(this.value);
-			},
 			// 导航栏点击
 			navClick(index) {
 				this.$parent.currentTab = index //设置swiper的第几页
@@ -73,7 +83,6 @@
 				this.$emit("change", index);
 			},
 			longClick(index) {
-				console.info(111)
 				var tempIndex = index - 2
 				tempIndex = tempIndex <= 0 ? 0 : tempIndex
 				this.toView = `id${tempIndex}` //动画滚动,滚动至中心位置
