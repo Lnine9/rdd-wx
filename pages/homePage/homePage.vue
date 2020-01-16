@@ -201,6 +201,8 @@
 			navToRoute: function(target) {
 				let index = target.currentTarget.dataset.index;
 				let routePath = {};
+				console.log(this.routerList[index].menuName)
+				wx.setStorageSync('content', this.routerList[index].menuName)
 				if (index === 'specical') {
 					routePath = this.specialRouter.androidPath;
 				} else {
@@ -438,6 +440,7 @@
 					area: uni.getStorageSync('location'),
 					shopPlace: 'Guess',
 				};
+				console.info(userAndLocalMes_1.area);
 				api.getProducts(userAndLocalMes_1).then(res => {
 					this.guessList = res.data.data;
 					this.showNoGuess = this.guessList.length == 0;
