@@ -159,6 +159,7 @@
 			},
 			getClassification(){
 				api.getClassification(this.valueArr).then(res=>{
+					console.info(this.list)
 					if(res.data.data.length!=0){
 						this.showNoGuess=false;
 						this.list=this.list.concat(res.data.data);
@@ -166,7 +167,7 @@
 						uni.stopPullDownRefresh();
 						console.log(res.data.data)
 					}
-					else if(this.list==null){
+					else if(this.list.length==0){
 						this.showNoGuess=true;
 					}
 					else{
