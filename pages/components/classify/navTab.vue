@@ -58,14 +58,13 @@
 			that.toView = 'id0'
 			that.content=wx.getStorageSync('content')
 			that.tabBars=wx.getStorageSync('tabBars')
-			console.log("1:"+that.content)
 			for(var i = 0; i < that.tabBars.length; i++){
 				if(that.tabBars[i]==that.content){
 					if(that.tabBars.length > 4){
-						this.longClick(i);
+						this.longclick(i);
 					}
 					else{
-						this.navClick(i);
+						this.navclick(i);
 					}
 				}
 			}
@@ -84,6 +83,19 @@
 				tempIndex = tempIndex <= 0 ? 0 : tempIndex
 				this.toView = `id${tempIndex}` //动画滚动,滚动至中心位置
 				this.$emit("change", index);
+				this.tabClick = index //设置导航点击了哪一个
+				this.isLeft = index * this.isLongWidth //设置下划线位置
+				this.$parent.currentTab = index //设置swiper的第几页
+			},
+			navclick(index) {
+				this.$parent.currentTab = index //设置swiper的第几页
+				this.tabClick = index //设置导航点击了哪一个
+				this.isLeft = index * this.isWidth //设置下划线位置
+			},
+			longclick(index) {
+				var tempIndex = index - 2
+				tempIndex = tempIndex <= 0 ? 0 : tempIndex
+				this.toView = `id${tempIndex}` //动画滚动,滚动至中心位置
 				this.tabClick = index //设置导航点击了哪一个
 				this.isLeft = index * this.isLongWidth //设置下划线位置
 				this.$parent.currentTab = index //设置swiper的第几页

@@ -107,7 +107,6 @@
 			uni.removeStorage({
 				key: 'content'
 			});
-			console.info("2:"+wx.getStorageSync('content'))
 			this.getClassification();
 		},
 		onPullDownRefresh: function() {
@@ -150,7 +149,11 @@
 					if(res.data.data.length!=0){
 						this.showNoGuess=false;
 						this.list=this.list.concat(res.data.data);
-						this.loading=false;
+						// this.loading=false;
+						let _this = this;
+						setTimeout(function() {
+							_this.loading=false;
+						}, 1000);
 						uni.stopPullDownRefresh();
 					}
 					else if(this.list.length==0){

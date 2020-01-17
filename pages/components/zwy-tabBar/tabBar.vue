@@ -7,8 +7,8 @@
 		 :class="{'active':item.url == currentPage}"
 		 @click="navTo(item)"
 		 >	<view style="display: flex;flex-direction: column;align-items: center;">
-			<image v-if="item.url == currentPage" :src="item.imgNormal"></image>
-			<image v-if="item.url != currentPage" :src="item.imgClick"></image>
+			<image class="click" v-if="item.url == currentPage" :src="item.imgNormal"></image>
+			<image class="noclick" v-if="item.url != currentPage" :src="item.imgClick"></image>
 			<view class="text">{{item.text}}</view>
 			</view>
 		</view>
@@ -159,9 +159,13 @@
 				color: $chooseTextColor;
 			}
 		}
-		image{
+		.noclick{
 			width: 50rpx;
-			height:54rpx;
+			height:45rpx;
+		}
+		.click{
+			width: 52rpx;
+			height:45rpx;
 		}
 	}
 </style>

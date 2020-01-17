@@ -83,7 +83,7 @@
 				firstScrollInto: 0,
 				secondScrollInto: 0,
 				componentTop:0	,//组件top
-				menuArr:[0,0,0],
+				menuArr:[[0],[0],[0]],
 				flag:0,
 			}
 		},
@@ -296,10 +296,22 @@
 					index[i] = item;
 					
 				});
-				this.$emit('confirm', {
-					index: index,
-					value:value
-				})
+				let display=false;
+				display=false;
+				for(let i=0;i<this.menu.length;i++){
+					if(index[i][0]!=this.menuArr[i][0]){
+						display=true;
+					}
+					console.log(index[i][0])
+					console.log(this.menuArr[i][0])
+				}
+				console.log(display)
+				if(display){
+					this.$emit('confirm', {
+						index: index,
+						value:value
+					})
+				}
 				for(let i=0;i<this.menu.length;i++){
 					this.menu[i]=this.filterData[i].submenu[index[i]];
 				}
