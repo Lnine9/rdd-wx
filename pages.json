@@ -143,10 +143,11 @@
 		}
     ],
 	"globalStyle": {
-		"navigationBarTextStyle": "black",
+		"navigationBarTextStyle":"white",
 		"navigationBarTitleText": "囧途宝盒",
 		"navigationBarBackgroundColor": "#EAEAEA",
-		"backgroundColor": "#EAEAEA"
+		"backgroundColor": "#EAEAEA",
+		"navigationBarBackgroundColor": "#de2032"
 	},
 	"tabBar": {
 		"color": "#C0C4CC",
