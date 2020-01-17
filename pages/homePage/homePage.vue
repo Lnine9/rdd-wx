@@ -159,10 +159,7 @@
 
 			// 计算轮播图高度并存储
 			this.swiperHeight = (2 * this.navHeight + this.status) * 7 / 3;
-			
 		},
-		
-		 
 		// 向下滑动刷新
 		onReachBottom() {
 			this.page++;
@@ -229,11 +226,11 @@
 			navToRoute: function(target) {
 				let index = target.currentTarget.dataset.index;
 				let routePath = {};
-				console.log(this.routerList[index].menuName)
-				wx.setStorageSync('content', this.routerList[index].menuName)
 				if (index === 'specical') {
+					wx.setStorageSync('content', this.specialRouter.menuName);
 					routePath = this.specialRouter.androidPath;
 				} else {
+					wx.setStorageSync('content', this.routerList[index].menuName);
 					routePath = this.routerList[index].androidPath;
 				}
 				
