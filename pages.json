@@ -145,7 +145,6 @@
 	"globalStyle": {
 		"navigationBarTextStyle":"white",
 		"navigationBarTitleText": "囧途宝盒",
-		"navigationBarBackgroundColor": "#EAEAEA",
 		"backgroundColor": "#EAEAEA",
 		"navigationBarBackgroundColor": "#de2032"
 	},

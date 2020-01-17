@@ -159,7 +159,10 @@
 
 			// 计算轮播图高度并存储
 			this.swiperHeight = (2 * this.navHeight + this.status) * 7 / 3;
+			
 		},
+		
+		 
 		// 向下滑动刷新
 		onReachBottom() {
 			this.page++;
@@ -177,6 +180,22 @@
 		},
 		methods: {
 			/** 首页分类数据获取 */
+			initPosition: function() {
+				console.log('登录');
+				uni.getLocation({
+				          type: 'wgs84',
+				          success: function(res) {
+							uni.setStorageSync('latitude', res.latitude)
+							uni.setStorageSync('longitude', res.longitude)
+							this.getGuess();
+				        },
+						fail() {
+							uni.setStorageSync('latitude', null)
+							uni.setStorageSync('longitude', null)
+							this.getGuess();
+						}
+				});
+			},
 			getHomepageRouter: function() {
 				let params = {
 					menuIdentityCode: 'WCPHomepageNav'
@@ -429,6 +448,8 @@
 				let userAndLocalMes_1 = {
 					area: uni.getStorageSync('location'),
 					shopPlace: 'Guess',
+					latitude: uni.getStorageSync('latitude'),
+					longitude: uni.getStorageSync('longitude')
 				};
 				console.info(userAndLocalMes_1.area);
 				api.getProducts(userAndLocalMes_1).then(res => {
@@ -449,12 +470,12 @@
 			 */
 			getPageData: function() {
 				this.defaultRegion = uni.getStorageSync('location') || '';
-
+				
 				if (this.defaultRegion == '') {
 					this.defaultRegion = '选择地区';
 				}
+				this.initPosition();
 				this.getBanner();
-				this.getGuess();
 				this.getAreas();
 			}
 		},
