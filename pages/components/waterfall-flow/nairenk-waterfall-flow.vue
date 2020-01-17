@@ -18,7 +18,7 @@
 					<text class="priceCurrent">￥{{item.originalPrice}}</text>
 				</view>
 				<view class="sales">
-					<text class="distance">{{item.distance}}</text></br>
+					<text class="distance" v-show="item.distance != null">{{item.distance}}</text></br>
 					<text class="salesVolume">销量：{{item.salesVolume}}</text>
 				</view>
 			</view>
