@@ -91,7 +91,7 @@
 		},
 		methods: {
 			init() { 
-				this.getProducts();
+				
 			    this.loadDefaultKeyword();
 				this.loadOldKeyword();
 				this.loadHotKeyword();
@@ -133,11 +133,19 @@
 				})
 			},
 			//获取商品信息
-			getProducts(){	
-				console.log(12);
-				api.getProducts().then(res => {
-					this.shopList = res.data.data ;
-					console.log(this.shopList)
+			getProducts(data,keywords){	
+				let p = {
+					commodityTitle:data
+				};
+				api.getProducts(p).then(res => {
+					this.shopList = res.data.data;
+					if(this.shopList == null){
+						this.isShowKeywordList = false;
+					}else{
+					    this.isShowKeywordList = true;	
+				        this.keywordList = this.drawCorrelativeKeyword(this.shopList, keywords);
+					}
+								
 				}).catch(err => {
 					 console.log(err);
 				})
@@ -155,18 +163,13 @@
 					return;
 				}
 				if(event.value != ""){
-					this.isShowKeywordList = true;
-				    this.keywordList = this.drawCorrelativeKeyword(this.shopList, keywords);
+					console.log(event.value);
+					this.getProducts(event.value,keywords);
 				}else{
+					console.log(event.value);
 					this.isShowKeywordList = false;
+					this.keywordList = null;	
 				}
-				// 以下示例截取淘宝的关键字，请替换成你的接口
-				// uni.request({
-				// 	url: 'https://suggest.taobao.com/sug?code=utf-8&q=' + keyword, //仅为示例
-				// 	success: (res) => {
-				// 		this.keywordList = this.drawCorrelativeKeyword(res.data.result, keyword);
-				// 	}
-				// });
 			},
 			//高亮关键字
 			drawCorrelativeKeyword(keywords, keyword) {
@@ -175,22 +178,17 @@
 					keywordArr = [];
 				for (var i = 0; i < len; i++) {
 					 var row = keywords[i].commodityTitle;
-					 if(keyword.value.length<=row.length){
-						 // console.log(Object.is(row[keyword.value.length-1],keyword.value));
-						 if(row.slice(0,keyword.value.length)== keyword.value){
-						    //定义高亮#9f9f9f
-							console.log("right")
-							var html = row.replace(keyword, "<span style='color: #9f9f9f;'>" + keyword + "</span>");
-							html = '<div>' + html + '</div>';
-							var tmpObj = {
-								keyword: row,
-								htmlStr: html
-							};
-							keywordArr.push(tmpObj)
-						}	
-					 } 
+					//定义高亮#9f9f9f
+					console.log("right")
+					var html = row.replace(keyword, "<span style='color: #9f9f9f;'>" + keyword + "</span>");
+					html = '<div>' + html + '</div>';
+					var tmpObj = {
+						keyword: row,
+						htmlStr: html
+					};
+					keywordArr.push(tmpObj)
 				}
-				console.log( keywordArr);
+				console.log(keywordArr);
 				return keywordArr;
 				
 			},

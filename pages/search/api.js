@@ -7,8 +7,8 @@ export class api{
    * 获取精选商品 & 猜你喜欢列表
    * @param {Object} userAndLocalMes
    */
-  static getProducts(){
-  	  return minRequest.get('/api/WCPCommodityInfo/getCommodityTitleList')
+  static getProducts(data){
+  	  return minRequest.get('/api/WCPCommodityInfo/getCommodityTitleList',data)
   } 
   
   static selectDict(data){
