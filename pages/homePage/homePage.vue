@@ -33,7 +33,7 @@
 		<!-- 顶部轮播图 -->
 		<view class="carousel-section">
 			<!-- 背景色区域 -->
-			<swiper class="carousel" :style='"height:" + ((2 * navHeight + status) * 7 / 3) + "px;"' circular=true autoplay
+			<swiper class="carousel" :style='"height:" + ((2 * navHeight + status) * 6 / 3) + "px;"' circular=true autoplay
 			 indicator-dots indicator-color="rgba(255,255,255,0.3))" indicator-active-color="rgba(255,255,255,1)" @change="swiperChange"
 			 @current="swiperCurrent">
 				<swiper-item v-for="(item, index) in carouselList" :key="index" class="carousel-item" @click="navToWebView(item)">
@@ -109,11 +109,7 @@
 				swiperHeight: 0, // 轮播图高度
 
 				routerList: [], // 商品分类
-				specialRouter: {
-					menuName: '',
-					androidPath: '',
-					savePath: ''
-				}, // 特殊推荐
+				specialRouter: {}, // 特殊推荐
 
 				current: 0,
 				swiperCurrent: 0,
@@ -210,15 +206,15 @@
 					this.specialRouter = {};
 				});
 			},
-			/** 路由跳转事件，index=specical，为特殊推荐 */
+			/** 路由跳转事件，index=-1，为特殊推荐 */
 			navToRoute: function(target) {
 				let index = target.currentTarget.dataset.index;
 				let routePath = {};
+				console.log(this.routerList[index].menuName)
+				wx.setStorageSync('content', this.routerList[index].menuName)
 				if (index === 'specical') {
-					wx.setStorageSync('content', this.specialRouter.menuName);
 					routePath = this.specialRouter.androidPath;
 				} else {
-					wx.setStorageSync('content', this.routerList[index].menuName);
 					routePath = this.routerList[index].androidPath;
 				}
 				
