@@ -14,12 +14,13 @@
 
 				<view class="PriceArea">
 					<text class="priceOrigin">￥</text>
-					<text class="priceOriginValue">{{item.salePrice}}</text>
+					<text class="priceOriginValue">{{item.salePrice}}</text></br>
 					<text class="priceCurrent">￥{{item.originalPrice}}</text>
 				</view>
 				<view class="sales">
-					<text class="distance" v-show="item.distance != null">{{item.distance}}</text></br>
-					<text class="salesVolume">销量：{{item.salesVolume}}</text>
+					<text class="salesVolume">{{item.salesVolume}}已售</text></br>
+					<view style="height: 10rpx;"></view>
+					<text class="distance" v-show="item.distance != null">{{item.distance}}</text>
 				</view>
 			</view>
 		</view>
@@ -190,7 +191,6 @@
 	}
 
 	.priceCurrent {
-		margin-left: 17rpx;
 		font-size: 24rpx;
 		font-weight: 500;
 		color: rgba(153, 153, 153, 1);
@@ -198,21 +198,13 @@
 	}
 	
 	.sales{
-		font-size: 24rpx;
+		font-size: 22rpx;
 		position: relative;
+		right: -70rpx;
 		width: 200rpx;
-	}
-
-	.salesVolume{
-		position: absolute;
-		top: -60rpx;
-		right: -180rpx;
-	}
-	
-	.distance{
-		position: absolute;
-		top: -90rpx;
-		right: -180rpx;
+		height: 80rpx;
+		top: -70rpx;
+		text-align: right;
 	}
 
 	.flow-box .content text {
