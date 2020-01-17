@@ -106,7 +106,10 @@
 			if(wx.getStorageSync('inputSerach') != ''){
 				this.inputSerach = wx.getStorageSync('inputSerach')
 				this.isSearch = false
-				this.valueArr.commodityTitle = this.inputSerach
+				this.valueArr.commodityTitle = this.inputSerach;
+				uni.removeStorage({
+					key: 'inputSerach'
+				});
 			}
 			if(wx.getStorageSync('content') != ''){
 				this.valueArr.content = wx.getStorageSync('content')
@@ -203,6 +206,7 @@
 				this.start=0;
 				this.end=0;
 				this.loading=true;
+				console.log(e)
 				if(e.value[0]=="重庆市"){
 					this.valueArr.area='';
 				}
@@ -216,30 +220,27 @@
 					this.valueArr.salesVolume=0;
 				}
 				else if(e.index[1]==1){
-					this.valueArr.distance=1;
+					this.valueArr.distance=(Number)(e.value[1]);
 					this.valueArr.salePrice=0;
 					this.valueArr.salesVolume=0;
 				}
 				else if(e.index[1]==2){
 					this.valueArr.distance=0;
-					this.valueArr.salePrice=2;
+					this.valueArr.salePrice=(Number)(e.value[1]);
 					this.valueArr.salesVolume=0;
 				}
 				else{
 					this.valueArr.distance=0;
-					this.valueArr.salePrice=1;
+					this.valueArr.salePrice=(Number)(e.value[1]);
 					this.valueArr.salesVolume=0;
 				}
+				
 				if(e.index[2]!=0){
 					this.valueArr.salesVolume=(Number)(e.value[2]);
 					this.valueArr.distance=0;
 					this.valueArr.salePrice=0;
 				}
-				else{
-					this.valueArr.salesVolume=0;
-					this.valueArr.distance=0;
-					this.valueArr.salePrice=0;
-				}
+				console.log(this.valueArr)
 				this.getClassification();
 			},
 			//返回主页面
