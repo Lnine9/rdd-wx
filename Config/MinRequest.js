@@ -6,8 +6,8 @@ const requestAfter = Symbol('requestAfter')
 class MinRequest {
 	[config] = {
 		// baseURL: 'http://106.91.21.239:8899',
-		baseURL: 'http://127.0.0.1:8899',
-		// baseURL: 'https://test.renduoduo2019.com:888',
+		// baseURL: 'http://127.0.0.1:8899',
+		baseURL: 'https://www.renduoduo2019.com:888',
 		method: 'GET',
 		dataType: 'json',
 		responseType: 'text'
