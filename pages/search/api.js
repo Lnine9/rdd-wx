@@ -12,6 +12,6 @@ export class api{
   } 
   
   static selectDict(data){
-  	  return minRequest.get('/api/dict/getDicByName',data)
+  	  return minRequest.get('/auth/getDicByName',data)
   }
 }
