@@ -105,10 +105,16 @@
 			}
 			this.tabBars = wx.getStorageSync('tabBars')
 			uni.removeStorage({
-				key: 'content',
-				key: 'tabBars',
+				key: 'content'
+			});
+			uni.removeStorage({
+				key: 'tabBars'
+			});
+			uni.removeStorage({
 				key: 'inputSerach'
 			});
+			console.log("肖阳含猪猪")
+			console.log(wx.getStorageSync('tabBars'))
 			this.getClassification();
 		},
 		onPullDownRefresh: function() {
