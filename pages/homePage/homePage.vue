@@ -255,8 +255,9 @@
 						console.log(this.list);
 						this.start = this.end;
 						// 延迟 120 毫秒隐藏加载动画，为了跟组件里面的 100 毫秒定位有个平缓过度
+						let _this = this;
 						setTimeout(() => {
-							this.loading = false;
+							_this.loading = false;
 						}, 120);
 					}, 1000)
 				} else {
@@ -413,27 +414,6 @@
 					console.log(err);
 				})
 			},
-
-			// /**
-			//  * 获取精选商品
-			//  */
-			// getRecommend: function() {
-			// 	let userAndLocalMes = {
-			// 		area: uni.getStorageSync('location'),
-			// 		longitude: '',
-			// 		latitude: '',
-			// 		shopPlace: 'Recommend'
-			// 	};
-			// 	api.getProducts(userAndLocalMes).then(res => {
-			// 		this.goodsList = res.data.data;
-			// 		this.showNoGoods = this.goodsList == 0;
-			// 	}).catch(err => {
-			// 		console.log(err);
-			// 		this.goodsList = [];
-			// 		this.showNoGoods = true;
-			// 	})
-			// },
-
 			/**
 			 * 猜你喜欢
 			 */
@@ -471,7 +451,7 @@
 				this.defaultRegion = uni.getStorageSync('location') || '';
 
 				if (this.defaultRegion == '') {
-					this.defaultRegion = '请选择地区';
+					this.defaultRegion = '选择地区';
 				}
 				this.getBanner();
 				this.getGuess();
@@ -484,36 +464,6 @@
 			this.getAreas();
 		},
 		mounted() {
-			console.log('首页调用了mounted');
-			// 微信获取经纬度，使用高德地址编码解析
-			// wx.getLocation({
-			// 	type: 'wgs84',
-			// 	success: function(res) {
-			// 		console.log(JSON.stringify(res))
-			// 		var latitude = res.latitude
-			// 		var longitude = res.longitude
-			// 		var speed = res.speed
-			// 		var accuracy = res.accuracy;
-
-			// 		wx.request({
-			// 			url: 'https://restapi.amap.com/v3/geocode/regeo', // 高德逆地址编码
-			// 			data: {
-			// 				key: 'cf488077447e5123e2080cd2267ca96e',
-			// 				location: longitude + ',' + latitude,
-			// 			},
-			// 			header: {
-			// 				'content-type': 'application/json' // 默认值
-			// 			},
-			// 			success(res) {
-			// 				console.log(res.data)
-			// 			}
-			// 		})
-			// 	},
-			// 	fail: function(res) {
-			// 		console.log('fail' + JSON.stringify(res))
-			// 	}
-			// });
-
 			uni.showLoading({
 				title: '获取信息中'
 			});
@@ -923,7 +873,7 @@
 
 	.main-content-box {
 		position: relative;
-		top: -35rpx;
+		top: -40rpx;
 		background-color: rgba($color: #FFFFFF, $alpha: 1.0);
 		border-top-right-radius: 35rpx;
 		border-top-left-radius: 35rpx;
