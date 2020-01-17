@@ -166,16 +166,7 @@
 			
 		},
 		
-		initPosition() {
-			uni.getLocation({
-			          type: 'wgs84',
-			          success: function(res) {
-						uni.setStorageSync('latitude', res.latitude)
-						uni.setStorageSync('longitude', res.longitude)
-						this.getGuess();
-			        }
-			});
-		}, 
+		 
 		// 向下滑动刷新
 		onReachBottom() {
 			this.page++;
@@ -193,6 +184,22 @@
 		},
 		methods: {
 			/** 首页分类数据获取 */
+			initPosition: function() {
+				console.log('登录');
+				uni.getLocation({
+				          type: 'wgs84',
+				          success: function(res) {
+							uni.setStorageSync('latitude', res.latitude)
+							uni.setStorageSync('longitude', res.longitude)
+							this.getGuess();
+				        },
+						fail() {
+							uni.setStorageSync('latitude', null)
+							uni.setStorageSync('longitude', null)
+							this.getGuess();
+						}
+				});
+			},
 			getHomepageRouter: function() {
 				let params = {
 					menuIdentityCode: 'WCPHomepageNav'
@@ -467,7 +474,7 @@
 			 */
 			getPageData: function() {
 				this.defaultRegion = uni.getStorageSync('location') || '';
-
+				
 				if (this.defaultRegion == '') {
 					this.defaultRegion = '选择地区';
 				}
