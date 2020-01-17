@@ -5,6 +5,7 @@
 			"style": {
 				"navigationBarTitleText": "囧途宝盒",
 				"enablePullDownRefresh": true,
+				"navigationBarBackgroundColor": "#de2032",
 				"navigationStyle": "custom"
 			}
 		},{
@@ -85,7 +86,8 @@
 		{
 			"path": "pages/search/search",
 			"style": {
-				"navigationBarTitleText": "搜索",
+				"navigationBarTitleText": "囧途宝盒",
+				"navigationBarTextStyle":"white",
 				"enablePullDownRefresh": true,
 				"navigationBarBackgroundColor": "#de2032"	
 			}

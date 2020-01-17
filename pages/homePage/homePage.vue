@@ -125,7 +125,7 @@
 				guessList: [],
 				goodsList: [],
 				addressName: '',
-
+				tabBars: ["全部"],
 				page: 1,
 				start: 0,
 				end: 0,
@@ -142,6 +142,15 @@
 		},
 		onShow() {
 			this.wxGetLogin();
+			api.getContent().then(res=>{
+				console.info(res.data)
+				if(res.data.code == 200){
+					this.tabBars = this.tabBars.concat(res.data.data);
+					wx.setStorageSync('tabBars', this.tabBars)
+				}
+			}).catch(err=>{
+				console.log(err);
+			})
 		},
 		onLoad() {
 			this.setNavSize();
@@ -201,11 +210,14 @@
 			navToRoute: function(target) {
 				let index = target.currentTarget.dataset.index;
 				let routePath = {};
+				console.log(this.routerList[index].menuName)
+				wx.setStorageSync('content', this.routerList[index].menuName)
 				if (index === 'specical') {
 					routePath = this.specialRouter.androidPath;
 				} else {
 					routePath = this.routerList[index].androidPath;
 				}
+				
 
 				// 跳转到分类页面
 				uni.navigateTo({
@@ -418,6 +430,7 @@
 					area: uni.getStorageSync('location'),
 					shopPlace: 'Guess',
 				};
+				console.info(userAndLocalMes_1.area);
 				api.getProducts(userAndLocalMes_1).then(res => {
 					this.guessList = res.data.data;
 					this.showNoGuess = this.guessList.length == 0;

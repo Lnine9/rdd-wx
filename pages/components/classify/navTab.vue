@@ -42,7 +42,8 @@
 				isLeft: 0, //导航栏下划线位置
 				isWidth: 0, //每个导航栏占位
 				toView: '',
-				isLongWidth: 0
+				isLongWidth: 0,
+				content:''
 			};
 		},
 		created() {
@@ -54,7 +55,21 @@
 					that.isLongWidth = e.windowWidth / 4
 				}
 			})
-			this.toView = 'id0'
+			that.toView = 'id0'
+			that.content=wx.getStorageSync('content')
+			that.tabBars=wx.getStorageSync('tabBars')
+			console.log("1:"+that.content)
+			for(var i = 0; i < that.tabBars.length; i++){
+				if(that.tabBars[i]==that.content){
+					if(that.tabBars.length > 4){
+						this.longClick(i);
+					}
+					else{
+						this.navClick(i);
+					}
+				}
+			}
+			
 		},
 		methods: {
 			// 导航栏点击
@@ -65,7 +80,6 @@
 				this.$emit("change", index);
 			},
 			longClick(index) {
-				console.info(111)
 				var tempIndex = index - 2
 				tempIndex = tempIndex <= 0 ? 0 : tempIndex
 				this.toView = `id${tempIndex}` //动画滚动,滚动至中心位置

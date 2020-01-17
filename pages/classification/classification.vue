@@ -1,20 +1,20 @@
 <template>
 	<view>
-		<view class="searchHead" v-if="!isSearch">
+		<view class="searchHead" v-show="!isSearch">
 			<view class="searchBorder">
 				<image class="searchImg" src="../../static/search/search.png"></image>
-				<input class="searchFont" :placeholder="inputSerach" placeholder-style="color:#FFFFFF" @click="getToSearch()"/>
+				<input class="searchFont" disabled :placeholder="inputSerach" placeholder-style="color:#FFFFFF" @click="getToSearch()"/>
 			</view>
 			<text class="cancel" @click="back()">取消</text>
 		</view>
 		<!-- 滑动导航栏 -->
-		<view v-else>
+		<view v-show="isSearch">
 			<navTab ref="navTab" :tabBars="tabBars" @change="change"></navTab>
 		</view>
 		<view>
 			<HMfilterDropdown :filterData="filterData" :defaultSelected ="filterDropdownValue" :updateMenuName="false" @confirm="confirm"></HMfilterDropdown>
 		</view>
-		<!-- 商品展示 -->
+		<!-- 商品展示 -->.
 		<view class="guess-section" v-show="!showNoGuess">
 			<waterfall-flow class="guess-content" :list="list" :loading="loading" @click="choose"></waterfall-flow>
 		</view>
@@ -58,29 +58,29 @@
 					latitude: 0.00,
 					longitude: 0.00,
 					commodityTitle:'',
+					pageSize:10,
+					page:1,
 				},
 				filterDropdownValue:[],
 				filterData:[],
 				inputSerach:'请输入要搜索的商品',
-				tabBars: ["全部"],
+				tabBars: [],
 				swiperCurrent: 0,
 				regionList:[],
 				isSearch:true,
 				list: [], // 列表
 				guessList:[],
-				page: 1,
-				start: 0,
-				end: 0,
 				loading: true,
 				currentPage: 'classification',
 				showNoGuess:false
 			}
 		},
 		onLoad: function (option) { //option为object类型，会序列化上个页面传递的参数
+			if(option.key != undefined){
+				wx.setStorageSync('inputSerach', option.key)
+			}
 			//定时器模拟ajax异步请求数据
 			this.getAreas();
-			this.getContent();
-			this.getClassification();
 			setTimeout(()=>{
 				this.filterDropdownValue = [[0],[0],[0]];
 				this.filterData = data; 
@@ -94,6 +94,21 @@
 		onShow() {
 			this.valueArr.latitude = wx.getStorageSync('latitude')
 			this.valueArr.longitude = wx.getStorageSync('longitude')
+			if(wx.getStorageSync('inputSerach') != ''){
+				this.inputSerach = wx.getStorageSync('inputSerach')
+				this.isSearch = false
+				this.valueArr.commodityTitle = this.inputSerach
+			}
+			if(wx.getStorageSync('content') != ''){
+				this.valueArr.content = wx.getStorageSync('content')
+				this.isSearch = true;
+			}
+			this.tabBars = wx.getStorageSync('tabBars')
+			uni.removeStorage({
+				key: 'content'
+			});
+			console.info("2:"+wx.getStorageSync('content'))
+			this.getClassification();
 		},
 		onPullDownRefresh: function() {
 			wx.showNavigationBarLoading() //在标题栏中显示加载
@@ -107,9 +122,9 @@
 		},
 		// 向下滑动刷新
 		onReachBottom() {
-			this.page++;
+			this.valueArr.page++;
 			this.loading = true;
-			this.getList();
+			this.getClassification();
 		},
 		methods: {
 			getAreas(){
@@ -130,26 +145,19 @@
 					console.log(err);
 				})
 			},
-			getContent(){
-				api.getContent().then(res=>{
-					console.info(res.data)
-					if(res.data.code == 200){
-						this.tabBars = this.tabBars.concat(res.data.data);
-					}
-				}).catch(err=>{
-					console.log(err);
-				})
-			},
 			getClassification(){
 				api.getClassification(this.valueArr).then(res=>{
 					if(res.data.data.length!=0){
 						this.showNoGuess=false;
-						this.guessList = res.data.data;
+						this.list=this.list.concat(res.data.data);
+						this.loading=false;
 						uni.stopPullDownRefresh();
-						this.getList();
+					}
+					else if(this.list.length==0){
+						this.showNoGuess=true;
 					}
 					else{
-						this.showNoGuess=true;
+						this.loading=false;
 					}
 				}).catch(err=>{
 					console.log(err);
@@ -162,22 +170,6 @@
 				        }
 				})
 			},
-			// 加载数据
-			getList: function() {
-				if (this.list.length < this.guessList.length) {
-					setTimeout(() => {
-						this.end = this.page * 10;
-						this.list = this.list.concat(this.guessList.slice(this.start, this.end));
-						this.start = this.end;
-						// 延迟 120 毫秒隐藏加载动画，为了跟组件里面的 100 毫秒定位有个平缓过度
-						setTimeout(() => {
-							this.loading = false;
-						}, 120);
-					}, 1000)
-				} else {
-					this.loading = false;
-				}
-			},
 			// 选中
 			choose(item) {
 				//测试数据没有写id，用title代替
@@ -185,13 +177,12 @@
 				uni.navigateTo({
 					url: `/pages/product/product?id=${id}`,
 				})
+				this.list=[];
 			},
 			change(index){
 				this.valueArr.content=this.tabBars[index];
-				console.info(this.valueArr.content);
 				this.list=[];
-				this.guessList=[];
-				this.page=1;
+				this.valueArr.page=1;
 				this.start=0;
 				this.end=0;
 				this.loading=true;
@@ -199,8 +190,7 @@
 			},
 			confirm(e){
 				this.list=[];
-				this.guessList=[];
-				this.page=1;
+				this.valueArr.page=1;
 				this.start=0;
 				this.end=0;
 				this.loading=true;
@@ -210,25 +200,49 @@
 				else{
 					this.valueArr.area=(String)(e.value[0]);
 				}
-
+				
 				if(e.index[1]==0){
 					this.valueArr.distance=0;
 					this.valueArr.salePrice=0;
+					this.valueArr.salesVolume=0;
 				}
 				else if(e.index[1]==1){
 					this.valueArr.distance=1;
 					this.valueArr.salePrice=0;
+					this.valueArr.salesVolume=0;
 				}
 				else if(e.index[1]==2){
 					this.valueArr.distance=0;
 					this.valueArr.salePrice=2;
+					this.valueArr.salesVolume=0;
 				}
 				else{
 					this.valueArr.distance=0;
 					this.valueArr.salePrice=1;
+					this.valueArr.salesVolume=0;
 				}
-				this.valueArr.salesVolume=(Number)(e.value[2]);
+				if(e.index[2]!=0){
+					this.valueArr.salesVolume=(Number)(e.value[2]);
+					this.valueArr.distance=0;
+					this.valueArr.salePrice=0;
+				}
+				else{
+					this.valueArr.salesVolume=0;
+					this.valueArr.distance=0;
+					this.valueArr.salePrice=0;
+				}
 				this.getClassification();
+			},
+			//返回主页面
+			back(){
+				uni.navigateBack({
+					url: `/pages/homePage/homePage`
+				})
+			},
+			getToSearch(){
+				uni.navigateBack({
+					url: `/pages/search/search`
+				})
 			}
 		}
 	}
@@ -240,13 +254,15 @@
 		background: #F8F9FB;
 	}
 	.searchHead{
+		position: fixed;
 		display: inline-block;
 		width: 750rpx;
 		height: 110rpx;
 		background-color: #de2032;
+		z-index: 1000;
 	}
 	.searchBorder{
-		position: relative;
+		position: fixed;
 		left: 30rpx ;
 		top: 10rpx;
 		width: 600rpx;
@@ -255,7 +271,7 @@
 		border-radius: 50rpx;
 	}
 	.cancel{
-		position: absolute;
+		position: fixed;
 		right: 50rpx;
 		top: 30rpx;
 		color: #FFFFFF;
