@@ -130,6 +130,7 @@
 		methods: {
 			getAreas(){
 				api.getAreas().then(res=>{
+					this.regionList=[];
 					for(let i=0;i<res.data.data.length;i++){
 						let region={
 							name:null,
