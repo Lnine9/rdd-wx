@@ -43,5 +43,7 @@ export class api{
   	  return minRequest.get('/api/AppHomePage/selectHomePageRouters', params)
   }
   
-  
+  static getContent(){
+  	  return minRequest.get('/api/WCPCommodityInfo/getContent')
+  }
 }

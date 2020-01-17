@@ -64,7 +64,7 @@
 				filterDropdownValue:[],
 				filterData:[],
 				inputSerach:'请输入要搜索的商品',
-				tabBars: ["全部"],
+				tabBars: [],
 				swiperCurrent: 0,
 				regionList:[],
 				isSearch:true,
@@ -81,15 +81,6 @@
 			}
 			//定时器模拟ajax异步请求数据
 			this.getAreas();
-			api.getContent().then(res=>{
-				console.info(res.data)
-				if(res.data.code == 200){
-					this.tabBars = this.tabBars.concat(res.data.data);
-					wx.setStorageSync('tabBars', this.tabBars)
-				}
-			}).catch(err=>{
-				console.log(err);
-			})
 			setTimeout(()=>{
 				this.filterDropdownValue = [[0],[0],[0]];
 				this.filterData = data; 
@@ -106,15 +97,13 @@
 			if(wx.getStorageSync('inputSerach') != ''){
 				this.inputSerach = wx.getStorageSync('inputSerach')
 				this.isSearch = false
-				this.valueArr.commodityTitle = this.inputSerach;
-				uni.removeStorage({
-					key: 'inputSerach'
-				});
+				this.valueArr.commodityTitle = this.inputSerach
 			}
 			if(wx.getStorageSync('content') != ''){
 				this.valueArr.content = wx.getStorageSync('content')
 				this.isSearch = true;
 			}
+			this.tabBars = wx.getStorageSync('tabBars')
 			uni.removeStorage({
 				key: 'content'
 			});
@@ -158,7 +147,6 @@
 			},
 			getClassification(){
 				api.getClassification(this.valueArr).then(res=>{
-					console.info(this.list)
 					if(res.data.data.length!=0){
 						this.showNoGuess=false;
 						this.list=this.list.concat(res.data.data);
@@ -206,7 +194,6 @@
 				this.start=0;
 				this.end=0;
 				this.loading=true;
-				console.log(e)
 				if(e.value[0]=="重庆市"){
 					this.valueArr.area='';
 				}
@@ -220,27 +207,30 @@
 					this.valueArr.salesVolume=0;
 				}
 				else if(e.index[1]==1){
-					this.valueArr.distance=(Number)(e.value[1]);
+					this.valueArr.distance=1;
 					this.valueArr.salePrice=0;
 					this.valueArr.salesVolume=0;
 				}
 				else if(e.index[1]==2){
 					this.valueArr.distance=0;
-					this.valueArr.salePrice=(Number)(e.value[1]);
+					this.valueArr.salePrice=2;
 					this.valueArr.salesVolume=0;
 				}
 				else{
 					this.valueArr.distance=0;
-					this.valueArr.salePrice=(Number)(e.value[1]);
+					this.valueArr.salePrice=1;
 					this.valueArr.salesVolume=0;
 				}
-				
 				if(e.index[2]!=0){
 					this.valueArr.salesVolume=(Number)(e.value[2]);
 					this.valueArr.distance=0;
 					this.valueArr.salePrice=0;
 				}
-				console.log(this.valueArr)
+				else{
+					this.valueArr.salesVolume=0;
+					this.valueArr.distance=0;
+					this.valueArr.salePrice=0;
+				}
 				this.getClassification();
 			},
 			//返回主页面

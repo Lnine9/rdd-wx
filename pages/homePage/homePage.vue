@@ -125,7 +125,7 @@
 				guessList: [],
 				goodsList: [],
 				addressName: '',
-
+				tabBars: ["全部"],
 				page: 1,
 				start: 0,
 				end: 0,
@@ -142,6 +142,15 @@
 		},
 		onShow() {
 			this.wxGetLogin();
+			api.getContent().then(res=>{
+				console.info(res.data)
+				if(res.data.code == 200){
+					this.tabBars = this.tabBars.concat(res.data.data);
+					wx.setStorageSync('tabBars', this.tabBars)
+				}
+			}).catch(err=>{
+				console.log(err);
+			})
 		},
 		onLoad() {
 			this.setNavSize();
@@ -208,6 +217,7 @@
 				} else {
 					routePath = this.routerList[index].androidPath;
 				}
+				
 
 				// 跳转到分类页面
 				uni.navigateTo({
