@@ -710,143 +710,10 @@
 		}
 	}
 
-	/* 秒杀专区 */
-	.seckill-section {
-		padding: 0 30upx;
-		margin-top: 30rpx;
-
-		.s-header {
-			display: flex;
-			align-items: center;
-			height: 92upx;
-			line-height: 1;
-
-			.s-img {
-				width: 140upx;
-				height: 30upx;
-			}
-
-			.tip {
-				font-size: $font-base;
-				color: $font-color-light;
-				margin: 0 20upx 0 40upx;
-			}
-
-			.timer {
-				display: inline-block;
-				width: 40upx;
-				height: 36upx;
-				text-align: center;
-				line-height: 36upx;
-				margin-right: 14upx;
-				font-size: $font-sm+2upx;
-				color: #fff;
-				border-radius: 20px;
-				background: rgba(0, 0, 0, .8);
-			}
-
-			.icon-you {
-				font-size: $font-lg;
-				color: $font-color-light;
-				flex: 1;
-				text-align: right;
-			}
-		}
-
-		.floor-list {
-			white-space: nowrap;
-		}
-
-		.scoll-wrapper {
-			display: flex;
-			align-items: flex-start;
-			padding-left: 2rpx;
-			padding-right: 2rpx;
-		}
-
-		.floor-item {
-			display: flex;
-			flex-direction: column;
-			width: 280rpx;
-			background: #FFFFFF;
-			padding-bottom: 20rpx;
-			margin-right: 30rpx;
-			font-size: 32rpx;
-			font-weight: 800;
-			color: $font-color-dark;
-			border-bottom-right-radius: 10rpx;
-			border-bottom-left-radius: 10rpx;
-
-			image {
-				width: 280rpx;
-				height: 280rpx;
-				border-top-right-radius: 10rpx;
-				border-top-left-radius: 10rpx;
-				// border-radius: 20upx;
-				// border: 2upx solid #E3E3E3
-			}
-
-			.PriceArea {
-				/* margin-left: 10rpx; */
-			}
-
-			.priceOrigin {
-				font-size: 24rpx;
-				font-weight: 700;
-				color: rgba(255, 126, 48, 1);
-			}
-
-			.priceOriginValue {
-				font-size: 31rpx;
-				font-weight: 700;
-				color: rgba(255, 126, 48, 1);
-			}
-
-			.clamp {
-				width: 280rpx;
-				// margin-left: 15rpx;
-				padding-left: 15rpx;
-				-webkit-box-orient: vertical;
-				-webkit-line-clamp: 2;
-				word-break: break-all;
-				margin-top: 10rpx;
-				font-size: 32rpx;
-				font-weight: 500;
-				color: rgba(51, 51, 51, 1);
-				max-width: 280rpx;
-				white-space: nowrap;
-				text-overflow: ellipsis;
-				overflow: hidden;
-			}
-		}
-	}
-
 	.area-picker-txt {
 		font-weight: 500;
 		font-size: 28rpx;
 		color: #FFFFFF;
-	}
-
-	.PriceArea {
-		margin-left: 15rpx;
-	}
-
-	.clamp {
-		margin-bottom: 5rpx;
-		width: 280rpx;
-		// margin-left: 15rpx;
-		padding-left: 15rpx;
-		-webkit-box-orient: vertical;
-		-webkit-line-clamp: 2;
-		word-break: break-all;
-		margin-top: 16rpx;
-		font-size: 27rpx;
-		font-weight: 500;
-		color: rgba(51, 51, 51, 1);
-		max-width: 280rpx;
-		white-space: nowrap;
-		text-overflow: ellipsis;
-		overflow: hidden;
 	}
 
 	// 暂无商品样式
@@ -875,20 +742,6 @@
 		margin-top: 40rpx;
 	}
 
-	.priceOrigin {
-		font-size: 27rpx;
-		font-weight: 700;
-		color: rgba(255, 126, 48, 1);
-	}
-
-	.priceCurrent {
-		margin-left: 17rpx;
-		font-size: 24rpx;
-		font-weight: 500;
-		color: rgba(153, 153, 153, 1);
-		text-decoration: line-through;
-	}
-
 	.main-content-box {
 		position: relative;
 		top: -40rpx;
@@ -896,7 +749,6 @@
 		border-top-right-radius: 35rpx;
 		border-top-left-radius: 35rpx;
 	}
-
 
 	.main-content-placeholder {
 		height: 35rpx;

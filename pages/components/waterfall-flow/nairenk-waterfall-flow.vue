@@ -6,7 +6,7 @@
 				<image class="image" mode="widthFix" :src="item.commodityImg[0]" style="width: 100%; display: block;"></image>
 			</view>
 			<view class="content">
-				<text class="title">{{item.commodityTitle}}</text>
+				<text class="commodity-title">{{item.commodityTitle}}</text>
 				<!-- 			<view class="user">
 					<image style="width: 40upx; height: 40upx; border-radius: 50%; margin-right: 10upx;" :src="item.user.avatar"></image>
 					{{item.user.name}}
@@ -138,8 +138,6 @@
 	.flow-box .item {
 		border-radius: 10rpx;
 		position: absolute;
-		/* left: 10upx; */
-		/* width: calc(50% - 20upx); */
 		width: 47%;
 		border: 1upx solid #f9f9f9;
 		background: #fff;
@@ -171,7 +169,7 @@
 		flex-wrap: wrap;
 	}
 
-	.title {
+	.commodity-title {
 		margin: 0 20rpx;
 		font-size: 32rpx;
 	}
@@ -204,6 +202,7 @@
 	}
 	
 	.salesVolume {
+		font-size: 28rpx;
 		width: 50%;
 		text-align: right;
 	}
@@ -217,6 +216,7 @@
 	}
 
 	.priceCurrent {
+		text-align: left;
 		width: 50%;
 		font-size: 24rpx;
 		font-weight: 500;
