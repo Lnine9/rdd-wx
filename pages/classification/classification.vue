@@ -105,7 +105,9 @@
 			}
 			this.tabBars = wx.getStorageSync('tabBars')
 			uni.removeStorage({
-				key: 'content'
+				key: 'content',
+				key: 'tabBars',
+				key: 'inputSerach'
 			});
 			this.getClassification();
 		},
@@ -145,10 +147,12 @@
 				})
 			},
 			getClassification(){
+				console.info(this.valueArr)
 				api.getClassification(this.valueArr).then(res=>{
 					if(res.data.data.length!=0){
 						this.showNoGuess=false;
 						this.list=this.list.concat(res.data.data);
+						console.info(this.list)
 						// this.loading=false;
 						let _this = this;
 						setTimeout(function() {
