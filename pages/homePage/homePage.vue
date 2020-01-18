@@ -147,6 +147,7 @@
 				if(res.data.code == 200){
 					this.tabBars = this.tabBars.concat(res.data.data);
 					wx.setStorageSync('tabBars', this.tabBars)
+					this.tabBars = ["全部"]
 				}
 			}).catch(err=>{
 				console.log(err);
