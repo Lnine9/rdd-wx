@@ -6,20 +6,21 @@
 				<image class="image" mode="widthFix" :src="item.commodityImg[0]" style="width: 100%; display: block;"></image>
 			</view>
 			<view class="content">
-				<text>{{item.commodityTitle}}</text>
+				<text class="commodity-title">{{item.commodityTitle}}</text>
 				<!-- 			<view class="user">
 					<image style="width: 40upx; height: 40upx; border-radius: 50%; margin-right: 10upx;" :src="item.user.avatar"></image>
 					{{item.user.name}}
 				</view> -->
 
 				<view class="PriceArea">
-					<text class="priceOrigin">￥</text>
-					<text class="priceOriginValue">{{item.salePrice}}</text></br>
-					<text class="priceCurrent">￥{{item.originalPrice}}</text>
+					<view class="price-main">
+						<text class="priceOrigin">￥</text>
+						<text class="priceOriginValue">{{item.salePrice}}</text>
+					</view>
+					<text class="salesVolume">{{item.salesVolume}}已售</text>
 				</view>
 				<view class="sales">
-					<text class="salesVolume">{{item.salesVolume}}已售</text></br>
-					<view style="height: 10rpx;"></view>
+					<text class="priceCurrent">￥{{item.originalPrice}}</text>
 					<text class="distance" v-show="item.distance != null">{{item.distance}}</text>
 				</view>
 			</view>
@@ -137,8 +138,6 @@
 	.flow-box .item {
 		border-radius: 10rpx;
 		position: absolute;
-		/* left: 10upx; */
-		/* width: calc(50% - 20upx); */
 		width: 47%;
 		border: 1upx solid #f9f9f9;
 		background: #fff;
@@ -164,21 +163,33 @@
 	.flow-box .content {
 		border-bottom-right-radius: 20rpx;
 		border-bottom-left-radius: 20rpx;
-		padding: 20upx;
+		margin: 0 10rpx;
 		display: flex;
 		justify-content: space-between;
 		flex-wrap: wrap;
 	}
 
-	.title {
+	.commodity-title {
+		margin: 0 20rpx;
 		font-size: 32rpx;
 	}
 
 	.PriceArea {
-		/* margin-left: 10rpx; */
+		margin: 20rpx 20rpx 10rpx 20rpx;
+		width: 100%;
+		display: flex;
+		flex-direction: row;
+	}
+
+	.price-main {
+		width: 50%;
+		text-align: left;
+		display: flex;
+		flex-direction: row;
 	}
 
 	.priceOrigin {
+		margin-top: 7rpx;
 		font-size: 24rpx;
 		font-weight: 700;
 		color: rgba(255, 126, 48, 1);
@@ -189,27 +200,37 @@
 		font-weight: 700;
 		color: rgba(255, 126, 48, 1);
 	}
+	
+	.salesVolume {
+		font-size: 28rpx;
+		width: 50%;
+		text-align: right;
+	}
+
+	.sales{
+		margin: 0 20rpx 20rpx 20rpx;
+		width: 100%;
+		display: flex;
+		flex-direction: row;
+		font-size: 22rpx;
+	}
 
 	.priceCurrent {
+		text-align: left;
+		width: 50%;
 		font-size: 24rpx;
 		font-weight: 500;
 		color: rgba(153, 153, 153, 1);
 		text-decoration: line-through;
 	}
 	
-	.sales{
-		font-size: 22rpx;
-		position: relative;
-		right: -70rpx;
-		width: 200rpx;
-		height: 80rpx;
-		top: -70rpx;
+	.distance {
+		width: 50%;
 		text-align: right;
 	}
 
-	.flow-box .content text {
-		width: 100%;
-		margin-bottom: 20upx;
+	.flow-box .content {
+	/* 	width: 100%; */
 	}
 
 	.flow-box .user {

@@ -80,6 +80,7 @@
 				wx.setStorageSync('inputSerach', option.key)
 			}
 			//定时器模拟ajax异步请求数据
+			this.tabBars = wx.getStorageSync('tabBars')
 			this.getAreas();
 			setTimeout(()=>{
 				this.filterDropdownValue = [[0],[0],[0]];
@@ -103,7 +104,6 @@
 				this.valueArr.content = wx.getStorageSync('content')
 				this.isSearch = true;
 			}
-			this.tabBars = wx.getStorageSync('tabBars')
 			uni.removeStorage({
 				key: 'content'
 			});
