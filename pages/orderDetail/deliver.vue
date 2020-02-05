@@ -53,17 +53,23 @@
 		onLoad: function(params) {
 			// console.log(params);
 			if (params) {
-				// this.requestParams.deliveryNum = params.deliveryNum;
-				// this.requestParams.deliveryCompany = params.deliveryCompany;
-				// this.requestParams.orderId = params.orderId;
-				// this.getTraces();
+				this.requestParams.deliveryNum = params.deliveryNum;
+				this.requestParams.deliveryCompany = params.deliveryCompany;
+				if(this.requestParams.deliveryNum == null){
+					this.requestParams.deliveryNum = '暂无'
+				}
+				if(this.this.requestParams.deliveryCompany == null){
+					this.this.requestParams.deliveryCompany = '暂无'
+				}
+				this.requestParams.orderId = params.orderId;
+				this.getTraces();
 			} else {
 				this.hasTraces = false;
 			}
 			// 测试
-			this.requestParams.deliveryNum = '75313967739006';
-			this.requestParams.deliveryCompany = '中通快递';
-			this.getTraces();
+			// this.requestParams.deliveryNum = '75313967739006';
+			// this.requestParams.deliveryCompany = '中通快递';
+			// this.getTraces();
 			console.log(this.requestParams);
 		},
 		onShow() {
@@ -99,8 +105,10 @@
 			},
 			//获取订单信息
 			getOrderDetail(){
+				let _this = this;
 				OrderDetailAPI.getOrderDetail({
-					orderId: '1575463400271'
+					// orderId: '1575463400271'
+					orderId:_this.requestParams.orderId
 				}).then(res => {
 					console.log(res.data.data)
 					this.order = res.data.data;
