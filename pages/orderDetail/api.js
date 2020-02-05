@@ -14,7 +14,7 @@ export class OrderDetailAPI {
 	 * @param {Object} params
 	 */
 	static confirmDelivery(params) {
-	  return minRequest.post('/api/WCPCommodityOrder/comfirmDeliveryState', params)
+	  return minRequest.get('/api/WCPCommodityOrder/comfirmDeliveryState', params)
 	}
 	
 	/**
