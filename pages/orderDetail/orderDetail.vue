@@ -367,31 +367,38 @@
 			},
 			getLastDeliveryInfo: function() {
 
-				if (this.order.deliveryCompany === null || this.order.deliveryNum === null) {
+				if (this.order.deliveryState === 1 || this.order.deliveryState === 2) {
+					this.deliveryInfoShow = '查看物流信息';
+				} else {
 					this.deliveryInfoShow = '暂时没有物流信息';
-					return;
 				}
 
-				let params = {
-					deliveryNum: this.order.deliveryNum,
-					deliveryCompany: this.order.deliveryCompany
-				};
+				// if (this.order.deliveryCompany === null || this.order.deliveryNum === null) {
+				// 	this.deliveryInfoShow = '暂时没有物流信息';
+				// 	return;
+				// }
+
+				// let params = {
+				// 	deliveryNum: this.order.deliveryNum,
+				// 	deliveryCompany: this.order.deliveryCompany
+				// };
 
 				// 测试
 				// params.deliveryNum = '75311669293386';
 				// params.deliveryCompany = '中通快递';
 				// 获取最近一次的物流数据
-				OrderDetailAPI.getDeliverInfo(params).then(res => {
-					// 要显示的文字
-					if (res.data.data) {
-						let data = res.data.data.Traces;
-						this.deliveryInfoShow = data[data.length - 1].AcceptStation;
-					} else {
-						this.deliveryInfoShow = '暂时没有物流信息';
-					}
-				}).catch(err => {
-					this.deliveryInfoShow = '暂时没有物流信息';
-				});
+				
+				// OrderDetailAPI.getDeliverInfo(params).then(res => {
+				// 	// 要显示的文字
+				// 	if (res.data.data) {
+				// 		let data = res.data.data.Traces;
+				// 		this.deliveryInfoShow = data[data.length - 1].AcceptStation;
+				// 	} else {
+				// 		this.deliveryInfoShow = '暂时没有物流信息';
+				// 	}
+				// }).catch(err => {
+				// 	this.deliveryInfoShow = '暂时没有物流信息';
+				// });
 			},
 			getDeliverNoticeText: function() {
 				if (this.takeWay === 1) {
