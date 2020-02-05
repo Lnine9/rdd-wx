@@ -3,7 +3,7 @@
 		<!-- 订单状态 -->
 		<view class="order-state-container">
 			<view class="order-state-text-container">
-				<text class="order-state">{{takeWay === 1? order.deliveryStateShow : order.orderStateShow}}</text>
+				<text class="order-state" >{{takeWay === 1? order.deliveryStateShow : order.orderStateShow}}</text>
 				<text class="order-state-notice">{{getDeliverNoticeText()}}</text>
 			</view>
 
@@ -146,7 +146,7 @@
 				<text class="bottom-btn-look-logistics-text">联系商家</text>
 			</button>
 
-			<button v-if="takeWay === 1" class="bottom-btn-sure-receive" @click="confirmDelivery">
+			<button v-if="takeWay === 1" class="bottom-btn-sure-receive" @click="confirmDelivery" :style="{display:order.deliveryState== 2 || order.deliveryState== 0 ? 'none' :'flex'}">
 				<text class="bottom-btn-sure-receive-text">{{sureBtnText}}</text>
 			</button>
 		</view>
@@ -236,7 +236,7 @@
 						this.order.attrInfo = this.order.attrInfo.slice(0, this.order.attrInfo.length - 1);
 					}
 
-					console.log(this.order.attrInfo);
+					console.log(this.order);
 					this.takeWay = Number(this.order.commodityType);
 					if (this.takeWay === 2) {
 						// 核销类型显示物流信息
@@ -306,11 +306,10 @@
 				});
 			},
 			lookLogistics: function() {
-
-				// uni.navigateTo({
-				// 	url: '/pages/orderDetail/deliver?deliveryNum=' + this.order.deliveryNum +
-				// 		'&deliveryCompany=' + this.order.deliveryCompany
-				// });
+				uni.navigateTo({
+					url: '/pages/orderDetail/deliver?deliveryNum=' + this.order.deliveryNum +
+						'&deliveryCompany=' + this.order.deliveryCompany
+				});
 			},
 			// 联系商家
 			contactShop: function() {
@@ -334,9 +333,11 @@
 			},
 			confirmDelivery: function() {
 				if (this.order.commodityType === '1') {
+					console.log(this.order.orderId);
 					OrderDetailAPI.confirmDelivery({
 						orderId: this.order.orderId
 					}).then(res => {
+						console.log(res.data.data);
 						if (res.data.data) {
 							uni.showToast({
 								title: '确认收货成功',
@@ -351,6 +352,7 @@
 							});
 						}
 					}).catch(err => {
+						
 						uni.showToast({
 							title: '确认收货失败',
 							icon: 'none'
@@ -801,7 +803,7 @@
 
 	.bottom-btn-sure-receive {
 		background: 'rgba(0,0,0,0)';
-		display: flex;
+		/* display: flex; */
 		justify-content: center;
 		border-radius: 50rpx;
 		border: #06C1AE 2rpx solid;
