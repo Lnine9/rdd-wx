@@ -308,7 +308,7 @@
 			lookLogistics: function() {
 				uni.navigateTo({
 					url: '/pages/orderDetail/deliver?deliveryNum=' + this.order.deliveryNum +
-						'&deliveryCompany=' + this.order.deliveryCompany
+						'&deliveryCompany=' + this.order.deliveryCompany + '&orderId=' + this.orderId
 				});
 			},
 			// 联系商家
