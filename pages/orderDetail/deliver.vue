@@ -52,7 +52,6 @@
 		  trackNode
 		},
 		onLoad: function(params) {
-			// console.log(params);
 			if (params) {
 				this.requestParams.deliveryNum = params.deliveryNum;
 				this.requestParams.deliveryCompany = params.deliveryCompany;
@@ -62,36 +61,23 @@
 			} else {
 				this.hasTraces = false;
 			}
+			this.getOrderDetail();
 			// 测试
 			// this.requestParams.deliveryNum = '75313967739006';
 			// this.requestParams.deliveryCompany = '中通快递';
 			// this.getTraces();
 			// console.log(this.requestParams);
 		},
-		onShow() {
-			this.getOrderDetail();
-		},
 		methods: {
 			//判断参数
 			judgeTraces(data){	
-				console.log(data.deliveryNum);
-				console.log(data.deliveryNum !=null && data.deliveryCompany != null);
-				// if(data.deliveryNum == null || data.deliveryNum == ""){
-				// 	this.requestParams.deliveryNum = '暂无'
-				// }
-				// if(data.deliveryCompany == null || data.deliveryCompany == ""){
-				// 	this.requestParams.deliveryCompany = '暂无'
-				// }
 				if(data.deliveryNum !=null && data.deliveryCompany==null ){
 					this.getTraces();
-					
 				}else{
 					this.requestParams.deliveryNum = '暂无'
 					this.requestParams.deliveryCompany = '暂无'
 				}
-				console.log(data);
-				console.log(this.requestParams)
-				
+				console.log(this.requestParams)				
 			},
 			// 请求物流轨迹
 			getTraces: function() {
