@@ -42,6 +42,7 @@
 					deliveryNum: '',
 					deliveryCompany: ''
 				},
+				orderId:'',
 				order:[],
 				imageUrl:'',
 				tracesData: []
@@ -55,14 +56,9 @@
 			if (params) {
 				this.requestParams.deliveryNum = params.deliveryNum;
 				this.requestParams.deliveryCompany = params.deliveryCompany;
-				if(this.requestParams.deliveryNum == null){
-					this.requestParams.deliveryNum = '暂无'
-				}
-				if(this.this.requestParams.deliveryCompany == null){
-					this.this.requestParams.deliveryCompany = '暂无'
-				}
-				this.requestParams.orderId = params.orderId;
-				this.getTraces();
+				this.orderId = params.orderId;
+				this.judgeTraces(this.requestParams);
+				// this.getTraces();
 			} else {
 				this.hasTraces = false;
 			}
@@ -70,12 +66,33 @@
 			// this.requestParams.deliveryNum = '75313967739006';
 			// this.requestParams.deliveryCompany = '中通快递';
 			// this.getTraces();
-			console.log(this.requestParams);
+			// console.log(this.requestParams);
 		},
 		onShow() {
 			this.getOrderDetail();
 		},
 		methods: {
+			//判断参数
+			judgeTraces(data){	
+				console.log(data.deliveryNum);
+				console.log(data.deliveryNum !=null && data.deliveryCompany != null);
+				// if(data.deliveryNum == null || data.deliveryNum == ""){
+				// 	this.requestParams.deliveryNum = '暂无'
+				// }
+				// if(data.deliveryCompany == null || data.deliveryCompany == ""){
+				// 	this.requestParams.deliveryCompany = '暂无'
+				// }
+				if(data.deliveryNum !=null && data.deliveryCompany==null ){
+					this.getTraces();
+					
+				}else{
+					this.requestParams.deliveryNum = '暂无'
+					this.requestParams.deliveryCompany = '暂无'
+				}
+				console.log(data);
+				console.log(this.requestParams)
+				
+			},
 			// 请求物流轨迹
 			getTraces: function() {
 				let _this = this;
@@ -108,10 +125,11 @@
 				let _this = this;
 				OrderDetailAPI.getOrderDetail({
 					// orderId: '1575463400271'
-					orderId:_this.requestParams.orderId
+					orderId:_this.orderId
 				}).then(res => {
 					console.log(res.data.data)
 					this.order = res.data.data;
+					
 					// 图片地址
 					if(this.order !=null){
 						if (this.order.commodityImgList.length > 0) {
@@ -120,7 +138,7 @@
 					}		
 				}).catch(err => {
 					uni.showToast({
-						title: '获取订单信息失败，刷新试试',
+						title: '获取订单信息失败!',
 						icon: 'none'
 					});
 				});
