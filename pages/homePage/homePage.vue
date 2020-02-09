@@ -180,17 +180,18 @@
 			/** 首页分类数据获取 */
 			initPosition: function() {
 				console.log('登录');
+				let _this = this;
 				uni.getLocation({
 				          type: 'wgs84',
 				          success: function(res) {
 							uni.setStorageSync('latitude', res.latitude)
 							uni.setStorageSync('longitude', res.longitude)
-							this.getGuess();
+							_this.getGuess();
 				        },
 						fail() {
 							uni.setStorageSync('latitude', null)
 							uni.setStorageSync('longitude', null)
-							this.getGuess();
+							_this.getGuess();
 						}
 				});
 			},
