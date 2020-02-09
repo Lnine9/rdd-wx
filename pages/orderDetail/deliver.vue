@@ -55,9 +55,10 @@
 			if (params) {
 				this.requestParams.deliveryNum = params.deliveryNum;
 				this.requestParams.deliveryCompany = params.deliveryCompany;
+				// this.requestParams.deliveryNum = '75313967739006';
+				// this.requestParams.deliveryCompany = '中通快递';
 				this.orderId = params.orderId;
 				this.judgeTraces(this.requestParams);
-				// this.getTraces();
 			} else {
 				this.hasTraces = false;
 			}
@@ -66,16 +67,17 @@
 			// this.requestParams.deliveryNum = '75313967739006';
 			// this.requestParams.deliveryCompany = '中通快递';
 			// this.getTraces();
-			// console.log(this.requestParams);
+			// 
 		},
 		methods: {
 			//判断参数
 			judgeTraces(data){	
-				if(data.deliveryNum !=null && data.deliveryCompany==null ){
+				if(data.deliveryNum !=null && data.deliveryCompany !=null ){
 					this.getTraces();
 				}else{
 					this.requestParams.deliveryNum = '暂无'
 					this.requestParams.deliveryCompany = '暂无'
+					this.hasTraces = false;
 				}
 				console.log(this.requestParams)				
 			},
@@ -83,7 +85,6 @@
 			getTraces: function() {
 				let _this = this;
 				DeliverAPI.getDeliverInfo(this.requestParams).then(res => {
-					console.log(res);
 					if (res.data.data) {
 						console.log(res.data.data.Traces);
 						if(res.data.data.Traces!= null){
@@ -110,12 +111,10 @@
 			getOrderDetail(){
 				let _this = this;
 				OrderDetailAPI.getOrderDetail({
-					// orderId: '1575463400271'
 					orderId:_this.orderId
 				}).then(res => {
 					console.log(res.data.data)
-					this.order = res.data.data;
-					
+					this.order = res.data.data;		
 					// 图片地址
 					if(this.order !=null){
 						if (this.order.commodityImgList.length > 0) {
