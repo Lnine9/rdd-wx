@@ -235,6 +235,18 @@
 						}
 						this.order.attrInfo = this.order.attrInfo.slice(0, this.order.attrInfo.length - 1);
 					}
+					
+					if (this.order.electronicCode != undefined && this.order.electronicCode != null && this.order.electronicCode != '') {
+						// 商品属性信息json->string
+						let map = JSON.parse(this.order.electronicCode);
+						console.info(map)
+						this.order.electronicCode = '';
+						for(var key in map) {
+							console.log('kkkkkk');
+							this.order.electronicCode += map[key] + '，';
+						}
+						this.order.electronicCode = this.order.electronicCode.slice(0, this.order.electronicCode.length - 1);
+					}
 
 					console.log(this.order);
 					this.takeWay = Number(this.order.commodityType);

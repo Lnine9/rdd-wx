@@ -114,9 +114,11 @@
 			</view>
 
 			<view class="purchase-number-container">
-				<view class="commodity-attr-name" style="margin-right: 50rpx;">购买数量</view>
+				<view class="commodity-attr-name" style="margin-right: 50rpx;">购买数量<span v-if="dataDic.limitedNum!=0">(限购{{dataDic.limitedNum}})</span></view>
 				<uniNumberBox :min="1" :max="dataDic.commodityNum" :value="buyNum>dataDic.commodityNum?dataDic.commodityNum:buyNum"
-				 @change="numberChange()"></uniNumberBox>
+				 @change="numberChange()" v-if="dataDic.limitedNum==0"></uniNumberBox>
+				 <uniNumberBox :min="1" :max="dataDic.limitedNum" :value="buyNum>dataDic.commodityNum?dataDic.commodityNum:buyNum"
+				  @change="numberChange()" v-else  style="margin-left: -20px;"></uniNumberBox>
 				<button class="buyButton" @click="buy()">立即购买</button>
 			</view>
 		</view>
@@ -436,7 +438,7 @@
 					this.dataDic = res.data.data;
 					this.dataDic.commodityNum = Number.parseInt(this.dataDic.commodityNum);
 					this.dataDic.salePrice = Number.parseFloat(this.dataDic.salePrice);
-
+					this.dataDic.limitedNum = Number.parseInt(this.dataDic.limitedNum);
 					// 海报图片数据path处理
 					console.log('商品海报图片');
 					console.log(this.dataDic.posterImg);

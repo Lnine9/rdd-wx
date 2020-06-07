@@ -113,7 +113,6 @@
 			uni.removeStorage({
 				key: 'inputSerach'
 			});
-			console.log("肖阳含猪猪")
 			console.log(wx.getStorageSync('tabBars'))
 			this.getClassification();
 		},
