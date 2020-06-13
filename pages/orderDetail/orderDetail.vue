@@ -130,7 +130,7 @@
 				
 				<view v-if="takeWay === 3&&order.qrcode!=null" class="qr-code-container">
 					<text class="order-text">二维码</text>
-					<a class="qr-code-img" style="font-size: 10px;margin-top: -20px;">{{order.qrcode}}</a>
+					<a class="qr-code" :href="order.qrcode">{{order.qrcode}}</a>
 				</view>
 			</view>
 
@@ -274,86 +274,44 @@
 						if (this.order.electronicCode != undefined && this.order.electronicCode != null && this.order.electronicCode != '') {
 							var strs = this.order.electronicCode.split(",");
 							console.info(strs);
-							if(this.order.electronicCode.search("二维码") == -1){
-								this.order.electronicCode = '';
-								// 商品属性信息json->string
-								for(var i = 0; i < strs.length; i++){
-									if(i == 0){
-										strs[i] += "}";
-									}
-									else if(i == strs.length - 1){
-										strs[i] = "{" + strs[i];
-									}
-									else{
-										strs[i] = "{" + strs[i] + "}";
-									}
-									console.info(strs[i]);
-									let map = JSON.parse(strs[i]);
-									console.info(map)
-									for(var key in map) {
-										console.log('kkkkkk');
+							
+							this.order.electronicCode = "";
+							this.order.qrcode = "";
+							// 商品属性信息json->string
+							for(var i = 0; i < strs.length; i++){
+								if(i === 0 && i !== strs.length - 1){
+									strs[i] += "}";
+								}
+								else if(i === strs.length - 1 && i !== 0){
+									strs[i] = "{" + strs[i];
+								}
+								else if(i !== strs.length - 1 && i !== 0){
+									strs[i] = "{" + strs[i] + "}";
+								}
+								console.info(strs[i]);
+								let map = JSON.parse(strs[i]);
+								console.log(map);
+								for(var key in map) {
+									console.log(key);
+									if(key === "电子码"){
 										this.order.electronicCode += map[key] + '\n';
 									}
+									else if(key === "二维码"){
+										this.order.qrcode += map[key] + '\n';
+									}
 								}
+							}	
+							if(this.order.electronicCode !== "" && this.order.electronicCode !== null){
 								this.order.electronicCode = this.order.electronicCode.slice(0, this.order.electronicCode.length - 1);
-								this.order.qrcode = null;
-							}
-							else if(this.order.electronicCode.search("电子码") == -1){
-								// 商品属性信息json->string
-								this.order.electronicCode = '';
-								// 商品属性信息json->string
-								for(var i = 0; i < strs.length; i++){
-									if(i == 0){
-										strs[i] += "}";
-									}
-									else if(i == strs.length - 1){
-										strs[i] = "{" + strs[i];
-									}
-									else{
-										strs[i] = "{" + strs[i] + "}";
-									}
-									console.info(strs[i]);
-									let map = JSON.parse(strs[i]);
-									for(var key in map) {
-										console.log('kkkkkk');
-										this.order.electronicCode += map[key] + '\n';
-									}
-								}
-								this.order.qrcode = this.order.electronicCode.slice(0, this.order.electronicCode.length - 1);
-								console.info(this.order.qrcode);
-								// 核销类型的商品生成二维码
-								// this.getQRCodeImage();
+							}	
+							else{
 								this.order.electronicCode = null;
 							}
-							else{
-								this.order.electronicCode = '';
-								this.order.qrcode = '';
-								// 商品属性信息json->string
-								for(var i = 0; i < strs.length; i++){
-									if(i == 0){
-										strs[i] += "}";
-									}
-									else if(i == strs.length - 1){
-										strs[i] = "{" + strs[i];
-									}
-									else{
-										strs[i] = "{" + strs[i] + "}";
-									}
-									console.info(strs[i]);
-									let map = JSON.parse(strs[i]);
-									for(var key in map) {
-										console.log(key);
-										if(key === "电子码"){
-											this.order.electronicCode += map[key] + '\n';
-										}
-										else if(key === "二维码"){
-											this.order.qrcode += map[key] + '\n';
-										}
-									}
-								}
-								
-								this.order.electronicCode = this.order.electronicCode.slice(0, this.order.electronicCode.length - 1);
+							if(this.order.qrcode !== null && this.order.qrcode !== ""){
 								this.order.qrcode = this.order.qrcode.slice(0, this.order.qrcode.length - 1);
+							}
+							else{
+								this.order.qrcode = null;
 							}
 						}
 						
@@ -868,6 +826,14 @@
 		margin: 10rpx 220rpx 0 230rpx;
 		width: 300rpx;
 		height: 300rpx;
+	}
+	
+	.qr-code {
+		margin: -40rpx 220rpx 0 230rpx;
+		width: 300rpx;
+		height: 300rpx;
+		color: #999999;
+		font-size: 20rpx;
 	}
 
 	.bottom-price-container {
