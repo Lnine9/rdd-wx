@@ -122,6 +122,16 @@
 					<text class="order-text">二维码</text>
 					<image :src="qrImageUrl" mode="" class="qr-code-img"></image>
 				</view>
+				
+				<view v-if="takeWay === 3&&order.electronicCode!=null" class="attr-info-container">
+					<view class="order-text">电子码<text style="color: #FFFFFF;">白</text></view>
+					<view class="order-value">{{order.electronicCode}}</view>
+				</view>
+				
+				<view v-if="takeWay === 3&&order.qrcode!=null" class="qr-code-container">
+					<text class="order-text">二维码</text>
+					<a class="qr-code-img" style="font-size: 10px;margin-top: -20px;">{{order.qrcode}}</a>
+				</view>
 			</view>
 
 			<view class="bottom-price-container">
@@ -177,7 +187,7 @@
 				orderId: '',
 				hasLogistics: false,
 				phones: [],
-				takeWay: 1, // 1,寄送，2,核销
+				takeWay: 1, // 1:寄送,2:核销,3:库存
 				order: {
 					orderId: '',
 					createAt: '',
@@ -191,7 +201,7 @@
 					shopName: '',
 					deliveryCompany: '',
 					deliveryNum: '',
-					commodityType: 2, // 1，寄送，2，核销
+					commodityType: 2, // 1:寄送,2:核销,3:库存
 					orderState: '',
 					orderStateShow: '',
 					electronicCode: '', // 电子码
@@ -224,6 +234,7 @@
 					orderId: this.orderId
 				}).then(res => {
 					this.order = res.data.data;
+					console.info(this.order)
 					this.phones = this.order.shopPhone.split(",");
 					if (this.order.attrInfo != undefined && this.order.attrInfo != null && this.order.attrInfo != '') {
 						// 商品属性信息json->string
@@ -234,18 +245,6 @@
 							this.order.attrInfo += map[key] + '，';
 						}
 						this.order.attrInfo = this.order.attrInfo.slice(0, this.order.attrInfo.length - 1);
-					}
-					
-					if (this.order.electronicCode != undefined && this.order.electronicCode != null && this.order.electronicCode != '') {
-						// 商品属性信息json->string
-						let map = JSON.parse(this.order.electronicCode);
-						console.info(map)
-						this.order.electronicCode = '';
-						for(var key in map) {
-							console.log('kkkkkk');
-							this.order.electronicCode += map[key] + '，';
-						}
-						this.order.electronicCode = this.order.electronicCode.slice(0, this.order.electronicCode.length - 1);
 					}
 
 					console.log(this.order);
@@ -271,7 +270,112 @@
 								this.statusStyle = "color: #06C1AE";
 								break;
 						}
-					} else {
+					} else if(this.takeWay === 3){
+						if (this.order.electronicCode != undefined && this.order.electronicCode != null && this.order.electronicCode != '') {
+							var strs = this.order.electronicCode.split(",");
+							console.info(strs);
+							if(this.order.electronicCode.search("二维码") == -1){
+								this.order.electronicCode = '';
+								// 商品属性信息json->string
+								for(var i = 0; i < strs.length; i++){
+									if(i == 0){
+										strs[i] += "}";
+									}
+									else if(i == strs.length - 1){
+										strs[i] = "{" + strs[i];
+									}
+									else{
+										strs[i] = "{" + strs[i] + "}";
+									}
+									console.info(strs[i]);
+									let map = JSON.parse(strs[i]);
+									console.info(map)
+									for(var key in map) {
+										console.log('kkkkkk');
+										this.order.electronicCode += map[key] + '\n';
+									}
+								}
+								this.order.electronicCode = this.order.electronicCode.slice(0, this.order.electronicCode.length - 1);
+								this.order.qrcode = null;
+							}
+							else if(this.order.electronicCode.search("电子码") == -1){
+								// 商品属性信息json->string
+								this.order.electronicCode = '';
+								// 商品属性信息json->string
+								for(var i = 0; i < strs.length; i++){
+									if(i == 0){
+										strs[i] += "}";
+									}
+									else if(i == strs.length - 1){
+										strs[i] = "{" + strs[i];
+									}
+									else{
+										strs[i] = "{" + strs[i] + "}";
+									}
+									console.info(strs[i]);
+									let map = JSON.parse(strs[i]);
+									for(var key in map) {
+										console.log('kkkkkk');
+										this.order.electronicCode += map[key] + '\n';
+									}
+								}
+								this.order.qrcode = this.order.electronicCode.slice(0, this.order.electronicCode.length - 1);
+								console.info(this.order.qrcode);
+								// 核销类型的商品生成二维码
+								// this.getQRCodeImage();
+								this.order.electronicCode = null;
+							}
+							else{
+								this.order.electronicCode = '';
+								this.order.qrcode = '';
+								// 商品属性信息json->string
+								for(var i = 0; i < strs.length; i++){
+									if(i == 0){
+										strs[i] += "}";
+									}
+									else if(i == strs.length - 1){
+										strs[i] = "{" + strs[i];
+									}
+									else{
+										strs[i] = "{" + strs[i] + "}";
+									}
+									console.info(strs[i]);
+									let map = JSON.parse(strs[i]);
+									for(var key in map) {
+										console.log(key);
+										if(key === "电子码"){
+											this.order.electronicCode += map[key] + '\n';
+										}
+										else if(key === "二维码"){
+											this.order.qrcode += map[key] + '\n';
+										}
+									}
+								}
+								
+								this.order.electronicCode = this.order.electronicCode.slice(0, this.order.electronicCode.length - 1);
+								this.order.qrcode = this.order.qrcode.slice(0, this.order.qrcode.length - 1);
+							}
+						}
+						
+						// 核销类型显示物流信息
+						this.hasLogistics = false;
+						// 按钮文字显示
+						this.sureBtnText = '确认完成';
+						// 订单状态(核销类型的订单显示)
+						switch (Number(this.order.orderState)) {
+							case 1:
+								this.order.orderStateShow = '待处理';
+								this.statusStyle = "color: #06C1AE";
+								break;
+							case 2:
+								this.order.orderStateShow = '已完成';
+								break;
+							default:
+								this.order.orderStateShow = '待处理';
+								this.statusStyle = "color: #06C1AE";
+								break;
+						}
+					}else {
 						// 按钮文字显示
 						this.sureBtnText = '确认收货';
 								this.hasLogistics = true;
