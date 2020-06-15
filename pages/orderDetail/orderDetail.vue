@@ -3,7 +3,7 @@
 		<!-- 订单状态 -->
 		<view class="order-state-container">
 			<view class="order-state-text-container">
-				<text class="order-state" >{{takeWay === 1? order.deliveryStateShow : order.orderStateShow}}</text>
+				<text class="order-state">{{takeWay === 1? order.deliveryStateShow : order.orderStateShow}}</text>
 				<text class="order-state-notice">{{getDeliverNoticeText()}}</text>
 			</view>
 
@@ -88,7 +88,7 @@
 
 			<!-- 订单信息 -->
 			<view class="order-info-container">
-<!-- 				<view>
+				<!-- 				<view>
 					<text class="order-text">商家电话</text>
 					<text class="order-value">{{order.shopPhone}}</text>
 				</view> -->
@@ -122,15 +122,18 @@
 					<text class="order-text">二维码</text>
 					<image :src="qrImageUrl" mode="" class="qr-code-img"></image>
 				</view>
-				
-				<view v-if="takeWay === 3&&order.electronicCode!=null" class="attr-info-container">
+
+				<view v-if="takeWay === 3&&order.electronicCode!== null" class="attr-info-container">
 					<view class="order-text">电子码<text style="color: #FFFFFF;">白</text></view>
 					<view class="order-value">{{order.electronicCode}}</view>
 				</view>
-				
-				<view v-if="takeWay === 3&&order.qrcode!=null" class="qr-code-container">
+
+				<view v-if="takeWay === 3 && qrcode.length !== 0" class="qr-code-container" style="position: relative;">
 					<text class="order-text">二维码</text>
-					<a class="qr-code" :href="order.qrcode">{{order.qrcode}}</a>
+					<view v-for="(item,i) in qrcode" class="qr-code-container">
+						<a class="qr-code" :href="qrcode">{{item.slice(0, 18) + "..."}}</a>
+						<text @click="copyTBL(item)" class="copy">复制</text>
+					</view>
 				</view>
 			</view>
 
@@ -162,14 +165,14 @@
 		</view>
 
 		<uni-popup ref="popup" type="center" maskClick="true">
+			<view class="phoneCell">
+				<text style="font-size: 40rpx; margin-left: 40rpx; font-weight: bold;">拨打电话</text>
+			</view>
+			<view v-for="(index, item) in phones" :key="index">
 				<view class="phoneCell">
-					<text style="font-size: 40rpx; margin-left: 40rpx; font-weight: bold;">拨打电话</text>
+					<text class="phoneCell-text" @click="callToShop(item)">{{item}}</text>
 				</view>
-				<view v-for="(index, item) in phones" :key="index">
-					<view class="phoneCell">
-						<text class="phoneCell-text" @click="callToShop(item)">{{item}}</text>
-					</view>
-				</view>
+			</view>
 		</uni-popup>
 	</view>
 </template>
@@ -215,10 +218,11 @@
 				qrImageUrl: '', // 二维码图片
 				statusStyle: '', // 订单or发货状态样式
 				deliveryInfoShow: '', // 显示在物流信息的文字
+				qrcode: [],
 			}
 		},
-		components:{
-			'uni-popup':uniPopup
+		components: {
+			'uni-popup': uniPopup
 		},
 		onLoad: function(params) {
 			this.orderId = params.orderid;
@@ -229,7 +233,30 @@
 			this.getOrderInfo();
 		},
 		methods: {
+			copyTBL: function(e) {
+				uni.setClipboardData({
+					data: e,
+					success: function(res) {
+						uni.getClipboardData({
+							success: function() {
+								uni.showModal({
+									title: '提示',
+									content: '复制成功,请前往浏览器查看',
+									success: function(res) {
+										if (res.confirm) {
+											console.log('确定')
+										} else if (res.cancel) {
+											console.log('取消')
+										}
+									}
+								})
+							}
+						})
+					}
+				});
+			},
 			getOrderInfo: function() {
+				this.qrcode = [];
 				OrderDetailAPI.getOrderDetail({
 					orderId: this.orderId
 				}).then(res => {
@@ -240,7 +267,7 @@
 						// 商品属性信息json->string
 						let map = JSON.parse(this.order.attrInfo);
 						this.order.attrInfo = '';
-						for(var key in map) {
+						for (var key in map) {
 							console.log('kkkkkk');
 							this.order.attrInfo += map[key] + '，';
 						}
@@ -270,51 +297,49 @@
 								this.statusStyle = "color: #06C1AE";
 								break;
 						}
-					} else if(this.takeWay === 3){
-						if (this.order.electronicCode != undefined && this.order.electronicCode != null && this.order.electronicCode != '') {
+					} else if (this.takeWay === 3) {
+						if (this.order.electronicCode != undefined && this.order.electronicCode != null && this.order.electronicCode !=
+							'') {
 							var strs = this.order.electronicCode.split(",");
 							console.info(strs);
-							
+
 							this.order.electronicCode = "";
 							this.order.qrcode = "";
 							// 商品属性信息json->string
-							for(var i = 0; i < strs.length; i++){
-								if(i === 0 && i !== strs.length - 1){
+							for (var i = 0; i < strs.length; i++) {
+								if (i === 0 && i !== strs.length - 1) {
+									console.info("1" + strs[i]);
 									strs[i] += "}";
-								}
-								else if(i === strs.length - 1 && i !== 0){
+								} else if (i === strs.length - 1 && i !== 0) {
+									console.info("2" + strs[i]);
 									strs[i] = "{" + strs[i];
-								}
-								else if(i !== strs.length - 1 && i !== 0){
+								} else if (i !== strs.length - 1 && i !== 0) {
+									console.info("3" + strs[i]);
 									strs[i] = "{" + strs[i] + "}";
 								}
 								console.info(strs[i]);
 								let map = JSON.parse(strs[i]);
 								console.log(map);
-								for(var key in map) {
-									console.log(key);
-									if(key === "电子码"){
+								console.info(this.qrcode);
+								for (var key in map) {
+									if (map[key].indexOf("http") === -1) {
 										this.order.electronicCode += map[key] + '\n';
-									}
-									else if(key === "二维码"){
-										this.order.qrcode += map[key] + '\n';
+									} else if (map[key].indexOf("http") !== -1) {
+										this.qrcode.push(map[key]);
 									}
 								}
-							}	
-							if(this.order.electronicCode !== "" && this.order.electronicCode !== null){
+								console.info(this.qrcode);
+							}
+							console.info("654867987");
+							console.info(this.order.electronicCode);
+							if (this.order.electronicCode !== "" && this.order.electronicCode !== null) {
+								console.info(this.order.electronicCode);
 								this.order.electronicCode = this.order.electronicCode.slice(0, this.order.electronicCode.length - 1);
-							}	
-							else{
+							} else {
 								this.order.electronicCode = null;
 							}
-							if(this.order.qrcode !== null && this.order.qrcode !== ""){
-								this.order.qrcode = this.order.qrcode.slice(0, this.order.qrcode.length - 1);
-							}
-							else{
-								this.order.qrcode = null;
-							}
 						}
-						
+
 						// 核销类型显示物流信息
 						this.hasLogistics = false;
 						// 按钮文字显示
@@ -333,10 +358,10 @@
 								this.statusStyle = "color: #06C1AE";
 								break;
 						}
-					}else {
+					} else {
 						// 按钮文字显示
 						this.sureBtnText = '确认收货';
-								this.hasLogistics = true;
+						this.hasLogistics = true;
 						switch (Number(this.order.deliveryState)) {
 							case 0:
 								this.order.deliveryStateShow = '未发货';
@@ -389,7 +414,7 @@
 			contactShop: function() {
 				this.$refs.popup.open();
 			},
-			callToShop: function(item){
+			callToShop: function(item) {
 				uni.makePhoneCall({
 					// 手机号
 					phoneNumber: item,
@@ -426,7 +451,7 @@
 							});
 						}
 					}).catch(err => {
-						
+
 						uni.showToast({
 							title: '确认收货失败',
 							icon: 'none'
@@ -461,7 +486,7 @@
 				// params.deliveryNum = '75311669293386';
 				// params.deliveryCompany = '中通快递';
 				// 获取最近一次的物流数据
-				
+
 				// OrderDetailAPI.getDeliverInfo(params).then(res => {
 				// 	// 要显示的文字
 				// 	if (res.data.data) {
@@ -476,7 +501,7 @@
 			},
 			getDeliverNoticeText: function() {
 				if (this.takeWay === 1) {
-					if (this.order.deliveryState ===1) {
+					if (this.order.deliveryState === 1) {
 						return '您的快递正在路上，请耐心等候发货';
 					} else if (this.order.deliveryState === 2) {
 						return '您的快递已签收，感谢您的使用';
@@ -827,13 +852,19 @@
 		width: 300rpx;
 		height: 300rpx;
 	}
-	
+
 	.qr-code {
-		margin: -40rpx 220rpx 0 230rpx;
-		width: 300rpx;
-		height: 300rpx;
+		margin: -40rpx 220rpx 60rpx 230rpx;
 		color: #999999;
-		font-size: 20rpx;
+		width: 50rpx;
+		font-size: 26rpx;
+	}
+
+	.copy {
+		margin: -40rpx 220rpx 0 480rpx;
+		color: #0299cc;
+		font-size: 26rpx;
+		position: absolute;
 	}
 
 	.bottom-price-container {
@@ -906,15 +937,17 @@
 		font-size: 24rpx;
 		margin: auto;
 	}
-	.phoneCell{
-		display:flex;
+
+	.phoneCell {
+		display: flex;
 		align-items: center;
 		width: 580rpx;
 		height: 100rpx;
 		background-color: #FFFFFF;
 		border-radius: 10rpx;
 	}
-	.phoneCell-text{
+
+	.phoneCell-text {
 		margin-left: 40rpx;
 		font-weight: lighter;
 	}
