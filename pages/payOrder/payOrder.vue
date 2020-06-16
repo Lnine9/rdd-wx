@@ -269,8 +269,9 @@
 				console.log('开始请求');
 				PayOrderAPI.payOrder(params).then(res => {
 					console.log(res);
-					if (res.data.data) {
+					if (res.data.data != null) { 
 						let data = res.data.data;
+						console.log(data.jsonObject.prepayid);
 						// 起调支付接口
 						wx.requestPayment({
 							'timeStamp': data.jsonObject.timestamp,
@@ -298,6 +299,11 @@
 								});
 							},
 							'complete': function(res) {}
+						});
+					}else{
+						uni.showToast({
+							title: '库存不够',
+							icon: 'none'
 						});
 					}
 				}).catch(err => {
