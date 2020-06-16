@@ -125,12 +125,12 @@
 
 				<view v-if="takeWay === 3&&order.electronicCode!== null" class="attr-info-container">
 					<view class="order-text">电子码<text style="color: #FFFFFF;">白</text></view>
-					<view class="order-value">{{order.electronicCode}}</view>
+					<view class="order-value" style="line-height: 40rpx;">{{order.electronicCode}}</view>
 				</view>
 
-				<view v-if="takeWay === 3 && qrcode.length !== 0" class="qr-code-container" style="position: relative;">
+				<view v-if="takeWay === 3 && qrcode.length !== 0" class="qr-code-container">
 					<text class="order-text">二维码</text>
-					<view v-for="(item,i) in qrcode" class="qr-code-container">
+					<view v-for="(item,i) in qrcode" class="qr-code-container" style="position: relative;">
 						<a class="qr-code" :href="qrcode">{{item.slice(0, 18) + "..."}}</a>
 						<text @click="copyTBL(item)" class="copy">复制</text>
 					</view>
@@ -239,16 +239,10 @@
 					success: function(res) {
 						uni.getClipboardData({
 							success: function() {
-								uni.showModal({
-									title: '提示',
-									content: '复制成功,请前往浏览器查看',
-									success: function(res) {
-										if (res.confirm) {
-											console.log('确定')
-										} else if (res.cancel) {
-											console.log('取消')
-										}
-									}
+								uni.showToast({
+									title: '复制成功,请前往浏览器',
+									icon: 'none',
+									duration: 2500
 								})
 							}
 						})
@@ -861,10 +855,11 @@
 	}
 
 	.copy {
-		margin: -40rpx 220rpx 0 480rpx;
+		margin: -40rpx 220rpx 0 500rpx;
 		color: #0299cc;
 		font-size: 26rpx;
 		position: absolute;
+		width: 100rpx;
 	}
 
 	.bottom-price-container {
