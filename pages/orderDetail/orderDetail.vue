@@ -855,7 +855,7 @@
 	}
 
 	.copy {
-		margin: -40rpx 220rpx 0 500rpx;
+		margin: -40rpx 220rpx 0 530rpx;
 		color: #0299cc;
 		font-size: 26rpx;
 		position: absolute;
