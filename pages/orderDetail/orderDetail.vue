@@ -125,7 +125,7 @@
 
 				<view v-if="takeWay === 3&&order.electronicCode!== null" class="attr-info-container">
 					<view class="order-text">电子码<text style="color: #FFFFFF;">白</text></view>
-					<view class="order-value">{{order.electronicCode}}</view>
+					<view class="order-value" style="line-height: 40rpx;">{{order.electronicCode}}</view>
 				</view>
 
 				<view v-if="takeWay === 3 && qrcode.length !== 0" class="qr-code-container">
