@@ -127,6 +127,7 @@
 					console.log(parms);
 					api.buyVIP(parms).then(res => {
 						console.log(res);
+						let _this = this;
 						if (res.data.data != null) { 
 							let data = res.data.data;
 							console.log(data.jsonObject.prepayid);
@@ -143,7 +144,7 @@
 										icon: 'success',
 									});
 									setTimeout(() => {
-										this.getUserMes();
+										_this.getUserMes();
 									}, 2000);
 								},
 								'fail': function(res) {
