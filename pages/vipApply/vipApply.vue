@@ -2,11 +2,17 @@
     <view>
         <view v-if="isCanUse">
 			<view class='header'>
-				<view class="vipApplyLogo">
+				<view class="vipApplyLogo" v-if="money === 0">
 					<image src='/static/vip.png'></image>
 					<text class="text1">囧途宝盒会员</text>
 					<text class="text2">免费申请啦！</text>
 					<text class="text3">名额有限！时间有限！快快报名申请吧！！</text>
+				</view>
+				<view class="vipApplyLogo" v-if="money !== 0">
+					<image src='/static/vip.png'></image>
+					<text class="text1">囧途宝盒会员</text>
+					<text class="text2">永久性购买！</text>
+					<text class="text3">名额有限！时间有限！快快报名购买吧！！</text>
 				</view>
 				<view class="exclusive">专属权益</view>
 				<view class="legalRight">
@@ -32,7 +38,7 @@
 				<text>备注</text>
 				<input placeholder="请输入备注信息" class="inputPhoneAndRemarks" v-model="applyInformation.remarks"/>
 			</view>
-			<button @click ="recommend">立即申请</button>
+			<button @click ="recommend">购买会员<span v-if="money !== 0">({{money}}元)</span></button>
         </view>
     </view>
 </template>
@@ -47,19 +53,38 @@
 					name:'',
 					phone:'',
 					remarks:''
-				}
+				},
+				money:'',
+				userId:'',
+				area:''
             };
         },
+		onLoad(query){
+			this.userId = query.userId;
+			this.area = query.area;
+		    console.log(query)
+		},
+		mounted() {
+			this.getMoney();
+		},
         methods: {
+			getMoney(){
+				api.getVipMoney().then(res=>{
+					this.money = res.data.data
+					console.info(this.money)
+				})
+			},
 			/**
-			 *
+			 *申请会员
 			 * @param {Object} options
 			 */
             recommend:function(options){
 				var parms = {
 					userName:this.applyInformation.name,
 					phoneNum:this.applyInformation.phone,
-					remark:this.applyInformation.remarks
+					remark:this.applyInformation.remarks,
+					userId:this.userId,
+					area:this.area
 				}
 				console.log(parms)
 				if(this.applyInformation.name==''){
@@ -87,15 +112,60 @@
 						return null;
 					}
 				}
-				api.sendData(parms).then(res=>{
-					this.getUserMes();
-					uni.showToast({
-					  title: '申请成功',
-					  icon: 'success',
-					  duration: 3000
+				if(money === 0){
+					api.sendData(parms).then(res=>{
+						this.getUserMes();
+						uni.showToast({
+						  title: '购买成功',
+						  icon: 'success',
+						  duration: 3000
+						})
 					})
-				})
-
+				}
+				else{
+					console.log('开始请求');
+					api.buyVIP(parms).then(res => {
+						console.log(res);
+						if (res.data.data != null) { 
+							let data = res.data.data;
+							console.log(data.jsonObject.prepayid);
+							// 起调支付接口
+							wx.requestPayment({
+								'timeStamp': data.jsonObject.timestamp,
+								'nonceStr': data.jsonObject.noncestr,
+								'package': 'prepay_id=' + data.jsonObject.prepayid,
+								'signType': 'MD5',
+								'paySign': data.paySignStr,
+								'success': function(res) {
+									uni.showToast({
+										title: '购买成功!',
+										icon: 'success',
+									});
+									setTimeout(() => {
+										this.getUserMes();
+									}, 2000);
+								},
+								'fail': function(res) {
+									uni.showToast({
+										title: '支付失败',
+										icon: 'none'
+									});
+								},
+								'complete': function(res) {}
+							});
+						}else{
+							uni.showToast({
+								title: '支付失败',
+								icon: 'none'
+							});
+						}
+					}).catch(err => {
+						uni.showToast({
+							title: '支付请求失败，刷新试试',
+							icon: 'none'
+						});
+					});
+				}
 			},
 			/**
 			 * 获取用户信息

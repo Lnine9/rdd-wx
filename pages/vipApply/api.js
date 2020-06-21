@@ -29,4 +29,19 @@ export class api{
   static getUserInfo(location){
   	  return minRequest.get('/api/AppPersonalCenter/appGetUserEnterpriseInfo', location)
   }
+  /**
+   * 获取申请会员金额
+   * @param {Object} location
+   */
+  static getVipMoney(){
+  	  return minRequest.post('/api/VipApply/getVipMoney')
+  }
+  
+  /**
+   * 申请会员
+   * @param {Object} location
+   */
+  static buyVIP(){
+  	  return minRequest.post('/api/WeChatAppletPaymentVip/WeChatRechargeVip')
+  }
 }

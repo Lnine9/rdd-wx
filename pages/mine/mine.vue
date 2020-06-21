@@ -17,7 +17,7 @@
 				<image class="vipPhoto" src="../../static/vip/icVipPrice.png"></image>
 				<text class="applyVip" @click="getVip()" :style="{display: isVip == false ? 'block' :'none' }">申请会员</text>
 				<text class="applyVip"  :style="{display:isVip == true ? 'block' :'none' }">囧途宝盒会员</text>
-				<text class="freeVip"  @click="getVip()" :style="{display: isVip == false ? 'block' :'none' }">囧途宝盒会员免费申请啦！</text>
+				<text class="freeVip"  @click="getVip()" :style="{display: isVip == false ? 'block' :'none' }">囧途宝盒会员先到先得哟！</text>
 				<image class="more" src="../../static/vip/icVipMore.png" @click="getVip()" :style="{display: isVip == false ? 'block' :'none' }"></image>
 			</view>
 			<view class="service">
@@ -283,7 +283,7 @@
 						this.$refs.loginPopUp.open();
 					}else{
 						uni.navigateTo({
-							url: `/pages/vipApply/vipApply`
+							url: `/pages/vipApply/vipApply?userId=` + uni.getStorageSync('bindingId') + `&&area=` + uni.getStorageSync('location') 
 						})
 					}
 				},
