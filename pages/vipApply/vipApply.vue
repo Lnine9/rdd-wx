@@ -79,14 +79,14 @@
 			 * @param {Object} options
 			 */
             recommend:function(options){
-				var parms = {
+				let parms = {
 					userName:this.applyInformation.name,
-					phoneNum:this.applyInformation.phone,
+					userAccount:this.applyInformation.phone,
 					remark:this.applyInformation.remarks,
 					userId:this.userId,
-					area:this.area
+					area:this.area,
+					vipPrice:this.money
 				}
-				console.log(parms)
 				if(this.applyInformation.name==''){
 					wx.showToast({
 					  title: '请输入姓名',
@@ -124,6 +124,7 @@
 				}
 				else{
 					console.log('开始请求');
+					console.log(parms);
 					api.buyVIP(parms).then(res => {
 						console.log(res);
 						if (res.data.data != null) { 
