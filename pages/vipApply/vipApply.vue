@@ -112,7 +112,7 @@
 						return null;
 					}
 				}
-				if(money === 0){
+				if(this.money === 0){
 					api.sendData(parms).then(res=>{
 						this.getUserMes();
 						uni.showToast({

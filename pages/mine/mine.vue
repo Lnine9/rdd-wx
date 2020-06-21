@@ -283,7 +283,7 @@
 						this.$refs.loginPopUp.open();
 					}else{
 						uni.navigateTo({
-							url: `/pages/vipApply/vipApply?userId=` + uni.getStorageSync('bindingId') + `&&area=` + uni.getStorageSync('location') 
+							url: `/pages/vipApply/vipApply?userId=` + uni.getStorageSync('userId') + `&&area=` + uni.getStorageSync('location') 
 						})
 					}
 				},

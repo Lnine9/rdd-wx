@@ -41,7 +41,7 @@ export class api{
    * 申请会员
    * @param {Object} location
    */
-  static buyVIP(){
-  	  return minRequest.post('/api/WeChatAppletPaymentVip/WeChatRechargeVip')
+  static buyVIP(data){
+  	  return minRequest.post('/api/WeChatAppletPaymentVip/WeChatRechargeVip',data)
   }
 }
