@@ -554,6 +554,13 @@
 			},
 
 			buy: function() {
+				if(this.buyNum > 2){
+					uni.showToast({
+						title: '商品一次性购买不能超过2个',
+						icon: 'none',
+					});
+					return;
+				}
 				// 存储当前选择的属性id
 				let selectedValueId = '';
 				// 属性选择验证
