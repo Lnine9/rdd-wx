@@ -122,10 +122,40 @@
 					<text class="order-text">二维码</text>
 					<image :src="qrImageUrl" mode="" class="qr-code-img"></image>
 				</view>
+							
+				<view v-if="takeWay === 3&&cardNumber.length !== 0" class="attr-info-container">
+					<view class="order-text">卡号<text style="color: #FFFFFF;">白</text></view>
+					<view v-for="(itemCardNumber,i) in cardNumber" class="qr-code-container" style="position: relative;">
+						<text class="order-value">{{itemCardNumber}}</text>
+					</view>
+				</view>
 
-				<view v-if="takeWay === 3&&order.electronicCode!== null" class="attr-info-container">
-					<view class="order-text">电子码<text style="color: #FFFFFF;">白</text></view>
-					<view class="order-value" style="line-height: 40rpx;">{{order.electronicCode}}</view>
+				<view v-if="takeWay === 3&&activationCode.length !== 0" class="attr-info-container">
+					<view class="order-text">激活码<text style="color: #FFFFFF;">白</text></view>
+					<view v-for="(itemActivationCode,i) in activationCode" class="qr-code-container" style="position: relative;">
+						<text class="order-value">{{itemActivationCode}}</text>
+					</view>
+				</view>
+				
+				<view v-if="takeWay === 3&&serialNumber.length !== 0" class="attr-info-container">
+					<view class="order-text">序列号<text style="color: #FFFFFF;">白</text></view>
+					<view v-for="(itemSerialNumber,i) in serialNumber" class="qr-code-container" style="position: relative;">
+						<text class="order-value">{{itemSerialNumber}}</text>
+					</view>
+				</view>
+				
+				<view v-if="takeWay === 3&&password.length !== 0" class="attr-info-container">
+					<view class="order-text">密码<text style="color: #FFFFFF;">白</text></view>
+					<view v-for="(itemPassword,i) in password" class="qr-code-container" style="position: relative;">
+						<text class="order-value">{{itemPassword}}</text>
+					</view>
+				</view>
+				
+				<view v-if="takeWay === 3&&exchangeNo.length !== 0" class="attr-info-container">
+					<view class="order-text">兑换号<text style="color: #FFFFFF;">白</text></view>
+					<view v-for="(itemExchangeNo,i) in exchangeNo" class="qr-code-container" style="position: relative;">
+						<text class="order-value">{{itemExchangeNo}}</text>
+					</view>
 				</view>
 
 				<view v-if="takeWay === 3 && qrcode.length !== 0" class="qr-code-container">
@@ -218,7 +248,12 @@
 				qrImageUrl: '', // 二维码图片
 				statusStyle: '', // 订单or发货状态样式
 				deliveryInfoShow: '', // 显示在物流信息的文字
-				qrcode: [],
+				qrcode: [],			// 二维码
+				cardNumber :[],		// 卡号
+				activationCode:[],	// 激活码
+				serialNumber:[],	// 序列号
+				password:[],	// 密码
+				exchangeNo:[],	// 兑换号
 			}
 		},
 		components: {
@@ -251,6 +286,11 @@
 			},
 			getOrderInfo: function() {
 				this.qrcode = [];
+				this.cardNumber = [];
+				this.activationCode = [];
+				this.serialNumber = [];
+				this.password = [];
+				this.exchangeNo = [];
 				OrderDetailAPI.getOrderDetail({
 					orderId: this.orderId
 				}).then(res => {
@@ -316,22 +356,30 @@
 								console.log(map);
 								console.info(this.qrcode);
 								for (var key in map) {
-									if (map[key].indexOf("http") === -1) {
-										this.order.electronicCode += map[key] + '\n';
-									} else if (map[key].indexOf("http") !== -1) {
+									console.log(key);
+									if (map[key].indexOf("http") !== -1) {
 										this.qrcode.push(map[key]);
+									}else if (key === '卡号') {
+										this.cardNumber.push(map[key]);
+										console.info(this.cardNumber);
+									}else if (key === '激活码') {
+										this.activationCode.push(map[key]);
+									}else if (key === '序列号') {
+										this.serialNumber.push(map[key]);
+									}else if (key === '密码') {
+										this.password.push(map[key]);
+									}else if (key === '兑换号') {
+										this.exchangeNo.push(map[key]);
 									}
 								}
+								console.info(this.cardNumber);
+								console.info(this.activationCode);
+								console.info(this.serialNumber);
+								console.info(this.password);
+								console.info(this.exchangeNo);
 								console.info(this.qrcode);
 							}
 							console.info("654867987");
-							console.info(this.order.electronicCode);
-							if (this.order.electronicCode !== "" && this.order.electronicCode !== null) {
-								console.info(this.order.electronicCode);
-								this.order.electronicCode = this.order.electronicCode.slice(0, this.order.electronicCode.length - 1);
-							} else {
-								this.order.electronicCode = null;
-							}
 						}
 
 						// 核销类型显示物流信息
