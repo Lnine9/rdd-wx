@@ -17,4 +17,12 @@ export class api{
   static getQRCodeImg(params) {
   	  return minRequest.get('/api/WCPUserInfo/getWCPCommodityCode', params)
   }
+  
+  /**
+   * 限购
+   * @param {Object} params
+   */
+  static getLimited(params) {
+  	  return minRequest.post('/api/WeChatAppletPaymentVip/getLimited', params)
+  }
 }
