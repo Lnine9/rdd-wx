@@ -564,7 +564,38 @@
 					// this.$refs.loginPopUp.open();
 				}
 			},
-
+			navPayfor:function () {
+				// 存储当前选择的属性id
+				let selectedValueId = '';
+				// 属性选择验证
+				for (let attrValueObj of this.attrValueList) {
+					if (attrValueObj.selectedValue === '') {
+						uni.showToast({
+							title: '请选择' + attrValueObj.name,
+							icon: 'none',
+						});
+				
+						return;
+					}
+				
+					for (let value of attrValueObj.contentList) {
+						if (attrValueObj.selectedValue === value.content) {
+							selectedValueId += value.commodityAttrId + ",";
+						}
+					}
+				}
+				// 去除末尾逗号
+				if (selectedValueId != null && selectedValueId != '') {
+					selectedValueId = selectedValueId.slice(0, selectedValueId.length - 1);
+				}
+				console.log('传递商品图片');
+				console.log(this.showSaleImageUrl);
+				let imageUrl = encodeURIComponent(this.showSaleImageUrl);
+				console.log(imageUrl);
+				uni.navigateTo({
+					url: `/pages/payOrder/payOrder?commodityId=${this.dataDic.commodityId}&commodityNum=${this.buyNum}&selectedValueId=${selectedValueId}&selectedAttr=${this.selectedAttr}&showSalePrice=${this.showSalePrice}&imageUrl=${imageUrl}`
+				})
+			},
 			buy: function() {
 				if(this.buyNum > 2){
 					uni.showToast({
@@ -584,7 +615,10 @@
 							title: res.data.message,
 							icon: 'none'
 						});
-						return 0;
+						return;
+					}
+					else{
+						this.navPayfor();
 					}
 				}).catch(err => {
 					console.log('获取商品信息失败');
@@ -594,43 +628,6 @@
 						title: "网络错误，请稍后重试",
 						icon: 'none'
 					})
-				})
-				// 存储当前选择的属性id
-				let selectedValueId = '';
-				// 属性选择验证
-				for (let attrValueObj of this.attrValueList) {
-					if (attrValueObj.selectedValue === '') {
-						uni.showToast({
-							title: '请选择' + attrValueObj.name,
-							icon: 'none',
-						});
-
-						return;
-					}
-
-					for (let value of attrValueObj.contentList) {
-						if (attrValueObj.selectedValue === value.content) {
-							selectedValueId += value.commodityAttrId + ",";
-						}
-					}
-				}
-				// 去除末尾逗号
-				if (selectedValueId != null && selectedValueId != '') {
-					selectedValueId = selectedValueId.slice(0, selectedValueId.length - 1);
-				}
-				console.log('传递商品图片');
-				console.log(this.showSaleImageUrl);
-				let imageUrl = encodeURIComponent(this.showSaleImageUrl);
-				console.log(imageUrl);
-				let parmes ={
-					selectedValueId:selectedValueId,
-					imageUrl:imageUrl
-				}
-				this.navPayFor(parmes);
-			},
-			navPayFor:function (parmes) {
-				uni.navigateTo({
-					url: `/pages/payOrder/payOrder?commodityId=${this.dataDic.commodityId}&commodityNum=${this.buyNum}&selectedValueId=${parmes.selectedValueId}&selectedAttr=${this.selectedAttr}&showSalePrice=${this.showSalePrice}&imageUrl=${parmes.imageUrl}`
 				})
 			},
 			...mapMutations(['login']),
