@@ -92,6 +92,10 @@
 					<view class="selected-attr-container">
 						<text class="selected-attr-txt">{{selectedAttr}}</text>
 					</view>
+					
+					<view class="selected-attr-container" v-if="dataDic.idLimitedNum !== 0">
+						<text class="selected-attr-txt" style="color: #333333;">商品限购:{{dataDic.idLimitedNum}}件</text>
+					</view>
 
 					<view class="price-container">
 						<text class="small-price-txt">¥</text>
@@ -114,7 +118,7 @@
 			</view>
 
 			<view class="purchase-number-container">
-				<view class="commodity-attr-name" style="margin-right: 50rpx;">购买数量<span v-if="dataDic.limitedNum!=0">(限购{{dataDic.limitedNum}})</span></view>
+				<view class="commodity-attr-name" style="margin-right: 50rpx;">购买数量<span v-if="dataDic.limitedNum!=0" style="font-size: 25rpx;">(限购{{dataDic.limitedNum}}件)</span></view>
 				<uniNumberBox :min="1" :max="dataDic.commodityNum" :value="buyNum>dataDic.commodityNum?dataDic.commodityNum:buyNum"
 				 @change="numberChange()" v-if="dataDic.limitedNum==0"></uniNumberBox>
 				 <uniNumberBox :min="1" :max="dataDic.limitedNum" :value="buyNum>dataDic.commodityNum?dataDic.commodityNum:buyNum"
