@@ -94,8 +94,8 @@
 					</view>
 					
 					<view class="selected-attr-container">
-						<text class="selected-attr-txt" style="color: #333333;" v-if="dataDic.idLimitedNum !== 0">商品限购:{{dataDic.idLimitedNum}}件</text>
-						<text class="selected-attr-txt" style="color: #333333;" v-if="dataDic.limitedNum !== 0">今日限购:{{dataDic.limitedNum}}件</text>
+						<text class="selected-attr-txt" style="color: #333333;" v-if="dataDic.limitedType === 3 || dataDic.limitedType === 2">商品限购:{{dataDic.idLimitedNum}}件</text>
+						<text class="selected-attr-txt" style="color: #333333;" v-if="dataDic.limitedType === 1 || dataDic.limitedType === 3">今日限购:{{dataDic.limitedNum}}件</text>
 					</view>
 
 					<view class="price-container">
@@ -124,7 +124,7 @@
 				 @change="numberChange()" v-if="dataDic.limitedNum==0"></uniNumberBox>
 				 <uniNumberBox :min="1" :max="dataDic.limitedNum" :value="buyNum>dataDic.commodityNum?dataDic.commodityNum:buyNum"
 				  @change="numberChange()" v-else  style="margin-left: -20px;"></uniNumberBox>
-				<button class="buyButton" @click="buy()">立即购买</button>
+				<button class="buyButton" @click="buy()">立    即购买</button>
 			</view>
 		</view>
 
@@ -445,6 +445,12 @@
 					this.dataDic.salePrice = Number.parseFloat(this.dataDic.salePrice);
 					this.dataDic.limitedNum = Number.parseInt(this.dataDic.limitedNum);
 					this.dataDic.idLimitedNum = Number.parseInt(this.dataDic.idLimitedNum);
+					if(this.dataDic.limitedType == 1){
+						this.dataDic.idLimitedNum = 0;
+					}
+					if(this.dataDic.limitedType == 2){
+						this.dataDic.limitedNum = 0;
+					}
 					// 海报图片数据path处理
 					console.log('商品海报图片');
 					console.log(this.dataDic.posterImg);
@@ -568,11 +574,18 @@
 					return;
 				}
 				api.getLimited({
-					commodityId: this.commodityId
+					commodityId: this.commodityId,
+					commodityNum:this.buyNum
 				}).then(res => {
 					console.log('商品信息');
 					console.log(res);
-					
+					if(res.data.code == 200){
+						uni.showToast({
+							title: res.data.message,
+							icon: 'none'
+						});
+						return 0;
+					}
 				}).catch(err => {
 					console.log('获取商品信息失败');
 					console.log(err);
@@ -609,6 +622,9 @@
 				console.log(this.showSaleImageUrl);
 				let imageUrl = encodeURIComponent(this.showSaleImageUrl);
 				console.log(imageUrl);
+				this.navPayFor();
+			},
+			navPayFor:function () {
 				uni.navigateTo({
 					url: `/pages/payOrder/payOrder?commodityId=${this.dataDic.commodityId}&commodityNum=${this.buyNum}&selectedValueId=${selectedValueId}&selectedAttr=${this.selectedAttr}&showSalePrice=${this.showSalePrice}&imageUrl=${imageUrl}`
 				})
