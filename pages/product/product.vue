@@ -439,6 +439,7 @@
 					this.dataDic.commodityNum = Number.parseInt(this.dataDic.commodityNum);
 					this.dataDic.salePrice = Number.parseFloat(this.dataDic.salePrice);
 					this.dataDic.limitedNum = Number.parseInt(this.dataDic.limitedNum);
+					this.dataDic.idLimitedNum = Number.parseInt(this.dataDic.idLimitedNum);
 					// 海报图片数据path处理
 					console.log('商品海报图片');
 					console.log(this.dataDic.posterImg);
