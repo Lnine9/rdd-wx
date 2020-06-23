@@ -622,11 +622,15 @@
 				console.log(this.showSaleImageUrl);
 				let imageUrl = encodeURIComponent(this.showSaleImageUrl);
 				console.log(imageUrl);
-				this.navPayFor();
+				let parmes ={
+					selectedValueId:selectedValueId,
+					imageUrl:imageUrl
+				}
+				this.navPayFor(parmes);
 			},
-			navPayFor:function () {
+			navPayFor:function (parmes) {
 				uni.navigateTo({
-					url: `/pages/payOrder/payOrder?commodityId=${this.dataDic.commodityId}&commodityNum=${this.buyNum}&selectedValueId=${selectedValueId}&selectedAttr=${this.selectedAttr}&showSalePrice=${this.showSalePrice}&imageUrl=${imageUrl}`
+					url: `/pages/payOrder/payOrder?commodityId=${this.dataDic.commodityId}&commodityNum=${this.buyNum}&selectedValueId=${parmes.selectedValueId}&selectedAttr=${this.selectedAttr}&showSalePrice=${this.showSalePrice}&imageUrl=${parmes.imageUrl}`
 				})
 			},
 			...mapMutations(['login']),
