@@ -88,8 +88,8 @@
 			"style": {
 				"navigationBarTitleText": "囧途宝盒",
 				"navigationBarTextStyle":"white",
-				"enablePullDownRefresh": true,
-				"navigationBarBackgroundColor": "#de2032"	
+				"enablePullDownRefresh": true
+				// "navigationBarBackgroundColor": "#de2032"	
 			}
 		},
 		{
@@ -137,16 +137,16 @@
 			"path": "pages/classification/classification",
 			"style": {
 				"navigationBarTitleText": "囧途宝盒",
-				"navigationBarTextStyle":"white",
-				"navigationBarBackgroundColor": "#de2032"	
+				"navigationBarTextStyle":"white"
+				// "navigationBarBackgroundColor": "#de2032"	
 			}
 		}
     ],
 	"globalStyle": {
 		"navigationBarTextStyle":"white",
 		"navigationBarTitleText": "囧途宝盒",
-		"backgroundColor": "#EAEAEA",
-		"navigationBarBackgroundColor": "#de2032"
+		"backgroundColor": "#EAEAEA"
+		// "navigationBarBackgroundColor": "#de2032"
 	},
 	"tabBar": {
 		"color": "#C0C4CC",

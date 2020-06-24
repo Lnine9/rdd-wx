@@ -292,7 +292,8 @@
 				this.password = [];
 				this.exchangeNo = [];
 				OrderDetailAPI.getOrderDetail({
-					orderId: this.orderId
+					orderId: this.orderId,
+					// orderId: "1575618256034",
 				}).then(res => {
 					this.order = res.data.data;
 					console.info(this.order)
