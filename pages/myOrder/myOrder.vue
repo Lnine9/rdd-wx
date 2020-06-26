@@ -129,7 +129,6 @@
 					return ""
 				}
 				let item = this.shopList[index]
-
 				if (item.commodityType == "1") {
 					if (item.deliveryState == 0) {
 						this.statusStyle[index] = "color:#06C1AE;"
@@ -138,15 +137,14 @@
 						this.statusStyle[index] = "color:#06C1AE;"
 						return "已发货"
 					} else if (item.deliveryState == 2) {
-						this.statusStyle = "color:#CCCCCC"
-						return "已签收"
-					} else
 						this.statusStyle[index] = "color:#CCCCCC"
-					return "--"
+						return "已签收"
+					} else{
+						this.statusStyle[index] = "color:#CCCCCC"
+					}
+					return "状态未知"
 				} else {
-					console.log(item.orderState)
 					if (item.orderState == 1) {
-						
 						this.statusStyle[index] = "color:#06C1AE;"
 						return "待处理"
 
@@ -156,11 +154,9 @@
 					}
 					else {
 						this.statusStyle[index] = "color:#CCCCCC"
-						return "--"
+						return "状态未知"
 					}
 				}
-
-
 			},
 			// 加载数据
 			getData: function() {

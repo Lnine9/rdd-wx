@@ -55,9 +55,7 @@ export default {
 			// this.requestParams.deliveryNum = '';
 			// this.requestParams.deliveryCompany = '';
 			this.orderId = params.orderId;
-			// this.judgeTraces();
 			this.judgeTraces(this.requestParams);
-		
 		} else {
 			this.hasTraces = false;
 		}
