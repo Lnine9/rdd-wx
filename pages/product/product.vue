@@ -480,6 +480,7 @@
 
 					this.titleImg = this.dataDic.commodityImg;
 					this.bottomImg = this.dataDic.commodityIntroduce;
+					console.info(this.bottomImg)
 					// let bottomPicture = this.dataDic.guessImgs;
 					// this.bottomImg += `<div style="width:100%">`
 					// bottomPicture.forEach((item, index, arr) => { // item为arr的元素，index为下标，arr原数组

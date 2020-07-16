@@ -348,6 +348,10 @@
 							this.order.qrcode = "";
 							// 商品属性信息json->string
 							for (var i = 0; i < strs.length; i++) {
+								if(strs[i].indexOf('\t')){
+									strs[i] = strs[i].replace("\t","");
+									console.info(strs[i]);
+								}
 								if (i === 0 && i !== strs.length - 1) {
 									console.info("1" + strs[i]);
 									strs[i] += "}";
