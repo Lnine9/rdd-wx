@@ -123,11 +123,12 @@
 					<image :src="qrImageUrl" mode="" class="qr-code-img"></image>
 				</view>
 							
+				<!--  商品类型为3-->			
 				<view v-if="takeWay === 3&&cardNumber.length !== 0" class="attr-info-container">
 					<view class="order-text">卡号<text style="color: #FFFFFF;">白</text></view>
 					<view v-for="(itemCardNumber,i) in cardNumber" class="qr-code-container" style="position: relative;">
 						<text class="order-value">{{itemCardNumber}}</text>
-						<text @click="copyTBL(itemCardNumber)" class="copyNum">复制</text>
+						<text @click="copyTBLOne(itemCardNumber)" class="copyNum">复制</text>
 					</view>
 				</view>
 
@@ -135,7 +136,7 @@
 					<view class="order-text">激活码<text style="color: #FFFFFF;">白</text></view>
 					<view v-for="(itemActivationCode,i) in activationCode" class="qr-code-container" style="position: relative;">
 						<text class="order-value">{{itemActivationCode}}</text>
-						<text @click="copyTBL(itemActivationCode)" class="copyNum">复制</text>
+						<text @click="copyTBLOne(itemActivationCode)" class="copyNum">复制</text>
 					</view>
 				</view>
 				
@@ -143,7 +144,7 @@
 					<view class="order-text">序列号<text style="color: #FFFFFF;">白</text></view>
 					<view v-for="(itemSerialNumber,i) in serialNumber" class="qr-code-container" style="position: relative;">
 						<text class="order-value">{{itemSerialNumber}}</text>
-						<text @click="copyTBL(itemSerialNumber)" class="copyNum">复制</text>
+						<text @click="copyTBLOne(itemSerialNumber)" class="copyNum">复制</text>
 					</view>
 				</view>
 				
@@ -151,7 +152,7 @@
 					<view class="order-text">密码<text style="color: #FFFFFF;">白</text></view>
 					<view v-for="(itemPassword,i) in password" class="qr-code-container" style="position: relative;">
 						<text class="order-value">{{itemPassword}}</text>
-						<text @click="copyTBL(itemPassword)" class="copyNum">复制</text>
+						<text @click="copyTBLOne(itemPassword)" class="copyNum">复制</text>
 					</view>
 				</view>
 				
@@ -159,15 +160,16 @@
 					<view class="order-text">兑换号<text style="color: #FFFFFF;">白</text></view>
 					<view v-for="(itemExchangeNo,i) in exchangeNo" class="qr-code-container" style="position: relative;">
 						<text class="order-value">{{itemExchangeNo}}</text>
-						<text @click="copyTBL(itemExchangeNo)" class="copyNum">复制</text>
+						<text @click="copyTBLOne(itemExchangeNo)" class="copyNum">复制</text>
 					</view>
 				</view>
 
 				<view v-if="takeWay === 3 && qrcode.length !== 0" class="qr-code-container">
 					<text class="order-text">二维码</text>
 					<view v-for="(item,i) in qrcode" class="qr-code-container" style="position: relative;">
-						<a class="qr-code" :href="qrcode">{{item.slice(0, 18) + "..."}}</a>
-						<text @click="copyTBL(item)" class="copy">复制</text>
+						<!-- <a class="qr-code" :href="qrcode">{{item.slice(0, 18) + "..."}}</a>
+						<text @click="copyTBL(item)" class="copy">复制</text> -->
+						<image :src="item" mode="" class="qr-code-img"></image>
 					</view>
 				</view>
 			</view>
@@ -218,6 +220,7 @@
 	} from './api.js'
 	import qr from '../utils/wxqrcode.js'
 	import uniPopup from "../components/uni-popup/uni-popup.vue"
+	import Qr from "../utils/wxqrcode.js"
 
 	export default {
 		data() {
@@ -273,6 +276,7 @@
 			this.getOrderInfo();
 		},
 		methods: {
+	
 			copyTBL: function(e) {
 				console.info(111)
 				uni.setClipboardData({
@@ -282,6 +286,23 @@
 							success: function() {
 								uni.showToast({
 									title: '复制成功,请前往浏览器',
+									icon: 'none',
+									duration: 2500
+								})
+							}
+						})
+					}
+				});
+			},
+			copyTBLOne: function(e) {
+				console.info(111)
+				uni.setClipboardData({
+					data: e,
+					success: function(res) {
+						uni.getClipboardData({
+							success: function() {
+								uni.showToast({
+									title: '复制成功,请前往公众号兑换二维码',
 									icon: 'none',
 									duration: 2500
 								})
@@ -368,8 +389,8 @@
 								console.info(this.qrcode);
 								for (var key in map) {
 									console.log(key);
-									if (map[key].indexOf("http") !== -1) {
-										this.qrcode.push(map[key]);
+									if (key === '二维码') {
+										this.qrcode.push(Qr.createQrCodeImg(map[key]));
 									}else if (key === '卡号') {
 										this.cardNumber.push(map[key]);
 										console.info(this.cardNumber);
