@@ -302,10 +302,7 @@
 					if(index[i][0]!=this.menuArr[i][0]){
 						display=true;
 					}
-					console.log(index[i][0])
-					console.log(this.menuArr[i][0])
 				}
-				console.log(display)
 				if(display){
 					this.$emit('confirm', {
 						index: index,

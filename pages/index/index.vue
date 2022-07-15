@@ -103,6 +103,7 @@
 								}
 							});
 						}
+						uni.setStorageSync('userCode', loginRes.code)
 						//2.将用户登录code传递到后台置换用户SessionKey、OpenId等信息
 						console.log('请求后台');
 						let loginParam = {

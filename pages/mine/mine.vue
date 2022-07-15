@@ -130,7 +130,8 @@
 					subScreenHeight: 1200,
 					loginState:false,
 					bindingIdState:false,
-					flag: true, // 标识当前页面是否显示
+					flag: true, // 标识当前页面是否显示,
+					totalVIP: 0,
 	            };
 	        },
 			onShow() {
@@ -155,6 +156,10 @@
 						this.getSubMenu();
 					}
 				}
+				
+				// api.getTotalVIP().then(res => {
+				// 	this.totalVIP = res.data.data;
+				// })
 			},
 			//下拉刷新
 			onPullDownRefresh(){
@@ -182,7 +187,7 @@
 				wxGetLogin(){
 					this.loginState = uni.getStorageSync('loginState');
 					let _this = this
-					if(this.loginState == true){
+					if(this.loginState == true && !this.user.name){
 						_this.wxGetUserInfo();
 					}
 				},
@@ -203,19 +208,41 @@
 					   this.bindingIdState = false;
 					}
 					console.log(this.bindingIdState)
-				    uni.getUserInfo({
-				        provider: 'weixin',
-				        success: function(infoRes) {
-				           _this.user.name = infoRes.userInfo.nickName; //昵称
-				           _this.user.photo = infoRes.userInfo.avatarUrl; //头像
-				        },
-				        fail(res) {
-							uni.showModal({
-								content: '失败了',
-								showCancel: true
-							});
-						}
-				    });
+					
+					uni.showModal({
+						  title: '温馨提示',
+						  content: '授权微信登录获取用户头像昵称',
+						  success(res) {
+							console.log(res)
+							//如果用户点击了确定按钮
+							if (res.confirm) {
+							  uni.getUserProfile({
+							      desc:'Wexin',
+							      success: function(infoRes) {
+							         _this.user.name = infoRes.userInfo.nickName; //昵称
+							         _this.user.photo = infoRes.userInfo.avatarUrl; //头像
+									console.log(infoRes)
+									uni.setStorageSync('USER_PROFILE', infoRes.userInfo)
+							      },
+							      fail(res) {
+							  		console.log(res);
+							  		uni.showModal({
+							  			content: '失败了',
+							  			showCancel: true
+							  		});
+							  	}
+							  });
+							} else if (res.cancel) {
+							  //如果用户点击了取消按钮
+							  uni.showToast({
+								title: '您拒绝了请求,不能正常使用小程序',
+								icon: 'error',
+								duration: 2000
+							  });
+							  return;
+							}
+						  }
+						});
 				},
 				//获取已绑定菜单信息
 				getMenu(){

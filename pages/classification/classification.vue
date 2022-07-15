@@ -54,7 +54,7 @@
 					content:'',
 					salesVolume:0,
 					salePrice:0,
-					distance:0,
+					distance:1,
 					latitude: 0.00,
 					longitude: 0.00,
 					commodityTitle:'',
@@ -207,6 +207,8 @@
 				this.start=0;
 				this.end=0;
 				this.loading=true;
+				console.log(e.index[1], e.index[2])
+				
 				if(e.value[0]=="重庆市"){
 					this.valueArr.area='';
 				}
@@ -214,17 +216,17 @@
 					this.valueArr.area=(String)(e.value[0]);
 				}
 				
-				if(e.index[1]==0){
-					this.valueArr.distance=0;
-					this.valueArr.salePrice=0;
-					this.valueArr.salesVolume=0;
-				}
-				else if(e.index[1]==1){
+				if(e.index[1][0]==0){
 					this.valueArr.distance=1;
 					this.valueArr.salePrice=0;
 					this.valueArr.salesVolume=0;
 				}
-				else if(e.index[1]==2){
+				else if(e.index[1][0]==1){
+					this.valueArr.distance=1;
+					this.valueArr.salePrice=0;
+					this.valueArr.salesVolume=0;
+				}
+				else if(e.index[1][0]==2){
 					this.valueArr.distance=0;
 					this.valueArr.salePrice=2;
 					this.valueArr.salesVolume=0;
@@ -234,16 +236,12 @@
 					this.valueArr.salePrice=1;
 					this.valueArr.salesVolume=0;
 				}
-				if(e.index[2]!=0){
+				if(e.index[2][0]!=0){
 					this.valueArr.salesVolume=(Number)(e.value[2]);
 					this.valueArr.distance=0;
 					this.valueArr.salePrice=0;
 				}
-				else{
-					this.valueArr.salesVolume=0;
-					this.valueArr.distance=0;
-					this.valueArr.salePrice=0;
-				}
+
 				this.getClassification();
 			},
 			//返回主页面

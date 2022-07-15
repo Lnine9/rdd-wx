@@ -31,10 +31,22 @@
 			return {
 				amount: 0,
 				paymentAccount: "",
-				paymentName: "",
-				paymentAmount: ""
+				paymentAmount: "",
+				wxName: '',
+				openId: '',
 			}
 		},
+		
+		onShow(){
+			this.getOpenId()
+			let user = uni.getStorageSync('USER_PROFILE')
+			if(user){
+				this.wxName = user.nickName
+			} else {
+				this.getUserProfile()
+			}
+		},
+	
 		
 		// 上一个页面传来的值
 		onLoad(option) {
@@ -45,6 +57,62 @@
 			}
 		},
 		methods: {
+			getOpenId(){
+				const _this = this;
+				wx.login({
+				      success: function (res) {
+				        api.getOpenId({code: res.code}).then(res=>{
+				        	console.log(res);
+				        	if(res.statusCode == 200){
+				        		_this.openId = res.data
+				        	} else{
+				        		uni.showToast({
+				        			title: '获取OpenId失败，请尝试重新登录',
+				        			icon: 'error',
+				        			duration: 2000
+				        		});
+				        	}
+				        })
+				      }
+				    })
+			},
+			
+			getUserProfile(){
+				let _this = this;
+				uni.showModal({
+					  title: '温馨提示',
+					  content: '授权微信登录获取用户信息',
+					  success(res) {
+						console.log(res)
+						//如果用户点击了确定按钮
+						if (res.confirm) {
+						  uni.getUserProfile({
+						      desc:'Wexin',
+						      success: function(infoRes) {
+						         _this.wxName = infoRes.userInfo.nickName; //昵称
+								console.log(infoRes)
+								uni.setStorageSync('USER_PROFILE', infoRes.userInfo)
+						      },
+						      fail(res) {
+						  		console.log(res);
+						  		uni.showModal({
+						  			content: '失败了',
+						  			showCancel: true
+						  		});
+						  	}
+						  });
+						} else if (res.cancel) {
+						  //如果用户点击了取消按钮
+						  uni.showToast({
+							title: '您拒绝了请求,不能正常使用提现功能',
+							icon: 'error',
+							duration: 2000
+						  });
+						  return;
+						}
+					  }
+					});
+			},
 			
 			// 页面的跳转
 			toIncome(type) {
@@ -63,14 +131,14 @@
 					})
 					return;
 				}
-				// if (this.paymentAmount < 0) {
-				// 	wx.showToast({
-				// 	  title: '提现金额不能为负数！',
-				// 	  icon: 'none',
-				// 	  duration: 1500
-				// 	})
-				// 	return;
-				// }
+				if (this.paymentAmount < 1) {
+					wx.showToast({
+					  title: '提现金额不能小于1元',
+					  icon: 'none',
+					  duration: 1500
+					})
+					return;
+				}
 				// if (this.paymentAmount < 10) {
 				// 	wx.showToast({
 				// 	  title: '满10元才支持提现哟！',
@@ -79,14 +147,14 @@
 				// 	})
 				// 	return;
 				// }
-				// if (this.paymentAmount > this.amount) {
-				// 	wx.showToast({
-				// 	  title: '输入金额过大！',
-				// 	  icon: 'none',
-				// 	  duration: 2000
-				// 	})
-				// 	return;
-				// }
+				if (this.paymentAmount > this.amount) {
+					wx.showToast({
+					  title: '输入金额过大！',
+					  icon: 'none',
+					  duration: 2000
+					})
+					return;
+				}
 				if(!/^\d+(\.\d{0,2})?$/.test(this.paymentAmount)) {
 					wx.showToast({
 					  title: '输入金额只能为整数或者两位小数！',
@@ -100,35 +168,42 @@
 			
 			// 后端数据的返回
 			toWithdraw() {
-				wx.showToast({
-				  title: '快速提现，请添加客服微信  ~  ( cqrdd2019 )',
-				  icon: 'none',
-				  duration: 4000
-				})
+				console.log(this.openId, this.wxName);
+				if(!this.openId){
+					this.getOpenId()
+					return;
+				}
+				
+				if(!this.wxName){
+					this.getUserProfile();
+					return;
+				}
 			
-				// api.postData({
-				// 	paymentAmount: this.paymentAmount
-				// }).then(res => {
-				// 	wx.showToast({
-				// 	  title: res.data.message,
-				// 	  icon: 'none',
-				// 	  duration: 3000
-				// 	});
-				// 	// wx.navigateBack({
-				// 	// 	delta:1
-				// 	// })
-				// 	// if (res.data.message.equals("提现成功")) {
-				// 	// 	wx.navigateBack({
-				// 	// 		delta:1
-				// 	// 	})快速提现，请添加客服微信  ~  ( cqrdd2019 )
-				// 	// }
-				// }).catch(_ => {
-				// 	wx.showToast({
-				// 	  title: '网络错误',
-				// 	  icon: 'none',
-				// 	  duration: 4000
-				// 	})
-				// })
+				api.postData({
+					wxName: this.wxName,
+					amount: this.paymentAmount,
+					openId: this.openId,
+				}).then(res => {
+					uni.showToast({
+					  title: res.data.message,
+					  icon: 'none',
+					  duration: 3000
+					});
+					if(res.data.code == 200){
+						this.amount = this.amount-this.paymentAmount
+						this.paymentAccount = ''
+						nui.navigateBack({
+							delta:1
+						})
+					}
+					
+				}).catch(_ => {
+					uni.showToast({
+					  title: '网络错误',
+					  icon: 'none',
+					  duration: 4000
+					})
+				})
 			}
 		}
 	}

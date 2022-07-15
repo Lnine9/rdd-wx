@@ -14,4 +14,8 @@ export class api{
   static comfirmOrder(data){
 	  return minRequest.post('/api/WCPCommodityOrder/comfirmWCPCommodityOrder',data)
   }
+  
+  static getTotalVIP(){
+  	  return minRequest.get('/api/userManagement/getTotalVip')
+  }
 }

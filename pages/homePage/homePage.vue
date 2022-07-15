@@ -444,14 +444,26 @@
 				// 显示刷新加载图片
 				this.loading = true;
 
-				let userAndLocalMes_1 = {
-					area: uni.getStorageSync('location'),
-					shopPlace: 'Guess',
+				// let userAndLocalMes_1 = {
+				// 	area: uni.getStorageSync('location'),
+				// 	shopPlace: 'Guess',
+				// 	latitude: uni.getStorageSync('latitude'),
+				// 	longitude: uni.getStorageSync('longitude')
+				// };
+				let valueArr = {
+					area: '',
+					content:'',
+					salesVolume:0,
+					salePrice:0,
+					distance:1,
 					latitude: uni.getStorageSync('latitude'),
-					longitude: uni.getStorageSync('longitude')
+					longitude: uni.getStorageSync('longitude'),
+					commodityTitle:'',
+					pageSize:12,
+					page:1,
 				};
-				console.info(userAndLocalMes_1.area);
-				api.getProducts(userAndLocalMes_1).then(res => {
+				// api.getProducts(userAndLocalMes_1)
+				api.getClassification(valueArr).then(res => {
 					this.guessList = res.data.data;
 					this.showNoGuess = this.guessList.length == 0;
 

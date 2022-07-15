@@ -60,9 +60,16 @@
             };
         },
 		onLoad(query){
-			this.userId = query.userId;
-			this.area = query.area;
-		    console.log(query)
+			this.userId = query.userId || uni.getStorageSync('userId');
+			this.area = query.area || uni.getStorageSync('location');
+			console.log(this.userId, this.area);
+			if(!this.userId || !this.area){
+				uni.showToast({
+				  title: '获取位置信息失败，请返回首页选择城市',
+				  icon: 'none',
+				  duration: 3000
+				});
+			}
 		},
 		mounted() {
 			this.getMoney();

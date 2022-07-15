@@ -11,15 +11,22 @@
 		<view v-show="showType">
 			<noPic :picSrc="picSrc" :noText="noText"></noPic>
 		</view>
-		<view class="list"  v-for="(item, index) in team" :key="index" v-show="!showType">
-			<view style="width: 500rpx;height: 186rpx;position: relative; margin-left: 20rpx;">
-				<image :src="item.avatarUrl" class="img"></image>
-				<view class="userName">{{item.userName | ellipsis}}</view>
-				<view class="createAt">{{item.createAt}}</view>
-			</view>
-			<text class="remark">累积收益:</text>
-			<text class="amount">{{item.amount}}</text>
+		<view class="total" v-show="!showType">
+			共{{teamTotal}}位好友
 		</view>
+		<scroll-view scroll-y="true" @scrolltolower="lower()" :style="{height:scrollH+'rpx'}">
+			<view class="list"  v-for="(item, index) in team" :key="index" v-show="!showType">
+				<view style="width: 500rpx;height: 186rpx;position: relative; margin-left: 20rpx;">
+					<view class="user-index">{{index+1}}</view>
+					<image :src="item.avatarUrl" class="img"></image>
+					<view class="userName">{{item.userName | ellipsis}}</view>
+					<view class="createAt">{{item.createAt}}</view>
+				</view>
+				<text class="remark">累积收益:</text>
+				<text class="amount">{{item.amount}}</text>
+			</view>
+		</scroll-view>
+		
 	</view>
 </template>
 
@@ -53,8 +60,14 @@
 				showType:true,
 				showRecomend: false,
 				team:[],
+				teamTotal:0,
 				}
 			},
+		computed:{
+			scrollH(){
+				return this.team.length * 186
+			}
+		},
 			
 		onLoad(option) {
 			this.wxGetUserInfo();
@@ -67,12 +80,40 @@
 			} else {
 				this.getRecomend();
 			}
+			api.getListTotal().then(res=>{
+				this.teamTotal = res.data.data
+			})
 			this.getTeam();
 		},
 
 		methods: {
+			lower() {
+				let start = this.team.length
+				if (start >= this.teamTotal){
+					return
+				}
+				console.log(start);
+				// end 其实是pagesize 懒得改后端了。。。
+				api.getListLimit({start:start, end:12}).then(res => {
+					this.team = [...this.team, ...res.data.data]
+					if (this.team.length == 0) {
+						this.showType = true;
+						return;
+					} else {
+						this.showType = false;
+					}
+				
+					this.team.forEach(item => {
+						if (item.amount == null) {
+							item.amount = '0.00'
+						}
+					});
+				}).catch(err => {
+					console.log(err)
+				})
+			},
 			getTeam() {
-				api.getList().then(res => {
+				api.getListLimit({start:0, end:12}).then(res => {
 					this.team = res.data.data;
 					if (this.team.length == 0) {
 						this.showType = true;
@@ -142,7 +183,7 @@
 		border-radius: 10rpx;
 		position: absolute;
 		top: 45rpx;
-		left: 40rpx;
+		left: 50rpx;
 		width: 90rpx;
 		height: 90rpx;
 	}
@@ -168,13 +209,31 @@
 		font-weight: bold;
 	}
 	
+	.total{
+		color: #909090;
+		width: 100%;
+		text-align: center;
+		height: 40rpx;
+		line-height: 40rpx;
+		font-size: 24rpx;
+		position: fixed;
+		z-index: 1000;
+		background-color: white;
+	}
+	
 	.createAt {
 		width: 320rpx;
 		position: relative;
-		top: 100rpx;
-		left: 140rpx;
+		bottom: 80rpx;
+		left: 150rpx;
 		font-size: 24rpx;
 		color: #CCCCCC;
+	}
+	
+	.user-index{
+		height: 186rpx;
+		line-height: 186rpx;
+		color: #909090;
 	}
 	
 	.userName {
@@ -184,7 +243,7 @@
 		color: #333333;
 		position: absolute;
 		top: 40rpx;
-		left: 140rpx;
+		left: 150rpx;
 	}
 
 	.noIncome {

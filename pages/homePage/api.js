@@ -27,6 +27,10 @@ export class api{
   	  return minRequest.get('/api/WCPCommodityInfo/getCommodityList', userAndLocalMes)
   } 
   
+  static getClassification(data){
+  	  return minRequest.get('/api/WCPCommodityInfo/getClassification',data)
+  }
+  
   /**
    * 获取地址列表
    */
