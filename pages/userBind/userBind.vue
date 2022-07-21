@@ -1,39 +1,46 @@
 <template>
-	<view>
-		<view class="row topRow">
-			<input class="input" 
-			type="text" 
-			v-model="user.userAccount" 
-			placeholder="请输入电话" 
-			placeholder-class="placeholder"  />
-		</view>
-		<view class="row">
-			<input class="input" 
-			v-show="!isShowEye"
-			v-model="user.userName" 
-			type="password"
-			password="true"
-			placeholder="请输入密码" 
-			placeholder-class="placeholder"  />
-			
-			<input class="input"
-			v-show="isShowEye"
-			v-model="user.userName" 
-			type="text"
-			placeholder="请输入密码" 
-			placeholder-class="placeholder"  />
-			<image class="eyes" src="../../static/hidePassword.png" v-show="isShowEye" @click="changeEye"></image>
-			<image class="eyes" src="../../static/showPassword.png" v-show="!isShowEye" @click="changeEye"></image>
-		</view>
-		<view class="warning">
-			<text class="warning">{{warning}}</text>
-		<button class="add-btn" @click="confirm">确认绑定</button>
-		</view>
-		<!-- <view class="register-section">
-			还没有账号?
-			<text class="regist" @click="toRegist">马上注册</text> -->	
-		</view>
-	</view>
+<!--	<view>-->
+<!--		<view class="row topRow">-->
+<!--			<input class="input" -->
+<!--			type="text" -->
+<!--			v-model="user.userAccount" -->
+<!--			placeholder="请输入电话" -->
+<!--			placeholder-class="placeholder"  />-->
+<!--		</view>-->
+<!--		<view class="row">-->
+<!--			<input class="input" -->
+<!--			v-show="!isShowEye"-->
+<!--			v-model="user.userName" -->
+<!--			type="password"-->
+<!--			password="true"-->
+<!--			placeholder="请输入密码" -->
+<!--			placeholder-class="placeholder"  />-->
+<!--			-->
+<!--			<input class="input"-->
+<!--			v-show="isShowEye"-->
+<!--			v-model="user.userName" -->
+<!--			type="text"-->
+<!--			placeholder="请输入密码" -->
+<!--			placeholder-class="placeholder"  />-->
+<!--			<image class="eyes" src="../../static/hidePassword.png" v-show="isShowEye" @click="changeEye"></image>-->
+<!--			<image class="eyes" src="../../static/showPassword.png" v-show="!isShowEye" @click="changeEye"></image>-->
+<!--		</view>-->
+<!--		<view class="warning">-->
+<!--			<text class="warning">{{warning}}</text>-->
+<!--		<button class="add-btn" @click="confirm">确认绑定</button>-->
+<!--		</view>-->
+<!--		<view class="register-section">-->
+<!--			还没有账号?-->
+<!--			<text class="regist" @click="toRegist">马上注册</text>-->
+<!--		</view>-->
+<!--	</view>-->
+  <button class="contact" open-type="contact">
+  	<view class="buyView" style="background-color: #06C1AE;color: white;">
+  		<image style="width: 31rpx;height: 30rpx;margin-right: 10rpx;" src="../../static/product/server.png"></image>
+  		<text style="font-size: 30rpx;margin-left: 0.5rem;">联系客服</text>
+  	</view>
+  </button>
+  
 </template>
 
 <script>
@@ -102,11 +109,11 @@
 			changeEye(){
 				this.isShowEye=!this.isShowEye;
 			},
-			// toRegist(){
-			// 	uni.navigateTo({
-			// 		url: `/pages/userBind/regist`
-			// 	})
-			// }
+			toRegist(){
+				uni.navigateTo({
+					url: `/pages/userBind/regist`
+				})
+			}
 		}
 	}
 </script>
@@ -168,5 +175,14 @@
 	.eyes{
 		width: 40rpx;
 		height: 25rpx;
+	}
+	.contact{
+		position: absolute;
+		padding: 0 2rem;
+		background-color: #06C1AE;
+		color: white;
+		left: 50%;
+		top: 50%;
+		transform: translate(-50%,-50%);
 	}
 </style>

@@ -11,7 +11,7 @@
 				<view class="list" v-if="item.amount!=0" v-for="(item, index) in income" :key="index">
 					<view style="width: 500rpx;height: 186rpx;position: relative">
 						<image src="../../static/income/fanIncome.png" class="img"></image>
-						<view class="remark">{{item.remark}}</view>
+						<view class="remark">{{item.remark || '--'}}</view>
 						<view class="number">{{item.userName}}</view>
 						<view class="updateAt">{{item.createAt}}</view>
 					</view>

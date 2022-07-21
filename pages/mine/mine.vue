@@ -3,8 +3,8 @@
 			<view class="head">
 				<view class="subHead">
 					<image :style="{display:loginState == true ? 'block' :'none' }" class="photo" :src="user.photo"></image>
-					<text :style="{display:loginState == true ? 'block' :'none',top:bindingIdState == true ? '10rpx' :'30rpx' }" class="name">{{user.name}}</text>
-					<text :style="{display:bindingIdState == true ? 'block' :'none' }" class="bindAccount">{{user.account}}</text>
+					<text :style="{display:loginState == true ? 'block' :'none' }" class="name">{{user.name}}</text>
+					<!-- <text :style="{display:bindingIdState == true ? 'block' :'none' }" class="bindAccount">{{user.account}}</text> -->
 					<image :style="{display:loginState == true ? 'none' :'block' }" class="photo" :src="logn.photo" @click="getLogin()"></image>
 					<text :style="{display:loginState == true ? 'none' :'block' }" class="loginName" @click="getLogin()">{{logn.name}}</text>
 					<view class="scan" :style="{display:isShop == 1 ? 'block' : 'none' }">
@@ -202,13 +202,25 @@
 					console.log('...授权...')
 				    let _this = this;
 					let bindingId = uni.getStorageSync('bindingId');
-					if(bindingId!=null && bindingId!=''){
+					if(bindingId && bindingId!=''){
 					   this.bindingIdState = true;
 					}else{
 					   this.bindingIdState = false;
 					}
 					console.log(this.bindingIdState)
 					
+					let userInfo = uni.getStorageSync('USER_PROFILE');
+					
+					if(userInfo){
+						_this.user.name = userInfo.nickName;
+						_this.user.photo = userInfo.avatarUrl;
+					} else {
+						this.getUserProfile();
+					}
+				},
+					
+				getUserProfile(){
+					let _this = this;
 					uni.showModal({
 						  title: '温馨提示',
 						  content: '授权微信登录获取用户头像昵称',
@@ -589,7 +601,7 @@
 		display: inline-block;
 		color: #FFFFFF;
 		position: absolute;
-		/* top:30rpx; */
+		top:30rpx;
 		left: 148.6rpx;
 		font-size: 32rpx;
 	}

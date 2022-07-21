@@ -66,10 +66,13 @@
 			<rich-text style="width: 100%;" :nodes="bottomImg"></rich-text>
 		</view>
 		<view class="bottom" v-if="!deliveryFlag">
-			<view @click="makeCall()" class="buyView" style="background-color: #FFFFFF;">
-				<image style="width: 31rpx;height: 30rpx;margin-right: 10rpx;" src="../../static/product/server.png"></image>
-				<text style="color:rgba(51,51,51,1);font-size: 28rpx;">联系客服</text>
-			</view>
+			<button style="padding: 0;border-radius: 0;" open-type="contact">
+				<view class="buyView" style="background-color: #FFFFFF;">
+					<image style="width: 31rpx;height: 30rpx;margin-right: 10rpx;" src="../../static/product/server.png"></image>
+					<text style="color:rgba(51,51,51,1);font-size: 28rpx;">联系客服</text>
+				</view>
+			</button>
+			
 			<button open-type="getUserInfo" lang="zh_CN" @getuserinfo="reayToBuy()" class="buyView">
 				<text>立即购买</text>
 			</button>

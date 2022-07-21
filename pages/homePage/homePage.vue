@@ -830,7 +830,7 @@
 		padding-left: 5%;
 		padding-right: 5%;
 		width: 90%;
-		padding-bottom: 110rpx;
+		padding-bottom: 400rpx;
 
 		.guess-content {
 			width: 100%;

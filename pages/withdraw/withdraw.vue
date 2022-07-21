@@ -192,17 +192,11 @@
 					if(res.data.code == 200){
 						this.amount = this.amount-this.paymentAmount
 						this.paymentAccount = ''
-						nui.navigateBack({
+						uni.navigateBack({
 							delta:1
 						})
 					}
 					
-				}).catch(_ => {
-					uni.showToast({
-					  title: '网络错误',
-					  icon: 'none',
-					  duration: 4000
-					})
 				})
 			}
 		}

@@ -65,7 +65,10 @@
             "scope.userLocation" : {
                 "desc" : "你的位置信息将用于获取附近门店"
             }
-        }
+        },
+		"requiredPrivateInfos": [
+			"getLocation"
+		]
     },
     "mp-alipay" : {
         "usingComponents" : true

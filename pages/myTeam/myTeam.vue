@@ -5,6 +5,7 @@
 			<view style="display: flex;align-items: center;">
 				<image :src="recomend.avatarUrl" style="margin-left: 60rpx;width: 90rpx;height: 90rpx;border-radius: 10rpx;"></image>
 				<view class="name">{{recomend.userName}}</view>
+				<view class="rec-bindingId">{{recomend.bindingPhone || '--' | ellipsisAccount}}</view>
 			</view>
 			<view class="recomendTag">我的推荐人</view>
 		</view>
@@ -20,6 +21,7 @@
 					<view class="user-index">{{index+1}}</view>
 					<image :src="item.avatarUrl" class="img"></image>
 					<view class="userName">{{item.userName | ellipsis}}</view>
+					<view class="bindingId">{{item.bindingPhone || '--' | ellipsisAccount}}</view>
 					<view class="createAt">{{item.createAt}}</view>
 				</view>
 				<text class="remark">累积收益:</text>
@@ -42,6 +44,13 @@
 				if (!value) return ''
 				if (value.length > 7) {
 					return value.slice(0, 7) + '...'
+				}
+				return value
+			},
+			ellipsisAccount(value) {
+				if (!value) return ''
+				if (value.length > 18) {
+					return value.slice(0, 18) + '...'
 				}
 				return value
 			}
@@ -193,6 +202,7 @@
 		letter-spacing: 3rpx;
 		font-size: 30rpx;
 		color: #333333;
+		transform: translateY(-30rpx);
 	}
 	
 	.remark{
@@ -216,7 +226,6 @@
 		height: 40rpx;
 		line-height: 40rpx;
 		font-size: 24rpx;
-		position: fixed;
 		z-index: 1000;
 		background-color: white;
 	}
@@ -224,8 +233,8 @@
 	.createAt {
 		width: 320rpx;
 		position: relative;
-		bottom: 80rpx;
-		left: 150rpx;
+		bottom: 70rpx;
+		left: 50rpx;
 		font-size: 24rpx;
 		color: #CCCCCC;
 	}
@@ -265,11 +274,27 @@
 	}
 
 	.recomendView {
-
+		position: relative;
 		width: 100vw;
 		height: 150rpx;
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
+	}
+	
+	.bindingId{
+		position: relative;
+		bottom: 80rpx;
+		left: 150rpx;
+		font-size: 24rpx;
+		color: #9c9c9c;
+	}
+	
+	.rec-bindingId{
+		position: absolute;
+		bottom: 30rpx;
+		left: 160rpx;
+		font-size: 24rpx;
+		color: #9c9c9c;
 	}
 </style>
