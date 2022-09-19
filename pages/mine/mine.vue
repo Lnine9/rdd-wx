@@ -60,6 +60,7 @@
 					</view>
 				</view>
 			</view>
+			
 			<uni-popup ref="popup"  type="center" maskClick="true">
 				<view class="popUp">
 					<text class="popupCodeName" >电子码：{{code.electronicCode}}</text>
@@ -160,6 +161,7 @@
 				// api.getTotalVIP().then(res => {
 				// 	this.totalVIP = res.data.data;
 				// })
+				
 			},
 			//下拉刷新
 			onPullDownRefresh(){

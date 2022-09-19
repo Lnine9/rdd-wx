@@ -141,6 +141,15 @@
 				"navigationBarBackgroundColor": "#EAEAEA"	
 			}
 		}
+        ,{
+            "path" : "pages/h5/h5",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+            
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle":"black",

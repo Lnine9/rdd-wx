@@ -39,6 +39,9 @@
 				<swiper-item v-for="(item, index) in carouselList" :key="index" class="carousel-item" @click="navToWebView(item)">
 					<image :src="item.savePath" />
 				</swiper-item>
+				<swiper-item style="display: flex;align-items: center;background: rgb(183, 183, 183);">
+					<ad unit-id="adunit-06cb62ad22815b23"></ad>
+				</swiper-item>
 			</swiper>
 		</view>
 
@@ -160,6 +163,26 @@
 
 			// 计算轮播图高度并存储
 			this.swiperHeight = (2 * this.navHeight + this.status) * 7 / 3;
+			
+			// 在页面中定义插屏广告
+			let interstitialAd = null
+			
+			// 在页面onLoad回调事件中创建插屏广告实例
+			if (wx.createInterstitialAd) {
+			  interstitialAd = wx.createInterstitialAd({
+			    adUnitId: 'adunit-55e568586015fbe2'
+			  })
+			  interstitialAd.onLoad(() => {})
+			  interstitialAd.onError((err) => {})
+			  interstitialAd.onClose(() => {})
+			}
+			
+			// 在适合的场景显示插屏广告
+			if (interstitialAd) {
+			  interstitialAd.show().catch((err) => {
+			    console.error(err)
+			  })
+			}
 		},
 		// 向下滑动刷新
 		onReachBottom() {
@@ -257,11 +280,20 @@
 			},
 			// 选中
 			choose: function(item) {
-				//测试数据没有写id，用title代替
-				let id = item.commodityId;
-				uni.navigateTo({
-					url: `/pages/product/product?id=${id}`,
-				});
+				if(item.jumpto?.substr(0,5) === 'https'){
+					console.log(item.jumpto);
+					this.list = []
+					uni.navigateTo({
+						url:'/pages/h5/h5?url='+encodeURIComponent(item.jumpto)
+					})
+				} else {
+					//测试数据没有写id，用title代替
+					let id = item.commodityId;
+					uni.navigateTo({
+						url: `/pages/product/product?id=${id}`,
+					});
+				}
+				
 			},
 			// 加载数据
 			getList: function() {
@@ -349,6 +381,14 @@
 							uni.setStorageSync('loginState', true);
 						} else {
 							uni.setStorageSync('loginState', false);
+							// uni.showToast({
+							// 	title:'请先进行登录',
+							// 	icon:"none",
+							// 	duration: 1000,
+							// })
+							// uni.navigateTo({
+							//   url: `/pages/index/index`
+							// })
 						}
 
 						console.log(uni.getStorageSync('loginState'))
@@ -461,6 +501,7 @@
 					commodityTitle:'',
 					pageSize:12,
 					page:1,
+					showPlace: 'Guess',
 				};
 				// api.getProducts(userAndLocalMes_1)
 				api.getClassification(valueArr).then(res => {

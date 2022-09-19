@@ -185,12 +185,20 @@
 			},
 			// 选中
 			choose(item) {
-				//测试数据没有写id，用title代替
-				let id = item.commodityId;
-				uni.navigateTo({
-					url: `/pages/product/product?id=${id}`,
-				})
-				this.list=[];
+				if(item.jumpto?.substr(0,5) === 'https'){
+					console.log(item.jumpto);
+					this.list = []
+					uni.navigateTo({
+						url:'/pages/h5/h5?url='+encodeURIComponent(item.jumpto)
+					})
+				} else {
+					//测试数据没有写id，用title代替
+					let id = item.commodityId;
+					uni.navigateTo({
+						url: `/pages/product/product?id=${id}`,
+					})
+					this.list=[];
+				}
 			},
 			change(index){
 				this.valueArr.content=this.tabBars[index];

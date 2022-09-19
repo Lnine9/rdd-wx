@@ -8,4 +8,7 @@ export class api{
   static getWallet(data){
   	  return minRequest.get('/api/AppPersonalCenter/getUserIncomeInfo', data)
   }
+  static getMoreIncomeHelp(){
+	  return minRequest.get('/api/AppPersonalCenter/getMoreIncomeHelp')
+  }
 }

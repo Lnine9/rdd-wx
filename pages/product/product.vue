@@ -16,7 +16,7 @@
 		</view>
 
 		<view class="introduce-section">
-			<text class="title">{{dataDic.commodityTitle}}</text>
+			<text class="title" selectable="true">{{dataDic.commodityTitle}}</text>
 			<view class="price-box">
 				<view style="display: block;">
 					<text class="price">{{"￥" + dataDic.salePrice}}</text>
@@ -99,6 +99,7 @@
 					<view class="selected-attr-container">
 						<text class="selected-attr-txt" style="color: #333333;" v-if="dataDic.limitedType === 3 || dataDic.limitedType === 2">商品限购:{{dataDic.idLimitedNum}}件</text>
 						<text class="selected-attr-txt" style="color: #333333;" v-if="dataDic.limitedType === 1 || dataDic.limitedType === 3">今日限购:{{dataDic.limitedNum}}件</text>
+            <text class="selected-attr-txt" style="color: #333333;" v-if="dataDic.limitedType === 4">本月限购:{{dataDic.limitedNum}}件</text>
 					</view>
 
 					<view class="price-container">
@@ -399,7 +400,10 @@
 				if (loginState == true) {
 					this.deliveryFlag = true;
 				} else {
-					this.wxGetUserInfo();
+				  uni.navigateTo({
+					url: `/pages/index/index`
+				  })
+					// this.wxGetUserInfo();
 					// this.$refs.loginPopUp.open();
 				}
 			},
@@ -431,7 +435,10 @@
 			loginUpdate: function() {
 				this.loginTipShow = false;
 
-				this.wxGetUserInfo();
+				uni.navigateTo({
+				  url: `/pages/index/index`
+				})
+				// this.wxGetUserInfo();
 			},
 			getData: function(commodityId) {
 				uni.showLoading({
@@ -561,10 +568,25 @@
 				this.buyLogin = true;
 				this.shareLogin = false;
 				let loginState = uni.getStorageSync("loginState");
+				let _this = this;
 				if (loginState == true) {
-					this.isBuy = true
+					uni.showModal({
+						title: '购买须知',
+						content: '!!!购买产品前请确保阅读商品介绍!!!',
+						confirmColor:'#ff0000',
+						success(res) {
+							//如果用户点击了确定按钮
+							if (res.confirm) {
+								_this.isBuy = true
+							}
+						}
+					});
+					
 				} else {
-					this.wxGetUserInfo();
+					uni.navigateTo({
+						url: `/pages/index/index`
+					})
+					// this.wxGetUserInfo();
 					// this.$refs.loginPopUp.open();
 				}
 			},
@@ -601,13 +623,13 @@
 				})
 			},
 			buy: function() {
-				if(this.buyNum > 2){
-					uni.showToast({
-						title: '商品一次性购买不能超过2个',
-						icon: 'none',
-					});
-					return;
-				}
+				// if(this.buyNum > 2){
+				// 	uni.showToast({
+				// 		title: '商品一次性购买不能超过2个',
+				// 		icon: 'none',
+				// 	});
+				// 	return;
+				// }
 				api.getLimited({
 					commodityId: this.commodityId,
 					commodityNum:this.buyNum
@@ -636,83 +658,83 @@
 			},
 			...mapMutations(['login']),
 			//第一授权获取用户信息===》按钮触发
-			wxGetUserInfo: function() {
-				let _this = this;
-				uni.getUserInfo({
-					provider: 'weixin',
-					success: function(infoRes) {
-						let nickName = infoRes.userInfo.nickName; //昵称
-						_this.nickName = nickName;
-						let avatarUrl = infoRes.userInfo.avatarUrl; //头像
-						_this.avatarUrl = avatarUrl;
-						uni.base
-						try {
-							uni.setStorageSync('isCanUse', false); //记录是否第一次授权  false:表示不是第一次授权
-							_this.loginWx();
-						} catch (e) {
-							console.error(e)
-						}
-					},
-					fail(res) {
-						uni.showModal({
-							content: '获取用户信息失败',
-							showCancel: true
-						});
-					}
-				});
-			},
+			// wxGetUserInfo: function() {
+			// 	let _this = this;
+			// 	uni.getUserInfo({
+			// 		provider: 'weixin',
+			// 		success: function(infoRes) {
+			// 			let nickName = infoRes.userInfo.nickName; //昵称
+			// 			_this.nickName = nickName;
+			// 			let avatarUrl = infoRes.userInfo.avatarUrl; //头像
+			// 			_this.avatarUrl = avatarUrl;
+			// 			uni.base
+			// 			try {
+			// 				uni.setStorageSync('isCanUse', false); //记录是否第一次授权  false:表示不是第一次授权
+			// 				_this.loginWx();
+			// 			} catch (e) {
+			// 				console.error(e)
+			// 			}
+			// 		},
+			// 		fail(res) {
+			// 			uni.showModal({
+			// 				content: '获取用户信息失败',
+			// 				showCancel: true
+			// 			});
+			// 		}
+			// 	});
+			// },
 			//登录
-			loginWx: function() {
-				let _this = this;
-				uni.showLoading({
-					title: '登录中...'
-				});
-				// 1.wx获取登录用户code
-				uni.login({
-					provider: 'weixin',
-					success: function(loginRes) {
-						if (!_this.isCanUse) {
-							//非第一次授权获取用户信息
-							uni.getUserInfo({
-								provider: 'weixin',
-								success: function(infoRes) {
-									//获取用户信息后向调用信息更新方法
-									let nickName = infoRes.userInfo.nickName; //昵称
-									_this.nickName = nickName;
-									let avatarUrl = infoRes.userInfo.avatarUrl; //头像
-									_this.avatarUrl = avatarUrl;
-								}
-							});
-						}
-						//2.将用户登录code传递到后台置换用户SessionKey、OpenId等信息
-						let loginParam = {
-							code: loginRes.code,
-							nickName: _this.nickName,
-							avatarUrl: _this.avatarUrl,
-							// superiorUser: _this.superiorUser
-							superiorUser: uni.getStorageSync('superiorUser') || null
-						}
-						api.getData(loginParam).then(res => {
-							_this.loginSuccess(res.data.token)
-						}).catch(err => {
-							console.log(err)
-						})
-					},
-				});
-			},
-			//登录成功后跳转到首页
-			loginSuccess: function(data) {
-				this.login(data);
-				uni.setStorageSync('loginState', true);
-				uni.hideLoading();
+			// loginWx: function() {
+			// 	let _this = this;
+			// 	uni.showLoading({
+			// 		title: '登录中...'
+			// 	});
+			// 	// 1.wx获取登录用户code
+			// 	uni.login({
+			// 		provider: 'weixin',
+			// 		success: function(loginRes) {
+			// 			if (!_this.isCanUse) {
+			// 				//非第一次授权获取用户信息
+			// 				uni.getUserInfo({
+			// 					provider: 'weixin',
+			// 					success: function(infoRes) {
+			// 						//获取用户信息后向调用信息更新方法
+			// 						let nickName = infoRes.userInfo.nickName; //昵称
+			// 						_this.nickName = nickName;
+			// 						let avatarUrl = infoRes.userInfo.avatarUrl; //头像
+			// 						_this.avatarUrl = avatarUrl;
+			// 					}
+			// 				});
+			// 			}
+			// 			//2.将用户登录code传递到后台置换用户SessionKey、OpenId等信息
+			// 			let loginParam = {
+			// 				code: loginRes.code,
+			// 				nickName: _this.nickName,
+			// 				avatarUrl: _this.avatarUrl,
+			// 				// superiorUser: _this.superiorUser
+			// 				superiorUser: uni.getStorageSync('superiorUser') || null
+			// 			}
+			// 			api.getData(loginParam).then(res => {
+			// 				_this.loginSuccess(res.data.token)
+			// 			}).catch(err => {
+			// 				console.log(err)
+			// 			})
+			// 		},
+			// 	});
+			// },
+			// //登录成功后跳转到首页
+			// loginSuccess: function(data) {
+			// 	this.login(data);
+			// 	uni.setStorageSync('loginState', true);
+			// 	uni.hideLoading();
 
-				// 根据标识，继续之后的操作
-				if (this.buyLogin && !this.shareLogin) {
-					this.isBuy = true
-				} else if (this.shareLogin = true && !this.buyLogin) {
-					this.deliveryFlag = true;
-				}
-			},
+			// 	// 根据标识，继续之后的操作
+			// 	if (this.buyLogin && !this.shareLogin) {
+			// 		this.isBuy = true
+			// 	} else if (this.shareLogin = true && !this.buyLogin) {
+			// 		this.deliveryFlag = true;
+			// 	}
+			// },
 
 			// 关闭分享返佣的图片
 			closeRebate: function() {
@@ -749,6 +771,11 @@
 			}
 			// 获取登录状态
 			let loginState = uni.getStorageSync('loginState');
+			if(!loginState){
+				uni.navigateTo({
+				  url: `/pages/index/index`
+				})
+			}
 			if (params.scene) { // 二维码解析进入
 				// 获取scene中的数据
 				let scene = decodeURIComponent(params.scene);
@@ -816,6 +843,7 @@
 			url('//at.alicdn.com/t/font_1065286_3bsye5aijur.ttf') format('truetype'),
 			url('//at.alicdn.com/t/font_1065286_3bsye5aijur.svg#font_family') format('svg');
 	}
+
 
 	.font_family {
 		font-family: "font_family" !important;

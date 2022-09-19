@@ -154,9 +154,14 @@
 				console.info(data)
 				this.login(data);
 				uni.setStorageSync('loginState', true);
-				uni.reLaunch({
-					url: '/pages/homePage/homePage'
-				})
+				console.log(getCurrentPages().length);
+				if(getCurrentPages().length === 1){
+					uni.reLaunch({
+						url: '/pages/homePage/homePage'
+					})
+				}else{
+					uni.navigateBack()
+				}
 			},
 			onLoad(options) {
 				console.log('父级' + options)

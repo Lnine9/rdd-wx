@@ -427,6 +427,18 @@
 							case 2:
 								this.order.orderStateShow = '已完成';
 								break;
+              case 7:
+                this.order.orderStateShow = '充值中';
+                this.statusStyle = "color: #06C1AE";
+                break;
+              case 8:
+                this.order.orderStateShow = '已退款';
+                this.statusStyle = "color: #06C1AE";
+                break;
+              case 9:
+                this.order.orderStateShow = '充值失败';
+                this.statusStyle = "color: #06C1AE";
+                break;
 							default:
 								this.order.orderStateShow = '待处理';
 								this.statusStyle = "color: #06C1AE";

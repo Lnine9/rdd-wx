@@ -5,22 +5,45 @@
 				<image class="backImg" src="../../static/wallet/incomeBack.png"></image>
 				<view class="incomeType">总收益</view>
 				<view class="theIncome">{{wallet.totalIncome.toFixed(2)}}
-					<text style="font-size: 28rpx;margin-left: 15rpx;">元</text>
+					<text style="font-size: 35rpx;margin-left: 15rpx;">元</text>
 				</view>
 			</view>
 			<view class="right">
 				<image class="backImg" src="../../static/wallet/balance.png"></image>
 				<view class="incomeType">余额</view>
 				<view class="theIncome">{{wallet.blance.toFixed(2)}}
-					<text style="font-size: 28rpx;margin-left: 15rpx;">元</text>
+					<text style="font-size: 35rpx;margin-left: 15rpx;">元</text>
 				</view>
 			</view>
 		</view>
 		<view class="incomes" @click="toIncome(0)">
 			<view class="income">
-				<image class="incomePic" src='../../static/wallet/share.png'></image>分享下单收益 （元）
+				<image class="incomePic" src='../../static/wallet/share.png'></image>会员分享下单收益 （元）
 			</view>
 			<text class="text">{{wallet.fanyongIncome.toFixed(2)}}</text>
+			<image class="arrow" src="../../static/wallet/arrow.png"></image>
+		</view>
+<!-- 		<view class="incomes" @click="toIncome(9)">
+			<view class="income">
+				<image class="incomePic" src='../../static/wallet/share.png'></image>其他
+			</view>
+			<text class="text">{{wallet.otherIncome.toFixed(2)}}</text>
+			<image class="arrow" src="../../static/wallet/arrow.png"></image>
+		</view> -->
+		
+		<view class="incomes" @click="moreIncome()">
+			<view class="income">
+				<icon class="incomePic" type="waiting"></icon></image> 升级个人代理预计奖励（元）
+			</view>
+			<text class="text">{{wallet.moreIncome?wallet.moreIncome.toFixed(2):0}}</text>
+			<image class="arrow" src="../../static/wallet/arrow.png"></image>
+		</view>
+		
+		<view class="incomes" @click="moreIncome()">
+			<view class="income">
+				<icon class="incomePic" type="waiting"></icon></image> 邀请个人代理预计奖励（元）
+			</view>
+			<text class="text">{{wallet.moreIncome2?wallet.moreIncome2.toFixed(2):0}}</text>
 			<image class="arrow" src="../../static/wallet/arrow.png"></image>
 		</view>
 
@@ -44,8 +67,11 @@
 					totalIncome: 0,
 					shareIncome: 0,
 					fanyongIncome: 0,
-					otherIncome: 0
-				}
+					otherIncome: 0,
+					moreIncome: 0,
+					moreIncome2: 0,
+				},
+				moreIncomeHelp: '',
 			}
 		},
 
@@ -56,6 +82,13 @@
 
 		// 页面的跳转
 		methods: {
+			moreIncome: function() {
+				const content = this.moreIncomeHelp?this.moreIncomeHelp.replace(/<br>/g,"\n"):"";
+				uni.showModal({
+					title:'更多预期收益说明',
+					content:content,
+				})
+			},
 			// 下拉刷新
 			onPullDownRefresh: function() {
 				wx.showNavigationBarLoading() //在标题栏中显示加载
@@ -80,6 +113,9 @@
 
 			// 后端数据的返回
 			getInfo() {
+				api.getMoreIncomeHelp().then(res=>{
+					this.moreIncomeHelp = res.data.data;
+				}).catch(()=>{})
 				api.getWallet().then(res => {
 					console.log(res.data.data);
 					if (res.data.data == null) {
@@ -88,6 +124,8 @@
 						this.wallet.shareIncome = 0;
 						this.wallet.fanyongIncome = 0;
 						this.wallet.otherIncome = 0;
+						this.wallet.moreIncome = 0;
+						this.wallet.moreIncome2 = 0;
 					} else {
 						this.wallet = res.data.data;
 					}
@@ -205,12 +243,13 @@
 		margin: 50rpx 0 0 50rpx;
 		font-size: 35rpx;
 		color: #FFFFFF;
+		display: flex;
 	}
 
 	.text {
 		margin-right: 30rpx;
 		line-height: 130rpx;
-		font-size: 30rpx;
+		font-size: 25rpx;
 		font-family:  ;
 		font-weight: 500;
 		color: rgba(102, 102, 102, 1);
