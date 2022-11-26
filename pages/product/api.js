@@ -25,4 +25,8 @@ export class api{
   static getLimited(params) {
   	  return minRequest.post('/api/WeChatAppletPaymentVip/getLimited', params)
   }
+  
+  static getCurrentPintuanMoney(id){
+  	  return minRequest.get('/api/WCPCommodityInfo/getCurrentPintuanMoney', {commodityId: id} )
+  }
 }

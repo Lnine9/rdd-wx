@@ -39,9 +39,6 @@
 				<swiper-item v-for="(item, index) in carouselList" :key="index" class="carousel-item" @click="navToWebView(item)">
 					<image :src="item.savePath" />
 				</swiper-item>
-				<swiper-item style="display: flex;align-items: center;background: rgb(183, 183, 183);">
-					<ad unit-id="adunit-06cb62ad22815b23"></ad>
-				</swiper-item>
 			</swiper>
 		</view>
 
@@ -499,7 +496,7 @@
 					latitude: uni.getStorageSync('latitude'),
 					longitude: uni.getStorageSync('longitude'),
 					commodityTitle:'',
-					pageSize:12,
+					pageSize:24,
 					page:1,
 					showPlace: 'Guess',
 				};
@@ -512,6 +509,7 @@
 					this.getList();
 				}).catch(err => {
 					uni.stopPullDownRefresh();
+					
 					console.log(err);
 					this.guessList = [];
 					this.showNoGuess = true;

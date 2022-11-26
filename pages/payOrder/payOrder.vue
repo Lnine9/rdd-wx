@@ -70,7 +70,7 @@
 		<!-- 输入备注 -->
 		<view class="remark-container">
 			<text class="remark-text">备注</text>
-			<input class="remark-input" placeholder="选填，输入订单相关的备注" v-model="remark" />
+			<textarea rows="3" class="remark-input" placeholder="选填，输入订单相关的备注" v-model="remark" />
 		</view>
 
 		<!-- 支付按钮与价格 -->
@@ -533,27 +533,27 @@
 	}
 
 	.remark-container {
-		display: flex;
-		flex-direction: row;
 		margin-top: 15rpx;
 		width: 100%;
-		height: 115rpx;
 		background: #FFFFFF;
 		font-size: 30rpx;
 	}
 
 	.remark-text {
-		flex: 20%;
 		font-weight: 500;
-		margin: auto 10rpx auto 30rpx;
+		display: block;
+		margin: 10rpx 10rpx 20rpx 40rpx;
 		color: #303038;
 	}
 
 	.remark-input {
-		flex: 80%;
 		font-size: 30rpx;
-		text-align: right;
-		margin: auto 20rpx auto 0;
+		width: auto;
+		margin: 0 30rpx 0 30rpx;
+		display: block;
+		box-sizing: border-box;
+		padding: 15rpx 20rpx;
+		background: #f3f3f3;
 	}
 
 	.pay-btn-container {

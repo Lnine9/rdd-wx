@@ -29,6 +29,12 @@
 			</view>
 
 		</view>
+		<view v-show="isPintuan" class="c-list progress">
+			<view class="progress-bar">
+				<text class="progress-info">拼团进度:{{`${currentPintuanMoney}/${pintuanTarget}`}}</text>
+			    <view class="progress-bg" :style="{width: `${process * 100}%`}"></view>
+			</view>
+		</view>
 		<view class="c-list">
 			<view class="c-row b-b" @click="navToShop">
 				<view class="con-list">
@@ -236,6 +242,11 @@
 				showSaleImageUrl: '', // 用户准备购买时展示的商品图片
 
 				code: '', // 商品分享二维码
+				process: 0,
+				currentPintuanMoney: 0,
+				isPintuan: false,
+				pintuanTarget: 0,
+				timer: undefined,
 			};
 		},
 		components: {
@@ -297,6 +308,19 @@
 			...mapState(['token'])
 		},
 		methods: {
+			
+			getCurrentPintuanMoney: function() {
+				const _this = this;
+				api.getCurrentPintuanMoney(this.commodityId).then(res => {
+					if(res.data.data && _this.pintuanTarget && res.data.data < _this.pintuanTarget){
+						_this.process = res.data.data / _this.pintuanTarget;
+						_this.currentPintuanMoney = res.data.data;
+					}
+				}).catch(e => {
+					console.error(e);
+					_this.isPintuan = false;
+				})
+			},
 			// 商品加载完成的回调
 			commodityImageLoad: function () {
 
@@ -470,6 +494,18 @@
 
 					console.log('商品图片');
 					console.log(this.dataDic.commodityImg[0]);
+					
+					// 是否拼团
+					
+					if (this.dataDic.pintuanTarget){
+						this.isPintuan = true;
+						this.pintuanTarget = this.dataDic.pintuanTarget;
+						this.getCurrentPintuanMoney();
+					} else {
+						this.isPintuan = false;
+					}
+					
+					console.log(this.isPintuan);
 
 					// 设置商品属性
 					this.attrValueList = res.data.data.attrs;
@@ -812,6 +848,9 @@
 				this.commodityId = params.id;
 				this.getData(this.commodityId);
 			}
+			const _this = this;
+			// 拼团信息
+			this.timer = setInterval(()=>{_this.getCurrentPintuanMoney()}, 15 * 1000);
 
 			// 获取海报所需要的数据
 			this.getHchImage();
@@ -828,6 +867,9 @@
 				imageUrl: this.titleImg[0]
 			}
 		},
+		destroyed: function() {
+			clearInterval(this.timer)
+		}
 	}
 </script>
 
@@ -1643,5 +1685,36 @@
 		line-height: 80rpx;
 		font-size: 28rpx;
 		color: #06C1AE;
+	}
+	.progress{
+		width: 100%;
+		height: 20px;
+		display: flex;
+		justify-content: center;
+		position: relative;
+		color: #4d4d4d;
+	}
+	.progress-info{
+		font-size: 16px;
+		position: absolute;
+		left: 50%;
+		transform: translateX(-50%);
+	}
+	.progress-bar{
+	  width: 85%;
+	  height: 20px;
+	  overflow: hidden;
+	  box-sizing: border-box;
+	  border-radius: 24px;
+	  background-color: rgba(177, 177, 177, 0.2);
+	  position: relative;
+	}
+	.progress-bg{
+	  height: 100%;
+	  overflow: hidden;
+	  box-sizing: border-box;
+	  background-color: #06C1AE;
+	  border-radius: 24px;
+	  background-size: 20px 100%;
 	}
 </style>
