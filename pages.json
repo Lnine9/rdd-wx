@@ -159,6 +159,14 @@
             }
             
         }
+        ,{
+            "path" : "pages/sqr/sqr",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "检测历史",
+                "enablePullDownRefresh": false
+            }
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle":"black",
@@ -247,6 +255,10 @@
 			{
 				"name": "slogin",
 				"path": "pages/slogin/slogin"
+			},
+			{
+				"name": "sqr",
+				"path": "pages/sqr/sqr"
 			}
 
 		]

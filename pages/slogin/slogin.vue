@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<view class="sun-index">
+		<view class="sun-index" v-if="needbind">
 			<view class="sun-logo-box">
 				<view class="sun-logo">
 					<image class="sun-icon-img" src="@/static/code/scan.png" />
@@ -77,82 +77,120 @@
 				fails: false,
 				msg: '',
 				wxcode: '',
-				wxid: '',
-				needlogin: true,
-				batchId: null,
-				historyId: null,
+				wxid: undefined,
+				needlogin: false,
+				needbind: false,
+				historyId: undefined,
 			}
 		},
+		onLoad(params) {
+			console.log('初始参数');
+			console.log(params);
+			if (params.scene) { // 二维码解析进入
+				// 获取scene中的数据
+				let scene = decodeURIComponent(params.scene);
+				console.log(scene);
+				this.historyId = scene
+				if (!this.historyId) {
+					uni.showToast({
+						icon: 'error',
+						title: '二维码信息错误，请重新扫码',
+						duration: 2000
+					})
+					return
+				}
+			}
+			
+		},
+		onShow() {
+			console.log('loading cache wxid');
+			const that = this
+			uni.getStorage({
+			    key: 'swxid',
+			    success: function (res) {
+			        console.log(res.data);
+			        let cachewxid = res.data;
+					if (cachewxid) {
+						that.wxid = cachewxid
+						that.needlogin = false
+					} else {
+						that.needlogin = true
+					}
+					that.scan()
+			    },
+				fail: function (err) {
+					console.log(err);
+					that.needlogin = true
+					that.scan()
+				},
+			});
+		},
 		methods: {
-			onload(params) {
-				if (params.scene) { // 二维码解析进入
-					// 获取scene中的数据
-					let scene = decodeURIComponent(params.scene);
-					let arrPara = scene.split("&");
-					let arr = [];
-					for (let i in arrPara) {
-						arr = arrPara[i].split("=");
-						if (arr[0] === "batchId") { // 商品id
-							this.batchId = arr[1];
-						} else if (arr[0] === "historyId") { // 分享码中的推荐人id
-							this.historyId = arr[1];
-						}
-					}
-					if (!this.batchId || !this.historyId) {
-						uni.showToast({
-							icon: 'error',
-							title: '二维码信息错误，请重新扫码',
-							duration: 2000
-						})
-					}
-				}
-				
-				const cachewxid = localStorage.getItem('s_wxid')
-				if (cachewxid) {
-					this.wxid = cachewxid
-					this.needlogin = false
-				}
-				
-			},
 			scan() {
-				if (this.batchId && this.historyId) {
+				console.log('scaning');
+				console.log(this.historyId);
+				uni.showLoading({
+					title: '正在查询信息...',
+				})
+				const that = this
+				if (this.historyId) {
 					if (!this.wxid){
 						this.needlogin = true;
+						uni.hideLoading()
 						return
 					}
 					api.scan({
-						wechatId: this.wxid,
-						batchId: this.batchId,
-						historyId: this.historyId,
+						wechatId: that.wxid,
+						historyId: that.historyId,
 					}).then(res => {
 						if (res.data.code == 200) {
-							this.success = true
+							that.success = true
+							that.msg = "已完成确认"
+							that.no = res.data.data.studentId
+							that.name = res.data.data.studentName
 						} else {
-							this.fails = true
+							if (res.data.message == '用户未绑定！'){
+								uni.showToast({
+									title: "请绑定信息",
+									icon: 'none'
+								})
+								that.needbind = true
+							} else {
+								that.fails = true
+								that.msg = '确认失败，请重新扫码'
+								if (res.data.data){
+									that.no = res.data.data.studentId
+									that.name = res.data.data.studentName
+									that.msg = res.data.message
+								}
+							}
 						}
 					}).catch(err => {
 						console.log(err);
 						uni.showToast({
-							title: "网络错误，请稍后重试",
+							title: "确认失败，请重新扫码",
 							icon: 'none'
 						})
 					})
 				} else {
 					uni.showToast({
-						icon: 'error',
+						icon: 'none',
 						title: '信息有误，请重新扫码',
-						duration: 2000
+						duration: 3000
 					})
+					that.fails = true
+					that.msg = '信息有误，请重新扫码'
 				}
+				uni.hideLoading()
 			},
 			bind() {
 				console.log('bind');
+				const that = this
 				api.bind({
 					studentName: this.name,
-					studetnId: this.no,
+					studentId: this.no,
 					wechatId: this.wxid,
-					batchId: this.batchId,
-					history: this.historyId,
+					historyId: this.historyId,
 				}).then(res => {
 					console.log(res);
 					if (res.data.code == 200) {
@@ -161,6 +199,7 @@
 							icon: 'success',
 							duration: 1000
 						})
+						this.scan()
 					} else {
 						uni.showToast({
 							title: res.data.message,
@@ -203,11 +242,31 @@
 					provider: "weixin",
 					success(res) {
 						console.log(res);
-						that.wxcode = res.code //拿到的code存储在data中
-						that.needlogin = false
-						uni.showToast({
-							title: '登录成功',
-							duration: 1000
+						that.wxcode = res.code 
+						api.getWxid({
+							code: res.code
+						}).then(res => {
+							console.log(res);
+							if(res.data){
+								that.wxid = res.data
+								uni.setStorage({
+									key: 'swxid',
+									data: res.data,
+								})
+								that.needlogin = false
+								uni.showToast({
+									icon:'none',
+									title: '登录成功，等待确认信息',
+									duration: 1000
+								})
+								setTimeout(that.scan, 1000)
+							} else {
+								uni.showToast({
+									icon:'error',
+									title: '登录失败',
+									duration: 1000
+								})
+							}
 						})
 					},
 					fail(e) {
@@ -336,6 +395,7 @@
 		display: flex;
 		flex-direction: column;
 		align-items: center;
+		width: 70%;
 	}
 
 	.notimsg {

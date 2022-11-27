@@ -7,8 +7,7 @@ class YQRequest {
 
 	[config] = {
 		// baseURL: 'http://127.0.0.1:8899',
-		baseURL: 'https://121.37.98.238:8099',
-		dataType: 'json',
+		baseURL: 'https://renduoduo2019.com:8059',
 	}
 
 	interceptors = {
@@ -46,7 +45,6 @@ class YQRequest {
 
 	request(options = {}) {
 		options.baseURL = options.baseURL || this[config].baseURL
-		options.dataType = options.dataType || this[config].dataType
 		options.url = YQRequest[isCompleteURL](options.url) ? options.url : (options.baseURL + options.url)
 		options.data = options.data
 		options.header = { ...options.header
@@ -72,10 +70,6 @@ class YQRequest {
 		options.url = url
 		options.data = data
 		options.method = 'GET'
-		options.header = {
-			'content-type': 'application/json;charset=UTF-8',
-			// 'Authorization': token || ''
-		}
 		return this.request(options)
 	}
 	post(url, data, options = {}) {
@@ -84,7 +78,7 @@ class YQRequest {
 		options.data = data
 		options.method = 'POST'
 		options.header = {
-			'content-type': 'application/json;charset=UTF-8',
+			// 'content-type': 'application/json;charset=UTF-8',
 			// 'Authorization': token || ''
 		}
 		return this.request(options)

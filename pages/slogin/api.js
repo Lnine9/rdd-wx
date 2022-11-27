@@ -7,4 +7,8 @@ export class api{
   static scan(data){
   	  return yqRequest.post('/student/studentScanCode',data)
   }
+  static getWxid(data){
+	  console.log(data);
+  	  return yqRequest.get('/user/getUserInfo',data)
+  }
 }	
