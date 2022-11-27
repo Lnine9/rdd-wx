@@ -91,4 +91,4 @@ class YQRequest {
 	}
 }
 
-export const minRequest = new YQRequest()
+export const yqRequest = new YQRequest()
